@@ -1,4 +1,4 @@
 dLabPro
 =======
 
-Cognitive signal processing toolbox
+A signal processing and acoustic pattern recognition toolbox
