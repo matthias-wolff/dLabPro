@@ -1,0 +1,113 @@
+## dLabPro class CLPCproc (LPCproc)
+## - Definition script
+##
+## AUTHOR : Guntram Strecha
+## PACKAGE: dLabPro/classes
+## 
+## Copyright 2013 dLabPro contributors and others (see COPYRIGHT file) 
+## - Chair of System Theory and Speech Technology, TU Dresden
+## - Chair of Communications Engineering, BTU Cottbus
+## 
+## This file is part of dLabPro.
+## 
+## dLabPro is free software: you can redistribute it and/or modify it under the
+## terms of the GNU Lesser General Public License as published by the Free
+## Software Foundation, either version 3 of the License, or (at your option)
+## any later version.
+## 
+## dLabPro is distributed in the hope that it will be useful, but WITHOUT ANY
+## WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+## FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+## details.
+## 
+## You should have received a copy of the GNU Lesser General Public License
+## along with dLabPro. If not, see <http://www.gnu.org/licenses/>.
+
+PLATFORM: GNUC++
+COMPILER: gcc
+AR:       ar
+
+PROJECT:  LPCproc
+COMMENT:  Linear prediction coding (LPC) analysis and synthesis
+AUTHOR:   Guntram Strecha
+VERSION:  1.0 DLP
+
+CLASS:    LPCproc
+SUPERCLASS: ../fbaproc/fbaproc.def
+/cxx_nconv
+
+MAN:
+END_MAN
+
+######################################################################
+# Files and locations
+
+INCLUDE: "dlp_data.h"
+
+FILE:     lpc_work.cpp
+FILE:     lpc_synt.cpp
+FILE:     lpc_stat.cpp
+
+######################################################################
+## Header Code
+
+######################################################################
+# ERROR codes
+
+########################################################################
+# Fields
+
+FIELD:   coeff
+COMMENT: Number of LPC coefficients.
+TYPE:    short
+INIT:    50
+
+FIELD:   mem_lpc
+COMMENT: synthesis filter states
+TYPE:    double*
+FLAGS:   /hidden /nosave
+
+######################################################################
+# Options
+
+######################################################################
+# Methods
+
+METHOD:  -analyze
+COMMENT: Run LPC analysis.
+SYNTAX:  (data idSignal, data idPitch, data idReal, data idImag)
+MAN:
+         Runs the analysis. Instance dSignal contains the signal
+         to analyse in the first component. The first alpha numeric
+         component (if exist) is used as label component. In case 
+         of pitch synchronuous analysis dPitch contains the pitch 
+         information. dPitch must have two numeric components. The
+         and as many records as signal periods in dSignal. The first
+         component contains the lenght of the period in samples, the 
+         second contains the voiced/unvoiced information 
+         (1-voiced/0-unvoiced).
+         If dPitch is omitted pitch asynchronuous analysis is performed.
+END_MAN
+
+METHOD:  -status
+COMMENT: Display status information.
+SYNTAX:  ()
+
+######################################################################
+# System functions
+
+INITCODE:
+  INIT;
+END_CODE
+
+DONECODE:
+  if(m_lpMemLpc != NULL) dlp_free(m_lpMemLpc);
+  DONE;
+END_CODE
+
+######################################################################
+
+-cgen
+quit
+
+## EOF

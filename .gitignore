@@ -1,0 +1,8 @@
+/bin.debug.x86-w32
+/bin.release.x86-w32
+/obj.debug.x86-w32
+/obj.release.x86-w32
+/lib.debug.x86-w32
+/lib.release.x86-w32
+/.cproject
+/.project

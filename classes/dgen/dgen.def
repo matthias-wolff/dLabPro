@@ -1,0 +1,483 @@
+## dLabPro class CDgen (DGen)
+## - Document scanner and generator
+##
+## AUTHOR : Matthias Wolff
+## PACKAGE: dLabPro/classes
+## 
+## Copyright 2013 dLabPro contributors and others (see COPYRIGHT file) 
+## - Chair of System Theory and Speech Technology, TU Dresden
+## - Chair of Communications Engineering, BTU Cottbus
+## 
+## This file is part of dLabPro.
+## 
+## dLabPro is free software: you can redistribute it and/or modify it under the
+## terms of the GNU Lesser General Public License as published by the Free
+## Software Foundation, either version 3 of the License, or (at your option)
+## any later version.
+## 
+## dLabPro is distributed in the hope that it will be useful, but WITHOUT ANY
+## WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+## FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+## details.
+## 
+## You should have received a copy of the GNU Lesser General Public License
+## along with dLabPro. If not, see <http://www.gnu.org/licenses/>.
+
+#"_WINDOWS" ?platform if
+#  PLATFORM: MSVC++
+#else
+  PLATFORM: GNUC++
+  COMPILER: gcc
+  AR:       ar
+  CFLAGS:   -Wno-trigraphs
+#endif
+
+PROJECT: dgen
+CLASS:   DGen
+COMMENT: Document parser and generator
+AUTHOR:  Matthias Wolff
+VERSION: 1.0.1
+FRIEND:  CCgen
+FRIEND:  CFunction
+/cxx_nconv
+#MAN:    @dgen.html
+
+## Header file includes
+INCLUDE: "dlp_data.h"
+INCLUDE: "dlp_fst.h"
+
+## Additional C++ source files
+FILE:    dg_iam.cpp
+FILE:    dg_cpp.cpp
+FILE:    dg_dlp.cpp
+FILE:    dg_gen.cpp
+FILE:    dg_scan.cpp
+FILE:    dg_tok.cpp
+FILE:    dg_uasr.cpp
+FILE:    dg_fml.cpp
+FILE:    dg_perl.cpp
+
+## Defines - Token types (first tokenizer pass)
+DEFINE:  TT_LCMT       "cl"  # One line comment
+DEFINE:  TT_BCMT       "cb"  # Block comment
+DEFINE:  TT_DCMT       "cd"  # Documentation comment
+DEFINE:  TT_DRCT       "cv"  # Compiler directive
+DEFINE:  TT_STR        "ss"  # String constant "..."
+DEFINE:  TT_CHR        "sc"  # Character (alt. string) constant '...'
+DEFINE:  TT_DEL        "d"   # Delimiter (significant)
+DEFINE:  TT_UNK        "?"   # Unknown token type
+DEFINE:  TT_WSPC       "w"   # White space
+DEFINE:  TT_ELIN       "e"   # Blank line
+
+## Defines - Token type (second tokenizer pass if applicable)
+DEFINE:  TT_FORM       "fm"  # Formula expression token (dLabPro)
+DEFINE:  TT_LAB        "?L"  # Label definition (dLabPro)
+
+## Defines - Delimiter types
+DEFINE:  DL_NONE        0    # No delimiter
+DEFINE:  DL_SIGN        1    # Significant delimiter (a token by itself)
+DEFINE:  DL_INSIGN      2    # Insignificant delimiter (to be ignored)
+
+## Defines - Token sequence components (m_idTsq)
+DEFINE:  OF_LINE        0    # Line in source file
+DEFINE:  OF_TTYP        1    # Token type (one of the TT_XXX constants)
+DEFINE:  OF_TOK         2    # Token
+DEFINE:  OF_BLV0        3    # Brace counter {
+DEFINE:  OF_BLV1        4    # Brace counter (
+DEFINE:  OF_BLV2        5    # Brace counter [
+DEFINE:  OF_IDEL        6    # Insignificant delimiter string following token
+DEFINE:  OF_SRCID       7    # -- Custom use -- (source file index)
+
+## Defines - DOM components of "cpp" token sequence parser (m_idTsq)
+DEFINE:  CDM_OF_DOBT    0    # Type of DOM object
+DEFINE:  CDM_OF_DSPC    1    # Declaration specfifiers
+DEFINE:  CDM_OF_NAME    2    # Identifier
+DEFINE:  CDM_OF_EXT1    3    # Extra 1: sv-modifiers, array specifier
+DEFINE:  CDM_OF_EXT2    4    # Extra 2: default value
+DEFINE:  CDM_OF_FTOK    5    # First token index in m_idTsq
+DEFINE:  CDM_OF_LTOK    6    # Last token index in m_idTsq
+DEFINE:  CDM_OF_FTOKD   7    # First JavaDoc token index in m_idTsq
+DEFINE:  CDM_OF_LTOKD   8    # Last JavaDoc token index in m_idTsq
+
+## Define - DOM object types of "cpp" token sequence parser (m_idTsq)
+DEFINE:  CDM_OT_FHEAD   0    # Function header
+DEFINE:  CDM_OT_FFARG   1    # Function formal argument
+
+## Defines - DOM components of "uasr" token sequence parser (m_idTsq)
+DEFINE:  UDM_OF_DOBT    0    # Type of DOM object
+DEFINE:  UDM_OF_NAME    1    # Identifier
+DEFINE:  UDM_OF_TYPE    2    # Type (class, variable type, etc.)
+DEFINE:  UDM_OF_EXT1    3    # Extra 1: - reserved - 
+DEFINE:  UDM_OF_FTOK    4    # First token index in m_idTsq
+DEFINE:  UDM_OF_LTOK    5    # Last token index in m_idTsq
+DEFINE:  UDM_OF_FJVD    6    # Index of first JavaDoc string in m_idTxt
+DEFINE:  UDM_OF_NJVD    7    # Number of JavaDoc strings in m_idTxt
+
+## Define - DOM object types of token sequence parser (m_idTsq)
+DEFINE:  UDM_OT_CLARG   0    # Command line argument
+DEFINE:  UDM_OT_FHEAD   1    # Function header
+DEFINE:  UDM_OT_FRETV   2    # Function return value
+DEFINE:  UDM_OT_FFARG   3    # Function formal argument
+DEFINE:  UDM_OT_FGLOB   4    # Function access to global variable
+DEFINE:  UDM_OT_FSEE    5    # Function documentation comment: see tag
+
+## Defines - Token sequence macros
+DEFINE:  __TTYP_IS_EX(THIS,A,B) (dlp_strcmp((char*)THIS->XAddr(A,OF_TTYP),B)==0)
+DEFINE:  __TOK_IS_EX(THIS,A,B)  (dlp_strcmp((char*)THIS->XAddr(A,OF_TOK ),B)==0)
+DEFINE:  __TTYP_EX(THIS,A)      ( (char* )THIS->XAddr(A,OF_TTYP  ))
+DEFINE:  __TOK_EX(THIS,A)       ( (char* )THIS->XAddr(A,OF_TOK   ))
+DEFINE:  __LINE_EX(THIS,A)      (*(INT32* )THIS->XAddr(A,OF_LINE  ))
+DEFINE:  __BLV_EX(THIS,A,B)     (*(INT16*)THIS->XAddr(A,OF_BLV0+B))
+DEFINE:  __IDEL_EX(THIS,A)      ( (char* )THIS->XAddr(A,OF_IDEL  ))
+DEFINE:  __TTYP_IS(A,B)         __TTYP_IS_EX(m_idTsq,A,B)
+DEFINE:  __TOK_IS(A,B)          __TOK_IS_EX(m_idTsq,A,B)
+DEFINE:  __TTYP(A)              __TTYP_EX(m_idTsq,A)
+DEFINE:  __TOK(A)               __TOK_EX(m_idTsq,A)
+DEFINE:  __LINE(A)              __LINE_EX(m_idTsq,A)
+DEFINE:  __BLV(A,B)             __BLV_EX(m_idTsq,A,B)
+DEFINE:  __IDEL(A)              __IDEL_EX(m_idTsq,A)
+
+## Errors
+ERROR:   DG_TOOFEWCOMPS
+COMMENT: Node table of instance '%s' has too few components.
+
+ERROR:   DG_NOTSYMBCOMPTYPE
+COMMENT: Node component %ld of instance '%s' must be symbolic.
+
+ERROR:   DG_TOOLONG
+COMMENT: %s(%ld): %s too long.
+LEVEL:   EL_WARNING
+
+ERROR:   DG_TOOLONG2
+COMMENT: %s '%s' too long (max. %ld characters).
+LEVEL:   EL_WARNING
+
+ERROR:   DG_HERESCRIPT
+COMMENT: Unexpected end of file scanning for '%s'.
+
+ERROR:   DG_STREXCEEDSLINE
+COMMENT: String constant exceeds line.
+
+ERROR:   DG_PARSER
+COMMENT: Parser '%s' unknown.
+
+ERROR:   DG_OPCODE
+COMMENT: '%s' is not a valid %s operation.
+
+ERROR:   DG_SYNTAX
+COMMENT: Syntax error.
+
+ERROR:   DG_SYNTAX2
+COMMENT: Syntax error (%s).
+
+ERROR:   DG_EXPECT
+COMMENT: Expect %s.
+
+ERROR:   DG_AWOB
+COMMENT: %s without matching %s.
+
+ERROR:   DG_JVD
+COMMENT: JavaDoc %s %s %s.
+
+## Fields
+FIELD:   lcmt
+COMMENT: One line comment mark ('til end of line)
+TYPE:    8
+INIT:    "#"
+
+FIELD:   bcmton
+COMMENT: Block comment mark (start)
+TYPE:    8
+
+FIELD:   bcmtoff
+COMMENT: Block comment mark (end)
+TYPE:    8
+
+FIELD:   dcmt
+COMMENT: Documentation comment
+TYPE:    8
+INIT:    "##"
+
+FIELD:   drct
+COMMENT: Compiler directive (entire line will be one token)
+TYPE:    8
+
+FIELD:   sdel
+COMMENT: Significant token delimiter characters
+TYPE:    64
+CODE:
+  dlp_strconvert(SC_UNESCAPE,m_lpsSdel,m_lpsSdel);
+END_CODE
+/html MAN:
+  <p>Significant token delimiters do not only separate tokens by are also
+  tokens by themselves. Typical examples are commas, semicolons and braces.</p>
+END_MAN
+
+FIELD:   idel
+COMMENT: Insignificant token delimiter characters
+TYPE:    64
+CODE:
+  dlp_strconvert(SC_UNESCAPE,m_lpsIdel,m_lpsIdel);
+END_CODE
+INIT:    " \t"
+/html MAN:
+  <p>Insignificant token delimiters separate tokens from each other. They have
+  no other meaning. Typical examples are white spaces.</p>
+END_MAN
+
+FIELD:   chrs
+COMMENT: Get character strings in single quotation marks as tokens.
+TYPE:    short
+CNAME:   m_bChrs
+INIT:    TRUE
+/html MAN:
+  <p>Some languages (like C, Java or JavaScript) use strings in single quotation
+  marks. These are trated as one token by default. Set this field to
+  <code>FALSE</code> if the single quotation mark character is used for other
+  purposes (e.g. matrix transpose operator in dLabPro or MatLab).</p>
+END_MAN
+
+FIELD:   strs
+COMMENT: Get character strings in double quotation marks as tokens.
+TYPE:    short
+CNAME:   m_bStrs
+INIT:    TRUE
+/html MAN:
+  <p>Most languages (like C, Java or JavaScript) use strings in double quotation
+  marks. These are trated as one token by default. Set this field to
+  <code>FALSE</code> if the double quotation mark character is used for other
+  purposes.</p>
+END_MAN
+
+FIELD:   grany
+COMMENT: Memory allocation granularity
+TYPE:    int
+INIT:    100
+FLAGS:   /noset
+
+FIELD:   filename
+CNAME:   m_lpsFilename
+TYPE:    255
+COMMENT: Most recently tokenized file
+FLAGS:   /noset
+
+FIELD:   tsq
+CNAME:   m_idTsq
+COMMENT: Token sequence
+TYPE:    data
+FLAGS:   /noset
+#MAN:    @dgen.html
+
+FIELD:   spl
+COMMENT: Source property list (key-value pairs)
+TYPE:    data
+FLAGS:   /noset
+#MAN:    @dgen.html
+
+FIELD:   dom
+CNAME:   m_idDom
+COMMENT: Document object model
+TYPE:    data
+FLAGS:   /noset
+#MAN:    @dgen.html
+
+FIELD:   txt
+COMMENT: Documentation texts
+TYPE:    data
+FLAGS:   /noset
+#MAN:    @dgen.html
+
+FIELD:   gen
+COMMENT: Generated document
+TYPE:    data
+FLAGS:   /noset
+#MAN:    @dgen.html
+
+## Options
+OPTION:  /bare
+COMMENT: Ignore prefixes and suffixes.
+/html MAN:
+  <h4>{@link /bare} {@link -table}</h4>
+  <p>Do not place the prefix before/the suffix after the first/last row.</p>
+END_MAN
+
+## Methods - Source parser
+METHOD:  -scan
+SYNTAX:  (string sFilename, string sParser, INSTANCE(fst) itDeps)
+COMMENT: For convenience: -tokenize plus -parse
+
+METHOD:  -setup
+SYNTAX:  (string sParser)
+COMMENT: Load default parameter set for given parser
+
+METHOD:  -tokenize
+SYNTAX:  (string sFilename)
+COMMENT: Tokenize source file
+
+METHOD:  -parse
+SYNTAX:  (string sParser, INSTANCE(fst) itDeps, int nFtok, int nLtok)
+COMMENT: Parse token sequence (field tsq)
+#MAN:    @dgen.html
+
+## Methods - HTML generator
+METHOD:  <%
+POSTSYN: ... %>
+SYNTAX:  ()
+COMMENT: Add HTML code (here script) to HTML page
+CNAME:   HereScript
+
+METHOD:  >>
+SYNTAX:  (string sText)
+COMMENT: Add text to HTML page
+CNAME:   AddText
+
+METHOD:  -table
+SYNTAX:  (data idTable, string sPre, string sDel, string sSuf)
+COMMENT: Adds table data to HTML page
+/html MAN:
+  <p>Each row of the table is preceeded by a prefix string <code>sPre</code>.
+  Between the data cells the delimiter string <code>sDel</code> will be
+  placed. The suffix string <code>sSuf</code> is appended after the last
+  cell of each row.</p>
+
+  <p><u>Example</u></p>
+  <p>To generate a simple HTML table from a data instance <code>idTab</code>
+  you would write:</p>
+  <pre class="code">
+
+    UasrDoc iUD
+    ...
+    iUD &lt;% &lt;table&gt; %&gt;
+    idTab "&lt;tr&gt;&lt;td&gt;" "&lt;/td&gt;&lt;td&gt;" "&lt;/td&gt;&lt;/tr&gt;" iUD -table
+    iUD &lt;% &lt;/table&gt; %&gt;
+  </pre>
+
+  @cgen:option /bare Do not place the prefix before/the suffix after the first/last row.
+END_MAN
+
+METHOD:  -load
+SYNTAX:  (string sFilename)
+COMMENT: Load document template.
+
+METHOD:  -edit_section
+SYNTAX:  (string sMarkOn, string sMarkOff, data idText, string sOpname)
+COMMENT: Edits text between two markers in generated document.
+#MAN:    @dgen.html
+
+METHOD:  -write
+SYNTAX:  (string sFilename)
+COMMENT: Write HTML page to file
+
+## Kernel interface code
+RESETCODE:
+  RESET;
+  IFIELD_RESET(CData,"tsq");
+  IFIELD_RESET(CData,"spl");
+  IFIELD_RESET(CData,"dom");
+  IFIELD_RESET(CData,"txt");
+  IFIELD_RESET(CData,"gen");
+  m_idSpl->AddComp("key" , 33);
+  m_idSpl->AddComp("val" ,255);
+  m_idTxt->AddComp("line",255);
+  m_idGen->AddComp("line",255);
+END_CODE
+
+## Release notes
+NOTE:    Parsers - Overview
+COMMENT: Usage and implementation of token sequence parsers
+/html MAN:
+  <p>The following token parsers are available (click on parser name
+  for further information):</p>
+  <table>
+    <tr><th>Name</th><th>Description</th></tr>
+    <tr><td><A href="#rnt_001">dlp</a></td><td>dLabPro source scanner</td></tr>
+    <tr><td><A href="#rnt_002">uasr</a></td><td>UASR documentation generator</td></tr>
+    <tr><td><A href="#rnt_003">cpp</a> </td><td>C/C++ source scanner</td></tr>
+    <tr><td><A href="#rnt_004">perl</a> </td><td>Perl source scanner</td></tr>
+  </table>
+END_MAN
+
+NOTE:    The "dlp" parser
+COMMENT: dLabPro source parser
+/html MAN:
+  <p>This parser is used by class <a href="function.html"><code
+  class="link">function</code></a> and does not build a document object model.
+  </p>
+END_MAN
+
+NOTE:    The "uasr" parser
+COMMENT: UASR source parser
+/html MAN:
+  <p>This parser is used by the UASR documentation generator in order to
+  generate documentation of dLabPro scripts.</p>
+
+  <h4>Source Properties</h4>
+  <p>See field {@link spl}.</p>
+  <table>
+    <tr><th colspan="3">ID                         </th><th>Description         </th></tr>
+    <tr><th>Ordinal</th><th>C++ Symbol</th><th>Name</th><th>                    </th></tr>
+    <tr><td>0</td><td>NP_PACKAGE</td><td>"PACKAGE" </td><td>UASR package name   </td></tr>
+    <tr><td>1</td><td>NP_NAME   </td><td>"NAME"    </td><td>Script name         </td></tr>
+    <tr><td>2</td><td>NP_SNAME  </td><td>"SNAME"   </td><td>Short script name (w/o extension)</td></tr>
+    <tr><td>3</td><td>NP_SYNOP  </td><td>"SYNOPSIS"</td><td>Synopsis            </td></tr>
+    <tr><td>4</td><td>NP_AUTHOR </td><td>"AUTHOR"  </td><td>Author of script    </td></tr>
+    <tr><td>5</td><td>NP_UPDATE </td><td>"UPDATE"  </td><td>Latest manual update</td></tr>
+    <tr><td>6</td><td>NP_ID     </td><td>"ID"      </td><td>RCS ID string       </td></tr>
+    <tr><td>7</td><td>NP_CODE   </td><td>"CODE"    </td><td>Unique UASR code    </td></tr>
+  </table>
+
+  <h4>Document Object Model (DOM)</h4>
+  <p>See field {@link dom}.</p>
+  <table>
+    <tr><th colspan="3">ID                         </th><th>Description         </th></tr>
+    <tr><th>Ordinal</th><th>C++ Symbol</th><th>Name</th><th>                    </th></tr>
+    <tr><td>0</td><td>UDM_OF_DOBT</td><td>"dobt"</td><td nowrap>Type of DOM object<br>- 0=Script command line argument<br>- 1=Function<br>- 2=Function formal argument</td></tr>
+    <tr><td>1</td><td>UDM_OF_NAME</td><td>"name"</td><td nowrap>Identifier</td></tr>
+    <tr><td>2</td><td>UDM_OF_TYPE</td><td>"name"</td><td nowrap>Type (class, variable type, etc.)</td></tr>
+    <tr><td>3</td><td>UDM_OF_EXT1</td><td>"ext1"</td><td nowrap>Extra 1: - reserved -</td></tr>
+    <tr><td>4</td><td>UDM_OF_FTOK</td><td>"ftok"</td><td nowrap>First token index in field {@link tsq}</td></tr>
+    <tr><td>5</td><td>UDM_OF_LTOK</td><td>"ltok"</td><td nowrap>Last token index in field {@link tsq}</td></tr>
+    <tr><td>6</td><td>UDM_OF_FJVD</td><td>"fjvd"</td><td nowrap>Index of first JavaDoc string in field {@link txt}</td></tr>
+    <tr><td>7</td><td>UDM_OF_NJVD</td><td>"njvd"</td><td nowrap>Number of JavaDoc strings in field {@link txt}</td></tr>
+  </table>
+END_MAN
+
+NOTE:    The "cpp" parser
+COMMENT: C/C++ source parser
+/html MAN:
+  <p>This parser is used by the dLabPro documentation generator (see class <a
+  href="dcg.html"><code class="link">CGen</code></a>) in order to generate
+  documentation of C/C++ sources files.</p>
+
+  <h4>Document Object Model (DOM)</h4>
+  <p>See field {@link dom}.</p>
+  <table>
+    <tr><th colspan="3">ID                         </th><th>Description         </th></tr>
+    <tr><th>Ordinal</th><th>C++ Symbol</th><th>Name</th><th>                    </th></tr>
+    <tr><td>0</td><td>CDM_OF_DOBT </td><td>"dobt"</td><td nowrap>Type of DOM object<br>- 0=Function<br>- 1=Formal argument</td></tr>
+    <tr><td>1</td><td>CDM_OF_DSPC </td><td>"dscp"</td><td nowrap>Declaration specfifiers</td></tr>
+    <tr><td>2</td><td>CDM_OF_NAME </td><td>"name"</td><td nowrap>Identifier</td></tr>
+    <tr><td>3</td><td>CDM_OF_EXT1 </td><td>"ext1"</td><td nowrap>Extra 1: sv-modifiers, array specifier</td></tr>
+    <tr><td>4</td><td>CDM_OF_EXT2 </td><td>"ext2"</td><td nowrap>Extra 2: default value</td></tr>
+    <tr><td>5</td><td>CDM_OF_FTOK </td><td>"ftok"</td><td nowrap>First token index in field {@link tsq}</td></tr>
+    <tr><td>6</td><td>CDM_OF_LTOK </td><td>"ltok"</td><td nowrap>Last token index in field {@link tsq}</td></tr>
+    <tr><td>7</td><td>CDM_OF_FTOKD</td><td>"ftkd"</td><td nowrap>First JavaDoc token index in field {@link tsq}</td></tr>
+    <tr><td>8</td><td>CDM_OF_LTOKD</td><td>"ltkd"</td><td nowrap>Last JavaDoc token index in field {@link tsq}</td></tr>
+  </table>
+END_MAN
+
+NOTE:    The "perl" parser
+COMMENT: Perl source parser
+/html MAN:
+  <p>This parser is used by the UASR documentation generator in order to
+  generate documentation of perl scripts.</p>
+
+  <p>It uses the same Source Properties and Document Object Model as the
+  "uasr" parser.</p>
+END_MAN
+
+## Generate files
+-cgen
+quit
+
+## EOF

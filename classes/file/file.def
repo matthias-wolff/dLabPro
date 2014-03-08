@@ -1,0 +1,1002 @@
+## dLabPro class CDlpFile (file)
+## - Definition file
+##
+## AUTHOR : M. Wolff, M. Eichner and M. Cuevas
+## PACKAGE: dLabPro/classes
+## 
+## Copyright 2013 dLabPro contributors and others (see COPYRIGHT file) 
+## - Chair of System Theory and Speech Technology, TU Dresden
+## - Chair of Communications Engineering, BTU Cottbus
+## 
+## This file is part of dLabPro.
+## 
+## dLabPro is free software: you can redistribute it and/or modify it under the
+## terms of the GNU Lesser General Public License as published by the Free
+## Software Foundation, either version 3 of the License, or (at your option)
+## any later version.
+## 
+## dLabPro is distributed in the hope that it will be useful, but WITHOUT ANY
+## WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+## FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+## details.
+## 
+## You should have received a copy of the GNU Lesser General Public License
+## along with dLabPro. If not, see <http://www.gnu.org/licenses/>.
+
+PLATFORM: GNUC++
+COMPILER: gcc
+AR:       ar
+CFLAGS:   -Wno-trigraphs
+
+PROJECT:      file
+COMMENT:      File list processor and import/export filters
+AUTHOR:       M. Wolff, M. Eichner and M. Cuevas
+VERSION:      1.1.2
+
+CLASS:        file
+CNAME:        CDlpFile
+AUTOINSTANCE: stdfile
+FLAGS:        /noautoactivate                                                  # Do not activate on instanciation
+/cxx_nconv                                                                     # Use strict C++ naming conventions
+/cProject                                                                      # Generate ANSI C compatible code
+
+/html MAN:
+  <p>The file class manages import and export of files and handling of file lists.
+  The following import/export filters are currently available:</p>
+
+  <p><table>
+    <tr><th>Name    </th><th>Class                                                     </th><th>Mode</th><th>Description                  </th></tr>
+    <tr><td><a href="file.html#rnt_000">ascii</a>   </td><td><a href="data.html"><code class="link">data</code></a>    </td><td>I/E </td><td>White space delimited ASCII  </td></tr>
+    <tr><td>csv     </td><td><a href="data.html"><code class="link">data</code></a>    </td><td>I/E </td><td>Comma separated values file  </td></tr>
+    <tr><td>csv_de  </td><td><a href="data.html"><code class="link">data</code></a>    </td><td>I/E </td><td>Semicolon sep. values file   </td></tr>
+    <tr><td>wav     </td><td><a href="data.html"><code class="link">data</code></a>    </td><td>I/E </td><td>Microsoft WAV audio          </td></tr>
+    <tr><td>au      </td><td><a href="data.html"><code class="link">data</code></a>    </td><td>I/E </td><td>SUN AU audio                 </td></tr>
+    <tr><td>phd     </td><td><a href="data.html"><code class="link">data</code></a>    </td><td>I   </td><td>PhonDat                      </td></tr>
+    <tr><td>vm2_nist</td><td><a href="data.html"><code class="link">data</code></a>    </td><td>I   </td><td>Verbmobil2 signal (NIST)     </td></tr>
+    <tr><td><a href="file.html#rnt_002">esps_lab</a></td><td><a href="data.html"><code class="link">data</code></a>    </td><td>I/E </td><td>ESPS label                   </td></tr>
+    <tr><td>pm      </td><td><a href="data.html"><code class="link">data</code></a>    </td><td>I/E </td><td>Period marker                </td></tr>
+    <tr><td>pm.txt  </td><td><a href="data.html"><code class="link">data</code></a>    </td><td>I/E </td><td>Period marker (wavesurfer)   </td></tr>
+    <tr><td>into    </td><td><a href="data.html"><code class="link">data</code></a>    </td><td>I/E </td><td>Synthesis control (Into)     </td></tr>
+    <tr><td><a href="file.html#rnt_004">pstricks</a></td><td><a href="data.html"><code class="link">data</code></a>   </td><td>E   </td><td>PSTricks snippet for LaTeX   </td></tr>
+    <tr><td><a href="file.html#rnt_001">raw</a>     </td><td><a href="data.html"><code class="link">data</code></a>    </td><td>I/E </td><td>RAW (binary)                 </td></tr>
+    <tr><td><a href="file.html#rnt_003">mid</a>     </td><td><a href="data.html"><code class="link">data</code></a>    </td><td>I/E </td><td>Midi notes                     </td></tr>
+    
+    <tr><td>dot     </td><td><a href="fst.html"><code class="link">fst</code></a>      </td><td>E   </td><td>AT&T DOT for GraphViz (ASCII)</td></tr>
+    <tr><td>svg     </td><td><a href="fst.html"><code class="link">fst</code></a>      </td><td>E   </td><td>Scalable vector graphic      </td></tr>
+    <tr><td>png     </td><td><a href="fst.html"><code class="link">fst</code></a>      </td><td>E   </td><td>Portable network graphic     </td></tr>
+    <tr><td>ps      </td><td><a href="fst.html"><code class="link">fst</code></a>      </td><td>E   </td><td>Postscript (EPSF)            </td></tr>
+    <tr><td>itp     </td><td><a href="fst.html"><code class="link">fst</code></a>      </td><td>E   </td><td>dLabPro script               </td></tr>
+    <tr><td><a href="file.html#rnt_005">fsm-a</a>   </td><td><a href="fst.html"><code class="link">fst</code></a>      </td><td>I/E </td><td>AT&T/Openfst FSM Toolkit (ASCII)     </td></tr>
+    <tr><td><a href="file.html#rnt_005">fsm-t</a>   </td><td><a href="fst.html"><code class="link">fst</code></a>      </td><td>I/E </td><td>AT&T/Openfst FSM Toolkit (ASCII)     </td></tr>
+    <tr><td>htk     </td><td><a href="hmm.html"><code class="link">hmm</code></a>      </td><td>E   </td><td>HTK hmmdefs                  </td></tr>
+    <tr><td>htk     </td><td><a href="str.html"><code class="link">structure</code></a></td><td>I   </td><td>HTK-Lattice (ASCII)          </td></tr>
+    <tr><td>dot     </td><td><a href="str.html"><code class="link">structure</code></a></td><td>E   </td><td>AT&T DOT for GraphViz (ASCII)</td></tr>
+    <tr><td>svg     </td><td><a href="str.html"><code class="link">structure</code></a></td><td>E   </td><td>Scalable vector graphic      </td></tr>
+    <tr><td>png     </td><td><a href="str.html"><code class="link">structure</code></a></td><td>E   </td><td>Portable network graphic     </td></tr>
+    <tr><td>ps      </td><td><a href="str.html"><code class="link">structure</code></a></td><td>E   </td><td>Postscript (EPSF)            </td></tr>
+    <tr><td>itp     </td><td><a href="str.html"><code class="link">structure</code></a></td><td>E   </td><td>dLabPro script (as fst)      </td></tr>
+    <tr><td><a href="file.html#rnt_005">fsm-a</a>   </td><td><a href="str.html"><code class="link">structure</code></a></td><td>I/E </td><td>AT&T/Openfst FSM Toolkit (ASCII)     </td></tr>
+    <tr><td><a href="file.html#rnt_005">fsm-t</a>   </td><td><a href="str.html"><code class="link">structure</code></a></td><td>I/E </td><td>AT&T/Openfst FSM Toolkit (ASCII)     </td></tr>
+    <tr><td>slc21   </td><td><a href="str.html"><code class="link">structure</code></a></td><td>I   </td><td>sigmaLab 2.1                 </td></tr>
+  </table></p>
+
+  <p>For a recent list of available import/export filters use the
+  <a href="#mth_-list"><code class="link">-list</code></a> method at the
+  dlabpro command line. See release notes for additional information.</p>
+
+  <p>The following example demonstrates the usage of file lists and
+  import/export filters. First a file list is created using an OS shell
+  command. Then each file in the list is tried to be imported through the
+  PHONDAT filter. If the import succeeds, the imported signal data
+  are exported in the Microsoft wav format. Finally the file list file is
+  removed.</p>
+
+  <pre class="code">
+
+  <span class="c-cmt">## dLabPro 2.5</span>
+  <span class="c-cmt">## This script converts all files named *.a16 in the current folder from PHONDAT to MS WAV format.</span>
+
+  <a href="data.html"><code class="link">data</code></a> idSignal;                                                   <span class="c-cmt"># Data buffer</span>
+
+  "WIN32" <a href="function.html#mth__platform"><code class="link">?platform</code></a> <a href="function.html#mth_if"><code class="link"><b>if</b></code></a>                                             <span class="c-cmt"># Running on Windows? YES &gt;&gt;</span>
+    "cmd /c dir /a:-d /b" <a href="var.html"><code class="link">var</code></a> sCmdDir;                             <span class="c-cmt">#   Directory listing shell command</span>
+    "cmd /c del"          <a href="var.html"><code class="link">var</code></a> sCmdRm;                              <span class="c-cmt">#   Remove shell command</span>
+  <a href="function.html#mth_else"><code class="link"><b>else</b></code></a>                                                             <span class="c-cmt"># &lt;&lt; NO &gt;&gt;</span>
+    "ls -1"               <a href="var.html"><code class="link">var</code></a> sCmdDir;                             <span class="c-cmt">#   Directory listing shell command</span>
+    "rm"                  <a href="var.html"><code class="link">var</code></a> sCmdRm;                              <span class="c-cmt">#   Remove shell command</span>
+  <a href="function.html#mth_end"><code class="link"><b>end</b></code></a>                                                              <span class="c-cmt"># &lt;&lt;</span>
+
+  "\${sCmdDir} *.a16 > filelist.txt" <a href="function.html#mth_-system"><code class="link">-system</code></a>;                       <span class="c-cmt"># List files in current directory</span>
+  "filelist.txt" stdfile <a href="function.html#mth_-set"><code class="link">-set</code></a> flist;                               <span class="c-cmt"># Load file list</span>
+
+  stdfile <a href="#mth_-next"><code class="link">-next</code></a> <a href="function.html#mth_while"><code class="link"><b>while</b></code></a>                                              <span class="c-cmt"># Have another file in the list? YES >></span>
+    "\n File \${stdfile.{@link nfile}+1} of \${stdfile.{@link len}} - " <a href="function.html#mth_-echo"><code class="link">-echo</code></a>;       <span class="c-cmt">#   Protocol</span>
+    " Converting \${stdfile.{@link sfile_fq}}" <a href="function.html#mth_-echo"><code class="link">-echo</code></a>;                       <span class="c-cmt">#   Protocol</span>
+    stdfile.{@link sfile} "phd" idSignal stdfile <a href="#mth_-import"><code class="link">-import</code></a>;                  <span class="c-cmt">#   Import Verbmobil2 NIST signal file</span>
+    ?error <a href="function.html#mth_not"><code class="link"><b>not</b></code></a> <a href="function.html#mth_if"><code class="link"><b>if</b></code></a>                                                  <span class="c-cmt">#   Successful? YES &gt;&gt;</span>
+      "\${stdfile.{@link sfile}}.wav" "wav" idSignal stdfile <a href="#mth_-export"><code class="link">-export</code></a>;       <span class="c-cmt">#     Export as wav file</span>
+    <a href="function.html#mth_end"><code class="link"><b>end</b></code></a>                                                            <span class="c-cmt">#   &lt;&lt;</span>
+  <a href="function.html#mth_end"><code class="link"><b>end</b></code></a>                                                              <span class="c-cmt"># &lt;&lt;</span>
+
+  stdfile <a href="function.html#mth_-reset"><code class="link">-reset</code></a>;                                                  <span class="c-cmt"># Close file list</span>
+  "\${sCmdRm} filelist.txt" <a href="function.html#mth_-system"><code class="link">-system</code></a>;                                <span class="c-cmt"># Remove file list file</span>
+  </pre>
+
+END_MAN
+
+## Additional files
+INCLUDE: "ipkclib.h"
+INCLUDE: "kzl_list.h"
+INCLUDE: "dlp_data.h"
+FILE:    file_aux.c
+FILE:    file_data.c
+FILE:    file_gph.c
+FILE:    file_hmm.c
+FILE:    file_imex.c
+FILE:    file_vm2n.c
+FILE:    file_midi.c
+
+## Defines - File types
+DEFINE:  IMPORT_FILE  1
+DEFINE:  EXPORT_FILE  2
+
+## Macros
+DEFINE:  ADD_FILETYPE(A,B,C,D,E) \
+{ \
+  lnode_t* newNode = NULL; \
+  CFILE_FTYPE* lpGhost = NULL; \
+  lpGhost = (CFILE_FTYPE*)dlp_calloc(1,sizeof(CFILE_FTYPE)); \
+  if (lpGhost) \
+  { \
+    dlp_strncpy(lpGhost->lpName,A,L_NAMES-1); \
+    dlp_strncpy(lpGhost->lpClassName,B,L_NAMES-1); \
+    dlp_strncpy(lpGhost->lpDescr,D,2*L_NAMES-1); \
+    lpGhost->nMode = C; \
+    lpGhost->FilterFunc = E; \
+  } \
+  else return IERROR(_this,ERR_NOMEM,0,0,0); \
+  newNode = lnode_create(lpGhost); \
+  list_append(_this->m_lpFtypes, newNode); \
+}
+
+DEFINE: MAX_INVDESCR_LINE_LENGTH 1024
+
+## Errors
+ERROR:   FIL_NEEDFL
+COMMENT: Need a file list (parameter <flist>).
+
+ERROR:   FIL_FILENAME
+COMMENT: No filename specified.
+
+ERROR:   FIL_NOIMEX
+COMMENT: No %s method for '%s' file into '%s' instance.
+
+ERROR:   FIL_IMPORT
+COMMENT: Failed to import file '%s' using filter '%s'.
+
+ERROR:   FIL_NOEXPORT
+COMMENT: No export method for '%s' file from '%s' instance.
+
+ERROR:   FIL_EXPORT
+COMMENT: Failed to export file '%s' using filter '%s'.
+
+ERROR:   FIL_PROCESS
+COMMENT: Error while %s file %s.
+
+ERROR:   FIL_FORMAT
+COMMENT: Format error in file %s of type %s (%s).
+
+ERROR:   FIL_FORMATW
+COMMENT: Format error in file %s of type %s (%s).
+LEVEL:   EL_WARNING
+
+ERROR:   FIL_FORMATCOMPS
+COMMENT: All numeric components of %s must be of same type.
+
+ERROR:   FIL_FSR
+COMMENT: No valid continuation rate specified. Please set field 'fsr' of instance '%s' accordingly.
+
+ERROR:   FIL_PHD_SMM
+COMMENT: Counted samples incorrect (%ld != %ld).
+LEVEL:   EL_WARNING
+
+ERROR:   FIL_PHD_EMPTY_HEADER
+COMMENT: Invalid header detected. Assuming 16kHz data.
+LEVEL:   EL_WARNING
+
+ERROR:   FIL_NOTIMPL
+COMMENT: %s is not implemented.
+
+ERROR:   FIL_BADTYPE
+COMMENT: Component %d of %s must be of %s type.
+
+ERROR:   FIL_BADCOMPS
+COMMENT: Instance %s must must have %d components.
+
+ERROR:   IC_TIS_NOT_SET
+COMMENT: Field ic_tis in structure %s must be bigger than 1.
+
+ERROR:   FIL_DLP
+COMMENT: Need dLabPro interpreter.
+
+ERROR:   FIL_REMOVE
+COMMENT: Cannot remove %sfile '%s'.
+LEVEL:   EL_WARNING
+
+ERROR:   FIL_EXEC
+COMMENT: Cannot execute shell command '%s'. Check path.
+
+ERROR:   FIL_NOTFOUND
+COMMENT: Cannot find %s.
+
+ERROR:   FIL_WAV_MISS
+COMMENT: File %s doesn't contain %s!
+
+ERROR:   FIL_INVALARG
+COMMENT: Invalid argument (%s).
+
+ERROR:   FIL_OPTION
+COMMENT: Option %s will be ignored due to %s.
+LEVEL:   EL_WARNING
+
+## Fields
+FIELD:   flist
+COMMENT: Filename of file list.
+TYPE:    255
+/html MAN:
+  <p>Set <code>flist</code> to a filename denoting an existing ASCII file.
+  This file (the file list) has to contain a monocolumn list of file names.
+  The items of the file list can be read out by the <a
+  href="#mth_-next"><code class="link">-next</code></a> method. Reset the
+  file list by the <a href="function.html#mth_-reset"><code
+  class="link">-reset</code></a> method.</p>
+
+  <p>See also: <a href="#mth_-next"><code class="link">-next</code></a></p>
+END_MAN
+CODE:
+  CData_Reset(_this->m_idFlistData, TRUE);
+  if(dlp_strlen(_this->m_lpsFlist))
+  {
+    ISETOPTION(_this,"/strings");
+    CDlpFile_Import(_this,_this->m_lpsFlist,"ascii",_this->m_idFlistData);
+    IRESETOPTIONS(_this);
+    _this->m_nLen = CData_GetNRecs(AS(CData,_this->m_idFlistData));
+  }
+  else _this->m_nLen = 0;
+  _this->m_nNfile = -1;
+END_CODE
+
+FIELD:   path
+COMMENT: Path to preceed file list items.
+TYPE:    255
+CODE:
+  /* Remove tailing slashes/backslashes */
+  char* tx = &_this->m_lpsPath[dlp_strlen(_this->m_lpsPath)-1];
+  while (*tx == '\\' || *tx == '/')
+  {
+    *tx = 0;
+    if (tx == _this->m_lpsPath) break;
+    tx--;
+  }
+END_CODE
+
+FIELD:   ext
+COMMENT: File extension to succeed file list items.
+TYPE:    32
+CODE:
+  /* Remove leading dots */
+  while (_this->m_lpsExt[0] == '.') memmove(_this->m_lpsExt,&_this->m_lpsExt[1],dlp_strlen(_this->m_lpsExt));
+END_CODE
+
+FIELD:   sep
+COMMENT: List of separators used for import/export of ASCII files. 
+TYPE:    10
+INIT:    "\t "
+/html MAN:
+  <p>This string contains the characters that are used as separators during
+  import of ASCII files. The first character in list is used as separator for
+  the export of ASCII files.</p>
+END_MAN
+
+FIELD:   comment
+COMMENT: Comment marker used for import and export of ASCII files.
+TYPE:    10
+INIT:    "#"
+/html MAN:
+  <p>During the import of ASCII files, lines whose first non-white character
+  are equal to the comment marker will be ignored. Blank lines or lines
+  consisting only of white spaces are ignored as well.</p>
+  <p>See also: <a href="#fld_line_flt"><code
+  class="link">line_flt</code></a></p>
+END_MAN
+
+FIELD:   line_flt
+COMMENT: Line filter used for import and export of ASCII files.
+TYPE:    32
+/html MAN:
+  <p>ASCII import ignores all lines which
+    <ul>
+      <li>are blank <em>or</em></li>
+      <li>whose first non-white characters are equal to the comment marker (if sepcified) <em>or</em></li>
+      <li>whose first non-white characters differ from the line filter string (if specified)</li>
+    </ul>
+  </p>
+  <p>See also: <a href="#fld_comment"><code class="link">comment</code></a></p>
+END_MAN
+
+FIELD:   raw_head
+COMMENT: Number of bytes to skip importing raw files.
+TYPE:    long
+INIT:    0
+
+## Protected fields
+
+FIELD:    len
+COMMENT:  Length of file list
+TYPE:     int
+FLAGS:    /noset
+
+FIELD:    nfile
+COMMENT:  Current zero-based file index in file list.
+TYPE:     int
+INIT:     -1
+FLAGS:    /noset
+
+FIELD:    sfile
+OBSOLETE: current_file
+COMMENT:  Current file name in file list without path and extension.
+TYPE:     255
+FLAGS:    /noset 
+
+FIELD:    sfile_fq
+OBSOLETE: current_full_name
+COMMENT:  Current file name in file list including path and extension.
+TYPE:     255
+FLAGS:    /noset 
+
+FIELD:   flist_data
+COMMENT: File list data field.
+TYPE:    data
+CODE:
+  _this->m_nLen = CData_GetNRecs(AS(CData,_this->m_idFlistData));
+END_CODE
+
+FIELD:    recfile
+COMMENT:  Current record in file list (including extra components)
+TYPE:     data
+FLAGS:    /noset
+
+## Hidden fields
+FIELD:   ftypes
+COMMENT: List of known file types for export and import of non-native files.
+TYPE:    list_t*
+FLAGS:   /hidden /noset /nonautomatic /nosave
+
+## Options
+OPTION:  /big
+COMMENT: Import raw data in big endian format.
+/html MAN:       
+  <p>This option has an effect for the raw import/export filter only.</p>
+
+  <p>Without any option raw data is imported using the format of the host
+  machine. If data is in big endian format and the host type is little
+  endian, the correct import can be achieved using this option.</p>
+
+  <p>Using this option on a big endian host will have no effect.</p>
+
+  <p>See also: <a href="#opt__little"><code class="link">/little</code></a>,
+  <a href="#opt__reverse"><code class="link">/reverse</code></a>,
+  <a href="#mth_-import"><code class="link">-import</code></a></p>
+END_MAN
+
+OPTION:  /little
+COMMENT: Import raw data in little endian format.
+/html MAN:       
+  <p>This option has an effect for the raw import/export filter only.</p>
+
+  <p>Without any option data is imported using the format of the host machine.
+  If data is in little endian format and the host type is big endian, the
+  correct import can be achieved using this option.</p>
+
+  <p>Using this option on a little endian host will have no effect.</p>
+
+  <p>See also: <a href="#opt__big"><code class="link">/big</code></a>,
+  <a href="#opt__reverse"><code class="link">/reverse</code></a>,
+  <a href="#mth_-import"><code class="link">-import</code></a></p>
+END_MAN
+
+OPTION:  /reverse
+COMMENT: Reverse byte order in raw import
+/html MAN:
+  <p>*** EXPERIMENTAL ***</p>
+
+  <p>This option has an effect for the raw import/export filter only.</p>
+
+  <p>The byte order will be reversed on import independently of the host
+  machine's byte order.</p>
+
+  <p>See also: <a href="#opt__little"><code class="link">/little</code></a>,
+  <a href="#opt__big"><code class="link">/big</code></a>,
+  <a href="#mth_-import"><code class="link">-import</code></a></p>
+END_MAN
+
+OPTION:  /dir
+COMMENT: Directory mode
+/html MAN:
+  <p>Consider directories instead of files</p>
+  <h4>{@link -exists}</h4>
+  <p><code>sFilename</code> is a directory (default: is a file)</p>
+END_MAN
+
+OPTION:  /strings
+COMMENT: Determine only string columns while ascii-import
+/html MAN:
+  <p>All columns are interpreted as strings when importing a file
+  trough ascii import filter</p>
+  <h4>{@link -import}</h4>
+END_MAN
+
+OPTION:  /execute
+COMMENT: Do execute command instead of opening file
+/html MAN:
+  <p>Execute the command given by the filename instead of opening
+  the file. The data is read/write through a pipe to the new process.</p>
+  <h4>{@link -import}</h4>
+  <h4>{@link -export}</h4>
+END_MAN
+
+OPTION:  /append
+COMMENT: Do append to (existing) file while exporting
+/html MAN:
+  <p>Do append to (existing) file while exporting. This option
+  is implemented only for ascii and raw export until now.</p>
+  <h4>{@link -export}</h4>
+END_MAN
+
+OPTION:  /transpose
+COMMENT: Interchange rows and columns for ascii-export.
+/html MAN:
+  <p>The rows of the ascii-output represent the components and the
+  columns represent the records of the data instance.</p>
+END_MAN
+
+OPTION:  /compress
+COMMENT: Compressed import/export
+/html MAN:
+  <p>According to the import/export filters this option can have different
+  meaning. Currently these filters use this option:</p>
+  <ul>
+    <li>
+       The "esps_lab" import produces RLE-compressed format of labels.
+       Therefore the sampling rate must be given in the field <code>rinc</code>
+       of the destination data instance.
+    </li>
+  </ul>
+END_MAN
+
+OPTION:  /zip
+COMMENT: Zip after export
+/html MAN:
+  <p>If this option is used for {@link -export} the created file is zipped after the export.</p>
+END_MAN
+
+OPTION:  /pst_triglabels
+COMMENT: Plot trigonometric labels for PSTricks export.
+/html MAN:
+  <p>With this option the abscissa of the PSTricks output diagram
+  will be scaled to 2&pi; and annotated with the symbol &pi;.<p>
+END_MAN
+
+OPTION:  /pst_legend
+COMMENT: Plot a legend for PSTricks export.
+/html MAN:
+  <p>With this option a legend of the PSTricks output diagram
+  will be plotted. The component names are used.<p>
+END_MAN
+
+OPTION:  /pst_comma
+COMMENT: Plot German style numbers.
+/html MAN:
+  <p>With this option the tick label numbers will be plotted with
+  comma instead of point.<p>
+END_MAN
+
+OPTION:  /pst_halfspectrum
+COMMENT: Plot left-side of spectrum for PSTricks export.
+/html MAN:
+  <p>With this option the spectrum plot of the PSTricks output diagram
+  will be half sided.<p>
+END_MAN
+
+OPTION:  /pst_contour
+COMMENT: Plots contour for PSTricks export.
+/html MAN:
+  <p>With this option the data will be exported as contour plot of PSTricks.<p>
+END_MAN
+
+OPTION:  /pst_x_y_plot
+COMMENT: XY-Plot for PSTricks export.
+/html MAN:
+  <p>With this option the data will be exported as XY-plot of PSTricks. The 0<sup>th</sup> component of the data object should contain the x-values and the 1<sup>st</sup> component the y-values.<p>
+END_MAN
+
+## Methods - File lists
+METHOD: -next
+COMMENT: Push next file in list to string stack.
+SYNTAX:  string()
+/html MAN:
+  <p>Pushes the next item in the file list (see field <a
+  href="#fld_flist"><code class="link">flist</code></a>) to the string stack.
+  <!--If the command succeeds <code>TRUE</code> is pushed to the logic stack. If
+  there are no more files in the list or in case of errors <code>FALSE</code>
+  will be pushed to the logic stack.</p> -->
+
+  <p><b>NOTE:</b> Attach a file list by setting the field <a
+  href="#fld_flist"><code class="link">flist</code></a> before calling
+  <code>-next</code>.</p>
+
+  <p>See also: <a href="#fld_flist"><code class="link">flist</code></a></p>
+END_MAN
+
+METHOD:  -getlen
+COMMENT: Return number of items in file list.
+SYNTAX:  int()
+/html MAN:
+  <p>Retrieves the number of items in the file list (see field <a
+  href="#fld_flist"><code class="link">flist</code></a>). The result will be
+  pushed to the number stack. In case of errors the return value is 0.</p>
+END_MAN
+CODE:
+  FILE*    f                      = NULL;
+  INT32  nCtr                   = 0;
+  char  lpsBuffer[L_INPUTLINE] = "";
+
+  if (!dlp_strlen(_this->m_lpsFlist))
+  {
+    IERROR(_this,FIL_NEEDFL,0,0,0);
+    return 0;
+  }
+  f = fopen(_this->m_lpsFlist,"r");
+  if (!f)
+  {
+    IERROR(_this,ERR_FILEOPEN,_this->m_lpsFlist,"reading",0);
+    return 0;
+  }
+  while (fgets(lpsBuffer,L_INPUTLINE,f))
+    if(dlp_strlen(dlp_strtrimleft(dlp_strtrimright(lpsBuffer))))
+      nCtr++;
+  fclose(f);
+  return nCtr;
+END_CODE
+
+METHOD:   -partition
+COMMENT:  Partitiones a file list
+SYNTAX:   (file iSrc, double nPartSize, int nPartNum)
+/html MAN:
+  Partitiones a file list into (roughly) equally sized, pairwise disjoint subsets.
+  This method gets <em>one</em> of these subsets and stores the result in this
+  instance. The order of the file list entries is preserved. Concatenating the
+  partitions will produce the original file list in the correct order. 
+  @param iSrc      Source file list to be partitioned
+  @param nPartSize If smaller than 1, the value specifies the relative size of
+                   the subset (e. g. 0.33 for 33% of the file list entries); if
+                   greater or equal 1, the value specifies the absolute size of
+                   the subset (e. g. 200 for 200 file list entries)
+  @param nPartNum  Subset number. The method returns the <code>nPartNum</code>'th
+                   subset of the size specified through <code>nPartSize</code>.
+END_MAN
+
+## Methods - Utilities
+METHOD:  -exists
+COMMENT: Checks if directory exists
+SYNTAX:  BOOL(string sFilename)
+/html MAN:
+  The method determines if a file or directory exists. The specified path may
+  be relative to the current working directory or absolute.
+  @param sFilename Path of file or directory
+  @return <code>TRUE</code> if the file or directory exists, <code>FALSE</code>
+          otherwise
+  @cgen:option /dir <code>sFilename</code> is a directory (default: is a file)
+END_MAN
+
+METHOD:  -get_root_class
+COMMENT: Reads root class from dn3 or xml file
+SYNTAX:  string (string sFilename)
+/html MAN:
+  <p>This method reads the root class from the given
+  file. The file can be in dn3 or xml format (created
+  with -save).</p>
+  <p><span class="warning">Warning:</span> This
+  function returns a pointer to a static local buffer.</p>
+  @param sFilename Path of file or directory
+  @return The name of the root class or <code>NULL</code>
+          if the root class could not be determined.
+END_MAN
+
+## Methods - Import/export filters
+METHOD:  -import
+COMMENT: Imports an instance from a non-native file format
+SYNTAX:  (cstring sFilename, cstring sFilter, INSTANCE() iInst)
+/html MAN:
+  <p>Imports data from non-native file formats into <code>iInst</code>.
+  The argument <code>sFilter</code> specifies the filter to use. The available
+  filters can be diplayed using the method <a href="#mth_-list"><code
+  class="link">-list</code></a>.</p>
+
+  <p>The following example imports the sound file "test.wav" and stores the
+  samples in the data instance <code>dSig</code>. 
+
+  <pre>"test.wav" "wav" dSig stdfile -import
+  </pre>
+
+  <p>The instance <code>stdfile</code> of class file is automatically created
+  when starting dLabPro.</p>
+  
+  <p>See also: methods <a href="#mth_-list"><code class="link">-list</code></a>,
+  <a href="#mth_-export"><code class="link">-export</code></a> and options
+  <a href="#opt__big"><code class="link">/big</code></a>,
+  <a href="#opt__little"><code class="link">/little</code></a>,
+  <a href="#opt__strings"><code class="link">/strings</code></a></p>
+  <a href="#opt__execute"><code class="link">/execute</code></a></p>
+
+  <p><u>Note for import filter "midi"</u><br>
+  This filter uses an external converter program called "midi2xml". 
+  The executable ("midi2xml[.exe]") is searched in the path containing the 
+  running dLabPro executable. Source and makefile can be found in
+  dlabpro/projects/midi.
+
+END_MAN
+CODE:
+  return CDlpFile_ImportExport(_this,sFilename,sFilter,iInst,IMPORT_FILE);
+END_CODE
+
+METHOD:  -export
+COMMENT: Exports an instance to a non-native file format
+SYNTAX:  (cstring sFilename, cstring sFilter, INSTANCE() iInst)
+/html MAN:
+  <p>Export data from instance <code>iInst</code> to non-native file formats.
+  The argument <code>sFilter</code> specifies the filter to use. The available
+  filters can be diplayed using the method <a href="#mth_-list"><code
+  class="link">-list</code></a>.</p>
+
+  <p>The following example exports sample values stored in data instance
+  <code>dSig</code> to the sound file "test.wav".</p>
+
+  <pre>"test.wav" "wav" dSig stdfile -export
+  </pre>
+
+  <p>The instance <code>stdfile</code> of class file is automatically created
+  when starting dLabPro.</p>
+  
+  <p>See also: methods <a href="#mth_-list"><code class="link">-list</code></a>,
+  <a href="#mth_-import"><code class="link">-import</code></a> and options
+  <a href="#opt__big"><code class="link">/big</code></a>,
+  <a href="#opt__little"><code class="link">/little</code></a></p>
+  <a href="#opt__execute"><code class="link">/execute</code></a></p>
+
+  <p><u>Note for export filter "svg"</u><br>
+  This filter uses an external converter program called "dot" by AT&T which
+  must be installed. The executable ("dot[.exe]") is searched in <i>a)</i>
+  the path containing the running dLabPro executable, <i>b)</i> in the
+  subfolder ATT/GraphViz/bin in the path containing the running dLabPro
+  executable and <i>c)</i> in the path(s) specified through the
+  <code>PATH</code> environment variable.<p>
+END_MAN
+CODE:
+  return CDlpFile_ImportExport(_this,sFilename,sFilter,iInst,EXPORT_FILE);
+END_CODE
+
+METHOD:  -list
+COMMENT: Lists available import and export filters.
+SYNTAX:  ()
+CODE:
+  CFILE_FTYPE* lpType = NULL;
+  lnode_t*      lpNode = NULL;
+
+  printf("\n"); dlp_fprint_x_line(stdout,'-',80);
+  printf("\n Name      \tClass     \tMode  \tDescription\n");
+  dlp_fprint_x_line(stdout,'-',80); printf("\n");
+
+  for(lpNode=list_first(_this->m_lpFtypes); lpNode; lpNode=list_next(_this->m_lpFtypes,lpNode))
+  {
+    lpType = (CFILE_FTYPE*)lnode_get(lpNode);
+    DLPASSERT(lpType);
+    printf(" %-10s\t%-10s\t%s\t%s\n",lpType->lpName,lpType->lpClassName,
+           lpType->nMode==IMPORT_FILE?"Import":"Export",lpType->lpDescr);
+  }
+
+  dlp_fprint_x_line(stdout,'-',80); printf("\n");
+END_CODE
+
+## dLabPro interface code
+HEADERCODE:
+
+  #ifdef __cplusplus
+    class CDlpFile;
+  #else
+    struct CDlpFile;
+  #endif
+  
+  typedef struct tagCFILE_FTYPE
+  {
+    char  lpName[L_NAMES];
+    char  lpClassName[L_NAMES];
+    char  lpDescr[2*L_NAMES];
+    INT16 nMode;
+  #ifdef __cplusplus
+    INT16 (*FilterFunc)(CDlpFile*, const char* lpFilename, CDlpObject* iDest, const char* lpFiletype);
+  #else
+    INT16 (*FilterFunc)(struct CDlpFile*, const char* lpFilename, CDlpObject* iDest, const char* lpFiletype);
+  #endif
+  }CFILE_FTYPE;
+  
+END_CODE
+
+INITCODE:
+
+  INIT;
+
+  /* create list of filters for import / export */
+  _this->m_lpFtypes = list_create(LISTCOUNT_T_MAX);
+
+  /* add filters to list */
+  ADD_FILETYPE("ascii"    ,"data"     ,IMPORT_FILE,"White space delimited ASCII"      ,CDlpFile_ImportAsciiToData          );
+  ADD_FILETYPE("ascii"    ,"data"     ,EXPORT_FILE,"White space delimited ASCII"      ,CDlpFile_ExportAsciiFromData        );
+  ADD_FILETYPE("csv"      ,"data"     ,IMPORT_FILE,"Comma separated values file"      ,CDlpFile_ImportAsciiToData          );
+  ADD_FILETYPE("csv_de"   ,"data"     ,IMPORT_FILE,"Semicolon sep. values file"       ,CDlpFile_ImportAsciiToData          );
+  ADD_FILETYPE("csv"      ,"data"     ,EXPORT_FILE,"Comma separated values file"      ,CDlpFile_ExportAsciiFromData        );
+  ADD_FILETYPE("csv_de"   ,"data"     ,EXPORT_FILE,"Semicolon sep. values file"       ,CDlpFile_ExportAsciiFromData        );
+  ADD_FILETYPE("wav"      ,"data"     ,IMPORT_FILE,"Microsoft WAV audio"              ,CDlpFile_LibsndfileImport           );
+  ADD_FILETYPE("wav"      ,"data"     ,EXPORT_FILE,"Microsoft WAV audio"              ,CDlpFile_LibsndfileExport           );
+  ADD_FILETYPE("aiff"     ,"data"     ,IMPORT_FILE,"Audio Interchange File Format"    ,CDlpFile_LibsndfileImport           );
+  ADD_FILETYPE("aiff"     ,"data"     ,EXPORT_FILE,"Audio Interchange File Format"    ,CDlpFile_LibsndfileExport           );
+  ADD_FILETYPE("au"       ,"data"     ,IMPORT_FILE,"SUN AU audio"                     ,CDlpFile_LibsndfileImport           );
+  ADD_FILETYPE("au"       ,"data"     ,EXPORT_FILE,"SUN AU audio"                     ,CDlpFile_LibsndfileExport           );
+  ADD_FILETYPE("phd"      ,"data"     ,IMPORT_FILE,"PhonDat"                          ,CDlpFile_ImportPhDToData            );
+  ADD_FILETYPE("vm2_nist" ,"data"     ,IMPORT_FILE,"Verbmobil2 signal (NIST)"         ,CDlpFile_ImportDataFromVm2Nist      );
+  ADD_FILETYPE("esps_lab" ,"data"     ,IMPORT_FILE,"ESPS label"                       ,CDlpFile_ImportEspsLabToData        );
+  ADD_FILETYPE("esps_lab" ,"data"     ,EXPORT_FILE,"ESPS label"                       ,CDlpFile_ExportEspsLabFromData      );
+  ADD_FILETYPE("pm"       ,"data"     ,IMPORT_FILE,"Period marker"                    ,CDlpFile_ImportPmToData             );
+  ADD_FILETYPE("pm"       ,"data"     ,EXPORT_FILE,"Period marker"                    ,CDlpFile_ExportPmFromData           );
+  ADD_FILETYPE("pm.txt"   ,"data"     ,IMPORT_FILE,"Period marker (wavesurfer)"       ,CDlpFile_ImportPmTxtToData          );
+  ADD_FILETYPE("pm.txt"   ,"data"     ,EXPORT_FILE,"Period marker (wavesurfer)"       ,CDlpFile_ExportPmTxtFromData        );
+  ADD_FILETYPE("raw"      ,"data"     ,IMPORT_FILE,"RAW (binary)"                     ,CDlpFile_ImportRawToData            );
+  ADD_FILETYPE("raw"      ,"data"     ,EXPORT_FILE,"RAW (binary)"                     ,CDlpFile_ExportRawFromData          );
+  ADD_FILETYPE("IntRas"   ,"data"     ,IMPORT_FILE,"Fraunhofer (IZFP) IntRas"         ,CDlpFile_ImportIzfpRsToData         );
+  ADD_FILETYPE("FIRS04A"  ,"data"     ,IMPORT_FILE,"Fraunhofer (IZFP) FIRS04A"        ,CDlpFile_ImportIzfpRsToData         );
+  ADD_FILETYPE("into"     ,"data"     ,IMPORT_FILE,"Into"                             ,CDlpFile_ImportIntoToData           );
+  ADD_FILETYPE("into"     ,"data"     ,EXPORT_FILE,"Into"                             ,CDlpFile_ExportIntoFromData         );
+  ADD_FILETYPE("mid"      ,"data"     ,IMPORT_FILE,"Midi Notes"                       ,CDlpFile_Midi_ImportMidi            );
+  ADD_FILETYPE("mid"      ,"data"     ,EXPORT_FILE,"Midi Notes"                       ,CDlpFile_Midi_ExportMidi            );
+  ADD_FILETYPE("dot"      ,"fst"      ,EXPORT_FILE,"AT&T DOT for GraphViz (ASCII)"    ,CDlpFile_Gph_ExportDot              );
+  ADD_FILETYPE("svg"      ,"fst"      ,EXPORT_FILE,"Scalable vector graphic"          ,CDlpFile_Gph_ExportDotTx            );
+  ADD_FILETYPE("png"      ,"fst"      ,EXPORT_FILE,"Portable network graphic"         ,CDlpFile_Gph_ExportDotTx            );
+  ADD_FILETYPE("ps"       ,"fst"      ,EXPORT_FILE,"Postscript (EPSF)       "         ,CDlpFile_Gph_ExportDotTx            );
+  ADD_FILETYPE("itp"      ,"fst"      ,EXPORT_FILE,"dLabPro script"                   ,CDlpFile_Gph_ExportItp              );
+  ADD_FILETYPE("fsm-a"    ,"fst"      ,EXPORT_FILE,"AT&T FSM Toolkit (ASCII)"         ,CDlpFile_Gph_ExportFsm              );
+  ADD_FILETYPE("fsm-a"    ,"fst"      ,IMPORT_FILE,"AT&T FSM Toolkit (ASCII)"         ,CDlpFile_Gph_ImportFsm              );
+  ADD_FILETYPE("fsm-t"    ,"fst"      ,EXPORT_FILE,"AT&T FSM Toolkit (ASCII)"         ,CDlpFile_Gph_ExportFsm              );
+  ADD_FILETYPE("fsm-t"    ,"fst"      ,IMPORT_FILE,"AT&T FSM Toolkit (ASCII)"         ,CDlpFile_Gph_ImportFsm              );
+  ADD_FILETYPE("htk"      ,"hmm"      ,EXPORT_FILE,"HTK hmmdefs"                      ,CDlpFile_Hmm_ExportHtk              );
+  ADD_FILETYPE("pstricks" ,"data"     ,EXPORT_FILE,"PSTricks"                         ,CDlpFile_ExportPstricksFromData     );
+  ADD_FILETYPE("inv_descr","data"     ,IMPORT_FILE,"Inventory description file (.inv)",CDlpFile_ImportInvDescrToData       );
+  ADD_FILETYPE("inv_descr","data"     ,EXPORT_FILE,"Inventory description file (.inv)",CDlpFile_ExportInvDescrFromData     );
+
+END_CODE
+
+RESETCODE:
+
+  CData* idFlistData;
+  char   lpsB1[255];
+  char   lpsB2[255];
+  char   lpsB3[ 32];
+  char   lpsB4[255];
+  
+	if (_this->m_idFlistData==NULL) IFIELD_RESET(CData,"flist_data");
+  IFIELD_RESET(CData,"recfile");
+  dlp_strcpy(lpsB1,_this->m_lpsFlist);
+  dlp_strcpy(lpsB2,_this->m_lpsPath);
+  dlp_strcpy(lpsB3,_this->m_lpsExt);
+  dlp_strcpy(lpsB4,_this->m_lpsSep);
+  idFlistData = AS(CData,_this->m_idFlistData);
+  _this->m_idFlistData = NULL;
+
+  RESET;
+
+  _this->m_idFlistData = BASEINST(idFlistData); 
+  dlp_strcpy(_this->m_lpsFlist,lpsB1);
+  dlp_strcpy(_this->m_lpsPath ,lpsB2);
+  dlp_strcpy(_this->m_lpsExt  ,lpsB3);
+  dlp_strcpy(_this->m_lpsSep  ,lpsB4);
+  _this->m_nLen = CData_GetNRecs(AS(CData,_this->m_idFlistData));
+
+END_CODE
+
+DONECODE:
+
+  /* free list of filetypes */
+  if(_this->m_lpFtypes)
+  {
+  list_process(_this->m_lpFtypes,NULL,CDlpFile_FreeFTypeList);
+  list_destroy_nodes(_this->m_lpFtypes);
+  list_destroy(_this->m_lpFtypes);
+  _this->m_lpFtypes = NULL;
+  }
+
+  DONE;
+
+END_CODE
+
+#**************************************************************************
+# Release notes
+
+NOTE:    ASCII Import
+COMMENT: Comments for ASCII Import 
+MAN:
+  If no components are defined in the target instance ASCII import guesses 
+  the type of data by looking at the first line that is not a comment. This 
+  may give unexpected results if the this line is not representativ for the 
+  remaining data (i.e. 0 in the first line will result in a numeric component 
+  of type long, following real numbers in this column will be converted to 
+  integers). 
+  It is recommended to define the component structure (e.g. number and type of 
+  columns in the import file) before import. Allocating records in the target 
+  instance will tell the import routine to read as many lines from the ASCII 
+  file as records allocated. 
+END_MAN
+
+NOTE:    RAW Import
+COMMENT: Comments for RAW Import 
+/html MAN:
+  It is recommended to define the component type before import. 
+
+  <h4>Example</h4>
+  <p>
+    Following example shows how to import signed values of 8 bit and unsigned of 
+    16 bit per value (bpv) from a file.
+
+    <pre class="code">
+ <span class="c-cmt">## dLabPro 2.5</span>
+
+ <a href="data.html"><code class="link">data</code></a> idSigned8bpv;                                                 <span class="c-cmt"># Data buffer for signed values each 8 bit</span>
+ <a href="data.html"><code class="link">data</code></a> idUnsigned16bpv;                                              <span class="c-cmt"># Data buffer for unsigned values each 16 bit</span>
+
+ "s8"   <a href="itp.html#mth_type"><code class="link">-type</code></a> char   idSigned8bpv    <a href="data.html#mth_-addcomp"><code class="link">-addcomp</code></a>;                      <span class="c-cmt"># Add component (signed char; 8 bit per value)</span>
+ "us16" <a href="itp.html#mth_type"><code class="link">-type</code></a> ushort idUnsigned16bpv <a href="data.html#mth_-addcomp"><code class="link">-addcomp</code></a>;                      <span class="c-cmt"># Add component (unsigned short; 16 bit per value)</span>
+
+ "signal_signed8bpv.raw"    "raw" idSigned8bpv stdfile <a href="file.html#mth_-import"><code class="link">-import</code></a>;     <span class="c-cmt"># Use standard file object to import data</span>
+ "signal_unsigned16bpv.raw" "raw" idSigned8bpv stdfile <a href="file.html#mth_-import"><code class="link">-import</code></a>;     <span class="c-cmt"># Use standard file object to import data</span>
+
+ idSigned8bpv <a href="itp.html#mth_type"><code class="link">-type</code></a> short idSigned8bpv <a href="data.html#mth_-tconvert"><code class="link">-tconvert</code></a>;                   <span class="c-cmt"># Convert into an other representation like short</span>
+
+    </pre>
+  </p>
+  <p>
+  The field <a href="file.html#fld_raw_head">raw_head</a> of object <a href="file.html">file</a> enables you to begin importing of data after
+  a number of byte (e.g. after a file header).
+ 
+  <pre class="code">
+
+ <span class="c-cmt">## dLabPro 2.5</span>
+
+ <a href="data.html"><code class="link">data</code></a> idSigned32bpv;                                                <span class="c-cmt"># Data buffer for int-values (signed; 32 bit per value) </span>
+ <a href="file.html"><code class="link">file</code></a> iF;                                                           <span class="c-cmt"># File object for data import </span>
+
+ "s32" <a href="itp.html#mth_type"><code class="link">-type</code></a> int idSigned32bpv <a href="data.html#mth_-addcomp"><code class="link">-addcomp</code></a>;                            <span class="c-cmt"># Add a component of needed type (signed int; 32 bit per value)</span>
+
+ 40 iF -set <a href="file.html#fld_raw_head"><code class="link">raw_head</code></a>;                                               <span class="c-cmt"># Define number of bytes to skip while importing</span>
+
+ "signal_signed32bpv.raw" "raw" idSigned32bpv file <a href="file.html#mth_-import"><code class="link">-import</code></a>;         <span class="c-cmt"># Use file object to import data and skip first 40 bytes</span>
+
+  </pre>
+  </p>
+
+END_MAN
+
+NOTE:    ESPS Export
+COMMENT: Comments for ESPS Export 
+MAN:
+     Exported file is an ASCII file in ESPS/waves+ format. Each file has a header 
+     closed by the symbol "#".  The actual labels follow the "#" and they are 
+     stored line separated in format:
+
+         endtime colorcode name
+
+     endtime:   represents ending time of the label in seconds; floating point format
+     colorcode: characterises the color of the boundary; we use the value "121"
+     name:      name of the segment
+END_MAN
+
+NOTE:    Midi Import/ Export
+COMMENT: Comments for Midi Import 
+/html MAN:
+  Import and export notes of and to midifile with following data structure.
+  User Descriptions of data instance:
+   <ul>
+     <li>0: Number of MidiClocks per beat in midifile (standard 1920 with midiconvert).</li>
+   </ul>    
+  Every row represents one note with the following columns:
+  <ul>
+    <li>CHAN: Midichannel of note [1-16]</li>
+    <li>VOL:  Channelvolume </li>
+    <li>INST: Instrument </li> 
+    <li>NOTE: Notenumber </li>
+    <li>TIME: (Midiclock)</li>
+    <li>LGTH: Length (MidiClock)</li>
+    <li>VEL:  Velocity </li>
+  </ul>
+  Meta events are coded in CHAN=0 with INST giving the type and LGTH holding the
+  value:
+  <ul>
+    <li> INST 1: Tempo in bpm*1000 </li>   
+    <li> INST 2: Time signature (Example: 304 = 3/4 with 304/100=3 and 304%100=4)</li>
+  <ul>
+   
+END_MAN
+
+NOTE:    PSTricks Export
+COMMENT: Comments for PSTRicks Export
+/html MAN:
+  <p>The output produced by this export filter is intended to copy-paste
+  to a LaTeX file.<p>
+  
+  <h4>Example</h4>
+  <p>This example produces a spectrum plot, where for each frame one spectrum is plotted
+     in the same diagram.<p>
+
+    <pre class="code">
+ <span class="c-cmt">## dLabPro 2.5</span>
+
+<a href="data.html"><code class="link">data</code></a> idS;                 <span class="c-cmt"># Data buffer some random double values</span>
+<a href="data.html"><code class="link">data</code></a> idL;                 <span class="c-cmt"># Some dummy labels</span>
+<a href="data.html"><code class="link">data</code></a> idF;                 <span class="c-cmt"># Data buffer of the spectra</span>
+
+<a href="itp.html#mth_type"><code class="link">-type</code> double 1 320 idS <a href="data.html#mth_-array"><code class="link">-array</code></a>;                                              <span class="c-cmt"># Allocate data buffer</span>
+0 0 idS <a href="data.html#mth_/noise"><code class="link">/noise</code></a> -fill;                                                       <span class="c-cmt"># Fill some noise</span>
+{ { "a" 0 160 } { "b" 160 160 } } 0 1 2 idL <a href="data.html#mth_-expand"><code class="link">-expand</code></a>;                        <span class="c-cmt"># Create some dummy labels</span>
+idL idS <a href="data.html#mth_-join"><code class="link">-join</code></a>;                                                              <span class="c-cmt"># Join them</span>
+
+idS 160 160 512 frame fft abs .log idF =;                                   <span class="c-cmt"># Calculate log-abs-spectra from frames</span>
+
+"example.tex" "pstricks" idF stdfile <a href="file.html#opt__pst_legend"><code class="link">/pst_legend</code></a> <a href="file.html#opt__pst_triglabels"><code class="link">/pst_triglabels</code></a> <a href="file.html#mth_-export"><code class="link">-export</code></a>;   <span class="c-cmt"># Export PSTricks snippet to file</span>
+  </pre>
+
+  <p>Embedd the "example.tex" in your main LaTeX file<p>
+
+<pre class="code">
+\documentclass{article}
+\usepackage{pstricks}
+\usepackage{pstricks-add}
+
+\begin{document}
+\thispagestyle{empty}
+
+\begin{figure}[!htbp]
+\include{example}
+\end{figure}
+
+\end{document}
+</pre>
+
+  <p>Running <code>latex, dvips, ps2eps, epstopdf</code> should give something like this:</p>
+  <p><img src="../resources/file/pstricks_notes.png"></p>
+END_MAN
+
+NOTE:    AT&T/Openfst Im-/Export
+COMMENT: Comments for AT&T/Openfst Im-/Export 
+/html MAN:
+  <p>This filter is able to import or export AT&T or Openfst ascii Finite State Machines.</p>
+  <p>If the dlabpro FSM contains input or output symbol tables they are stored in separate files on export.
+  The files are named by replacing the extension with <code>_is.txt</code> or <code>_os.txt</code> respectively
+  (for example if you export to XXX.txt the input symbol table is called XXX_is.txt).</p>
+  <p>The input filter reads the input and output symbol tables if they are present.
+  While import first of all each symbol is looked up in the corresponding symbol table.
+  If it is not present but can be converted to a number it is treated as symbol id,
+  otherwise the symbol is added to the symbol table with a new id.</p>
+END_MAN
+
+## Generate and quit
+-cgen
+quit
+
+## EOF

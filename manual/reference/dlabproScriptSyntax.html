@@ -1,0 +1,237 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- dLabPro manual
+<    - Manual file
+<   
+<    AUTHOR : Matthias Wolff
+<    PACKAGE: dLabPro/manual
+<    
+<    Copyright 2013 dLabPro contributors and others (see COPYRIGHT file) 
+<    - Chair of System Theory and Speech Technology, TU Dresden
+<    - Chair of Communications Engineering, BTU Cottbus
+<    
+<    This file is part of dLabPro.
+<    
+<    dLabPro is free software: you can redistribute it and/or modify it under the
+<    terms of the GNU Lesser General Public License as published by the Free
+<    Software Foundation, either version 3 of the License, or (at your option)
+<    any later version.
+<    
+<    dLabPro is distributed in the hope that it will be useful, but WITHOUT ANY
+<    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<    FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+<    details.
+<    
+<    You should have received a copy of the GNU Lesser General Public License
+<    along with dLabPro. If not, see <http://www.gnu.org/licenses/>.
+-->
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title>dLabPro Script Syntax</title>
+  <link rel=stylesheet type="text/css" href="../default.css">
+</head>
+<script type="text/javascript">
+if (top==self)
+{
+  var sLocation = "../index.html?reference/dlabproScriptSyntax.html";
+  if (location.hash.length>0)
+    sLocation += ";"+location.hash.substr(1);
+  top.location = sLocation;
+}
+</script>
+<script type="text/javascript" src="../default.js"></script>
+<body>
+  <a name="top"></a>
+  <div id="clp_top">
+    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+      <tr>
+        <td nowrap width="25%" class="navbar">
+          dLabPro Script Syntax
+        </td>
+        <td nowrap width="75%" class="navbar" style="text-align:right;">
+          <a class="navbar" href="javascript:__PrintSection('clp_top','dLabPro Script Syntax','..');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle;" alt="Print"></a> 
+          <a class="navbar" href="../home.html">Home</a>
+        </td>
+      </tr>
+    </table>
+    <div class="mframe">
+      <table width="100%" cellSpacing="0" cellPadding="6" border="0">
+        <tr>
+          <td width="50%">
+            <h3 style="margin-top:2pt; margin-bottom:2pt">Contents</h3>
+            <ul class="linklist">
+              <li class="linklist">- <a href="#rpn">RPN syntax</a></li>
+              <li class="linklist">- <a href="#formula">Formula syntax</a></li>
+            </ul>
+          </td>
+          <td width="50%">
+            <h3 style="margin-top:2pt; margin-bottom:2pt">Related Topics</h3>
+            <ul class="linklist">
+              <li class="linklist"><a href="../automatic/function.html"><img
+              src="../resources/class_obj.gif" width="16" height="16" border="0"
+              style="vertical-align:middle" alt="class manual">&nbsp;Class function</a></li>
+            </ul>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <div id="clp_rpn"><a name="rpn"></a>
+    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+      <tr>
+        <td nowrap width="25%" class="navbar">RPN Syntax</td>
+        <td nowrap width="75%" class="navbar" style="text-align: right;"><a class="navbar"
+          href="javascript:__PrintSection('clp_rpn','RPN Syntax','..');"><img
+            src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align: middle;" alt="Print"></a>
+          <a class="navbar" href="../home.html">Home</a>
+          <a class="navbar" href="#top">Top</a>          
+        </td>
+      </tr>
+    </table>
+    <div class="mframe2">
+
+    <p>The syntax of the dLabPro script language is based on <em>Reverse
+    Polish Notation</em> (see <a href="../tutorials/t001.html">Tutorial
+    I</a>, section <a href="../tutorials/t001.html#synt">"The syntax"</a>). In
+    short that means operands/arguments always prefix the operators/functions.
+    </p>
+    <p>There are a couple of important syntactic structures:</p>
+
+    <h4>Instantiation</h4>
+    <pre class="code">
+
+  [&lt;initializer&gt;] &lt;class&gt; &lt;instance&gt;;
+
+  <a href="../automatic/data.html>"><code class="link">data</code></a> x;
+  2 <a href="../automatic/data.html>"><code class="link">var</code></a> n;
+  </pre>
+    <p>Creates an instance <code>&lt;instance&gt;</code> of <code>&lt;class&gt;</code>.
+    If <code>&lt;class&gt;</code> is <a href="../automatic/var.html>"><code
+    class="link">var</code></a>, an optional constant <code>&lt;initializer&gt;</code>
+    is allowed.</p>
+    
+    <h4>Method invocation</h4>
+    <pre class="code">
+
+  [&lt;arguments&gt;] &lt;instance&gt; [&lt;options&gt;] &lt;method&gt; [&lt;postfix_arguments&gt;]
+  
+  n 0 x <a href="../automatic/data.html#mth_-fill"><code class="link">-fill</code></a>;
+  </pre>
+    <p>with</p>
+    <table class="indent">
+      <tr>
+        <td class="hidden"><code>&lt;arguments&gt;</code></td>
+        <td class="hidden">optional white space separated list of arguments,</td>
+      </tr>
+      <tr>
+        <td class="hidden"><code>&lt;instance&gt;</code></td>
+        <td class="hidden">identifier of an instance of a class (see <a
+          href="../home.html">Class Reference Manual</a>),</td>
+      </tr>
+      <tr>
+        <td class="hidden"><code>&lt;options&gt;</code></td>
+        <td class="hidden">optional white space separated list of options,</td>
+      </tr>
+      <tr>
+        <td class="hidden"><code>&lt;method&gt;</code></td>
+        <td class="hidden">identifier of a method which is a member of
+        <code>instance</code>,</td>
+      </tr>
+      <tr>
+        <td class="hidden"><code>&lt;postfix_arguments&gt;</code></td>
+        <td class="hidden">few methods use postfix arguments which have an individual syntax
+        depending on the method.</td>
+      </tr>
+    </table>
+    <p>The methods which are members of the individual classes and the arguments
+    and options required or allowed for an individual method are described in
+    the <a href="../home.html">Class Reference Manual</a>.</p>
+
+    <h4>Operand / operator expressions</h4>
+    <pre class="code">
+
+  ([&lt;arguments&gt;] &lt;operator&gt;)
+  
+  2 PI * n * sin
+  </pre>
+    <p>See <a href="operators.html">Quick Reference - Table of Operators</a> for a
+    list of operators.</p>
+
+    <h4>Field access</h4>
+    <pre class="code">
+
+  &lt;instance&gt;.&lt;field&gt;[.&lt;field&gt;[...]]
+  
+  x.<a href="../automatic/data.html#fld_dim"><code class="link">dim</code></a>
+  </pre>
+    <p>Reads a field. Fields may also be accessed through the methods <a
+    href="../automatic/function.html#mth_-set"><code class="link">-set</code></a>, 
+    <a href="../automatic/function.html#mth_-get"><code class="link">-get</code></a> and
+    <a href="../automatic/function.html#mth_-see"><code class="link">-see</code></a>.</p>
+
+    <h4>Example</h4>
+    <pre class="code">
+
+  x x.<a href="../automatic/data.html#fld_nrec"><code class="link">nrec</code></a> n - n y <a
+  href="../automatic/data.html#opt__rec"><code class="link">/rec</code></a> <a
+  href="../automatic/data.html#mth_-delete"><code class="link">-delete</code></a>;
+  </pre>
+    <p>Deletes the last n records (table rows) of <a href="../automatic/data.html>"><code
+    class="link">data</code></a> instance <code>x</code>. <code>x</code>, <code>x.</code><a
+    href="../automatic/data.html#fld_nrec"><code class="link">nrec</code></a> 
+    <code>n -</code> and <code>n</code> are arguments to the method <a
+    href="../automatic/data.html#mth_-delete"><code class="link">-delete</code></a> of instance
+    <code>y</code>. <a href="../automatic/data.html#opt__rec"><code class="link">/rec</code></a>
+    is an option to that method. A dLabPro instruction ends with a semicolon.</p>
+
+    </div>
+  </div>
+
+  <div id="clp_formula"><a name="formula"></a>
+    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+      <tr>
+        <td nowrap width="25%" class="navbar">Formula Syntax</td>
+        <td nowrap width="75%" class="navbar" style="text-align: right;"><a class="navbar"
+          href="javascript:__PrintSection('clp_formula','Formula Syntax','..');"><img
+            src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align: middle;" alt="Print"></a>
+          <a class="navbar" href="../home.html">Home</a>
+          <a class="navbar" href="#top">Top</a>          
+        </td>
+      </tr>
+    </table>
+    <div class="mframe2">
+
+      <p>As the RPN syntax is uncomfortable for coding arithmetic expressions, dLabPro supports
+      an alternative so called <em>formula</em> syntax which allows the usual function, infix and
+      postfix notation. Formulas may be used anywhere in a dLabPro script. They are enclosed in
+      colons. The example above may be written a bit more legible:</p>
+    <pre class="code">
+
+  x :x.<a href="../automatic/data.html#fld_nrec"><code class="link">nrec</code></a>-n: n y <a
+  href="../automatic/data.html#opt__rec"><code class="link">/rec</code></a> <a
+  href="../automatic/data.html#mth_-delete"><code class="link">-delete</code></a>;
+  </pre>
+  
+     <p>Formulas may also include assignments:</p>
+    <pre class="code">
+
+  :n=x.<a href="../automatic/data.html#fld_nrec"><code class="link">nrec</code></a>;
+  </pre>
+    <p>In this case a formula should (but does not have to) be terminated with a semicolon.</p>
+    
+    <h4>Limitations</h4>
+    <p>Formulas <em>cannot</em> be used:</p>
+    <ul>
+      <li>to call methods or functions,</li>
+      <li>to assign values to fields.</li>
+    </ul>
+
+    </div>
+  </div>
+
+  <div class="footer">End of page</div>
+
+</body>
+</html>

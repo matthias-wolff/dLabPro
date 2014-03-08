@@ -1,0 +1,135 @@
+## dLabPro class CCPproc (CPproc)
+## - Definition file
+##
+## AUTHOR : Matthias Eichner
+## PACKAGE: dLabPro/classes
+## 
+## Copyright 2013 dLabPro contributors and others (see COPYRIGHT file) 
+## - Chair of System Theory and Speech Technology, TU Dresden
+## - Chair of Communications Engineering, BTU Cottbus
+## 
+## This file is part of dLabPro.
+## 
+## dLabPro is free software: you can redistribute it and/or modify it under the
+## terms of the GNU Lesser General Public License as published by the Free
+## Software Foundation, either version 3 of the License, or (at your option)
+## any later version.
+## 
+## dLabPro is distributed in the hope that it will be useful, but WITHOUT ANY
+## WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+## FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+## details.
+## 
+## You should have received a copy of the GNU Lesser General Public License
+## along with dLabPro. If not, see <http://www.gnu.org/licenses/>.
+
+PLATFORM:  GNUC++
+COMPILER:  gcc
+AR:        ar
+
+PROJECT:   CPproc
+COMMENT:   Cepstrum class based on FBAproc
+AUTHOR:    Matthias Eichner
+VERSION:   1.0 DLP
+
+CLASS:     CPproc
+SUPERCLASS: ../melproc/melproc.def
+/cxx_nconv
+
+MAN:
+END_MAN
+
+## Files and locations
+INCLUDE: "dlp_data.h"
+INCLUDE: "dlp_math.h"
+FILE:     cp_work.cpp
+FILE:     cp_synt.cpp
+FILE:     cp_stat.cpp
+
+## Errors
+
+ERROR:   CP_WARPTYPE
+COMMENT: Warp type %s is not applicable to the desired analysis type.
+
+## Fields
+
+FIELD:   warptype
+COMMENT: Type of cepstral warping.
+TYPE:    255
+INIT:    "none"
+MAN:     Sets the type of cepstral warping, either warping in spectral domain or in cepstral domain.
+         Possible values are:
+            - "none"
+            - "spectrum"
+            - "cepstrum"
+            - "time"
+END_MAN
+
+## Methods
+
+METHOD:  -analyze
+COMMENT: Run cepstral analysis.
+SYNTAX:  (data idSignal, data idPitch, data idReal, data idImag)
+MAN:
+         Runs the analysis. Instance dSignal contains the signal
+         to analyse in the first component. The first alpha numeric
+         component (if exist) is used as label component. In case 
+         of pitch synchronuous analysis dPitch contains the pitch 
+         information. dPitch must have two numeric components. The
+         and as many records as signal periods in dSignal. The first
+         component contains the lenght of the period in samples, the 
+         second contains the voiced/unvoiced information 
+         (1-voiced/0-unvoiced).
+         If dPitch is omitted pitch asynchronuous analysis is performed.
+END_MAN
+
+METHOD:  -status
+COMMENT: Display status information.
+SYNTAX:  ()
+
+METHOD:  -quantize
+COMMENT: Feature dependent quantization for (lossy) converting to fixpoint type of specified bit width.
+SYNTAX:  "<data idFea> <int first> <int count> <int bitwidth> <CPproc this>"
+CODE:
+  INT16 __nErr = O_K;
+  INT32 nQuant;
+  INT32 nFirst;
+  INT32 nCount;
+  CData* idFea;
+  CData* idRes;
+  MIC_CHECK;
+  nQuant = (INT32)MIC_GET_N(1,0);
+  nCount = (INT32)MIC_GET_N(2,1);
+  nFirst = (INT32)MIC_GET_N(3,2);
+  idFea =  (CData*)MIC_GET_I_EX(idFea,data,4,3);
+  ICREATEEX(CData,idRes,"#TMP#-quantize",NULL);
+  __nErr = QuantizeImpl(idFea, nFirst, nCount, nQuant, idRes);
+  MIC_PUT_I(BASEINST(idRes));
+  return __nErr;
+END_CODE
+
+METHOD:  -dequantize
+COMMENT: This is the inverse of -quantize.
+SYNTAX:  "<data idFea> <int first> <int count> <int bitwidth> <CPproc this>"
+CODE:
+  INT16 __nErr = O_K;
+  INT32 nQuant;
+  INT32 nFirst;
+  INT32 nCount;
+  CData* idFea;
+  CData* idRes;
+  MIC_CHECK;
+  nQuant = (INT32)MIC_GET_N(1,0);
+  nCount = (INT32)MIC_GET_N(2,1);
+  nFirst = (INT32)MIC_GET_N(3,2);
+  idFea =  (CData*)MIC_GET_I_EX(idFea,data,4,3);
+  ICREATEEX(CData,idRes,"#TMP#-dequantize",NULL);
+  __nErr = DequantizeImpl(idFea, nFirst, nCount, nQuant, idRes);
+  MIC_PUT_I(BASEINST(idRes));
+  return __nErr;
+END_CODE
+
+-cgen
+quit
+
+## EOF

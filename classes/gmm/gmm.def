@@ -1,0 +1,1080 @@
+## dLabPro class CGmm (gmm)
+## - Definition file
+##
+## AUTHOR : Matthias Wolff
+## PACKAGE: dLabPro/classes
+## 
+## Copyright 2013 dLabPro contributors and others (see COPYRIGHT file) 
+## - Chair of System Theory and Speech Technology, TU Dresden
+## - Chair of Communications Engineering, BTU Cottbus
+## 
+## This file is part of dLabPro.
+## 
+## dLabPro is free software: you can redistribute it and/or modify it under the
+## terms of the GNU Lesser General Public License as published by the Free
+## Software Foundation, either version 3 of the License, or (at your option)
+## any later version.
+## 
+## dLabPro is distributed in the hope that it will be useful, but WITHOUT ANY
+## WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+## FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+## details.
+## 
+## You should have received a copy of the GNU Lesser General Public License
+## along with dLabPro. If not, see <http://www.gnu.org/licenses/>.
+
+PLATFORM: GNUC++
+COMPILER: gcc
+AR:       ar
+CFLAGS:   -Wno-trigraphs
+
+PROJECT: gmm
+AUTHOR:  Matthias Wolff, Rainer Schaffer
+COMMENT: Multivariate multiclass Gaussian mixture models
+VERSION: 1.0.0
+/html MAN:
+  <p>Instances of the <code>gmm</code> class represent a set of Gaussian mixture models and provide methods for
+  density/distance computations, model tying/splitting and clustering.</p>
+
+  <h4>Introduction</h4>
+  <div style="background-color:white; padding-left:3pt; padding-right:3pt;">
+  <p>Figure 1 shows an overview of the data stored in one instance of the <code>gmm</code> class. The names printed in
+  type writer letters refer to the <a href="#fld">fields</a> of the <code>gmm</code> class which store the respective
+  data.</p>
+  <p class="figure"><nobr>
+    <object data="../resources/gmm/0006.svg" type="image/svg+xml" width="709" height="312"
+      alt="UASR system concept" viewastext="viewastext">
+      <img src="../resources/gmm/0006.gif" alt="UASR system concept" width="708" height="311">
+    </object><a href="../resources/gmm/0006.svg" target="_blank"><img src="../resources/btn_008a.gif" width="17"
+    height="17" border="0" alt="Enlarge image"></a></nobr></p>
+  <p class="figure">Figure 1: GMM Overview</p>
+  <p>The basic data elements of the <code>gmm</code> class are <i>N</i>-dimensional Gaussian probability density
+  functions (on the following referred to as "single" Gaussians). The method {@link -density} computes the pobability
+  density of <i>N</i> dimensional vectors given the single Gaussians:</p>
+  <p class="indent"><object data="../resources/gmm/0007.svg" type="image/svg+xml" width="368" height="38"
+    viewastext="viewastext" align="middle"><img src="../resources/gmm/0007.gif" width="367" height="37" border="0"
+    align="absmiddle"></object>, (1)</p>
+  <p>where <i><b>K</b><sub>k</sub></i> stands for the covariance matrix of Gaussian <i>k</i> and
+  <i>&mu;<sub>k</sub></i> for its mean vector. The exponent of equation (1), excluding the -<sup>1</sup>/<sub>2</sub>, 
+  is known as <span style="font-variant:small-caps;">Mahalanobis</span> distance and computed by the method
+  {@link -distance}. The <code>gmm</code> class supportes two principle ways of defining Gaussians probability
+  density functions:</p>
+  <ul>
+    <li>one <i>N</i>-dimensional mean vector and one <i>N</i>-dimensional variance vector or</li>
+    <li>one <i>N</i>-dimensional mean vector and one <i>N</i>x<i>N</i>-dimensional covariance matrix.</li>
+  </ul>
+  <p>Both methods {@link -density} and {@link -distance} are capable of computing probability densities
+  or distances of Gaussian mixture models. A Gaussian mixture model is defined as:</p>
+  <p class="indent"><object data="../resources/gmm/0008.svg" type="image/svg+xml" width="322" height="42"
+    viewastext="viewastext" align="middle"><img src="../resources/gmm/0008.gif" width="321" height="41" border="0"
+    align="absmiddle"></object>. (2)</p>
+  <p>where <i>g<sub>m</sub></i> stands for the mixture weighting vector of the mixture model <i>m</i>.
+  {@link -density} and {@link -distance} use a vector mapping object (see field {@link mmap}) in order to compute
+  Gaussian mixtures. The vector mapping object is not only capable of calculating a weighted sum according to equation
+  (2) but also of computing a great variety of other aggregation functions (e.q. minimum/maximum).</p>
+  </div>
+
+  <h4>Setting up a Gaussian Mixture Model</h4>
+  <p>Bevor using a <code>gmm</code> instance for computations you need to setup its Gaussian mixture models by
+  providing mean and (co)variance data along with a mixture map (see methods {@link -setup} and {@link -setup_ex}). For
+  memory and computation efficency the <code>gmm</code> class supports sharing of covariance matrices by several
+  Gaussians. A covariance tying map may be passed to the model through the {@link -setup_ex} method.</p>
+
+  <h4>Mathematic Symbol Table</h4>
+  <p class="indent"><table>
+    <tr>
+      <th>Symbol</th>
+      <th>Description</th>
+      <th>Defined by / Remarks</th>
+    </tr>
+    <tr>
+      <td><i>C</i></td>
+      <td>Number of (inverse) covariance matrices</td>
+      <td>Number of records in inverse covariance matrix sequence (field {@link icov})</td>
+    </tr>
+    <tr>
+      <td><i>K</i></td>
+      <td>Number of single Gaussians</td>
+      <td>Number of records in Gaussian mean vectors (field {@link mean})<br>
+          - There must be <i>K</i> (inverse) variance vectors (see field {@link ivar})<br>
+          - There must be <i>K</i> determinants of the (co-)variance matrices (see field {@link cdet})<br>
+          - The covariance-to-Gaussian map (see field {@link cmap}) must have <i>K</i> entries</td>
+    </tr>
+    <tr>
+      <td><i>M</i></td>
+      <td>Number of Gaussian mixture models</td>
+      <td>Output dimension of maiture map (field {@link mmap}) or if {@link mmap} is not present
+      the number of single Gaussians <i>K</i></td>
+    </tr>
+    <tr>
+      <td><i>N</i></td>
+      <td>Feature space dimensionality</td>
+      <td>Number of components in Gaussian mean vectors (field {@link mean})<br>
+          - Each (inverse) covariance matrix (see field {@link icov}) must be sized <i>N</i> x <i>N</i><br>
+          - Each (inverse) variance vector (see field {@link ivar}) must have <i>N</i> components</td>
+    </tr>
+  </table></p>
+  <h3 style="color:red">TODO:</h3>
+  <table class="indent" cellpadding="3">
+    <tr><th>Method</th><th>Author</th><th>Status</th><th>Source file</th></tr>
+    <tr>
+      <td style="line-height:16px;">
+        <code>double <b>CGmm_GaussD_SSE2</b>(CGmm* _this, double* x, long k, INT16 nMode)</code><br>
+        <code>float <b>CGmm_GaussF_SSE2</b>(CGmm* _this, float* x, long k, INT16 nMode)</code><br>
+      </td>
+      <td style="line-height:16px;">MW<br>MW</td>
+      <td style="line-height:16px;" nowrap>
+        <img src="../resources/checkmark.gif"> 2006-03-06<br>
+        <img src="../resources/checkmark.gif"> 2006-03-07<br>
+      </td>
+      <td style="line-height:16px;"><code>gmm_core_sse2.c</code></td>
+    </tr>
+    <tr>
+      <td style="line-height:16px;">
+        <code>idSrc idInd nModels iThis [/var] <b>-lbg</b></code><br>
+        <code>nParam idMap iThis <b>{@link -split}</b></code><br>
+        <code>nParam idMap iThis [/var] <b>-tie</b></code><br>
+      </td>
+      <td style="line-height:16px;">MW<br>MW<br>MW</td>
+      <td style="line-height:16px;" nowrap>
+        <img src="../resources/warning_obj.gif"><br>
+        <img src="../resources/checkmark.gif"> 2006-03-14<br>
+        <img src="../resources/warning_obj.gif"><br>
+      </td>
+      <td style="line-height:16px;"><code>gmm_clst.c</code></td>
+    </tr>
+    <tr>
+      <td style="line-height:16px;">
+        <code>idMean idCov iMmap idCmap idVar iThis <b>{@link -setup_ex}</b></code><br>
+      </td>
+      <td style="line-height:16px;">MW</td>
+      <td style="line-height:16px;" nowrap>
+        <img src="../resources/checkmark.gif"> 2006-03-07<br>
+      </td>
+      <td style="line-height:16px;"><code>gmm_iam.c</code></td>
+    </tr>
+    <tr>
+      <td style="line-height:16px;">
+        <code>idDest nModel iThis <b>-noise</b></code><br>
+      </td>
+      <td style="line-height:16px;">MW</td>
+      <td style="line-height:16px;" nowrap>
+        <img src="../resources/warning_obj.gif"><br>
+      </td>
+      <td style="line-height:16px;"><code>gmm_nse.c</code></td>
+    </tr>
+  </table>
+
+  @cgen:TODO: Mahalanobis distance of invalid Gaussians !?
+END_MAN
+
+CLASS:   gmm
+/cProject                                                                      # Generate ANSI C compatible code
+/cxx_nconv                                                                     # Use strict C++ naming conventions
+
+## C/C++ files
+INCLUDE: "dlp_vmap.h"                                                          # Include vector mapping class
+INCLUDE: "dlp_matrix.h"                                                        # Include matrix library 
+FILE:    gmm_aux.c                                                             # Auxilary and information methods
+FILE:    gmm_clst.c                                                            # Clustering methods
+FILE:    gmm_iam.c                                                             # Interactive methods
+FILE:    gmm_work.c                                                            # Worker methods
+
+## Defines - General
+#DEFINE:  GMM_SSE2    1                                                         # Comment out for safe operation
+
+## Defines - CGmm_Gauss operation modes
+DEFINE:  GMMG_MDIST  0                                                         # Mahalanobis distance
+DEFINE:  GMMG_LDENS  1                                                         # Logarithmic probability density
+DEFINE:  GMMG_NLDENS 2                                                         # Negative log. probability density
+DEFINE:  GMMG_DENS   3                                                         # Probability density
+
+## Errors
+ERROR:   GMM_NOTSETUP
+COMMENT: Model not properly set up%s.
+/html MAN:
+  <p>This error is caused by
+  <ul>
+    <li>computation methods if the fields of an instance are not properly setup for
+    the computation or</li>
+    <li>setup methods (@link -setup}, {@link -setup_ex}) if the data passed are
+    inconsistent or insufficient to setup the Gaussians.</li>
+  </ul>
+  <p>You may use {@link -status} to have a checkup of the instances setup performed
+  and to get detailled information on the problem.</p>
+  @param 1 Error description or hint to further information
+END_MAN
+
+ERROR:   GMM_DIM
+COMMENT: Wrong %s dimensionality (should be %ld).
+/html MAN:
+  <p>This error occurs when input feature vectors passed to the methods {@link -density}
+  or {@link -distance} have another dimensionality (number of components) than the
+  Gaussians represented by this gmm instance. In this case no computations can be done.</p>
+  @param 1 Description of object have a wrong dimensionality
+  @param 2 Expected dimensionality
+END_MAN
+
+ERROR:   GMM_RANK
+COMMENT: Covariance matrix no. %ld has no full rank.
+LEVEL:   EL_WARNING
+/html MAN:
+  <p>This warning may be caused by the {@link -setup} and {@link -setup_ex} methods.
+  Covariance matrices must have a full rank in order to make up a valid Gaussian.
+  Covariance matrices with no full rank are usually the result of sparse training
+  data.</p>
+  @param 1 Index of defective covariance matrix
+END_MAN
+
+ERROR:   GMM_IGNORE
+COMMENT: Extra %s ignored.
+LEVEL:   EL_WARNING
+/html MAN:
+  <p>This warning occures when unneccessary data are being ignored. This may
+  happen in the following cases:</p>
+  <ul>
+    <li>During {@link -setup_ex} if there are a covariance matrix for each
+    Gaussian and additionally one or several variance vectors committed.</li>
+  </ul>
+  @param 1 Description of ignored data
+END_MAN
+
+ERROR:   GMM_INVALD
+COMMENT: Invalid distance or density computed from Gaussian (mixture) %ld.
+/html MAN:
+  <p>This error occures when a probility density greater than one or a distance less 
+  than zero was computed for an input vector. The error indicates a defective Gaussian.
+  Please check fields {@link cdet} and {@link icov}</p>
+  @param 1 Gaussian (mixture) index
+END_MAN
+
+## Limits
+FIELD:   dceil
+COMMENT: Distance limit.
+TYPE:    double
+INIT:    1000
+/html MAN:
+  <p>Upper limit of the <span style="font-variant:small-caps;">Mahalanobis</span> distance. This
+  value is also used to define the lower limit of the logarithmic probability density as:</p>
+  <p class="indent">log(<i>p</i><sub>MIN</sub>) = -0.5&middot;<code>dceil</code>.</p>
+  @see -distance
+  @see -density
+END_MAN
+
+FIELD:   mindet
+COMMENT: Minimal acceptable determinant of covariance matrices.
+TYPE:    double
+INIT:    1E-34
+/html MAN:
+  Gaussians with a covariance matrix whose determinant is smaller than <code>mindet</code> or
+  greater than 1/<code>mindet</code> will be treated as invalid.
+END_MAN
+
+FIELD:   ldl_coef
+COMMENT: Number of unzero Values in the L matrix if LDL factorization is used.
+TYPE:    long
+INIT:    -1
+/html MAN:
+  If LDL factorization is used for precalculated values (see {@link /ldl}) the field
+  definies how many values in the L matrix should not be set to zero.
+  A negativ number says that no values should be set to zero.
+  @see /ldl
+END_MAN
+
+## Protected fields
+FIELD:   type
+COMMENT: Floating point type code for calculations.
+TYPE:    short
+INIT:    T_DOUBLE
+FLAGS:   /noset
+/html MAN:
+  <p>This field defines the floating point data type for calculations. The value may
+  either be <code>T_FLOAT</code> (=3004) for single precision floats or
+  <code>T_DOUBLE</code> (=3008) for double precision floats.</p>
+  <h4>Remarks</h4>
+  <p>This field is write protected and can only be modified through the {@link -setup}
+  or {@link -setup_ex} methods.</p>
+  @see -setup
+  @see -setup_ex
+END_MAN
+
+FIELD:   mean
+COMMENT: Mean vectors of Gaussians.
+TYPE:    INSTANCE(data)
+FLAGS:   /noset
+/html MAN:
+  <p>Set of Gaussian mean vectors. The number of components of this table defines the dimensionality <i>N</i>
+   of the feature space, the number of records defines the number <i>K</i> of single Gaussians. The variable type of
+   the first numeric component defines the floating point type for subsequent computations (see field {@link type}.</p>
+  <h4>Remarks</h4>
+  <p>This field is write protected and can only be modified through the {@link -setup} or {@link -setup_ex} methods.</p>
+  @see -setup
+  @see -setup_ex
+  @see type
+  @see ivar
+  @see icov
+  @see cmap
+END_MAN
+
+FIELD:   ivar
+COMMENT: Inverse variance vectors.
+TYPE:    INSTANCE(data)
+FLAGS:   /noset
+/html MAN:
+  <p>Set of Gaussian inverse variance vectors. This table contains <i>K</i> records and <i>N</i> components of type
+  {@link type}. The values are the main diagonals of the inverse covariance matrices (see field {@link icov}).</p>
+  <h4>Remarks</h4>
+  <ul>
+    <li>This field is write protected and can only be modified through the {@link -setup} or {@link -setup_ex} 
+    methods.</li>
+    <li>A value of <code>ivar.<a href="data.html#fld_descr0" class="code">descr0</a></code>=1 indicates, that
+    individual variances vectors were specified on {@link -setup_ex} though some covariance matrices are tied.</li>
+  </ul>
+  @see -setup
+  @see -setup_ex
+  @see type
+  @see mean
+  @see icov
+  @see cmap
+END_MAN
+
+FIELD:   cdet
+COMMENT: Determinants of covariance matrices.
+TYPE:    INSTANCE(data)
+FLAGS:   /noset
+/html MAN:
+  <p>Determinants of the Gaussians' covariance matrices. This table contains <i>K</i> records and 1 component of type
+  {@link type}. A determinant of 0 indicates that the respective Gaussian is invalid (i.e. its covariance matrix has
+  no full rank).</p>
+  <h4>Remarks</h4>
+  <p>This field is write protected and can only be modified through the {@link -setup} or {@link -setup_ex} methods.</p>
+  @see -setup
+  @see -setup_ex
+  @see type
+  @see mean
+  @see ivar
+  @see icov
+  @see cmap
+END_MAN
+
+FIELD:   icov
+COMMENT: Inverse covariance matrices w/o main diagonal.
+TYPE:    INSTANCE(data)
+FLAGS:   /noset
+/html MAN:
+  <p>Each record of this <a href="data.html">data table</a> defines the inverse covariance matrix
+  for one or several Gaussians. Only the upper right triangles (<em>excluding</em> the main diagonal!)
+  of the matrices will be stored. <code>icov</code> will contain <i>C</i> records and
+  <i>N</i>*(<i>N</i>-1)/2 components, where <i>N</i> stands for the feature space dimensionality
+  <code>{@link mean}.dim</code>. <code>icov</code> does <em>not</em> contain the inverse variance
+  vectors (i.e. the main diagonals of the inverse covariance matrices). These data are stored in 
+  {@link ivar}. The order of the inverse convariances in one record of <code>icov</code> is:
+  <br>&nbsp;<br><span class="indent">
+  <i><b>k</b></i><sup>(0,1)</sup> <i><b>k</b></i><sup>(0,2)</sup> <i><b>k</b></i><sup>(0,3)</sup>
+  ... <i><b>k</b></i><sup>(0,<i>N</i>-1)</sup> <i><b>k</b></i><sup>(1,2)</sup>
+  <i><b>k</b></i><sup>(1,3)</sup> ... <i><b>k</b></i><sup>(1,<i>N</i>-1)</sup> ...
+  <i><b>k</b></i><sup>(<i>N</i>-2,<i>N</i>-1)</sup></span></br>&nbsp;<br>
+  The component index <i>i</i> of the inverse covariance
+  <i><b>k</b></i><sup>(<i>n</i>,<i>m</i>)</sup> can be calculated as<br>&nbsp;<br>
+  <span class="indent"><i>i</i> = <i>n</i>&middot;<i>N</i> - 2<i>n</i> -
+  <i>n</i>(<i>n</i>-1)/2 + <i>m</i> - 1 for <i>m</i>&gt;<i>n</i> and</span><br>
+  <span class="indent"><i>i</i> = <i>m</i>&middot;<i>N</i> - 2<i>m</i> -
+  <i>m</i>(<i>m</i>-1)/2 + <i>n</i> - 1 for <i>m</i>&lt;<i>n</i>.</span></p>
+  <p>The covariance matrices can be shared by several Gaussians. In other words,
+  <code>icov</code> may contain fewer records than the number of Gaussians <i>K</i> (which is defined
+  by {@link mean}.<code>nrec</code>). The assignment is defined by the covariance tying map
+  {@link cmap}.</p>
+  <h4>Remarks</h4>
+  <ul>
+    <li>If the Gaussians use only diagonal covariance matrices this field is <code>NULL</code>.</li>
+    <li>This field is write protected and can only be modified through the {@link -setup}
+    or {@link -setup_ex} methods.</li>
+    <li>You may use {@link -extract} in order to obtain the set of inverse convariance matrices
+    in their usual representation (as data table with <i>C</i> <i>N</i>x<i>N</i> blocks) from
+    the GMM.</li>
+  </ul>
+  @see -setup
+  @see -setup_ex
+  @see -extract
+  @see mean
+  @see ivar
+  @see cmap
+END_MAN
+
+FIELD:   mmap
+COMMENT: Mixture map.
+TYPE:    INSTANCE(vmap)
+FLAGS:   /noset
+/html MAN:
+  <p>The {@link -distance} and {@link -density} methods compute distance / probability density values for the single
+  Gaussians. The results of these computations can be interpreted as a <i>K</i> dimensional vector whose components
+  correspond with the single Gaussians. Passing such result vectors through the <a href="MAP.html">mapping object</a>
+  <code>mmap</code> defines mixture Gaussians by computing an <i>M</i>-dimensional output vector from the
+  <i>K</i>-dimensional input vector. Among other aggregation operations the mapping object is capable of computing
+  a set of <i>M</i> weighted sums thus realizing <i>M</i> Gaussian mixture models.</p>
+  <h4>Remarks</h4>
+  <ul>
+    <li>This field is write protected and can only be modified through the {@link -setup} or {@link -setup_ex}
+    methods.</li>
+    <li><code>gmm</code> does not check the mapping object except that the input dimensionality <code>mmap.<a
+    href="MAP.html#fld_xdim">xdim</a></code> is tested to be equal to the number <i>K</i>of single Gaussians
+    <code>mean.<a href="data.html#fld_nrec">nrec</a></code>. Particularly it is not verified that the mapping object
+    makes up a valid Gaussian mixture model.</li>
+  </ul>
+END_MAN
+
+FIELD:   cmap
+COMMENT: (Co-)variance tying map.
+TYPE:    INSTANCE(data)
+FLAGS:   /noset
+/html MAN:
+  <p>Each record of this <a href="data.html">data table</a> assigns (co-)variance data to one Gaussian.
+  The table has exactly one integer component whose values are block indices of the inverse (co-)variance
+  data table (see field {@link icov}). The table contains exactly <i>K</i>={@link mean}<code>.nrec</code>
+  records.</p>
+  <h4>Remarks</h4>
+  <p>This field is write protected and can only be modified through the {@link -setup}
+  or {@link -setup_ex} methods.</p>
+  @see -setup
+  @see -setup_ex
+  @see mean
+  @see icov
+END_MAN
+
+## Hidden fields - Precalculated values for density calculation
+## Note: N - feature dimensionality
+##       K - number of single Gaussians
+##       C - number of covariance matrices
+FIELD:   alpha                                                                 # Class dependent alpha constants
+TYPE:    void*                                                                 # Actually: GMM_FTYPE* (1 x N x GMM_FYTPE)
+FLAGS:   /hidden /noset /nonautomatic /nosave
+
+FIELD:   beta                                                                  # Class dependent beta constants
+TYPE:    void*                                                                 # Actually: GMM_FTYPE* (K x N x GMM_FYTPE)
+FLAGS:   /hidden /noset /nonautomatic /nosave
+
+FIELD:   gamma                                                                 # Lazy covariance computation buffer
+TYPE:    void*                                                                 # Actually: GMM_FTYPE* (1 x K x GMM_FTYPE)
+FLAGS:   /hidden /noset /nonautomatic /nosave
+
+FIELD:   delta                                                                 # Class dependent delta constants
+TYPE:    void*                                                                 # Actually: GMM_FTYPE* (1 x N x GMM_FTYPE)
+FLAGS:   /hidden /noset /nonautomatic /nosave
+
+FIELD:   I                                                                     # Class dependent inverse covariance matrices
+TYPE:    void*                                                                 # Actually: GMM_FTYPE** (K x GMM_FYTPE*)
+FLAGS:   /hidden /noset /nonautomatic /nosave
+
+FIELD:   V                                                                     # Class dependent inverse variance vectors
+TYPE:    void*                                                                 # Actually: GMM_FTYPE* (K x N x GMM_FTYPE)
+FLAGS:   /hidden /noset /nonautomatic /nosave
+
+FIELD:   N                                                                     # Feature dimensionality (internal use, ...
+TYPE:    long                                                                  # ... correctness not guaranteed at any time!)
+FLAGS:   /hidden /noset /nonautomatic /nosave
+
+FIELD:   K                                                                     # Number of single Gaussians (internal use, ...
+TYPE:    long                                                                  # ... correctness not guaranteed at any time!)
+FLAGS:   /hidden /noset /nonautomatic /nosave
+
+## Hidden fields - Precalculated values for SSE2 optimized density calculation
+FIELD:   sse2_icov                                                             # Complete inverse covariance matrices
+TYPE:    INSTANCE(data)
+FLAGS:   /hidden /noset /nonautomatic /nosave
+
+FIELD:   sse2_buf                                                              # Auxilary buffer
+TYPE:    void*
+FLAGS:   /hidden /noset /nonautomatic /nosave
+
+## Hidden fields - Precalculated values for LDL factorizied density calculation
+FIELD:   LDL
+TYPE:    long
+INIT:    FALSE
+FLAGS:   /hidden /noset
+
+FIELD:   ldl_l
+TYPE:    void*
+FLAGS:   /hidden /noset /nonautomatic /nosave
+
+FIELD:   ldl_d
+TYPE:    void*
+FLAGS:   /hidden /noset /nonautomatic /nosave
+
+## Options
+OPTION:  /float
+COMMENT: Use single precision floating point numbers.
+/html MAN:
+  <p>The computation of distances and probability denstities can be done with
+  single or double precision. This option selects single presicion.</p>
+  <h4>{@link -setup}</h4>
+  <p>Convert all data to single precision floating point numbers. By default
+  the floating point precision is automatically obtained from the mean vector
+  data (parameter <code>idMean</code>).</p>
+END_MAN
+
+OPTION:  /double
+COMMENT: Use double precision floating point numbers.
+/html MAN:
+  <p>The computation of distances and probability denstities can be done with
+  single or double precision. This option selects double presicion.</p>
+  <h4>{@link -setup}</h4>
+  <p>Convert all data to double precision floating point numbers. By default
+  the floating point precision is automatically obtained from the mean vector
+  data (parameter <code>idMean</code>).</p>
+END_MAN
+
+OPTION:  /log
+COMMENT: Compute logarihmic values.
+/html MAN:
+  <h4>{@link -density}</h4>
+  <p>Computes logarithmic probability densities (default is just probability
+  densities).</p>
+  @see /neglog
+END_MAN
+
+OPTION:  /neglog
+COMMENT: Compute negative logarihmic values.
+/html MAN:
+  <h4>{@link -density}</h4>
+  <p>Computes negative logarithmic probability densities (default is just probability
+  densities).</p>
+  @see /log
+END_MAN
+
+OPTION:  /sse2
+COMMENT: Use SSE2 optimized algorithm.
+/html MAN:
+  <h4>{@link -density}, {@link -distance}</h4>
+  <p>Use a <span style="font-variant:small-caps;">Mahalanobis</span> distance algorithm optimized for the
+  SSE2 instruction set (default is a general algorithm). This option may not be available on a particular
+  platform. The speed up depends on the machine. In the current implementation there is speed up of
+  approximately 25% only for single precision computations (see option {@link /float}).</p>
+END_MAN
+CODE:
+  if (!CGmm_Sse2())
+  {
+    _this->m_bSse2 = FALSE;
+    return IERROR(_this,ERR_NOTSUPPORTED,"/sse2",0,0);
+  }
+END_CODE
+
+OPTION:  /icov
+COMMENT: Inverse covariance matrices
+/html MAN:
+  <h4>{@link -setup_ex}, {@link -setup}</h4>
+  <p>Parameter <code>idCov</code> contains <em>inverse</em> covariance matrices
+  (instead of "ordinary" covariance matrices).</p>
+END_MAN
+
+OPTION:  /ldl
+COMMENT: Use precalced values from LDL-Factorization for density calculation
+/html MAN:
+  <h4>{@link -setup_ex}, {@link -setup}</h4>
+  <p>Inverse covariance matrizies are LDL-factorizied while precalc. Precaled
+  values for density calculation are determined from factorizied matrizies.
+  With this option less operations are requiered for density calculation.
+  <span class="warning">Only used for full covariance matrizies!</span></p>
+  <p>The field {@link ldl_coef} may be used to reduce the number of values
+  in the L matrix.</p>
+  @see -setup_ex
+  @see -setup
+  @see ldl_coef
+  @see "Release Note "Distance and Density Computationn""
+END_MAN
+
+OPTION:  /nomix
+COMMENT: Do not use mixture map
+/html MAN:
+  With is option {@link -density} and {@link -distance} ignores the mixture map as if there is none.
+END_MAN
+
+OPTION:  /rand_gauss_bm
+COMMENT: Use Box-Muller-Method for generating gaussian distributed noise.
+/html MAN:
+  <p>This options switches {@link -noise} to generate random values using the Box-Muller-Method.</p>
+  <p>This is the default option.</p>
+END_MAN
+
+OPTION:  /rand_gauss_polar
+COMMENT: Use polar method for generating gaussian distributed noise.
+/html MAN:
+  <p>This options switches {@link -noise} to generate random values using the polar method.</p>
+END_MAN
+
+## Methods
+METHOD:  -setup
+SYNTAX:  (data idMean, data idCov, INSTANCE(vmap) iMmap)
+COMMENT: Setup Gaussian mixture model
+CODE:
+  return CGmm_SetupEx(_this,idMean,idCov,iMmap,NULL,NULL);
+END_CODE
+/html MAN:
+  <p>Supplied for convenience, equivalent to</p>
+  <pre class="code">
+
+  idMean idCov iMap NULL NULL this {@link -setup_ex}
+  </pre>
+  <p>or</p>
+  <pre class="code">
+
+  {@link -setup_ex CGmm_SetupEx}(_this,idMean,idCov,iMap,NULL,NULL),
+  </pre>
+  <p>respectivlely. See documentation of {@link -setup_ex} for a detailled description.</p>
+
+  @param idMean Gaussian mean vectors. The number of components <i>N</i>=<code>idMean.<a href="data.html#fld_dim"
+                class="code">dim</a></code> defines the feature space dimensionality. The number of records
+                <i>K</i>=<code>idMean.<a href="data.html#fld_nrec" class="code">nrec</a></code> defines the number of
+                (single) Gaussians.
+  @param idCov  (Co-)Variance data. The contained data are interpreted depending on <code>idMean</code> and on their
+                dimensionality <code>idCov.<a href="data.html#fld_dim" class="code">dim</a></code>, length <code>idCov.<a
+                href="data.html#fld_nrec" class="code">nrec</a></code> and block length <code>idCov.<a
+                href="data.html#fld_nblock" class="code">nblock</a></code> (see table above).
+  @param idMmap Mixture map, may be <code>NULL</code> for one Gaussian per mixture
+  @cgen:option /icov Parameter <code>idCov</code> contains <em>inverse</em> covariance matrices (instead of "ordinary"
+                     covariance matrices).</p>
+  @see -setup_ex
+  @see -density
+  @see -distance
+END_MAN
+
+METHOD:  -setup_ex
+SYNTAX:  (data idMean, data idCov, INSTANCE(vmap) iMmap, data idCmap, data idVar)
+COMMENT: Setup Gaussian mixture model.
+/html MAN:
+  <p>This method assigns statistic and mapping data to the Gaussian mixture model thus defining as set of (mixture)
+  Gaussian probability distributions. The parameters <code>idMean</code> and <code>idCov</code> (statistic data) are
+  mandatory, all other parameters are optional or only required under certain circumstances.</p>
+
+  <h4>Statistic Data</h4>
+  <p>The following table shows how the statistic data are used to define the GMMs:</p>
+  <table class="indent" cellpadding="1pt">
+    <tr>
+      <th style="text-align:center">Dimensionality<br>
+        <code>idCov.<a href="data.html#fld_dim" class="code">dim</a></code></th>
+      <th style="text-align:center">Block length<br>
+        <code>idCov.<a href="data.html#fld_nrec" class="code">nrec</a><br>
+        <span style="text-decoration:overline">idCov.<a href="data.html#fld_nblock" class="code">nblock</a></span></code></th>
+      <th style="text-align:center">No. of blocks<br>
+        <code>idCov.<a href="data.html#fld_nblock" class="code">nblock</a></code></th>
+      <th style="text-align:center">No. of records<br>
+        <code>idCov.<a href="data.html#fld_nrec" class="code">nrec</a></code></th>
+      <th style="text-align:center"><code>iMmap</code></th>
+      <th style="text-align:center"><code>idCmap</code></th>
+      <th style="text-align:center"><code>idVar</code></th>
+      <th>Description</th>
+      <th style="text-align:center"><b>TODO</b><br>Test</th>
+    </tr>
+    <tr>
+      <td rowspan="2" style="text-align:center">1</td>
+      <td style="text-align:center">-</td>
+      <td style="text-align:center">-</td>
+      <td style="text-align:center">1</td>
+      <td style="text-align:center">o</td>
+      <td style="text-align:center">-</td>
+      <td style="text-align:center">-</td>
+      <td>One variance value for all Gaussians and all dimensions</td>
+      <td style="text-align:center"><img src="../resources/warning_obj.gif"></td>
+    </tr>
+    <tr>
+      <td style="text-align:center">-</td>
+      <td style="text-align:center">-</td>
+      <td style="text-align:center"><i>K</i></td>
+      <td style="text-align:center">o</td>
+      <td style="text-align:center">-</td>
+      <td style="text-align:center">-</td>
+      <td>One variance value for all dimensions per Gaussian</td>
+      <td style="text-align:center"><img src="../resources/warning_obj.gif"></td>
+    </tr>
+    <tr>
+      <td rowspan="6" style="text-align:center"><i>N</i></td>
+      <td rowspan="3" style="text-align:center">1</td>
+      <td style="text-align:center">1</td>
+      <td style="text-align:center">-</td>
+      <td style="text-align:center">o</td>
+      <td style="text-align:center">-</td>
+      <td style="text-align:center">-</td>
+      <td>One common variance vector for all Gaussians</td>
+      <td style="text-align:center"><img src="../resources/warning_obj.gif"></td>
+    </tr>
+    <tr>
+      <td style="text-align:center"><i>C</i></td>
+      <td style="text-align:center">-</td>
+      <td style="text-align:center">o</td>
+      <td style="text-align:center">x</td>
+      <td style="text-align:center">-</td>
+      <td>A set of variance vectors shared by the Gaussians (requires a tying map <code>idCmap</code>)</td>
+      <td style="text-align:center"><img src="../resources/warning_obj.gif"></td>
+    </tr>
+    <tr>
+      <td style="text-align:center"><i>K</i></td>
+      <td style="text-align:center">-</td>
+      <td style="text-align:center">o</td>
+      <td style="text-align:center">-</td>
+      <td style="text-align:center">-</td>
+      <td>One variance vector for each Gaussian</td>
+      <td style="text-align:center"><img src="../resources/warning_obj.gif"></td>
+    </tr>
+    <tr>
+      <td rowspan="3" style="text-align:center"><i>N</i></td>
+      <td style="text-align:center">1</td>
+      <td style="text-align:center">-</td>
+      <td style="text-align:center">o</td>
+      <td style="text-align:center">-</td>
+      <td style="text-align:center">o</td>
+      <td>One common covariance matrix for all Gaussians</td>
+      <td style="text-align:center"><img src="../resources/warning_obj.gif"></td>
+    </tr>
+    <tr>
+      <td style="text-align:center"><i>C</i></td>
+      <td style="text-align:center">-</td>
+      <td style="text-align:center">o</td>
+      <td style="text-align:center">x</td>
+      <td style="text-align:center">o</td>
+      <td>A set of covariance matrices shared by the Gaussians (requires a tying map <code>idCmap</code>)</td>
+      <td style="text-align:center"><img src="../resources/warning_obj.gif"></td>
+    </tr>
+    <tr>
+      <td style="text-align:center"><i>K</i></td>
+      <td style="text-align:center">-</td>
+      <td style="text-align:center">o</td>
+      <td style="text-align:center">-</td>
+      <td style="text-align:center">-</td>
+      <td>One covariance matrix for each Gaussian</td>
+      <td style="text-align:center"><img src="../resources/checkmark.gif"></td>
+    </tr>
+  </table>
+  <table class="indent">
+    <tr><td class="hidden" colspan="2" style="font-size:3pt">&nbsp;</td></tr>
+    <tr><td class="hidden">-</td><td class="hidden">ignored</td></tr>
+    <tr><td class="hidden">o</td><td class="hidden">optional</td></tr>
+    <tr><td class="hidden">x</td><td class="hidden">required</td></tr>
+    <tr><td class="hidden"><i>C</i></td><td class="hidden"><code>idCov.<a
+      href="data.html#fld_nblock" class="code">nblock</a></code>; 1&le;<i>C</i>&le;<i>K</i></td></tr>
+    <tr><td class="hidden"><i>K</i></td><td class="hidden"><code>idMean.<a
+      href="data.html#fld_nrec" class="code">nrec</a></code></td></tr>
+    <tr><td class="hidden"><i>N</i></td><td class="hidden"><code>idMean.<a
+      href="data.html#fld_dim" class="code">dim</a></code></td></tr>
+  </table>
+  <p>The parameter <code>idVar</code> is only valid in connection with tied <em>and</em> full covariance matrices. It
+  may be used to define an individual variance vector for each Gaussian even though the covariance matrices are shared.
+  <code>idVar</code> is expected to contain <i>K</i> records (the variance vectors) and <i>N</i> components.</p>
+
+  <h4>Mapping Data</h4>
+  <p>There are two maps supported by the <code>gmm</code> class:</p>
+  <ul>
+    <li><b><code>iMmap</code> - Gaussian mixture map</b><br>
+      Defines a mapping from distances or densities computed for the <i>K</i> single Gaussians to
+      <i>M</i>=<code>iMap.<a href="MAP.html#fld_ydim" class="code">ydim</a></code> output classes (e.g. Gaussian
+      mixtures). The actual mapping operation is defined through the <a href="MAP.html">mapping object</a>
+      <code>iMap</code>. The setup method does <em>not</em> perform any checks on the mapping object except that the
+      input dimension of the map (<code>iMap.<a href="MAP.html#fld_xdim" class="code">xdim</a></code>) is equal to
+      <i>K</i>. Particularly it is <em>not ensured</em> that <code>iMap</code> makes the <code>gmm</code> instance a
+      valid Gaussian mixture model!<br>&nbsp;</li>
+    <li><b><code>idCmap</code> - (Co)Variance tying map</b><br>
+      Assigns each Gaussian a variance vector or a covariance matrix. The parameter is required if parameter <code>idCov</code>
+      contains more than one but fewer than <i>K</i> variance vectors or covariance matrices. Otherwise it is ignored.
+      <code>idCmap</code> is expected to contain exactly one numeric component and exactly <i>K</i> records. The data
+      values are interpreted as index of a variance vector or covariance matrix: <i>c</i> =
+      <code>idCmap</code>[<i>k</i>], where 0&le;<i>c</i>&le;<code>idCov.<a href="data.html#fld_nblock"
+      class="code">nblock</a></code> and 0&le;<i>k</i>&le;<i>K</i>.</li>
+  </ul>
+
+  @param idMean Gaussian mean vectors. The number of components <i>N</i>=<code>idMean.<a href="data.html#fld_dim"
+                class="code">dim</a></code> defines the feature space dimensionality. The number of records
+                <i>K</i>=<code>idMean.<a href="data.html#fld_nrec" class="code">nrec</a></code> defines the number of
+                (single) Gaussians.
+  @param idCov  (Co-)Variance data. The contained data are interpreted depending on <code>idMean</code> and on their
+                dimensionality <code>idCov.<a href="data.html#fld_dim" class="code">dim</a></code>, length <code>idCov.<a
+                href="data.html#fld_nrec" class="code">nrec</a></code> and block length <code>idCov.<a
+                href="data.html#fld_nblock" class="code">nblock</a></code> (see table above).
+  @param idMmap Mixture map, may be <code>NULL</code> for one Gaussian per mixture
+  @param idCmap (Co)Variance to Gaussian map (for variance vector or covariance matrix tying), may be <code>NULL</code>
+                for 1 by 1 map.
+  @param idVar  Variance data (only in connection with covariance tying), may be <code>NULL</code> to used tied
+                variances (main diagonals of tied covariances).
+  @cgen:option /icov Parameter <code>idCov</code> contains <em>inverse</em> covariance matrices (instead of "ordinary"
+                     covariance matrices).</p>
+  @cgen:option /ldl  Use LDL factorization for Mahalanobis distance calcuation. (Only used for full covariance matrizies!)</p>
+  @see -setup
+  @see -density
+  @see -distance
+END_MAN
+
+METHOD:  -extract
+SYNTAX:  (data idMean, data idIcov)
+COMMENT: Extract mean vectors and inverse covariance matrices.
+/html MAN:
+  <p>The method extracts <i>K</i> mean vectors and <i>K</i> inverse covariances matrices
+  from the internal data tables of this <code>gmm</code> instance. It always extracts
+  a complete set of inverse covariance matrices, even if covariance tying or diagonal
+  convariance matrices are used by this <code>gmm</code> instances.</p>
+  <h4>Remarks</h4>
+  <ul>
+    <li>Inverse variances and covariances are stored separately in the <code>gmm</code>
+    instance (see fields {@link icov}, {@link ivar}). Moreover only the upper right triangle
+    of the inverse covariance matrices is stored. Thus simply copying the {@link icov} and
+    {@link ivar} fields will not result in data tables being usable in dLabPro matrix
+    operations.</li> 
+  </ul>
+  @param idMean Data table to be filled with mean vectors of single Gaussians
+                (may be <code>NULL</code>)
+  @param idIcov Data table to be filled with inverse covariance matrices of Gaussians
+                (may be <code>NULL</code>)
+  @see mean
+  @see icov
+  @see ivar
+END_MAN
+
+METHOD:  -density
+SYNTAX:  (data idX, data idXmap, data idDens)
+COMMENT: Computes (log.) probability densities for a set of feature vectors.
+CODE:
+  return 
+    CGmm_Gauss(_this,idX,idXmap,idDens,
+      _this->m_bNeglog?GMMG_NLDENS:(_this->m_bLog?GMMG_LDENS:GMMG_DENS));
+END_CODE
+/html MAN:
+  <p>This method computes the (logarithmic) probability densities of the feature vectors contained in <code>idX</code>
+  for each of the (mixture) Gaussians of this instance. The output data table <code>idDens</code> will contain
+  <code>idX.<a href="data.html#fld_nrec" class="code">nrec</a></code> records and <i>M</i> (= number of mixture
+  Gaussians) components. The value <code>idDens[i,m]</code> will contain the value <i>p</i>(<i>x<sub>i</sub></i>|<i>m</i>)
+  - or log(<i>p</i>(<i>x<sub>i</sub></i>|<i>m</i>)) respectively - where <i>i</i> stands for the record index in
+  <code>idX</code> and <i>m</i> stands for the mixture Gaussian index. The input vectors must have <i>N</i> (=
+  dimensionality of Gaussians) numeric components. The data type of the components of the output table depends on the
+  floating point precision associated with this <code>gmm</code> instance (float and double are possible).</p>
+  @cgen:option /log Compute logarithmic probability densities. The computed values are limited to a minimum of
+                    -0.5&middot;{@link dceil}.
+  @cgen:option /neglog Compute negative logarithmic probability densities. The computed values are limited to a
+                    maximum of 0.5&middot;{@link dceil}.
+  @cgen:option /sse2 Use SSE2 optimization.
+  @cgen:option /nomix Do not use mixture map
+  @param idX    Set of feature vectors (input).
+  @param idXmap Computation map (input). This map is expected to contain <code>idX.<a href="data.html#fld_nrec"
+                class="code">nrec</a></code> records and <i>M</i> (see above) components. A
+                non-zero value of <code>idXmap[i,m]</code> means that the probability density
+                <i>p</i>(<i>x<sub>i</sub></i>|<i>m</i>) (i.e. the density value <code>idDens[i,m]</code> will be
+                computed, otherwise <code>idDens[i,m]</code> will be 0 or &plusmn;0.5&middot;{@link dceil} respectively.
+                May be <code>NULL</code> in order to compute all (log.) densities. This map may save a great deal of
+                computation time when doing forced alignments.
+  @param idDens Destination table (output, may be identical with <code>idX</code>). After completion of the method
+                the table will contain one record of <i>M</i> (log.) density values for each input record.
+  @see -distance
+  @see -setup
+  @see "Release Note "Distance and Density Computation""
+END_MAN
+
+METHOD:  -distance
+SYNTAX:  (data idX, data idXmap, data idDist)
+COMMENT: Computes Mahalanobis distances for a set of feature vectors.
+CODE:
+  return CGmm_Gauss(_this,idX,idXmap,idDist,GMMG_MDIST);
+END_CODE
+/html MAN:
+  <p>This method computes the <span style="font-variant:small-caps;">Mahalanobis</span> distances between the feature
+  vectors contained in <code>idX</code> and each (mixture) Gaussians of this instance. The output data table
+  <code>idDist</code> will contain <code>idX.<a href="data.html#fld_nrec" class="code">nrec</a></code> records and
+  <i>M</i> (= number of mixture Gaussians) components. The value <code>idDist[i,m]</code> will contain the value
+  <i>d<sub>M</sub></i>(<i>x<sub>i</sub></i>|<i>m</i>), where <i>i</i> stands for the record index in <code>idX</code>
+  and <i>m</i> stands for the mixture Gaussian index. The input vectors must have <i>N</i> (= dimensionality of
+  Gaussians) numeric components. The data type of the components of the output table depends on the floating point
+  precision associated with this <code>gmm</code> instance (float and double are possible).</p>
+  @cgen:option /sse2 Use SSE2 optimization.
+  @param idX    Set of feature vectors (input).
+  @param idXmap Computation map (input). This map is expected to contain <code>idX.<a href="data.html#fld_nrec"
+                class="code">nrec</a></code> records and <i>M</i> (see above) components. A non-zero value of
+                <code>idXmap[i,m]</code> means that the distance <i>d<sub>M</sub></i>(<i>x<sub>i</sub></i>|<i>m</i>)
+                (i.e. the distance value <code>idDist[i,m]</code> will be computed, otherwise <code>idDist[i,m]</code>
+                will {@link dceil}. May be <code>NULL</code> in order to compute all distances. This map may save a
+                great deal of computation time when doing forced alignments.
+  @param idDens Destination table (output, may be identical with <code>idX</code>). After completion of the method
+                the table will contain one record of <i>M</i> distance values for each input record.
+  @see -density
+  @see -setup
+  @see "Release Note "Distance and Density Computation""
+END_MAN
+
+METHOD:  -split
+SYNTAX:  (double nParam, data idMap)
+COMMENT: Splits single Gaussians into two.
+/html MAN:
+  <p>Splits the single Gaussians along their axis of greatest variance.</p>
+  <p>The splitting map <code>idMap</code> allows to prevent Gaussians from beeing split. Moreover the method will fill
+  this table with a children-to-parent map which associates the indices of the single Gaussians before and after the
+  splitting. There are the following operation modes:</p>
+  <table>
+    <tr><th><code>idMap</code></th><th>Description</th></tr>
+    <tr><td>is <code>NULL</code></td><td>Split all Gaussians and do <em>not</em> generate a children-to-parents map.</td></tr>
+    <tr><td>is empty</td><td>Split all Gaussians and generate a children-to-parents map.</td></tr>
+    <tr><td>contains at least one numeric component</td><td>Split Gaussians <i>k</i> if <code>idMap[k,0]</code> is not
+      zero, otherwise do not split Gaussian <i>k</i>, generate a children-to-parents map</td></tr>
+  </table>
+  <p>After completion <code>idMap</code> will contain exactly one component of type <code>long</code> and as many
+  records as there are split single Gaussians. The value <code>k=idMap[k',0]</code> means that the parent of the child
+  (split) Gaussian <i>k'</i> is <i>k</i>.</p>
+
+  <h4>Remarks</h4>
+  <ul>
+    <li>The method dissolves covariance tying, i.e. after the splitting each single Gaussian will possess an individual
+      covariance matrix (see field {@link cmap}).</li>
+    <li>The method dissolves all mixture Gaussians, i.e. there are only single Gaussians left after the splitting (see
+      field {@link mmap}).</li>
+  </ul>
+
+  @param nParam Number of Gaussians to split, if <code>nParam</code>&le;0 all Gaussians (according to
+                <code>idMap</code>) will be split
+  @param idMap  Defines which Gaussians are to be split, will be overwritten with a map which contains the parent
+                Gaussian index for each split Gaussian.<br><span class="warning">Important:</span> If you just want to
+                get the children-to-parents map but <em>not</em> to prevent any Gaussians from being split make sure
+                you pass an <em>empty</em> table for <code>idMap</code>! If the map is not empty it will be
+                misinterpreted as splitting map! (see above).
+  @cgen:TODO: Preserve mixture map!
+END_MAN
+
+METHOD:  -get_n_valid_gauss
+SYNTAX:  long()
+COMMENT: Determines the number of valid single Gaussians.
+/html MAN:
+  <p>Returns the number of valid single Gaussians. A Gaussian is valid if it
+  has a mean vector, an inverse variance vector and either no inverse
+  covariance matrix or a covariance matrix of full rank.</p>
+
+  @see GetNGauss    CGmm_GetNGauss
+  @see IsValidGauss CGmm_IsValidGauss
+  @param _this Pointer to CGmm instance
+  @return The number of valid single Gaussians or 0 in case of errors
+END_MAN
+
+METHOD:  -status
+SYNTAX:  ()
+COMMENT: Prints status information of the Gaussian mixture model.
+/html MAN:
+  <p>The method performs a check up of the instance data and prints a report of the GMM setup at the console. Use</p>
+  <pre class="code">
+
+  1 &lt;this&gt; <a href="function.html#mth_-set" class="code">-set</a> check; &lt;this&gt; {@link -status};
+  </pre>
+  <p>to see a very detailled protocol of the check up.</p>
+END_MAN
+
+METHOD:  -noise
+SYNTAX:  (long nDim, long nRecs, data idDest)
+COMMENT: Create normally distributed noise
+CODE:
+  INT32 i = 0;
+  INT32 j = 0;
+  CData_Array(idDest,T_DOUBLE,nDim,nRecs);
+  srand(time(NULL));
+  for (i=0; i<nDim; i++)
+    for (j=0; j<nRecs; j++)
+      if(_this->m_bRandGaussPolar == TRUE)
+        CData_Dstore(idDest,dlm_rand_gauss_polar(),j,i);
+      else
+        CData_Dstore(idDest,dlm_rand_gauss_bm(),j,i);
+END_CODE
+
+## Release notes
+NOTE:    Distance and Density Computation
+COMMENT: This section describes the mathematical and algorithmic foundations of the gmm class.
+/html MAN:
+  <div style="background-color:white; padding:3pt;">
+  <p>The probability density of an <i>N</i>-dimensional feature vector <i>x</i> in a Gaussian distribution
+  can be calculated as</p>
+  <p class="indent"><object data="../resources/gmm/0001.svg" type="image/svg+xml" width="269" height="38"
+    viewastext="viewastext" align="middle"><img src="../resources/gmm/0001.gif" width="268" height="37" border="0"
+    align="absmiddle"></object>, (1)</p>
+  where <i>d<sub>M</sub></i> stands for the <span style="font-variant:small-caps;">Mahalanobis</span> distance</p>
+  <p class="indent"><object data="../resources/gmm/0002.svg" type="image/svg+xml" width="225" height="18"
+    viewastext="viewastext" align="middle"><img src="../resources/gmm/0002.gif" width="224" height="17" border="0"
+    align="absmiddle"></object>. (2)</p>
+  <p><i><b>K</b><sub>k</sub></i> stands for the covariance matrix of Gaussian <i>k</i> and <i>&mu;<sub>k</sub></i>
+  for its mean vector.</p>
+
+  <h4>Computing the <span style="font-variant:small-caps;">Mahalanobis</span> Distance (Method {@link -distance}) without LDL factorization</h4>
+  <p>The <span style="font-variant:small-caps;">Mahalanobis</span> distance can be rewritten as:</p>
+  <p class="indent"><object data="../resources/gmm/0003.svg" type="image/svg+xml" width="661" height="73"
+    viewastext="viewastext" align="middle"><img src="../resources/gmm/0003.gif" width="660" height="72" border="0"
+    align="absmiddle"></object>. (3)</p>
+  <p>The terms A and B are independent of the feature vector and may be precalculated when setting up the Gaussains
+  (see method {@link -setup}). The precalculated data will be stored in the fields {@link alpha} and {@link beta}.
+  Term C depends only on the covariances and does not need to be calculated for operation modes 1 (common variance)
+  and 2 (variance vectors). Moreover term C does not depend on the Gaussian mean vectors which allows a lazy
+  computation if several Gaussians share their covariance matrices. In these cases term C has only to be calculated
+  once per feature vector and <em>covariance matrix</em> instead of one per feature vector and <em>Gaussian</em>.
+  The respective values of C are buffered in field {@link gamma}. However, {@link gamma} is only used if there are
+  fewer covariance matrices than Gaussians. Further term C is taylored to take advantage of the symmetry of the
+  covariance matrix which allows to save half of the multiply-and-adds.</p>
+  <p>Considering all this we can rewrite the <span style="font-variant:small-caps;">Mahalanobis</span> distance
+  again:</p>
+  <p class="indent"><object data="../resources/gmm/0004.svg" type="image/svg+xml" width="450" height="69"
+    viewastext="viewastext" align="middle"><img src="../resources/gmm/0004.gif" width="449" height="68" border="0"
+    align="absmiddle"></object>. (4)</p>
+  <p>The underbraces indicate the computational complexities of calculating the terms. The total complexity is
+  <i>N</i>+<i>N</i><sup>2</sup>/2.</p>
+
+  <h4>Computing the <span style="font-variant:small-caps;">Mahalanobis</span> Distance (Method {@link -distance}) using LDL factorization</h4>
+  <p>To use LDL factorization for computing of <span style="font-variant:small-caps;">Mahalanobis</span> distance
+  you should use {@link /ldl} option and you may set {@link ldl_coef} field. With LDL factorization the covariance
+  matrix can be splitted into a upper triangular matrix L and a diagonal matrix D. The
+  <span style="font-variant:small-caps;">Mahalanobis</span> distance can now be written as:</p>
+  <p class="indent"><img src="../resources/gmm/0009.gif" border="0" align="absmiddle">. (5)</p>
+  <p>The term B is independent of the feature vector and may be precalculated when setting up the Gaussians
+  (see method {@link -setup}). This is done similiar to computing without LDL factorization. So the
+  the computation is finally done in the following way:</p>
+  <p class="indent"><img src="../resources/gmm/0010.gif" border="0" align="absmiddle">. (6)</p>
+
+  <h4>Computing the Logarithmic Gaussian Probability Density (Method {@link -density})</h4>
+  <p>According to equation (1) we can calculate the logarithmic Gaussian density from the <span
+  style="font-variant:small-caps;">Mahalanobis</span> Distance as</p>
+  <p class="indent"><object data="../resources/gmm/0005.svg" type="image/svg+xml" width="310" height="53"
+    viewastext="viewastext" align="middle"><img src="../resources/gmm/0005.gif" width="309" height="52" border="0"
+    align="absmiddle"></object>. (7)</p>
+  The logarithmic density computation requires only one extra term (D) which does not depend on the feature
+  vectors and can be precalculated like the terms A and B. The precalculation of D is also done during the Gaussian
+  setup (see method {@link -setup}). The precalculated values are stored in field {@link delta}.
+  </div>
+END_MAN
+
+NOTE:    SSE2 Optimization
+COMMENT: This section describes the SSE2 optimizations available for the gmm class.
+/html MAN:
+  <p>There is an SSE2 optimized variant of the <span style="font-variant:small-caps;">Mahalanobis</span> distance
+  computation which is approximately two times faster than the standard algorithm. The optimization is activated
+  by the line</p>
+  <pre class="code">
+
+  DEFINE: GMM_SSE2 1
+  </pre>
+  <p>in the classes' definition file <code>gmm.def</code>. The optimized code may not be compilable on a
+  particular platform (resulting in lots of errors in source file <code>gmm_core_sse2.c</code>). In such
+  a case just comment out the <code>DEFINE:</code> mentioned above.</p>
+
+  @cgen:TODO: Implementation works but takes 170% computation time compared with standard implementation (for
+              double type)!??
+END_MAN
+
+## dLabPro interface code snippets
+RESETCODE:
+  RESET;
+  CGmm_Precalc(_this,TRUE);
+END_CODE
+
+DONECODE:
+  DONE;
+  CGmm_Precalc(_this,TRUE);
+END_CODE
+
+COPYCODE:
+  COPY;
+  CGmm_Precalc(_this,FALSE);
+END_CODE
+
+RESTORECODE:
+  RESTORE;
+  CGmm_Precalc(_this,FALSE);
+END_CODE
+
+## Generate and quit
+-cgen
+quit
+
+## EOF

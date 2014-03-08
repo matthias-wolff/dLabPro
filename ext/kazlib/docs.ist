@@ -1,0 +1,8 @@
+preamble
+
+"\\begin{theindex}\n\\addcontentsline{toc}{section}{Index}\n"
+
+postamble
+
+"\n\\end{theindex}\n"
+

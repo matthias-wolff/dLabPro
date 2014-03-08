@@ -1,0 +1,144 @@
+## dLabPro class CProsody (Prosody)
+## - Definition script
+##
+## AUTHOR : Hussein Hussein
+## PACKAGE: dLabPro/classes
+## 
+## Copyright 2013 dLabPro contributors and others (see COPYRIGHT file) 
+## - Chair of System Theory and Speech Technology, TU Dresden
+## - Chair of Communications Engineering, BTU Cottbus
+## 
+## This file is part of dLabPro.
+## 
+## dLabPro is free software: you can redistribute it and/or modify it under the
+## terms of the GNU Lesser General Public License as published by the Free
+## Software Foundation, either version 3 of the License, or (at your option)
+## any later version.
+## 
+## dLabPro is distributed in the hope that it will be useful, but WITHOUT ANY
+## WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+## FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+## details.
+## 
+## You should have received a copy of the GNU Lesser General Public License
+## along with dLabPro. If not, see <http://www.gnu.org/licenses/>.
+
+PLATFORM: GNUC++
+COMPILER: gcc
+AR:       ar
+CFLAGS:   -Wno-trigraphs
+
+PROJECT:  prosody
+COMMENT:  Prosody class
+AUTHOR:   Hussein Hussein
+VERSION:  1.0
+CLASS:    Prosody
+
+/html MAN: 
+       <p>This class is to calculate the prosodic features.</p>
+END_MAN
+
+## Files - Additional includes
+INCLUDE: "dlp_data.h"
+
+## Files - Additional source files
+FILE: pause.cpp
+FILE: pm2f0.cpp
+FILE: energy.cpp
+FILE: add_rms.cpp
+
+## Defines
+HEADERCODE:
+
+END_CODE
+
+## Errors
+ERROR:   FALSE_PAUSE
+COMMENT: Number of initial pauses is not equal to number of terminal pauses.
+
+ERROR:   NO_F0
+COMMENT: There is no F0 values.
+
+ERROR:   NO_SRate
+COMMENT: Sample rate for speech signal is not specified.
+
+ERROR:   NO_PM
+COMMENT: There is no Pitch Marks in the speech signal.
+
+ERROR:   Div_Zero
+COMMENT: Divide by zero.
+
+
+## Fields
+
+## Options
+
+
+## Methods
+METHOD:  -pause_detect
+COMMENT: Detect pauses in speech signal.
+SYNTAX:  (data idSignal, data idPause)
+/html MAN:
+         <p>Detect pauses in <CODE>idSignal</CODE> using the smoothed short time energy contour.
+
+         @param idSignal Input signal
+         @param idPause  Ouput pauses
+END_MAN
+
+
+METHOD:  -pm_fo
+COMMENT: Calculate F0 contour from Pitch Mark.
+SYNTAX:  (data dPM, int nSrate, int nSrateF0, data dF0)
+/html MAN:
+         <p>Calculate F0 contour from Pitch Marks.
+
+         @param dPM Input PM data object
+         @param nSrate Sample Rate for speech signal
+         @param nSrateF0 Sampling Rate for F0 contour
+         @param dF0  Ouput F0 data object
+END_MAN
+
+
+METHOD:  -add_rms
+COMMENT: Add RMS/Energy values to the F0 contour.
+SYNTAX:  (data dSignal, data dF0, int nSrate, int nSrateF0, data dF0rms)
+/html MAN:
+         <p>Add RMS/Energy values to the F0 contour.
+
+         @param dSignal Input signal
+     @param dF0 F0 contour
+         @param nSrate Sample Rate for speech signal
+         @param nSrateF0 Sample Rate for F0 contour
+         @param dF0rms Ouput F0 contour with RMS/Energy values
+END_MAN
+
+
+METHOD:  -energy_contour
+COMMENT: Calculate the short time energy contour of speech signal.
+SYNTAX:  (data idSignal, data idEnergy)
+/html MAN:
+         <p>Calculate the short time energy contour of <CODE>idSignal</CODE>.
+
+         @param idSignal Input signal
+         @param idEnergy Ouput short time energy contour
+END_MAN
+
+
+## dLabpro interface code
+INITCODE:
+  INIT;
+END_CODE
+
+DONECODE:
+  DONE;
+END_CODE
+
+RESETCODE:
+  RESET;
+END_CODE
+
+## Generate files
+-cgen
+quit
+
+## EOF

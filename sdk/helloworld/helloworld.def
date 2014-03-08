@@ -1,0 +1,213 @@
+## dLabPro SDK class CHelloworld (Helloworld)
+## - Definition file
+##
+## AUTHOR : Matthias Wolff
+## PACKAGE: dLabPro/sdk
+## 
+## Copyright 2013 dLabPro contributors and others (see COPYRIGHT file) 
+## - Chair of System Theory and Speech Technology, TU Dresden
+## - Chair of Communications Engineering, BTU Cottbus
+## 
+## This file is part of dLabPro.
+## 
+## dLabPro is free software: you can redistribute it and/or modify it under the
+## terms of the GNU Lesser General Public License as published by the Free
+## Software Foundation, either version 3 of the License, or (at your option)
+## any later version.
+## 
+## dLabPro is distributed in the hope that it will be useful, but WITHOUT ANY
+## WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+## FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+## details.
+## 
+## You should have received a copy of the GNU Lesser General Public License
+## along with dLabPro. If not, see <http://www.gnu.org/licenses/>.
+
+PLATFORM: GNUC++
+COMPILER: gcc
+AR:       ar
+CFLAGS:   -Wno-trigraphs
+
+/cProject
+PROJECT:  helloworld
+COMMENT:  Simple example for a dLabPro class
+AUTHOR:   m.eichner
+VERSION:  1.00 SLC22
+CLASS:    Helloworld
+
+## Files - Additional includes
+# INCLUDE: "myheader.h"
+INCLUDE: "dlp_function.h"
+
+## Files - Additional source files
+FILE:    helloworld_dm.c
+
+## Defines
+#DEFINE: MY_DEFINE 0
+
+## Errors
+ERROR:   PAR_ERROR
+COMMENT: Failed to set parameter %s. 
+
+## Fields
+FIELD:   greeting_english
+TYPE:    string
+COMMENT: English greeting text.
+INIT:    "Hello World!"
+MAN:
+  This parameter holds the greeting text in english.
+END_MAN
+CODE:
+  if (!dlp_strlen(_this->m_greetingEnglish))
+    return IERROR(_this,PAR_ERROR,"greeting_english",0,0);
+END_CODE
+
+FIELD:   greeting_german
+TYPE:    string
+COMMENT: German greeting text.
+INIT:    "Hallo Welt!"
+MAN:
+  This parameter holds the greeting text in german.
+END_MAN
+CODE:
+  if (!dlp_strlen(_this->m_greetingGerman))
+    return IERROR(_this,PAR_ERROR,"greeting_german",0,0);
+END_CODE
+
+FIELD:   field_bool
+TYPE:    bool
+COMMENT: Just a field of type bool.
+#INIT:    FALSE
+MAN:
+  This is just a field of type bool.
+END_MAN
+
+FIELD:   field_uchar
+TYPE:    unsigned char
+COMMENT: Just a field of type unsigned char.
+INIT:    0
+MAN:
+  This is just a field of type unsigned char.
+END_MAN
+
+FIELD:   field_char
+TYPE:    char
+COMMENT: Just a field of type char.
+INIT:    0
+MAN:
+  This is just a field of type char.
+END_MAN
+
+FIELD:   field_ushort
+TYPE:    unsigned short
+COMMENT: Just a field of type unsigned short.
+INIT:    0
+MAN:
+  This is just a field of type unsigned short.
+END_MAN
+
+FIELD:   field_short
+TYPE:    short
+COMMENT: Just a field of type short.
+INIT:    0
+MAN:
+  This is just a field of type short.
+END_MAN
+
+FIELD:   field_ulong
+TYPE:    unsigned long
+COMMENT: Just a field of type unsigned long.
+INIT:    0
+MAN:
+  This is just a field of type unsigned long.
+END_MAN
+
+FIELD:   field_long
+TYPE:    long
+COMMENT: Just a field of type long.
+INIT:    0
+MAN:
+  This is just a field of type long.
+END_MAN
+
+#FIELD:   field_int
+#TYPE:    int
+#COMMENT: Just a field of type int.
+#INIT:    0
+#MAN:
+#  This is just a field of type int.
+#END_MAN
+
+FIELD:   field_float
+TYPE:    float
+COMMENT: Just a field of type float.
+INIT:    0.0
+MAN:
+  This is just a field of type float.
+END_MAN
+
+FIELD:   field_double
+TYPE:    double
+COMMENT: Just a field of type double.
+INIT:    0.0
+MAN:
+  This is just a field of type double.
+END_MAN
+
+FIELD:   field_data
+TYPE:    data
+COMMENT: Just a field of type data.
+MAN:
+  This is just a field of type data.
+END_MAN
+
+## Options
+OPTION:  /german
+COMMENT: switch to german
+CODE:
+	printf("\nMake it German, baby!");
+END_CODE
+MAN:  
+  This option switches to german greeting.
+END_MAN
+
+## Methods
+METHOD:  -sayhello
+COMMENT: Says hello to the user.
+SYNTAX:  ()
+MAN: 
+  This is the manual for the '-sayhello' command of the sayhello module.
+END_MAN
+CODE:
+  if (_this->m_bGerman)
+    printf("\n\n%s\n\n",_this->m_greetingGerman);
+  else
+    printf("\n\n%s\n\n",_this->m_greetingEnglish);
+END_CODE
+
+OPTION:  /adm
+COMMENT: Adaptive delta modulation (method -dm)
+
+METHOD:  -dm
+COMMENT: Delta modulation example
+SYNTAX:  (data idSrc, long nOversample, data idDst)
+
+## dLabpro interface code
+INITCODE:
+  INIT;
+END_CODE
+
+DONECODE:
+  DONE;
+END_CODE
+
+RESETCODE:
+  RESET;
+END_CODE
+
+## Generate and quit
+-cgen
+quit
+
+## EOF
+

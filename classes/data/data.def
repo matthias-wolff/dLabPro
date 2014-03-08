@@ -1,0 +1,2577 @@
+## dLabPro class CData (data)
+## - Definition file
+##
+## AUTHOR : Guntram Strecha, Matthias Wolff
+## PACKAGE: dLabPro/classes
+## 
+## Copyright 2013 dLabPro contributors and others (see COPYRIGHT file) 
+## - Chair of System Theory and Speech Technology, TU Dresden
+## - Chair of Communications Engineering, BTU Cottbus
+## 
+## This file is part of dLabPro.
+## 
+## dLabPro is free software: you can redistribute it and/or modify it under the
+## terms of the GNU Lesser General Public License as published by the Free
+## Software Foundation, either version 3 of the License, or (at your option)
+## any later version.
+## 
+## dLabPro is distributed in the hope that it will be useful, but WITHOUT ANY
+## WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+## FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+## details.
+## 
+## You should have received a copy of the GNU Lesser General Public License
+## along with dLabPro. If not, see <http://www.gnu.org/licenses/>.
+
+#"_WINDOWS" ?platform if  
+#  PLATFORM: MSVC++
+#else
+  PLATFORM: GNUC++
+  COMPILER: gcc
+  AR:       ar
+  CFLAGS:   -Wno-trigraphs
+#endif
+
+PROJECT: Data
+CLASS:   data
+AUTHOR:  g. strecha, dresden
+COMMENT: Generic data container
+VERSION: 2.0.1
+/cProject
+/html MAN:
+  <p>The <code>data</code> class provides a table based data container along
+  with a number of handling and calculation methods.</b>
+
+  <h3>Definition of the <code>data</code> table</h3>
+  <p>A data table consists of an ordered set of <i>records</i>. Each record
+  consists of an ordered set of <i>cells</i>. The cells may have various data
+  types (numeric and strings). All records of one data table have the same cell
+  structure, i.e. they constist of the same number and type of cells. So the
+  cell structure, the so called <i>components</i>, of the table may be
+  interpreted as table rows. The records of a data table may be interpreted
+  as table columns. The records of a data table may be grouped into equally sized
+  <i>blocks</i>. This facilitates the handling of sets of matrices.</p>
+
+  <h3>Some important methods</h3>
+  <p>See <a href="#mth">method overview</a> for a complete list of methods.</p>
+  <table cellpadding="2">
+    <tr><td class="rowgroup" colspan="2">Seeing contents and properties                            </td></tr>
+    <tr><td>{@link -print     }</td><td>Print data content                                         </td></tr>
+    <tr><td>{@link -status    }</td><td>Print data instance description                            </td></tr>
+    <tr><td><a href="itp.html#mth_see"><code class="link">see</code></a> *</td><td>Print field values</td></tr>
+
+    <tr><td class="hidden" colspan="2">&nbsp;                                                      </td></tr>
+    <tr><td class="rowgroup" colspan="2">Layout and memory allocation                              </td></tr>
+    <tr><td>{@link -addcomp   }</td><td>Adds one component                                         </td></tr>
+    <tr><td>{@link -allocate  }</td><td>Allocates and clears memory                                </td></tr>
+    <tr><td>{@link -array     }</td><td>Defines components, allocates and clears memory            </td></tr>
+    <tr><td>{@link -reallocate}</td><td>Reallocates the memory preserving the content              </td></tr>
+
+    <tr><td class="hidden" colspan="2">&nbsp;                                                      </td></tr>
+    <tr><td class="rowgroup" colspan="2">Modifiying the data content                               </td></tr>
+    <tr><td>{@link -fetch     }</td><td>Fetches one value                                          </td></tr>
+    <tr><td>{@link -store     }</td><td>Stores one value                                           </td></tr>
+    <tr><td>{@link -xfetch    }</td><td>Fetches components, records or blocks                      </td></tr>
+    <tr><td>{@link -xstore    }</td><td>Stores components, records or blocks                       </td></tr>
+    <tr><td>{@link -fill      }</td><td>Fills numeric components                                   </td></tr>
+    <tr><td><code>x[r,c]</code></td><td>Access through <a href="../quickref/syntax.html#formula"
+                                        >formula interpreter</a>                                   </td></tr>
+
+    <tr><td class="hidden" colspan="2">&nbsp;                                                      </td></tr>
+    <tr><td class="rowgroup" colspan="2">Copying, joining and splicing                             </td></tr>
+    <tr><td>{@link -cat       }</td><td>Appends records                                            </td></tr>
+    <tr><td><code>-copy</code> </td><td>Makes a complete copy of a source instance                 </td></tr>
+    <tr><td>{@link -delete    }</td><td>Deletes components, records or blocks                      </td></tr>
+    <tr><td>{@link -join      }</td><td>Appends components                                         </td></tr>
+    <tr><td>{@link -select    }</td><td>Copies components, records or blocks                       </td></tr>
+
+    <tr><td class="hidden" colspan="2">&nbsp;                                                      </td></tr>
+    <tr><td class="rowgroup" colspan="2">Calculation and table lookup                              </td></tr>
+    <tr><td>{@link -aggregate }</td><td>Aggregates components/records/blocks                       </td></tr>
+    <tr><td>{@link -gen_index }</td><td>Generates index by searching                               </td></tr>
+    <tr><td>{@link -lookup    }</td><td>One dimensional table lookup                               </td></tr>
+    <tr><td>{@link -scalop    }</td><td>Executes scalar operation y=op(x,c)                        </td></tr>
+    <tr><td>{@link -strop     }</td><td>Executes string operation y=op(x,s)                        </td></tr>
+
+    <tr><td class="hidden" colspan="2">&nbsp;                                                      </td></tr>
+    <tr><td class="rowgroup" colspan="2">Sorting and RLE compression                               </td></tr>
+    <tr><td>{@link -compress  }</td><td>RLE compression of one component                           </td></tr>
+    <tr><td>{@link -expand    }</td><td>RLE expansion of one component                             </td></tr>
+    <tr><td>{@link -sortdown  }</td><td>Sorts one component on descending order                    </td></tr>
+    <tr><td>{@link -sortup    }</td><td>Sorts one component on ascending order                     </td></tr>
+  </table>
+END_MAN
+
+## Defines - identifiers for descriptor fields
+DEFINE: DESCR0    9900                                                          # User data descr. 0       field descr0
+DEFINE: DESCR1    9901                                                          # User data descr. 1       field descr1
+DEFINE: DESCR2    9902                                                          # User data descr. 2       field descr2
+DEFINE: DESCR3    9903                                                          # User data descr. 3       field descr3
+DEFINE: DESCR4    9904                                                          # User data descr. 4       field descr4
+DEFINE: RINC      9905                                                          # Physical record increment  field rinc
+DEFINE: RWID      9906                                                          # Physical record width      field rwid
+DEFINE: ROFS      9907                                                          # Phys. offset of 1st rec.   field rofs
+
+## Defines - Debug
+DEFINE: CHECK_DATA(A) {DLPASSERT(A!=NULL); DLPASSERT(A->m_lpTable);}
+
+## Defines - macros
+DEFINE: CDATA_XADDR(THIS,R,C)                  \
+  (THIS->m_lpTable->m_theDataPointer         + \
+   THIS->m_lpTable->m_reclen * R             + \
+   THIS->m_lpTable->m_compDescrList[C].offset)
+
+## Defines - sort
+DEFINE: CDATA_SORT_UP    1
+DEFINE: CDATA_SORT_DOWN  2
+
+## Defines - mark
+DEFINE: CDATA_MARK_RECS     0
+DEFINE: CDATA_MARK_COMPS    1
+DEFINE: CDATA_MARK_BLOCKS   2
+DEFINE: CDATA_MARK_CELLS    3
+
+## Defines - misc
+DEFINE: COMP_DESCR_LEN    8
+DEFINE: PRINTBREAK       -1
+DEFINE: PRINTNEXT        -2
+DEFINE: AXES_DESCRLEN    10
+
+## C source files
+INCLUDE: "dlp_table.h"
+FILE:    data_aci.c
+FILE:    data_iam.c
+FILE:    data_ini.c
+FILE:    data_int.c
+FILE:    data_prt.c
+FILE:    data_wrk.c
+
+## Errors
+ERROR:   DATA_INTERNAL
+COMMENT: Internal error (%s).
+
+ERROR:   DATA_EMPTY
+COMMENT: Argument '%s' must not be empty.
+
+ERROR:   DATA_BADCOMP
+COMMENT: Component %d does not exist in instance '%s'.
+
+ERROR:   DATA_BADCOMPTYPE
+COMMENT: Component %d in instance '%s' must be of type %s.
+
+ERROR:   DATA_BADOPC
+COMMENT: Opcode '%d' is not valid.
+
+ERROR:   DATA_INITIALIZERS
+COMMENT: Too %s initializers follow '{'.
+
+ERROR:   DATA_BADINITIALIZER
+COMMENT: Bad initializer '%s' for element [%d,%d].
+
+ERROR:   DATA_HERESCAN
+COMMENT: Unexpected end of file (scanning for '%s').
+
+ERROR:   DATA_MTHINCOMPL
+COMMENT: Method not completed.
+
+ERROR:   DATA_OPCODE
+COMMENT: '%s' is not a valid %s operation.
+
+ERROR:   DATA_BADSORTMODE
+COMMENT: '%d' is not a valid mode for sort.
+
+ERROR:   DATA_BADSORTTYPE
+COMMENT: Component %d is of type '%s'. This type is not supported by sort.
+
+ERROR:   DATA_TRUNCATE
+COMMENT: Data truncate due to different number of %s in '%s' and '%s'.
+LEVEL:   EL_WARNING
+
+ERROR:   DATA_DIMMISMATCH
+COMMENT: Dimensions of %s and %s do not match (%s)!.
+LEVEL:   EL_WARNING
+
+ERROR:   DATA_NOMARK
+COMMENT: No %s marked in instance '%s'.
+
+ERROR:   DATA_BADMARK
+COMMENT: Processing marked %s is not supported.
+
+ERROR:   DATA_HOMOGEN
+COMMENT: Instance %s must be homogeneous (either numeric or symbolic components).
+
+ERROR:   DATA_DESERIALIZE
+COMMENT: Deserialization of instance '%s' failed%s.
+
+ERROR:   DATA_CNVT
+COMMENT: Cannot convert %s to %s.
+
+ERROR:   DATA_NOSUPPORT
+COMMENT: %s is not supported%s.
+
+ERROR:   DATA_MDIM
+COMMENT: Matrix dimension error%s.
+/html MAN:
+  <p>A matrix computation could not be completed due to
+  invalid dimensions of one or several arguments.</p>
+  <p>The number of rows in a matrix is equal to the number of
+  <em>numerical</em> components, the number of columns is equal to the number
+  of records <em>per block</em> of the <code>data</code> instance containing
+  the matrix.</p>
+
+  <h4>Remarks</h4>
+  <ul>
+    <li>This error is also used by class <a href="matrix.html"><code
+      class="link">matrix</code></a>.</li>
+  </ul>
+
+  @param 1 More detailled description of error (e.q. "not a square matrix").
+END_MAN
+
+ERROR:   DATA_MDATA_WARN
+COMMENT: Matrix data error in block %ld%s.
+/html MAN:
+  <p>A matrix computation could not be completed due to
+  invalid data contents of one or several arguments.</p>
+
+  <h4>Remarks</h4>
+  <ul>
+    <li>This error is also used by class <a href="matrix.html"><code
+      class="link">matrix</code></a>.</li>
+  </ul>
+
+  @param 1 Index of defective block.
+  @param 2 More detailled description of error (e.q. "matrix asymmetric").
+END_MAN
+
+ERROR:   DATA_NOTFOUND_ERR
+COMMENT: %s%s not found.
+LEVEL:   EL_ERROR
+
+ERROR:   DATA_SIZE
+COMMENT: The data object has unexpected size of %s, must be %s %d.
+LEVEL:   EL_ERROR
+
+ERROR:   DATA_NOTFOUND
+COMMENT: %s%s not found.
+LEVEL:   EL_WARNING
+
+ERROR:   DATA_AMBIGUOUS
+COMMENT: Method ambiguous (%s).
+LEVEL:   EL_WARNING
+
+## Fields - Data table
+FIELD:   dim
+COMMENT: components per record
+CNAME:   0
+TYPE:    int
+FLAGS:   /noset
+MAN:     
+  <dim> is the number of record components. <dim> is set up
+  automatically by -defcomp, -ndefcomp, -delete (option /comp),
+  -scopy.
+
+  see also -defcomp -ndefcomp -scopy -delete
+END_MAN
+
+FIELD:   nrec
+COMMENT: Valid record number
+CNAME:   0
+TYPE:    int
+FLAGS:   /noset
+MAN:     
+  <nrec> is the number of records valid for processing.
+  <nrec> is set up automatically by commands -allocate,
+  -clear, -cat
+
+  see also: maxrec -allocate -clear -cat
+END_MAN
+
+FIELD:   maxrec
+COMMENT: max. number of records
+CNAME:   0
+TYPE:    int
+FLAGS:   /noset
+MAN:     
+  <maxrec> is the number of records, for which memory is allocated:
+  <maxrec> >= nrec.
+  
+  <maxrec> is set up automatically by commands -allocate,
+  -clear, -cat,
+
+  see also: nrec -allocate -clear -cat
+END_MAN
+
+FIELD:   reclen
+COMMENT: record length [bytes]
+CNAME:   0
+TYPE:    int
+FLAGS:   /noset
+MAN:     
+  <reclen> is the length of the records of the data instance in
+  bytes. It is set up automatically by commands -defcomp, -ndefcomp,
+  -delete (option /comp), -join
+END_MAN
+
+FIELD:   nblock
+COMMENT: block number
+TYPE:    int
+MAN:     
+  <nblock> specifies the number of blocks, in which the record
+  sequence is divided virtually. A new created data instance has
+  one block: <nblock> = 1.
+
+  <nblock> > 0 is used in the case of matrix operations.
+END_MAN
+
+FIELD:   noffset
+COMMENT: Record print Offset
+TYPE:    int
+MAN:     
+  <noffset> is the skipping count for command Print 
+
+  see also: Print
+END_MAN
+
+## Fields - User descriptions
+FIELD:   descr0
+COMMENT: User data description 0
+CNAME:   0                                                                      # REFLECTS m_lpTable->m_descr0!
+TYPE:    double
+/html MAN:     
+  <p>This field may contain a task specific data description which is used by
+  some algorithms for specific purposes. Before changing the content be sure
+  that this will not unintendedly interfere with any method you call.</p>
+
+  @see descr1
+  @see descr2
+  @see descr3
+  @see descr4
+  @see ftext
+  @see rtext
+  @see vrtext
+END_MAN
+
+FIELD:   descr1
+COMMENT: User data description 1
+CNAME:   0                                                                      # REFLECTS m_lpTable->m_descr1!
+TYPE:    double
+/html MAN:     
+  <p>This field may contain a task specific data description which is used by
+  some algorithms for specific purposes. Before changing the content be sure
+  that this will not unintendedly interfere with any method you call.</p>
+
+  @see descr0
+  @see descr2
+  @see descr3
+  @see descr4
+  @see ftext
+  @see rtext
+  @see vrtext
+END_MAN
+
+FIELD:   descr2
+COMMENT: User data description 2
+CNAME:   0                                                                      # REFLECTS m_lpTable->m_descr2!
+TYPE:    double
+/html MAN:     
+  <p>This field may contain a task specific data description which is used by
+  some algorithms for specific purposes. Before changing the content be sure
+  that this will not unintendedly interfere with any method you call.</p>
+
+  @see descr0
+  @see descr1
+  @see descr3
+  @see descr4
+  @see ftext
+  @see rtext
+  @see vrtext
+END_MAN
+
+FIELD:   descr3
+COMMENT: User data description 3
+CNAME:   0                                                                      # REFLECTS m_lpTable->m_descr3!
+TYPE:    double
+/html MAN:     
+  <p>This field may contain a task specific data description which is used by
+  some algorithms for specific purposes. Before changing the content be sure
+  that this will not unintendedly interfere with any method you call.</p>
+
+  @see descr0
+  @see descr1
+  @see descr2
+  @see descr4
+  @see ftext
+  @see rtext
+  @see vrtext
+END_MAN
+
+FIELD:   descr4
+COMMENT: User data description 4
+CNAME:   0                                                                      # REFLECTS m_lpTable->m_descr4!
+TYPE:    double
+/html MAN:     
+  <p>This field may contain a task specific data description which is used by
+  some algorithms for specific purposes. Before changing the content be sure
+  that this will not unintendedly interfere with any method you call.</p>
+
+  @see descr0
+  @see descr1
+  @see descr2
+  @see descr3
+  @see ftext
+  @see rtext
+  @see vrtext
+END_MAN
+
+FIELD:   ftext
+COMMENT: File text
+TYPE:    text
+MAN:     
+  <ftext> is a text which may be assigned to a DNORM file in order
+  to describe the data file content.
+END_MAN
+
+FIELD:   rtext
+COMMENT: Realization text
+CNAME:   0
+TYPE:    text
+MAN:     
+  <rtext> is a text which may be assigned to one data instance stored in
+  a DNORM file in order to describe the data by a text.
+  Currently this field is used to indicate that the data are quantized or not.
+END_MAN
+
+FIELD:   vrtext
+COMMENT: Realization description
+CNAME:   0
+TYPE:    text
+
+## Fields - Physical units
+FIELD:    rinc
+OBSOLETE: fsr
+COMMENT:  Distance between subsequent records in physical units.
+CNAME:    0                                                                     # REFLECTS m_lpTable->m_fsr!
+TYPE:     double
+/html MAN:
+  <p>If the record axis is associated with a physical dimension, this field
+  specifies the increment between subsequent records in physical units. A
+  typical usage is the the continuation rate of sampled time series measured in
+  milliseconds.</p>
+
+  @see runit
+  @see rofs
+  @see rwid
+END_MAN
+
+FIELD:    rwid
+OBSOLETE: zf
+COMMENT:  Span width of one record in physical units.
+CNAME:    0                                                                     # REFLECTS m_lpTable->m_zf!
+TYPE:     double
+/html MAN:
+  <p>If the record axis is associated with a physical dimentsion, this field
+  may be used to specify the "width" of one record. One typical usage is a
+  window length in ms, .i.e. the time interval of a signal represented by one
+  record.</p>
+  <p>Please note that this field is different from the record increment
+  {@link rinc} which specifies the offset between two subsequent records in
+  physical units.</p>
+
+  @see runit
+  @see rinc
+  @see rofs
+END_MAN
+
+FIELD:    rofs
+OBSOLETE: ofs
+CNAME:    0                                                                     # REFLECTS m_lpTable->m_ofs!
+COMMENT:  Offset of first record in physical units.
+TYPE:     double
+/html MAN:
+  <p>If the record axis is associated with a physical dimension, this field
+  specifies the offset of the first record (record index 0) from the origin of
+  the physical coordinate system. By default the record axis is associated with
+  the time dimension (measured in ms).</p>
+  @see rinc
+  @see rwid
+  @see runit
+END_MAN
+
+FIELD:   runit
+CNAME:   m_lpRunit
+COMMENT: Physical unit of record axis.
+TYPE:    10
+INIT:    "ms"
+/html MAN:
+  <p>If the record axis is associated with a physical dimension, this field
+  specifies the name of the physical unit. By default the record axis is
+  associated with the time dimension measured in milliseconds.</p>
+  <p>The following fields define the physical interpretation of the record
+  axis:</p>
+  <table class="indent" cellpadding="3">
+    <tr><th>Field</th><th>Description</th></tr>
+    <tr><td>{@link rofs}</td><td>Offset of first record in physical units</td></tr>
+    <tr><td>{@link rinc}</td><td>Distance between subsequent records in physical units</td></tr>
+    <tr><td>{@link rwid}</td><td>Span width of one record in physical units</td></tr>
+  </table>
+  @see cunit cunit <span class="normal">(physical dimension of component axis)</span>
+END_MAN
+
+FIELD:    cinc
+CNAME:    m_nCinc
+COMMENT:  Distance between subsequent components in physical units.
+TYPE:     double
+/html MAN:
+  <p>If the component axis is associated with a physical dimension, this field
+  specifies the increment between subsequent components in physical units.</p>
+  @see cofs
+  @see cunit
+END_MAN
+
+FIELD:    cofs
+CNAME:    m_nCofs
+COMMENT:  Offset of first component in physical units.
+TYPE:     double
+/html MAN:
+  <p>If the component axis is associated with a physical dimension, this field
+  specifies the offset of the first component (component index 0) from the
+  origin of the physical coordinate system.</p>
+  @see cinc
+  @see cunit
+END_MAN
+
+FIELD:   cunit
+CNAME:   m_lpCunit
+COMMENT: Physical unit of component axis
+TYPE:    10
+/html MAN:
+  <p>If the component axis is associated with a physical dimension, this field
+  specifies the name of the physical unit. By default the component axis is
+  <em>not</em> associated with any dimension.</p>
+  <p>The following fields define the physical interpretation of the component
+  axis:</p>
+  <table class="indent" cellpadding="3">
+    <tr><th>Field</th><th>Description</th></tr>
+    <tr><td>{@link cofs}</td><td>Offset of first component in physical units</td></tr>
+    <tr><td>{@link cinc}</td><td>Distance between subsequent components in physical units</td></tr>
+  </table>
+  @see runit runit <span class="normal">(physical dimension of record axis)</span>
+END_MAN
+
+FIELD:   vunit
+CNAME:   m_lpVunit
+COMMENT: Physical unit of values axis
+TYPE:    10
+/html MAN:
+  <p>If the component axis is associated with a physical dimension, this field
+  specifies the name of the physical unit. By default the component axis is
+  <em>not</em> associated with any dimension.</p>
+END_MAN
+
+## Hidden fields - mark
+FIELD:   mark_map
+COMMENT: Map used to mark elements.
+TYPE:    text
+FLAGS:   /hidden /noset /nosave
+MAN:     
+  This field is used to mark rec/comp/block/cell depending
+  on mark_mode.
+END_MAN
+
+FIELD:   mark_mode
+COMMENT: Mode of marking elements.
+TYPE:    int
+FLAGS:   /hidden /noset /nosave
+MAN:     
+  Valid mark modes are rec/comp/block/cell.
+END_MAN
+
+FIELD:   mark_map_size
+COMMENT: Size, i.e. number of elements in mark map.
+TYPE:    int
+FLAGS:   /hidden /noset /nosave
+MAN:     
+  Size, i.e. number of elements in mark map.
+  Number and size of mark map depend on mark mode.
+END_MAN
+
+## Hidden fields - The data table
+FIELD:   lpTable
+COMMENT: The data table
+TYPE:    CDlpTable*
+FLAGS:   /hidden /noset /nosave /nonautomatic
+
+## Methods - Data table structure
+METHOD:   -addcomp
+CNAME:    AddComp
+OBSOLETE: -defcomp
+COMMENT:  Adds one component
+SYNTAX:   (string sName, short nType)
+
+METHOD:   -addncomps
+CNAME:    AddNcomps
+OBSOLETE: -ndefcomp
+COMMENT:  Adds multiple components
+SYNTAX:   (short nType, int nCount)
+
+METHOD:  -insertcomp
+CNAME:   InsertComp
+COMMENT: Inserts one component at a specified position
+SYNTAX:  (string sName, short nType, int nInsertAt)
+
+METHOD:  -insertncomps
+CNAME:   InsertNcomps
+COMMENT: Inserts components at a specified position
+SYNTAX:  (short nType, int nInsertAt, int nCount)
+
+METHOD:  -repmat
+COMMENT: Replicate and tile a matrix.
+SYNTAX:  (data idSrc, int nRecs, int nComps)
+         
+METHOD:  -reshape
+COMMENT: Changes format of matrix (components/records)
+SYNTAX:  (data idSrc, int nRecs, int nComps)
+
+METHOD:  -get_comp_type
+COMMENT: Returns the variable type of a component
+SYNTAX:  short (int nComp)
+
+METHOD:  -scopy
+COMMENT: Copies the record structure
+SYNTAX:  (data idSrc)
+
+METHOD:  -copy_cnames   
+COMMENT: Copies selected component names
+SYNTAX:  (data iSrc, int jx, int jy, int n)
+MAN:
+  <-copy_cnames> copies the names of the record components
+  no. <jx>,...,<jx+n>-1 from <iSrc> to the components 
+  <jy>,...,<jy+n>-1 of this instance.
+
+  <iSrc>   - source data object
+  <jx>     - index of first component
+  <jy>     - first target component
+  <n>      - number of component names to copy
+
+  NOTE: If <this> does not have components <jy>,...,<jy+n>-1
+        a warning message occurs.
+
+  Example:
+  -------
+
+    data x
+    type short 10 -ndefcomp
+    100        -allocate
+    4 "s1"        -defcomp
+    data y
+    type long 5   -ndefcomp
+    50        -allocate
+    x 9 y 0 2     -copy_cnames
+
+  copies the names of components 9 ("") and 10 ("s1") of
+  data object "x" to names of components 0 and 1 of data
+  object "y". "y" consists of 5 components of type long
+  (component 1 named "s1", all other components are unnamed)
+  with 50 allocated records.
+
+  see also: -copy, -scopy, -defcomp
+END_MAN
+
+METHOD:  -set_cnames
+COMMENT: Sets component names from a table
+SYNTAX:  (data iTable, int nIComp)
+MAN:     
+  <-set_names> assigns component names to the record compo-
+  nents  of this instance.  The names are  taken from  com-
+  ponent <nIComp> of data instance <iTable>. This component 
+  must be a symbolic component, otherwise an error occurs.
+
+  Example:
+  -------
+
+  data y
+           y type short 2 -ndefcomp d1
+       4 -defcomp s1
+       3 -allocate
+       y  { 2 4 a 
+        2 3 bb
+            4 0 ccc  }
+
+   data z
+            z type float 3 -ndefcomp 
+            y 2 z -set_cnames
+
+  The names of the three components of z will be a , bb and ccc.
+END_MAN
+
+METHOD:  -get_cnames
+COMMENT: Stores the component names into a table.
+SYNTAX:  (data idSrc)
+
+METHOD:  -set_cname
+COMMENT: Sets the name of one component
+SYNTAX:  (int nIComp, string sCName)
+MAN:     
+  <-set_cname> replaces the name of the component 
+  <nIComp> of this instance with <sCName>.
+
+  Example:
+  -------
+
+       data x
+       type short 10 -ndefcomp
+       x 1 "c2" -set_cname
+
+  The second component of "x" is named "c2".
+
+  see also: -copy_cnames, -scopy, -defcomp
+   
+END_MAN
+
+METHOD:  -get_cname
+COMMENT: Gets the name of one component
+SYNTAX:  string(int nIComp)
+MAN:     
+ Returns the name of component nComp.
+
+ - nIComp The zero-based index of the component in question
+END_MAN
+
+METHOD:  -find_comp
+COMMENT: Gets the component index from a component name
+SYNTAX:  int (string sCName)
+MAN:    
+  <-findcomp> retrieves the index of a component by its name
+   <sCName>.
+
+  Example:
+  -------
+
+    data x
+    type short -defcomp x1
+    type long  -defcomp x2
+    ...
+
+    x -findcomp x1  ...
+
+    is equivalent to
+
+    x 0 ...
+END_MAN
+
+METHOD:  -allocate
+COMMENT: Allocates and clears memory
+SYNTAX:  (int nRecs)
+/html MAN:    
+  <p>{@link -allocate} allocates memory for <code>nRecs</code>
+  record of the predefined component structure (see commands
+  {@link -addcomp}, {@link -addncomps}). 
+  The  memory is zero-initialized if option {@link/fast}
+  is set to <code>FALSE</code> (default).</p>
+
+  <p>Before doing that, <code>-allocate</code> destroys data
+  and deallocates  memory. The file association of
+  <code>this</code> is not affected.</p>
+
+  <h4>NOTES:</h4>
+  <ul>
+    <li>0 <this> -allocate will only free the data memory.</li>
+    <li>Before allocating memory at least one record component
+         must be specified.</li>
+    <li>-allocate sets parameters "maxrec" and "nrec" to <n></li>
+  </ul>
+
+  <h4>Example</h4>
+  <pre class="code">
+  <a href="data.html">data</a> x;
+  <a href="itp.html#mth_type">-type</a> short 3      x <a href="#mth_-addncomps">-addncomps</a>;   <span class="c-cmt"># def. 3 short-components</span>
+  "d1"  <a href="itp.html#mth_type">-type</a> double x <a href="#mth_-addcomp">-addcomp</a>;     <span class="c-cmt"># def. 1 double-component</span>
+  100                x <a href="#mth_-allocate">-allocate</a>;    <span class="c-cmt"># allocate</span>;
+  </pre>
+
+  <p>The data object "x" consists of 3 unnamed components of
+  type short and 1 component of type double and contains
+  100 records.</p>
+  
+  @see -addcomp
+  @see /fast
+  @cgen:option /fast
+END_MAN
+
+METHOD:  -reallocate
+COMMENT: Reallocates the memory preserving the contens.
+SYNTAX:  (int nRecs)
+MAN:    
+  Reallocates the memory block for the data content. The new
+  memory block can hold nRecs records of the current record
+  structure (component setup).
+  The field 'nrec' is updated accordingly.
+END_MAN
+CODE:
+  CData_Realloc(_this,nRecs);
+  CData_IncNRecs(_this,nRecs);
+END_CODE
+
+METHOD:  -array
+COMMENT: Defines components, allocates and clears memory
+SYNTAX:  (short nCType, int nComps, int nRecs)
+POSTSYN: { ... }
+/html MAN:
+  <p>Resets the instance, defines <code>nComps</code> componentes of type
+  <code>nCType</code>, allocates memory for <code>nRecs</code> records and
+  marks these records used (i.e. sets field {@link nrec} to
+  <code>nRecs</code>).</p>
+
+  <h4>Remarks</h4>
+  <ul>
+    <li><span class="warning">Warning:</span> This method destroys all data
+    content, the component structure and the description fields.</li>
+    <li>The method accepts an optional initializer. Its syntax is the same as
+    for <a href="#mth_{">method <code class="link">{</code></a>.</li>
+  </ul>
+
+  @see -addcomp
+  @see -addncomps
+  @see -allocate
+  @see <a href="function.html#mth_-type"><code class="link">function -type</code></a>
+END_MAN
+
+METHOD:  -is_empty
+COMMENT: Returns TRUE if instance is empty
+SYNTAX:  BOOL()
+MAN:
+  Test if this instance is empty (i.e. if there are no VALID
+  data records). An instance can be empty even though there
+  are components defined and/or there is memory allocated.
+END_MAN
+
+## Methods - Access to data content
+METHOD:  -fetch
+COMMENT: Fetches one value.
+SYNTAX:  "<int nIr> <comp> <data this>"
+/primary CODE:
+  INT32 nIr;
+  INT32 nIc;
+  GET_THIS_VIRTUAL_RV(CData,NOT_EXEC);
+  MIC_CHECK;
+  /*nIc = (INT32)MIC_GET_N(1,0);*/
+  nIc = CData_MicGetIc(_this,1,0);
+  nIr = (INT32)MIC_GET_N(2,1);
+  if (dlp_is_numeric_type_code(CData_GetCompType(_this,nIc)))
+    MIC_PUT_C(CData_Cfetch(_this,nIr,nIc));
+  else
+    MIC_PUT_S(CData_Sfetch(_this,nIr,nIc));
+  return O_K;
+END_CODE
+/html MAN:
+  <p>Returns the value of cell <code>this[nIr,nIc]</code>. The returned value
+  may be a number or a string.</p>
+  @param comp Zero-based index or name of component to fetch.
+  @param nIr  Zero-based index of record to fetch.
+  @see -store
+END_MAN
+
+METHOD:  -store
+COMMENT: Stores one value.
+SYNTAX:  "<val> <int nIr> <comp> <data this>"
+/primary CODE:
+  INT32 nIr;
+  INT32 nIc;
+  GET_THIS_VIRTUAL_RV(CData,NOT_EXEC);
+  MIC_CHECK;
+  /*nIc = (INT32)MIC_GET_N(1,0);*/
+  nIc = CData_MicGetIc(_this,1,0);
+  nIr = (INT32)MIC_GET_N(2,1);
+  if (dlp_is_numeric_type_code(CData_GetCompType(_this,nIc)))
+    return CData_Cstore(_this,MIC_GET_C(3,2),nIr,nIc);
+  else if (dlp_is_symbolic_type_code(CData_GetCompType(_this,nIc)))
+    return CData_Sstore(_this,MIC_GET_S(3,2),nIr,nIc);
+  else if (dlp_is_pointer_type_code(CData_GetCompType(_this,nIc)))
+    return CData_Pstore(_this,MIC_GET_I(3,2),nIr,nIc);
+  return NOT_EXEC;
+END_CODE
+/html MAN:
+  <p>Stores <code>val</code> into cell <code>this[nIr,nIc]</code>. If the value
+  is not of the same type as component <code>nIc</code>, the method will try to
+  cast the value to the type of the component.</p>
+  @param val The value to be stored.
+  @param comp Zero-based index or name of component to store <code>val</code> in.
+  @param nIr  Zero-based index of record to store <code>val</code> in.
+  @see -fetch
+END_MAN
+
+METHOD:  -xfetch
+COMMENT: Fetches components, records or blocks.
+SYNTAX:  "<first> <int nCount> <data this>"
+/primary CODE:
+  INT16 __nErr = O_K;
+  INT32 nFirst;
+  INT32 nCount;
+  GET_THIS_VIRTUAL_RV(CData,NOT_EXEC);
+  MIC_CHECK;
+  nCount = (INT32)MIC_GET_N(1,0);
+  nFirst = CData_MicGetIc(_this,2,1);
+  /*nFirst = (INT32)MIC_GET_N(2,1); */
+  __nErr = CData_Xfetch(_this, nFirst, nCount);
+  return __nErr;
+END_CODE
+/html MAN:
+  <p>Fetches <code>nCount</code> components, records or blocks from this instance starting
+  at element <code>first</code> and places the resulting data in a temporaray instance.</p>
+  <h4>Remarks</h4>
+  <ul>
+    <li>The method is polymorphic in dLabPro (see description of parameters).</li>
+    <li>Working with temporary instances may cause trouble as their validity period is not
+    defined. Consider using {@link -select} instead of {@link -xfetch}.</li>
+    <li>The method <em>cannot</em> be used in dLabPro 2.4 scripts (dLabPro command line
+    option <code>--compat</code>)!</li>
+  </ul>
+  @cgen:option /rec   Fetch records (default is components)
+  @cgen:option /block Fetch blocks (default is components)
+  @param first  Zero-based index of first element (component, record or block)
+                to fetch. In component mode (and <em>only</em> there!)
+                <code>first</code> may be a string specifying the first
+                component's name.
+  @param nCount Number of elements (components, records or blocks) to fetch
+  @return A temporary data instance containing the selected data. The temporary
+          instance is guarateed to remain valid for the immediately following
+          method or operator call (but <em>not</em> longer).
+
+  @see -xstore
+END_MAN
+
+METHOD:  -xstore
+COMMENT:  Stores several components, records or blocks of a data \
+          instance to another data instance at a specified position.
+SYNTAX:  "<data idScr> <int nFirst> <int nCount> <pos> <data this>"
+/primary CODE:
+  INT16 __nErr = O_K;
+  data* idScr;
+  INT32 nFirst;
+  INT32 nCount;
+  INT32 nPos;
+  GET_THIS_VIRTUAL_RV(CData,NOT_EXEC);
+  MIC_CHECK;
+  /*nPos = (INT32)MIC_GET_N(1,0);*/
+  nPos = CData_MicGetIc(_this,1,0);
+  nCount = (INT32)MIC_GET_N(2,1);
+  nFirst = (INT32)MIC_GET_N(3,2);
+  idScr = MIC_GET_I_EX(idScr,data,4,1);
+  __nErr = CData_Xstore(_this, idScr, nFirst, nCount, nPos);
+  return __nErr;
+END_CODE
+/html MAN: 
+  <p><code>-xstore</code> copies the components (records/blocks)
+  <code>nFirst</code> through <code>nFirst</code>+<code>nCount</code> to this
+  instance. The data will be stored starting at position <code>pos</code>. The
+  method <em>overwrites</em> the previuos data content.</p>
+  <p>If no option is set <code>-xstore</code> read and stores components. To
+  read and store records or blocks use the {@link /rec} or {@link /block}
+  options.</p>
+
+  @param _this  This instance (destination)
+  @param idSrc  Source instance to copy data from
+  @param nFirst First element (component, record or block) to copy (zero-based)
+  @param nCount Number of elements (components, records or blocks) to copy
+  @param pos    Position in this instance start storing data at (zero-based). In
+                component mode (and <em>only</em> there!) <code>pos</code> may
+                be a string specifying a component name.
+
+  @see -xfetch
+END_MAN
+
+## Methods - Access to data content - DEPRECATED
+
+METHOD:  -dfetch
+COMMENT: Fetches one numeric value
+SYNTAX:  double (int nIRec, int nIComp)
+/html MAN:
+  @deprecated Use {@link -fetch} instead.
+END_MAN
+
+METHOD:  -dstore
+COMMENT: Stores one numeric value
+SYNTAX:  (double dVal, int nIRec, int nIComp)
+/html MAN:
+  @deprecated Use {@link -store} instead.
+END_MAN
+
+METHOD:  -pfetch
+COMMENT: Fetches one pointer
+SYNTAX:  ptr (int nIRec, int nIComp)
+/html MAN:
+  @deprecated Use {@link -fetch} instead.
+END_MAN
+
+METHOD:  -pstore
+COMMENT: Stores one pointer
+SYNTAX:  (ptr dVal, int nIRec, int nIComp)
+/html MAN:
+  @deprecated Use {@link -store} instead.
+END_MAN
+
+METHOD:  -sfetch
+COMMENT: Fetches one string
+SYNTAX:  string (int nIRec, int nIComp)
+/html MAN:
+  @deprecated Use {@link -fetch} instead.
+END_MAN
+
+METHOD: -sstore
+COMMENT: Stores one string
+SYNTAX:  (string sVal, int nIRec, int nIComp)
+/html MAN:
+  @deprecated Use {@link -store} instead.
+END_MAN
+
+## Methods - Initialization of data content
+METHOD:  -init
+CNAME:   Initialize
+COMMENT: Initialize instance from constants
+SYNTAX:  ()
+POSTSYN: { ... }
+/html MAN:     
+  <p>Initializes data cells with constant values. The numeric or symbolic
+  constants following <code>{</code> will be stored subsequently into the cells
+  of the data table. After the last constant initializer a closing brace
+  <code>}</code> is expected.</p>
+
+  <h4>Example</h4>
+  <pre class="code">
+
+  data y;
+  <a href="function.html#mth_-type"><code class="link">-type</code></a> double 2   y {@link -addncomps};
+  "lab" 4          y {@link -addcomp};
+  "s2" <a href="function.html#mth_-type"><code class="link">-type</code></a> short y {@link -addcomp};
+  3 y {@link -allocate};
+
+  y <span class="c-key">-init</span> { 2 4 a   5 
+    2 3 bb  6
+    4 0 ccc 7 
+  };
+  </pre>
+
+END_MAN
+
+METHOD:  *{
+CNAME:   InitializeRecord
+COMMENT: Initialize one record from constants
+SYNTAX:  (int nRec)
+POSTSYN: ... }
+/html MAN:
+@cgen:experimental
+END_MAN
+
+METHOD:  [
+CNAME:   ArrOp
+COMMENT: Array operator.
+SYNTAX:  ()
+POSTSYN: ... ]
+/html MAN:
+  <p>Fetches a single value or a sub table from this data instance. The following postfix arguments are supported:</p>
+  <table cellpadding="2" class="indent">
+    <tr>
+      <th>Sub table specifier</th>
+      <th>Description</th>
+    </tr>
+    <tr>
+      <td><code><b>[</b> nIcomp ]</code></td>
+      <td>Returns a table containing a copy of component <code>nIcomp</code> of this instance</td>
+    </tr>
+    <tr>
+      <td><code><b>[</b> nIcomp nIrec ]</code></td>
+      <td>Returns the value stored component <code>nIcomp</code> of record <code>nIrec</code> of this instance</td>
+    </tr>
+  </table>
+
+  <h4>Remarks</h4>
+  <ul>
+    <li>All indices are zero based.</li>
+    <li>Only constant specifiers are supported.</li>
+    <li>The type of the return value depends on the sub table specifier. It may be a data instance, a number or
+    a string.</li>
+    <li>The method is only intended for use in dLabPro scripts, in C/C++ use {@link SelectComps CData_SelectComps}
+    and/or {@link SelectRecs CData_SelectRecs}</li>
+  </ul>
+
+  <h4>Future Extension</h4>
+  <p><table cellpadding="2" class="indent">
+    <tr>
+      <th>Sub table specifier</th>
+      <th>Description</th>
+    </tr>
+    <tr>
+      <td><code><b>[</b> nIFirstComp:nILastComp ]</code></td>
+      <td>Returns the sub table containing a copy of components <code>nIFirstComp</code> through <code>nILastComp</code>
+      of this instance. <code>nIFirstComp</code> or <code>nILastComp</code> or both may be ommitted whereas the
+      ommitted specification is interpreted as first or last component of this data instance.</td>
+    </tr>
+    <tr>
+      <td nowrap><code><b>[</b> nIFirstComp:nILastComp nIFirstRec:nILastRec ]</code></td>
+      <td>Returns the sub table containing a copy of components <code>nIFirstComp</code> through <code>nILastComp</code>
+      and the records <code>nIFirstRec</code> through <code>nILastRec</code> of this instance. Each of the specifications
+      may be ommitted whereas the ommitted ones are interpreted as first or last component or record of this data
+      instance.</td>
+    </tr>
+  </table></p>
+  <h5>Remarks</h5>
+  <ul>
+    <li>There must not be white spaces left or right of the colons unless a specifier is omitted.</li>
+  </ul>
+  <h5>Examples</h5>
+  <ul>
+    <li><code>idX [ 2:2 : ]</code> (equals <code>idX [ 2 ]</code>) &rarr; returns the second component</li>
+    <li><code>idX [ 2:2 0:0 ]</code> (equals <code>idX [ 2 0 ]</code>) &rarr; returns the value stored in the zeroth
+    component of the second record.</li>
+  </ul>
+  <p></p>
+END_MAN
+
+METHOD:  -clear
+COMMENT: Clears the data content
+SYNTAX:  ()
+MAN:
+  Zero-initializes the entire data content.
+END_MAN
+
+METHOD:  -fill
+COMMENT: Fills numeric components
+SYNTAX:  (complex dStart, complex dDelta)
+MAN:
+  Fills the values
+  
+  x(i,j) = <dStart> + i * <dDelta>
+  
+  into the numeric record elements ( i - record index,
+  j - component index).
+
+  When option {@link /noise} is set, fill with white noise (value range 0...1).
+END_MAN
+
+METHOD:  -rindex
+COMMENT: (Adds and) fills a component with the record index.
+SYNTAX:  (cstring sCname, int nIc)
+/html MAN:
+  Fills the component <code>nIc</code> with the zero-based record index and
+  renames it to <code>sCname</code>. If <code>nIc</code> does not denote an
+  existing component, the method will create a new component. If  the existing
+  component <code>nIc</code> has a non-numeric type, the method will do nothing.
+  @param sCame Name of record index component
+  @param nIc   Zero-based index of record index component
+END_MAN
+CODE:
+  INT32 i;
+  if (nIc<0 || nIc>=CData_GetNComps(_this))
+  {
+    CData_AddComp(_this,sCname,T_LONG);
+    nIc = CData_GetNComps(_this)-1;
+  }
+  CData_SetCname(_this,nIc,sCname);
+  for (i=0; i<CData_GetNRecs(_this); i++)
+    CData_Cstore(_this,CMPLX(i),i,nIc);
+END_CODE
+
+METHOD:  -checksum
+COMMENT: Computates a checksum of the data
+SYNTAX:  (string sAlgo, int nIc)
+/html MAN:
+ Computates a checksum of the data of the object using the
+ algorithm specified by sAlgo (currently only "CRC-32" is
+ implemented). If nIc>=0 the component nIc will be excluded
+ from the checksum.
+ @param  sAlgo Algorithm for checksum computation
+ @param  nIc   Component to exclude (or <0 for no exclusion)
+ @return       Checksum as long number
+END_MAN
+CODE:
+#ifndef __NODLPMATH
+  INT32 nCheckSum=CData_ChecksumInt(_this,sAlgo,nIc);
+  MIC_PUT_N(nCheckSum);
+#else
+  IERROR(_this,ERR_NOTSUPPORTED,"Method -checksum in __NODLPMATH mode",0,0);
+#endif /* #ifndef __NODLPMATH */
+END_CODE
+
+## Methods - Table operations
+METHOD:  -lookup
+COMMENT: One dimensional table lookup.
+SYNTAX:  (data idSel, int nIcSel, data idTab, int nIcTab, int nCount)
+POSTSYN: { ... }
+/html MAN:
+  <p>Performs a vector lookup operation by selecting the components
+  <code>nIcTab</code>...<code>nIcTab</code>+<code>nCount</code>-1 from the
+  lookup table <code>idTab</code> according to the record lookup indices found
+  in <code>idSel[nIcSel,.]</code>. The result is stored into this instance.</p>
+
+  <h4>Example</h4>
+  <p>A table <code>idTab</code> may have 4 components per record and 5
+  records:</p>
+  <pre>  idTab {
+     1  2  3  a
+    11 12 13  b
+    21 22 23  c
+    31 32 33  d
+    41 42 43  e }</pre>
+  <p>Further, a selector object having two components per record is given:</p>
+  <pre>  idSel {
+    0 3 
+    1 5
+    2 2
+    0 0 }</pre>
+  <p>The command</p>
+  <pre class="code">
+
+  idSel 0 idTab 2 2 idDst {@link -lookup};
+  </pre>
+  <p>leads to the following content of idDst (4 records, two components per
+  record):</p>
+  <pre>  {
+     3 a
+    13 b
+    23 c
+     3 a }</pre>
+
+  <h4>Remarks</h4>
+  <ul>
+    <li>If an invalid lookup index is found in <code>idSel[nIcSel,.]</code>
+      (&lt;0 or &ge;<code>idTab.</code>{@link nrec}), the method will read the
+      constant record initializer following {@link -lookup} (enclosed in curly
+      braces) and output this record in place of the missing one. If there is
+      no constant record initializer, the method will output a blank record.
+      </li>
+  </ul>
+
+  @param idSel  Selector data instance
+  @param nIcSel Selector component index
+  @param idTab  Lookup table
+  @param nIcTab First component of <code>idTab</code> to select
+  @param nCount Number of components of <code>idTab</code> to select
+  @param {...}  Constant record initializer for missing lookup vectors (invalid
+                lookup index)
+  @see   -lookup_2
+END_MAN
+
+METHOD: -lookup_2
+COMMENT: 2-dim. lookup transformation
+SYNTAX:  (data sel1, int j1, data sel2, int j2, data tab)
+POSTSYN: {...}
+MAN:    
+  -lookup_2 performs a two-dimensional lookup-operation
+    depending on the option </matrix>.
+  
+  sel1 :  selector data 1 (record selector)
+  j1   :  selector component of sel1
+  sel2 :  selector data 2 (component selector)
+  j2   :  selector component of sel2
+  tab  :  lookup table
+
+  If </matrix> is NOT set, the result is computed like this:
+  
+    k=sel1(i,j1); l=sel2(i,j2); y(i,0) = tab(k,l);
+
+  If </matrix> is set, the lookup is performed using this rule:
+
+    k=sel1(i,j1); l=sel2(j,j2); y(i,j) = tab(k,l); j=0,...,n-1;
+
+  The operation is done for all records of <x1>.
+  <x1> and <x2> may be the same data object.
+  
+  NOTE: The operation is implemented only for numeric
+      lookup tables.
+
+    NOTE: If (k,l) is not a valid cell index in tab, the method will
+          create an empty record and initialize it from the constant
+          initializer { ... }. (ONLY if /matrix is NOT set!)
+
+  example:
+
+  A table tab may have 4 components per record and 5 records:
+
+  tab {   1  2  3  4
+         11 12 13 14
+         21 22 23 24
+         31 32 33 34
+       41 42 43 44 }
+
+  Further, a selector object having two components per record
+  is given:
+
+  sel1 { 0 3   
+       1 5   
+         2 2   
+         3 0 } 
+
+  sel 0 sel 1 tab y -lookup_2
+
+  yields to the content of y (one record per component)
+
+  y = { 4 0 23 31 }
+  
+  but  
+
+  sel 0 sel 1 tab y /matrix -lookup_2
+
+  results in the following content of y 
+
+  y = {  4  0  3  1
+          14  0 13 11
+          24  0 23 21
+          34  0 33 31 }
+
+    see also: -lookup 
+END_MAN
+METHOD:  -gen_index
+
+COMMENT: Generates index by searching.
+SYNTAX:  (data idSrc, data idTab, int nSrcIdx, int nTabIdx)
+POSTSYN: { ... }
+/html MAN:
+  <p><code>-gen_index</code> generates an index sequence by searching items in
+  an item table. First the method adds a new component named "indx" of type int
+  to this instance. Then it traverses <code>idSrc</code>. If
+  <code>idSrc[t,nSrcIdx]</code> is found in <code>idTab[j,nTabIdx]</code> for
+  the first time starting from <code>idTab[0,nTabIdx], <code>j</code> is stored
+  into this instance. If <code>idSrc[t,nSrcIdx]</code> was not found in the
+  table <code>idTab</code> the index -1 is written to this instance an a warning
+  occurs for non-numeric elements if option <code>/noerror</code> is not set. If
+  all indices of this instance are -1 an error will be thrown. The index of
+  unknown items can be altered using the post-fix initializer
+  <code>{ ... }</code>.</p>
+
+  <h3>Example</h3>
+<pre class="code">
+
+  data idSource;
+  data idTable;
+  data idIndex;
+
+  { 
+    {   3  5  "a"  "F1" }
+    {   8  1  "c"  "F2" }
+    {  10  2  "d"  "F1" }
+    {   9  1  "a"  "F3" }
+  } idSource =;
+
+  {
+    { "a" "F0" }
+    { "b" "F1" }
+    { "c" "F2" }
+  } idTable =;
+
+  idSource idTable 2 0 idIndex {@link -gen_index};
+  idIndex {@link -print};
+
+  idSource idTable 2 0 idIndex <a href="function.html#opt__noerror" class="code">/noerror</a> {@link -gen_index} { 99 };
+  idIndex {@link -print};
+
+</pre>
+<p>The script will produce the following output:</p>
+<pre>
+  script.itp(18): warning data1023: Label d not found.
+   data idIndex
+  ------------------------------------------------------------------------------------------------------------------------
+        0  1  2  3
+       .. .. .. ..
+   0 :  0  2 -1  0
+  ------------------------------------------------------------------------------------------------------------------------
+   data idIndex
+  ------------------------------------------------------------------------------------------------------------------------
+        0  1  2  3
+       .. .. .. ..
+   0 :  0  2 99  0
+  ------------------------------------------------------------------------------------------------------------------------
+  dLabPro>_
+</pre>
+
+  <p>See option {@link /label}.</p>
+
+  @param idSrc   Input data, containing subject to search
+  @param idTab   Search table
+  @param nSrcIdx Component index in idSrc, containing items
+  @param nTabIdx Component index in idTab
+END_MAN
+
+## Methods - Mathematic and string operations
+METHOD:  -scalop
+COMMENT: Matrix-constant scalar operation
+SYNTAX:  (data idSrc, complex nConst, cstring sOpname)
+/html MAN:
+  <p>Performs the cell-by-cell scalar operation</p>
+  <p class="indent">
+    <code>this[</code><i>i</i>, <i>j</i><code>]</code>
+    = <i>OP</i>(<code>idSrc[</code><i>i</i>, <i>j</i><code>]</code>,
+      <code>nConst</code>)</p>
+  <p>for all records 0&le;<i>i</i>&lt;<code>idSrc.{@link nrec}</code> and all
+  (numeric) components 0&le;<i>j</i>&lt;<code>idSrc.{@link dim}</code> of the source
+  data instance. <i>OP</i> stands for the scalar operation denoted by
+  <code>sOpname</code> (see <a href="dlpbase.html#scalops">List of scalar
+  operations</a> in the documentation of the dLabPro base library).</p>
+
+  <h4>Remarks</h4>
+  <ul>
+    <li>The method won't touch symbolic components.</li>
+    <li>If <code>sOpname</code> is undefined, an error occurs. Type
+       &lt;<code><a href="function.html#mth_-list">-list</a> scalops</code>&gt;
+       at the dLabPro command prompt for a list of valid operation names.</li>
+    <li>If <code>sOpname</code> denotes a monadic operation, the result is
+      independent of <code>nConst</const>.</li>
+  </ul>
+
+  @param idSrc   Source data (first operand)
+  @param nConst  Second operand
+  @param sOpname Operation name (see <a href="dlpbase.html#scalops">list of
+                 scalar operations</a>)  
+  @see <a href="dlpbase.html#scalops">List of scalar operations</a> 
+  @see -scalop_d
+  @see -aggregate
+  @see -strop
+  @see <a href="function.html#mth_-list" class="code">function -list</a> 
+END_MAN
+CODE:
+  INT16 nOpcode = -1;
+  CHECK_THIS_RV(NOT_EXEC);
+  if ((nOpcode = dlp_scalop_code(sOpname))<0)
+    return IERROR(_this,DATA_OPCODE,SCSTR(sOpname),"scalop",0);
+  return CData_Scalop_Int(_this,idSrc,nConst,NULL,nOpcode,-1,-1);
+END_CODE    
+
+METHOD:  -scalop_d
+COMMENT: Maxtrix-matrix scalar operation
+SYNTAX:  (data idSrc, data idConst, cstring sOpname)
+/html MAN:
+  <p>Performs the cell-by-cell scalar operation</p>
+  <p class="indent">
+    <code>this[</code><i>i</i>, <i>j</i><code>]</code>
+    = <i>OP</i>(<code>idSrc[</code><i>i</i>, <i>j</i><code>]</code>,
+      <code>idConst[</code><i>i</i>, <i>j</i><code>]</code>)</p>
+  <p>for all records 0&le;<i>i</i>&lt;<code>idSrc.{@link nrec}</code> and all
+  (numeric) components 0&le;<i>j</i>&lt;<code>idSrc.{@link dim}</code> of the source
+  data instance. <i>OP</i> stands for the scalar operation denoted by
+  <code>sOpname</code> (see <a href="dlpbase.html#scalops">List of scalar
+  operations</a> in the documentation of the dLabPro base library).</p>
+
+  <h4>Remarks</h4>
+  <ul>
+    <li>The result has the same component structure and number of records as
+      <code>idSrc</code>.</li>
+    <li>If <code>idConst</code> has a different component structure and/or
+      number of records the method will ignore supernumerary cells and assume
+      the value 0 for missing cells.</li>
+    <li>The method will preserve symbolic components.</li>
+    <li>If <code>sOpname</code> is undefined, an error occurs. Type
+       &lt;<code><a href="function.html#mth_-list">-list</a> scalops</code>&gt;
+       at the dLabPro command prompt for a list of valid operation names.</li>
+    <li>If <code>sOpname</code> denotes a monadic operation, the result is
+      independent of <code>idConst</const>.</li>
+  </ul>
+
+  @param idSrc   Source data (first operand)
+  @param idConst Second operand
+  @param sOpname Operation name (see <a href="dlpbase.html#scalops">list of
+                 scalar operations</a>)  
+  @see <a href="dlpbase.html#scalops">List of scalar operations</a> 
+  @see -scalop
+  @see -aggregate
+  @see -strop
+  @see <a href="function.html#mth_-list" class="code">function -list</a> 
+END_MAN
+CODE:
+  INT16 nOpcode = -1;
+  CHECK_THIS_RV(NOT_EXEC);
+  if ((nOpcode = dlp_scalop_code(sOpname))<0)
+    return IERROR(_this,DATA_OPCODE,SCSTR(sOpname),"scalop_d",0);
+  return CData_Scalop_Int(_this,idSrc,CMPLX(0),idConst,nOpcode,-1,-1);
+END_CODE
+
+METHOD:  -aggregate
+COMMENT: Aggregates components/records/blocks
+SYNTAX:  (data dSrc, data dMask, complex dParam, string sOpname)
+/html MAN:
+  <p>Aggregates components (default), recors (option {@link /rec}) or blocks
+  (option {@link /block}) of <code>idSrc</code> and stores the aggrgated data
+  into <code>this</code> instance.</p>
+
+  <h3>Examples</h3>
+  <pre class="code">
+
+  x NULL 0 "min" y {@link /rec} {@link -aggregate}
+  </pre>
+  <p class="indent">Computes the component-wise minimum over all records of
+  <code>x</code> and stores it into <code>y</code>. After doing that
+  <code>y</code> contains one record of <code>x.</code>{@link dim} components.
+  The symbolic information is lost in that case. It is assumed that the block
+  number of <code>x</code> (<code>x.</code>{@link nblock}) is 1.</p>
+
+  <pre class="code">
+
+    x NULL 0 "sum" y {@link -aggregate}
+  </pre>
+  <p class="indent">Adds the components of the records and stores the sums into
+  the data object <code>y</code>. After that <code>y</code> contains as many
+  records as <code>x</code> with one numeric component each. The symbolic record
+  components also are copied from <code>x</code> to <code>y</code>.</p>
+
+  @cgen:option /rec   Aggregate all records per block
+  @cgen:option /block Aggregate blocks
+
+  @param idSrc   Source data
+  @param idMask  reserved, must be <code>NULL</code>
+  @param nParam  Constant parameter, interpretation depends on the aggrgation
+                 operation
+  @param sOpname Operation name (see <a href="dlpbase.html#aggrops">list of
+                 aggregation operations</a>)  
+
+  @see <a href="dlpbase.html#aggrops">List of aggregation operations</a> 
+  @see -scalop
+  @see -scalop_d
+  @see -strop
+  @see <a href="function.html#mth_-list" class="code">function -list</a> 
+END_MAN
+
+METHOD:  -strop
+COMMENT: Executes string operation y=op(x,s)
+SYNTAX:  (data iSrc, string sParam, string sOpname)
+/html MAN:
+  <p>
+    Performs scalar ("cell-by-cell") or aggregation string operations on the
+    source instance an stores the result into this instance. The interpretation
+    of the source instance and the structure of the target instance (this)
+    depends on the particular operation.
+  </p>
+  <p><table>
+    <tr><th colspan="3">Valid operation names (<code>sOpname</code>):</th></tr>
+    <tr>
+      <td>"ccat"</td>
+      <td>Aggregate strings into one component</sup></td>
+    </tr>
+    <tr>
+      <td>"chash"</td>
+      <td>Computes hashes using the algorithm specified through
+          <code>sParam</code> individually for all strings. See "hash" for a
+          list of valid hash algorithms.</td>
+    </tr>
+    <tr>
+      <td>"cmp"</td>
+      <td>Compares the strings with <code>sParam</code>. The result is -1/0/1 if a string is
+          less/equal/greater than <code>sParam</code>.</td>
+    </tr>
+    <tr>
+      <td>"hash"</td>
+      <td>Computes one global hash using the algorithm specified through
+          <code>sParam</code> over all strings. Currently only "CRC-32" is
+          supported as hash algorithm.</td>
+    </tr>
+    <tr>
+      <td>"left"</td>
+      <td>Copy the first n characters. The number if characters to copy is
+      specified by <code>sParam</code>.</td>
+    </tr>
+    <tr>
+      <td>"len"</td>
+      <td>String length (-1 for numeric values)</td>
+    </tr>
+    <tr>
+      <td>"lwr"</td>
+      <td>Convert to lower case</td>
+    </tr>
+    <tr>
+      <td>"rcat"</td>
+      <td>Aggregate strings into one record <sup><a href="#mth_-strop_1">1)</a></sup></td>
+    </tr>
+    <tr>
+      <td>"replace"</td>
+      <td>Replace substring, <code>sParam</code> contains the substring to be
+      replaced and the replacement string. The first character of
+      <code>sParam</code> is interpreted as delimiter.<br>Example for
+      <code>sParam</code>: "?foo?bar" &rarr; all occurances of "foo" will
+      be replaced with "bar"</td>
+    </tr>
+    <tr>
+      <td>"right"</td>
+      <td>Copy the last n characters. The number if characters to copy is
+      specified by <code>sParam</code>.</td>
+    </tr>
+    <tr>
+      <td>"search"</td>
+      <td>The zero-based position of the first occurrance of <code>sParam</code> or -1 if
+      the source string does not contain <code>sParam</code>.</td>
+    </tr>
+    <tr>
+      <td>"split"</td>
+      <td>Split at delimiter characters listed by <code>sParam</code>.</td>
+    </tr>
+    <tr>
+      <td>"splitall"</td>
+      <td>Split at delimiter characters listed by <code>sParam</code>.
+      Every delimiter defindes a new field.</td>
+    </tr>
+    <tr>
+      <td>"splitd"</td>
+      <td>Split at delimiter characters listed by <code>sParam</code>.
+      Every delimiter defindes a new field <em>and</em> is a field by itself.</td>
+    </tr>
+    <tr>
+      <td>"splitp"</td>
+      <td>Split directory and file name of a path.</td>
+    </tr>
+    <tr>
+      <td>"trim"</td>
+      <td>Trim characters listed by <code>sParam</code> left and right.</td>
+    </tr>
+    <tr>
+      <td>"upr"</td>
+      <td>Convert to upper case</td>
+    </tr>
+  </table></p>
+
+  <h4>Remarks</h4>
+  <ul>
+    <li><a name="mth_-strop_1"><sup>1)</sup></a> If the result is longer than
+    255 characters it will be trimmed. Trimming occurs only at record boundaries,
+    the result contains the concatenation of as many as possible records.</li>
+  <li>Use <a href="itp.html#mth_-list"><code class="link">-list strops</code></a>
+    to display a recent list of string operations.</li>
+  <li>You can also process selected components or records using the <a
+  href="#opt__mark"><code class="link">/mark</code></a> option. Use the <a
+    href="#mth_-mark"><code class="link">-mark</code></a> method to select
+    components or recrods.</li>
+  </ul>
+  @cgen:TODO: Support regular expressions for "search", "replace"
+  @cgen:TODO: Implement "match" using regular expressions
+  @see <a href="dlpbase.html#strops">List of string operations</a> 
+  @see -scalop
+  @see -scalop_d
+  @see -aggregate
+  @see <a href="function.html#mth_-list" class="code">function -list</a> 
+END_MAN
+
+METHOD:  -tconvert
+COMMENT: Copies and convert numeric components
+SYNTAX:  (data idSrc, short nCType)
+/html MAN:
+
+  <p>All numeric data elements of &lt;iSrc&gt; will be converted into the data
+  type <code>nCType</code>. Unless the {@link /force}-option is set the
+  symbolic components remain unchanged. The data type <code>nCType</code> may
+  be specified using the <a href="function.html#mth_-type"><code
+  class="link">-type</code></a> method of the <a href="function.html"><code
+  class"link">function</code></a> class. The result is stored in this
+  instance.</p>
+
+  <h4>Example</h4>
+<pre class="code">
+
+  <a href="data.html">data</a> x;
+  <a href="function.html#mth_-type">-type</a> short 3      x <a href="#mth_-addncomps">-addncomps</a>;   <span class="c-cmt"># def. 3 short-components</span>
+  "d1"  <a href="function.html#mth_-type">-type</a> double x <a href="#mth_-addcomp">-addcomp</a>;     <span class="c-cmt"># def. 1 double-component</span>
+  "lab" 8            x <a href="#mth_-addcomp">-addcomp</a>;     <span class="c-cmt"># def. 1 comp. of 8 characters</span>
+  ...
+  <a href="data.html">data</a> y;
+  x <a href="function.html#mth_-type">-type</a> double y -tconvert;        <span class="c-cmt"># convert to double</span>
+  </pre>
+
+  <p>
+    After this operation <code>y</code> will have 4 double components and one
+    component of type 8.
+  </p>
+  <p>
+    You can also convert selected components using the <a href="#opt__mark"><code
+    class="link">/mark</code></a> option. Use the <a href="#mth_-mark"><code
+    class="link">-mark</code></a> method to select components to be converted.
+  </p>
+  <h4>Example</h4>
+  <pre class="code">
+
+  ...
+  <a href="data.html">data</a> y;
+  0 1 x <a href="#mth_-mark">-mark</a>;
+  3 1 x <a href="#mth_-mark">-mark</a>;
+  x <a href="function.html#mth_-type">-type</a> float y <a href="#opt__mark">/mark</a> -tconvert; <span class="c-cmt"># convert comp 0 & 2 to float</span>
+  y <a href="#mth_-unmark">-unmark</a>;                      <span class="c-cmt"># unmark components in x</span>
+
+</pre>
+  <p>After this operation only the components 0 and 2 of <code>y</code> will
+  have a float type, the others remain unchanged.</p>
+
+  @param idSrc  Source instance (may be identical with destination instance)
+  @param nCType New component type (see <a href="function.html#mth_-type"><code class="link">-type</code></a>)
+  @cgen:option /mark  Process marked components only
+  @cgen:option /force Process all (numeric <em>and</em> symbolic) components 
+END_MAN
+
+METHOD:  -copy_descr
+COMMENT: Copies description fields
+SYNTAX:  (data idSrc)
+/html MAN:
+  Copies the following fields fields from <idSrc> to this instance:
+  <table>
+    <tr><td>{@link descr0}</td></tr>
+    <tr><td>{@link descr1}</td></tr>
+    <tr><td>{@link descr2}</td></tr>
+    <tr><td>{@link descr3}</td></tr>
+    <tr><td>{@link descr4}</td></tr>
+    <tr><td>{@link rinc}</td></tr>
+    <tr><td>{@link rofs}</td></tr>
+    <tr><td>{@link rwid}</td></tr>
+    <tr><td>{@link runit}</td></tr>
+    <tr><td>{@link cinc}</td></tr>
+    <tr><td>{@link cofs}</td></tr>
+    <tr><td>{@link cunit}</td></tr>
+    <tr><td>{@link ftext}</td></tr>
+    <tr><td>{@link rtext}</td></tr>
+    <tr><td>{@link vrtext}</td></tr>
+  </table>
+END_MAN
+
+METHOD:  -copy_labels
+COMMENT: Copies symbolic components
+SYNTAX:  (data iSrc)
+MAN:
+  Copies the  content(!)  of the  symbolic  componentes  in
+  <iSrc>  to the corresponding components of this instance.
+  Corresponding  components are  determined by their order,
+  meaning the first symbolic component  in <iSrc> is copied 
+  to the first symbolic component in this instance etc.
+
+  NOTE: This method does not change the component structure
+        of this instance.  Particularly, it does NOT insert
+        any symbolic components.
+END_MAN
+
+METHOD:  -join
+COMMENT: Appends components
+SYNTAX:  (data iSrc)
+MAN:
+  All record components of instance <iSrc> are appended to the 
+  to this instance. After this, the records of this instance
+  contain nx + ny components (nx, ny: record components of
+  this instance and <iSrc>, respectively).
+  
+  NOTE:
+          The component number of <iSrc> remains unchanged.
+          If <iSrc> has more records than this instance
+          the remaining data is truncated and a warning 
+          is printed. If the this instance has a more records 
+          the additional cells are initialized by zero.
+
+  Example:
+  -------
+
+  data x
+    type short   -defcomp s1         # def. short-component s1
+    10 -allocate
+        x  { 1  2  3  4  5  4  3  2  1  0 }
+                     
+  data y  
+    type double -defcomp s1
+    3           -defcomp s2
+    5 -allocate
+    y { 10 a  11 b  12 c  13 d  14 e }
+
+  x y -join
+
+  After this operation y will have a short component, a double
+  component and a component of type 3 .
+  The data content will be
+  
+  { 10 a 1   11 b 2  12 c 3  13 d 4  14 e 5 }
+
+END_MAN
+
+METHOD:  -cat
+COMMENT: Appends records
+SYNTAX:  (data iSrc)
+MAN:
+  <-cat> adds the records of the instance <iSrc> to this
+  instance. The component number of the records of this 
+  instance is not affected. If this instance is empty, 
+  <-cat> is identical with <-copy.>
+
+  NOTE: A data type conversion is done if nessecary to adapt
+        the records structures of <iSrc> to this instance.
+          If the target type is symbolic and the source type 
+          numeric (or vice versa) the component is skipped.
+          If <iSrc> has more components than this instance
+          the remaining data is truncated and a warning 
+          is printed. If the this instance has a higher dimension 
+          the additional components are initialized by zero.
+
+END_MAN
+
+METHOD:  -select
+COMMENT: Copies components, records, blocks or marked elements
+SYNTAX:  (data idSrc, int nFirst, int nCount)
+
+METHOD:  -delete
+COMMENT: Deletes components, records, blocks or marked elements
+SYNTAX:  (data idSrc, int nFirst, int nCount)
+/html MAN:
+  <p>Deletes components, records, blocks or the marked elements and stores the
+  remaining data in this instance. By default the method deletes components.
+  Use one of the options {@link /rec}, {@link /block} or {@link /mark} to delete
+  other elements.</p>
+
+  <h3>Example</h3>
+<pre class="code">
+
+  <span class="c-key">data</span> x
+  <span class="c-cmt"># ...</span>
+  x 2 3 x <span class="c-key">-delete</span>
+
+  <span class="c-cmt"># Deletes the components 2 through 4 from data instance x.</span>
+
+</pre>
+
+  @param       idSrc   The source instance
+  @param       nFirst  First element to delete(ignored if option {@link /mark} is used)
+  @param       nCount  Number of elements to delete (ignored if option {@link /mark} is used)
+  @cgen:option /block  Deletes blocks (default is components)
+  @cgen:option /mark   Deletes marked elements (entire components <i>or</i> records only)
+  @cgen:option /rec    Deletes records (default is components)
+  @see         -select
+END_MAN
+
+## Methods - Printing and display
+METHOD:  -print
+SYNTAX:  ()
+COMMENT: Print data content
+/html MAN:     
+  <p>Displays the data as formatted table. The method is not intended for
+  dumping the data content into a protocol file but for interactive usage. The
+  listing of large data tables will break in convenient intervals of
+  approximately screen size and allow to navigate.</p>
+
+  <h4>Remarks</h4>
+  <ul>
+    <li>You may prevent the listing from breaking and waiting for user input
+      using the option <a href="function.html#opt__nonstop"><code
+      class="link">/nonstop</code></a> of class <a href="function.html"><code
+      class="link">function</code></a>. However, you must use <a
+      href="function.html#opt__stop"><code class="link">/stop</code></a> then
+      to re-enable list breaking and break points!</li>
+  </ul>
+
+  @cgen:option /list Display data content in list mode (records in lines);
+                     default is vector mode (components in lines)
+  @cgen:option /nz   Prints zeros as "-"
+  @see -status
+  @see <a href="file.html"><code class="link">file</code></a> <a
+       href="file.html#mth_-export"><code class="link">-export</code></a>
+END_MAN
+
+METHOD:   -status
+OBSOLETE: -descr
+COMMENT:  Prints status information of the data instance.
+SYNTAX:  ()
+/html MAN:     
+  <p>Displays the description table containing the following information:</p>
+  <pre>
+  data object name      : data object name
+  filename              : name of assigned file
+  extension             : file extension
+  class  no. knr        : class index
+  ident. no. rnr        : identification of data 
+  max. record number    : par.  maxrec
+  valid record number   : par.  nrec
+  record components     : par.  dim
+  block number          : par.  nblock
+  record bytes          : par.  reclen
+  overall bytes         : =     reclen * nrec     
+  window length     [ms]: par.  zf
+  continuation rate [ms]: par.  fsr
+  offset of 1.rec.  [ms]: par.  ofs
+  descr0 (rres1)        : par.  descr0
+  descr1 (rres2)        : par.  descr1
+  descr2 (rres3)        : par.  descr2
+  descr3 (rres4)        : par.  descr3
+  descr4 (rres5)        : par.  descr4
+  data address          : hex. address of data array
+  records pointer       : par.  irec
+
+  component description table: 
+  - component :  component name
+  - offset    :  component offset in the record
+  - bytes     :  size of the component (bytes)
+  - type      :  data type (index and name)     
+  </pre>
+
+  <h4>Remarks</h4>
+  <ul>
+    <li>The parameters may be displayed also using <a href="function.html#mth_-see" class="code">-see</a>
+    <code>*</code>.</li>
+  </ul>
+END_MAN
+
+METHOD:  -compress
+COMMENT: RLE compression of component nComp.
+SYNTAX:  (data idSrc, int nComp)
+/html MAN:
+  <p>Compresses the data in the component <code>nComp</code> of the data
+  instance <code>idSrc</code> by removing and counting the subsequent occurence
+  of equal data elements. The result is stored in this instance.</p>
+  <p>After execution, this instance contains 3 components per record:</p>
+  <ol>
+    <li>like component <code>nComp</code> of <code>idSrc</code>
+    <li>position (index) of first occurrence in <code>idSrc</code>
+    <li>number of subsequent occurences 
+  </ol>
+
+  <h3>Example</h3>
+<pre class="code">
+
+  x {  a  3
+       a  2
+       b  7
+       a  1
+       a  9  }
+
+  x  0  y  -compress
+
+  <span class="c-cmt">## y now contains the following data
+  ## {  a  0  2
+  ##    b  2  1
+  ##    a  3  2 }</span>
+
+</pre>
+
+  <h3>Notes</h3>
+  <ul>
+    <li>creates one component of type int in _this
+    <li>the index in _this(i,0) is generated by searching the content
+        of iSrc(i,nSrcIdx) in iTab(j,nTabIdx) for all j;
+    <li>if iSrc(i,nSrcIdx) is found in iTab, the the corresponding record
+        index in iTab is stored into _this(i,0);
+    <li>if iSrc(i,nSrcIdx) is not found, the index is -1;
+    <li>only the first occurence of iSrc(i,nSrcIdx) in iTab is relevant
+  </ul>
+ 
+  @param _this Compressed data  
+  @param idSrc Input data
+  @param nComp Component to compress
+  @return O_K if at least label or index generated, a (negative) error code
+           otherwise
+  @see -expand
+END_MAN
+
+METHOD:  -quantize
+COMMENT: Quantization of numeric components.
+SYNTAX:  (data idIn)
+/html MAN:
+  <p>Quantization of floating point data to short data. This method is primarily used
+  for lossy compression of floating point data.</p>
+
+  <p>Quantization is done by calculating a scale factor for every numeric component in 
+  idIn. Every record in idIn is multiplied by the resulting scale vector and converted 
+  to short. The scale vector itself is also converted to short and appended at the beginning 
+  of the output instance (_this) for restoring the data at a later time.</p>
+  
+  <p>Since the scale vector is also converted to short, it must be chosen in a way that 
+  the resulting quantization error produced by quantization of the data and the scale vector 
+  itself is minimal. The optimal solution depends on the actual values and their distribution.
+  In this implementation the elements <i>s<sub>i</sub></i> of the scale vector are calculated 
+  from the values x<sub>ik</sub> in the following way:</p>
+  <p><i>s<sub>i</sub></i>=MAX_SHORT/<i>max(abs(x<sub>ik</sub>))</i></p>
+  
+  <h3>Important:</h3>
+  <p><span class="warning">The first record of the output instance is the scale vector!</span></p>
+
+  <h3>TODO:</h3>
+  <ul>
+    <li>Check if input is already in short format, 
+    <li>process only floating point components 
+    <li>What about quantization using an arbitrary number of bits?
+  </ul>
+
+  @param _this Quantized (compressed) data  
+  @param idSrc Input data
+  @see -dequantize
+END_MAN
+
+METHOD:  -dequantize
+COMMENT: Dequantization of numeric components.
+SYNTAX:  (data in)
+/html MAN:
+  Dequantization (uncompression) of numeric data that has been quantized by -quantize.
+
+  @param _this Dequantized (uncompressed) data  
+  @param idSrc Input data
+  @see -quantize
+END_MAN
+
+METHOD:  -sortup
+COMMENT: Sort data using comp. j as sort index in ascending order.
+SYNTAX:  (data x, int j)
+MAN:
+         Sort data using comp. j as sort index in ascending order.
+         A stable sorting algorithm is utilized.
+         Therefore the order of equal elements is retained.
+END_MAN
+CODE:
+         CData_SortInt(_this,x,NULL,j,CDATA_SORT_UP);
+END_CODE
+  
+METHOD:  -sortdown
+COMMENT: Sort data using comp. j as sort index in descending order.
+SYNTAX:  (data x, int j)
+MAN:
+         Sort data using comp. j as sort index in descending order.
+         A stable sorting algorithm is utilized.
+         Therefore the order of equal elements is retained.
+END_MAN
+CODE:
+  CData_SortInt(_this,x,NULL,j,CDATA_SORT_DOWN);
+END_CODE
+  
+METHOD:  -mark
+COMMENT: Mark n records/blocks/components starting from jx. 
+SYNTAX:  (int jx, int n)
+MAN:
+  Mark n records/blocks/components starting from jx. 
+END_MAN
+
+METHOD:  -dmark
+COMMENT: Mark records/components/cells according to a table
+SYNTAX:  (data idMark)
+  
+METHOD:  -unmark
+COMMENT: Clear all markings. 
+SYNTAX:  ()
+MAN:
+  Resets the mark table and clears all element markings.
+
+  See also: <-mark>, </mark>
+END_MAN
+
+METHOD:  -expand
+COMMENT: RLE expansion
+SYNTAX:  (data idSrc, int nIcE, int nIcS, int nIcL)
+/html MAN:
+  <p>Expands RLE compressed data. RLE compression represents sequences of equal
+  data records by one copy of the data, a segment start index and a segment
+  length. The latter two are stored in extra components committed through
+  parameters <code>nIcS</code> and <code>nIcL</code>. Either one of these may
+  be omitted (i.e. set to -1). If both are specified, the segments stored in
+  <code>idSrc</code> may have gaps and overlaps. In case of gaps
+  (<code>idSrc[k,nIcS]+idSrc[k,nIcL]&lt;idSrc[k+1,nIcS]</code>) the result will
+  contain empty records. In case of overlaps
+  (<code>idSrc[k,nIcS]+idSrc[k,nIcL]&gt;idSrc[k+1,nIcS]</code>) the data of segment
+  <code>k+1</code> will be stored in the result.</p>
+  <p>Please note: The start indices should be a strictly monotonic incresing
+  sequence, otherwise the method's behaviouor is undefined.</p>
+
+  @param idSrc Source (RLE compressed) data instance
+  @param nIcE  Zero-based index of data component to be expanded, may be -1 in
+               order to expand all components except <code>nIcS</code> and
+               <code>nIcL</code>
+  @param nIcS  Zero-based index of component containing the RLE start index. May
+               be -1 to use only the segment length information. In this case
+               <code>nIcL</code> must be a valid component index. <b>Please
+               note:</b> If <code>nIcS</code> is not specified, the last segment
+               cannot be restored because its length may not be determined!
+  @param nIcL  Zero-based index of component containing the RLE segment length.
+               May be -1 to use only the start index information. In this case
+               <code>nIcS</code> must be a valid component index.
+  @see -compress
+END_MAN
+
+METHOD:  -shift
+COMMENT: Shift n records/blocks/components.
+SYNTAX:  (data iSrc, int nCount)
+MAN:
+  Shift nCount records/blocks/components.
+END_MAN
+
+METHOD:  -rotate
+COMMENT: Rotate n records/blocks/components.
+SYNTAX:  (data iSrc, int nCount)
+MAN:
+  Rotate nCount records/blocks/components.
+END_MAN
+
+METHOD:  -resample
+COMMENT: Resample with factor nRate > 0
+SYNTAX:  (data iSrc, double nRate)
+MAN:
+  The data in iSrc is resampled by linear interpolation using
+  the resampling factor nRate. 
+
+  NOTE: The record count 0, 1, .. ,N-1 is taken as position
+    index of the records. The new position index sequence is
+    0, a, 2a, 3a, ... . If a new position is between two 
+    old positions (non-integer position) a linear approximation
+    is performed using the neighboured vectors of new position.
+    If nRate == 1., input = output.
+
+    The symbolic information is copied to the output using the 
+    nearest vector from iSrc.
+END_MAN
+CODE:
+  CData_ResampleInt(_this, iSrc, nRate, 0);
+END_CODE    
+
+## Options
+OPTION:  /rec
+COMMENT: Record mode
+MAN:       
+  Some commands may be switched to record mode. In this case, 
+  the index and number parameters are interpreted as record
+  index.
+
+  see also: -swap -delete -select
+END_MAN
+
+OPTION:  /comp
+COMMENT: Component mode
+MAN:       
+END_MAN
+
+OPTION:  /block
+COMMENT: Block mode
+MAN:       
+  Some methods may be switched to block mode. In this case, 
+  the index and number parameters are interpreted  as block
+  index.
+
+  see also: -swap -delete -select 
+END_MAN
+
+OPTION:  /cell
+COMMENT: Cell mode
+MAN:       
+  Some methods may be switched to cell mode. In this case, 
+  the index and number parameters are interpreted  as cell
+  index.
+END_MAN
+
+OPTION:  /mark
+COMMENT: switch to mark elements mode
+/html MAN:       
+  <p>Executes a method only for the marked elements (compontents,
+  records, blocks or cells).</p>
+  <h4>{@link -tconvert}</h4>
+  <p>Convert marked components only.</p>
+  @see -mark
+END_MAN
+
+OPTION:  /matrix
+COMMENT: Matrix mode of 2 dim. lookup.
+MAN:       
+END_MAN
+
+OPTION:  /fast
+COMMENT: Use faster code (method dependend).
+/html MAN:
+  <p>Some methods my use this option to execute faster code
+  implementation. In general the faster code is unsafer (if
+  its not unsafer, the original code could have changed).</p>
+  <h4>{@link /fast} {@link -allocate}</h4>
+  <p>Allocates memory for <nRec> records <em>without</em> zeroing the memory</p>
+END_MAN
+
+OPTION:  /force
+COMMENT: Force operations (method dependend).
+/html MAN:
+  <p>Some methods my use this option to force generation of some additional
+    output.</p>
+  <h4>{@link /force} {@link -tconvert}</h4>
+  <p>Convert all (numeric <em>and</em> symbolic) components.</p>
+END_MAN
+
+OPTION:  /list
+COMMENT: List mode.
+/html MAN:
+  <p>Switches printing methods into list mode (default is vector mode).</p>
+  <h4>{@link /list} {@link -print}</h4>
+  <p>Prints one record per line (default is one component per line).</p>
+END_MAN
+
+OPTION:  /nz
+COMMENT: Print zeros as '-'
+/html MAN:
+  <p>Replaces zeros by hyphens when printing.</p>
+  <h4>{@link /nz} {@link -print}</h4>
+END_MAN
+
+OPTION:  /label
+COMMENT: Ignore label indices if there some.
+/html MAN:
+  <p>If {@link -gen_index} is used with this option,
+  all label indices are ignored. Meaning all strings
+  are cutted by "[NUMBER]" if there is such at the
+  end of the string.</p>
+  <p>See note Label component format in the UASR manual for util/lab.itp.</p>
+END_MAN
+
+OPTION:  /numeric
+COMMENT: Sort strings numeric.
+/html MAN:
+  <p>If {@link -sortup} or {@link -sortdown} is used with this option,
+  the string component ist sorted in numeric order.</p>
+END_MAN
+
+OPTION:  /noise
+COMMENT: Generate noise
+/html MAN:
+  <h4>{@link -fill}</h4>
+  <p>Fill with white noise (value range 0...1)</p>
+END_MAN
+
+OPTION:  /exact
+COMMENT: Generate noise
+/html MAN:
+  <h4>{@link -print}</h4>
+  <p>Output exact values in method {@link -print}.</p>
+END_MAN
+
+## Interface code
+INITCODE:
+  /* Generic and data table initialization */
+  INIT;
+  _this->m_lpTable = CDlpTable_CreateInstance();
+  if(!_this->m_lpTable) return NOT_EXEC;
+
+  /* Remap fields */
+  {
+    /* Remap pointers to fields */
+    REMAP_FIELD("dim"   , _this->m_lpTable->m_dim   );
+    REMAP_FIELD("nrec"  , _this->m_lpTable->m_nrec  );
+    REMAP_FIELD("maxrec", _this->m_lpTable->m_maxrec);
+    REMAP_FIELD("reclen", _this->m_lpTable->m_reclen);
+    REMAP_FIELD("descr0", _this->m_lpTable->m_descr0);
+    REMAP_FIELD("descr1", _this->m_lpTable->m_descr1);
+    REMAP_FIELD("descr2", _this->m_lpTable->m_descr2);
+    REMAP_FIELD("descr3", _this->m_lpTable->m_descr3);
+    REMAP_FIELD("descr4", _this->m_lpTable->m_descr4);
+    REMAP_FIELD("rinc"  , _this->m_lpTable->m_fsr   );
+    REMAP_FIELD("rwid"  , _this->m_lpTable->m_zf    );
+    REMAP_FIELD("rofs"  , _this->m_lpTable->m_ofs   );
+    REMAP_FIELD("rtext" , _this->m_lpTable->m_rtext );
+    REMAP_FIELD("vrtext", _this->m_lpTable->m_vrtext);
+  }
+
+  /* Override XML serialization/deserialization methods */
+  #ifndef __cplusplus
+  __this->SerializeXml   = CData_SerializeXml;
+  __this->DeserializeXml = CData_DeserializeXml;
+  #endif
+END_CODE
+
+DONECODE:
+  /* Generic and data table destruction */
+  DONE;
+  CDlpTable_DestroyInstance(_this->m_lpTable);
+  _this->m_lpTable = NULL;
+
+  /* Cancel pointer mappings */
+  UNREMAP_FIELD("dim"   );
+  UNREMAP_FIELD("nrec"  );
+  UNREMAP_FIELD("maxrec");
+  UNREMAP_FIELD("reclen");
+  UNREMAP_FIELD("descr0");
+  UNREMAP_FIELD("descr1");
+  UNREMAP_FIELD("descr2");
+  UNREMAP_FIELD("descr3");
+  UNREMAP_FIELD("descr4");
+  UNREMAP_FIELD("fsr"   );
+  UNREMAP_FIELD("zf"    );
+  UNREMAP_FIELD("ofs"   );
+  UNREMAP_FIELD("rtext" );
+  UNREMAP_FIELD("vrtext");
+END_CODE
+
+RESETCODE:
+  CDlpTable_Reset(_this->m_lpTable);
+#ifndef __NORTTI
+  RESET;
+#endif
+END_CODE
+
+RESTORECODE:
+{
+#ifdef CODE_DN3
+
+#ifdef __NODN3STREAM
+
+  return IERROR(_this,ERR_NOTSUPPORTED,"-restore (DNorm3 format)",0,0);
+
+#else /* #ifdef __NODN3STREAM */
+
+  hscan_t  hs;
+  hnode_t* hn     = NULL;
+  SWord*   lpWord = NULL;
+  INT16    nErr   = O_K;
+#ifdef __NORTTI
+  return IERROR(_this,ERR_NOTSUPPORTED,"Deserialization in __NORTTI mode",0,0);
+#endif
+
+  /* Empty tables marked by knr=0 and rnr=0 --> skip, no error */
+  if (lpSrc->m_nKnr==0 && lpSrc->m_nRnr==0) return O_K;
+
+  /* Deserialize data table */
+  nErr = CDN3Stream_DeserializeTable(lpSrc, _this->m_lpTable);
+  IF_NOK(nErr)
+  {
+    if (nErr==-2)
+    {
+      IERROR(_this,DATA_DESERIALIZE,BASEINST(_this)->m_lpInstanceName," (out of memory)",0);
+      return NOT_EXEC;
+    }
+    IERROR(_this,DATA_DESERIALIZE,BASEINST(_this)->m_lpInstanceName,"",0);
+    return NOT_EXEC;
+  }
+
+  /* Deserialize fields from realization string */
+  if(_this->m_lpTable->m_vrtext)
+  {
+    /* Move deserialized vrtext to a buffer */
+    char* lpBuf = _this->m_lpTable->m_vrtext;
+    _this->m_lpTable->m_vrtext = NULL;
+
+    /* Deserialize fields from former vrtext (including the vrtext itself) */
+    hash_scan_begin(&hs,BASEINST(_this)->m_lpDictionary);
+    while ((hn = hash_scan_next(&hs)))
+    {
+      DLPASSERT((lpWord=(SWord*)hnode_get(hn))); /* NULL entry in dictionary */
+      if(lpWord->nWordType == WL_TYPE_FIELD && 
+         !(lpWord->nFlags & FF_NOSAVE) /* && !(lpWord->nFlags & FF_EXTERNAL) */)
+      {
+        CDlpObject_FieldFromString(BASEINST(_this),lpWord,lpBuf);
+      }
+    }
+
+    /* Delete former crtext */
+    dlp_free(lpBuf);
+  }
+
+  DLP_CHECK_MEMINTEGRITY
+  return O_K;
+
+#endif /* #ifdef __NODN3STREAM */
+
+#endif /* #ifdef CODE_DN3 */
+#ifdef CODE_XML
+
+#ifndef __NOXMLSTREAM
+
+  INT16       nRet = O_K;
+  SDomObject* lpDo = NULL;
+  char        lpFqName[255];
+  INT32        nRootInameLen   = 0;
+  INT32        nInameLen       = 0;
+
+#ifdef __NORTTI
+  return IERROR(_this,ERR_NOTSUPPORTED,"Deserialization in __NORTTI mode",0,0);
+#endif
+  GET_THIS_VIRTUAL_RV(CData,NOT_EXEC);
+
+  /* Invoke base class */
+  IF_NOK((nRet=INVOKE_BASEINST_1(DeserializeXml,lpSrc))) return nRet;
+
+  /* Set fully qualified name of root instance if blank */
+  if(lpSrc->m_lpsRootInameFq[0]=='\0') CDlpObject_GetFQName(BASEINST(_this),lpSrc->m_lpsRootInameFq,TRUE);
+
+  /* Get fully qualified table name
+     - trim root instance name
+     - append ".<table>"
+  */
+  CDlpObject_GetFQName(BASEINST(_this),lpFqName,TRUE);
+  dlp_strcat(lpFqName,".~table");
+
+  /* Cut root instance name from instance name */
+  nRootInameLen=dlp_strlen(lpSrc->m_lpsRootInameFq);
+  nInameLen=dlp_strlen(lpFqName);
+  if(dlp_strncmp(lpFqName,lpSrc->m_lpsRootInameFq,nRootInameLen)){
+    IFCHECK printf(" *** Root instance name doesnt match *** ");
+    IERROR(_this,ERR_DESERIALIZE,lpFqName,0,0);
+    return O_K;
+  }
+  dlp_memmove(lpFqName,lpFqName+nRootInameLen,nInameLen-nRootInameLen+1);
+  
+   /* Deserialize data table */
+  lpDo = CXmlStream_FindObject(lpSrc,lpFqName);
+  if (!lpDo || lpDo->nType!=XMLS_DT_TABLE || !lpDo->lpValue)
+  {
+    CXmlStream_ObjectNotFound(lpSrc);
+    return IERROR(_this,ERR_STREAMOBJ,lpFqName,0,0);
+  }
+
+  /* NOTE: Must not copy pointer because of remapped fields! */
+	CDlpTable_Dcopy((CDlpTable*)lpDo->lpValue,_this->m_lpTable);
+	CDlpTable_Copy(_this->m_lpTable,(CDlpTable*)lpDo->lpValue,0,((CDlpTable*)lpDo->lpValue)->m_nrec);
+
+  return O_K;
+
+#else /* #ifndef __NOXMLSTREAM */
+
+  return NOT_EXEC;
+
+#endif /* #ifndef __NOXMLSTREAM */
+
+#endif /* #ifdef CODE_XML */
+}
+END_CODE
+
+SAVECODE:  
+{
+#ifdef CODE_DN3
+
+#ifdef __NODN3STREAM
+
+  return IERROR(_this,ERR_NOTSUPPORTED,"-save (DNorm3 format)",0,0);
+
+#else /* #ifdef __NODN3STREAM */
+
+  hscan_t  hs;
+  hnode_t* hn        = NULL;
+  SWord*   lpWord    = NULL;
+  char*    lpBuf     = NULL;
+  char*    lpBuf2    = NULL;
+  char*    lpVrtSave = NULL;
+  INT16    nLimit    = 0;
+  char     lpSep[2]  = { C_FIELDSEP, 0};
+#ifdef __NORTTI
+  return IERROR(_this,ERR_NOTSUPPORTED,"Serialization in __NORTTI mode",0,0);
+#endif
+
+  /* Data instances with complex components not supported to serialize */
+  if(CData_GetNComplexComps(_this) > 0) {
+    return IERROR(_this,ERR_NOTSUPPORTED,"Serialization of data instances with complex components",0,0);
+  }
+
+  /* Empty data instances are not serialized */
+  /* but registered using knr=0 and rnr=0 */   
+  if(CData_IsEmpty(_this))
+  {
+    /* Get current record in type information table */
+    INT32 nTITIdx = CDlpTable_GetNRecs(lpDest->m_lpiTIT)-1;
+    CDlpTable_Dstore(lpDest->m_lpiTIT,0,nTITIdx,OF_KNR);
+    CDlpTable_Dstore(lpDest->m_lpiTIT,0,nTITIdx,OF_RNR);
+    return O_K;
+  }
+
+  /* Serialize fields into realization string */
+  lpBuf  = (char*)dlp_calloc(T_SHORT_MAX, sizeof(char));
+  lpBuf2 = (char*)dlp_calloc(T_SHORT_MAX, sizeof(char));
+  dlp_strcpy(lpBuf2,C_FIELDDEL);
+
+  hash_scan_begin(&hs,BASEINST(_this)->m_lpDictionary);
+  while ((hn = hash_scan_next(&hs)))
+  {
+    DLPASSERT((lpWord=(SWord*)hnode_get(hn))); /* NULL entry in dictionary */
+    if (lpWord->nWordType == WL_TYPE_FIELD && 
+        !(lpWord->nFlags & FF_NOSAVE) /* && !(lpWord->nFlags & FF_EXTERNAL) */)
+    {
+      CDlpObject_FieldToString(BASEINST(_this), lpBuf, T_SHORT_MAX, lpWord);
+      dlp_strcat(lpBuf2,lpBuf); dlp_strcat(lpBuf2,lpSep);
+    }
+  }
+  dlp_strcat(lpBuf2,C_FIELDDEL);
+
+  if(_this->m_lpTable->m_rtext) 
+  {
+    dlp_strncpy(lpBuf,_this->m_lpTable->m_rtext,T_SHORT_MAX);
+    nLimit = T_SHORT_MAX-dlp_strlen(lpBuf)-1;
+    lpBuf2[nLimit] = 0;
+    dlp_strcat(lpBuf,lpBuf2);
+  }
+  else dlp_strcpy(lpBuf,lpBuf2);
+
+  /* Save current vrtext */
+  lpVrtSave = _this->m_lpTable->m_vrtext;
+
+  /* Write serialized fields into realization attribute description string */
+  _this->m_lpTable->m_vrtext = (char*)dlp_calloc(dlp_strlen(lpBuf)+1,sizeof(char));
+  dlp_strcpy(_this->m_lpTable->m_vrtext,lpBuf);
+
+  /* Serialize data table */
+  if(O_K != CDN3Stream_SerializeTable(lpDest,_this->m_lpTable)) 
+  {
+    dlp_free(_this->m_lpTable->m_vrtext);
+    _this->m_lpTable->m_vrtext = lpVrtSave;
+    dlp_free(lpBuf);
+    dlp_free(lpBuf2);
+    return NOT_EXEC;
+  }
+
+  /* Restore current vrtext */
+  dlp_free(_this->m_lpTable->m_vrtext);
+  _this->m_lpTable->m_vrtext = lpVrtSave;
+
+  /* Clean up */
+  dlp_free(lpBuf);
+  dlp_free(lpBuf2);
+
+  DLP_CHECK_MEMINTEGRITY
+  return O_K;
+
+#endif /* #ifdef __NODN3STREAM */
+
+#endif /* #ifdef CODE_DN3 */
+#ifdef CODE_XML
+
+#ifndef __NOXMLSTREAM
+
+  INT16 nRet = O_K;
+  char  lpFqName[255];
+
+#ifdef __NORTTI
+  return IERROR(_this,ERR_NOTSUPPORTED,"Serialization in __NORTTI mode",0,0);
+#endif
+  GET_THIS_VIRTUAL_RV(CData,NOT_EXEC);
+
+  /* Invoke base class */
+  IF_NOK((nRet=INVOKE_BASEINST_1(SerializeXml,lpDest))) return nRet;
+
+  /* Serialize data table */
+  /* - Get fully qualified table name
+       - trim root instance name
+       - append ".<table>"
+  */
+  CDlpObject_GetFQName(BASEINST(_this),lpFqName,TRUE);
+  while (*lpFqName && *lpFqName!='.') dlp_memmove(lpFqName,&lpFqName[1],dlp_strlen(lpFqName));
+  if (*lpFqName=='.') dlp_memmove(lpFqName,&lpFqName[1],dlp_strlen(lpFqName));
+  dlp_strcat(lpFqName,".~table");
+
+  /* - Do serialize table */
+  IF_NOK((nRet=CXmlStream_SerializeTable(lpDest,_this->m_lpTable,lpFqName))) return nRet;
+
+  return O_K;
+
+#else /* #ifndef __NOXMLSTREAM */
+
+  return NOT_EXEC;
+
+#endif /* #ifndef __NOXMLSTREAM */
+
+#endif /* #ifdef CODE_XML */
+}
+END_CODE
+
+COPYCODE:
+{
+  /* Get type save pointer to source */
+  data* iSrc = NULL;
+  GET_VIRTUAL_RV(iSrc,CData,__iSrc,NOT_EXEC);
+ 
+  /* Call generic instance copy method */
+  COPY;
+
+  /* Copy data table (must be done AFTER copying fields!) */
+  if(O_K != CDlpTable_Copy(_this->m_lpTable, iSrc->m_lpTable, 0, iSrc->m_lpTable->m_nrec)) return NOT_EXEC;
+}
+END_CODE
+
+## Load manual, generate and quit
+"data_man.def" include
+-cgen
+quit
+
+## EOF
+
+
+
+
+
+
+

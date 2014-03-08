@@ -1,0 +1,1248 @@
+## dLabPro SDK class CCgen (cgen)
+## - Definition file
+##
+## AUTHOR : Matthias Wolff
+## PACKAGE: dLabPro/sdk
+## 
+## Copyright 2013 dLabPro contributors and others (see COPYRIGHT file) 
+## - Chair of System Theory and Speech Technology, TU Dresden
+## - Chair of Communications Engineering, BTU Cottbus
+## 
+## This file is part of dLabPro.
+## 
+## dLabPro is free software: you can redistribute it and/or modify it under the
+## terms of the GNU Lesser General Public License as published by the Free
+## Software Foundation, either version 3 of the License, or (at your option)
+## any later version.
+## 
+## dLabPro is distributed in the hope that it will be useful, but WITHOUT ANY
+## WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+## FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+## details.
+## 
+## You should have received a copy of the GNU Lesser General Public License
+## along with dLabPro. If not, see <http://www.gnu.org/licenses/>.
+
+PLATFORM:   GNUC++
+COMPILER:   gcc
+AR:         ar
+
+PROJECT:    cgen
+COMMENT:    Code Generator for dLabPro
+AUTHOR:     Matthias Wolff
+VERSION:    2.5.5                                                               ## for dLabPro 2.5.5
+
+CLASS:      cgen
+SUPERCLASS: ../../classes/function/function.def
+/cxx_nconv                                                                      ## Restrictive C++ naming conventions
+/no_idcheck                                                                     ## No restrictive dLabPro naming convs.
+/no_stdincl                                                                     ## No standard includes
+
+## Include and source files
+INCLUDE: "dlp_dgen.h"
+INCLUDE: "dlp_clist.h"
+FILE:    cgen_ctl.cpp
+FILE:    cgen_cmd.cpp
+FILE:    cgen_cpp.cpp
+FILE:    cgen_jvd.cpp
+FILE:    cgen_htm.cpp
+FILE:    cgen_mak.cpp
+FILE:    cgen_tpl.cpp
+
+## Defines - C/C++ source code scanner macros
+DEFINE: S_PROT       "__PROT"
+DEFINE: S_CGENPUB    "CGEN_PUBLIC"
+DEFINE: S_CGENVPUB   "CGEN_VPUBLIC"
+DEFINE: S_CGENVPPUB  "CGEN_VPPUBLIC"
+DEFINE: S_CGENSPUB   "CGEN_SPUBLIC"
+DEFINE: S_CGENPROT   "CGEN_PROTECTED"
+DEFINE: S_CGENVPROT  "CGEN_VPROTECTED"
+DEFINE: S_CGENVPPROT "CGEN_VPPROTECTED"
+DEFINE: S_CGENSPROT  "CGEN_SPROTECTED"
+DEFINE: S_CGENPRIV   "CGEN_PRIVATE"
+DEFINE: S_CGENSPRIV  "CGEN_SPRIVATE"
+DEFINE: S_CGENEXPORT "CGEN_EXPORT"
+DEFINE: S_CGENIGNORE "CGEN_IGNORE"
+DEFINE: S_DEFAULT    "DEFAULT("
+
+## Defines - End marks
+DEFINE: S_ENDCODE    "END_CODE"
+DEFINE: S_ENDMAN     "END_MAN"
+
+## Defines - First error code
+DEFINE: ERR_FIRST     -1000
+
+## Defines - Platform codes
+DEFINE: PF_GNUCXX     0x0001
+DEFINE: PF_MSDEV4     0x0002
+DEFINE: PF_MSDEV5     0x0003
+DEFINE: PF_MSDEV6     0x0004
+
+## Defines - Make flags
+DEFINE: MAK_NOHFILE   0x0001
+DEFINE: MAK_NOCPPFILE 0x0002
+DEFINE: MAK_NOMAKFILE 0x0004
+DEFINE: MAK_NOMANFILE 0x0008
+DEFINE: MAK_NOHTMLMAN 0x0010
+DEFINE: MAK_IFNOTEX   0x0020
+
+## Defines - Section ID\'s writing NMAKE files
+DEFINE: NMS_RELEASE   0x0001
+DEFINE: NMS_DEBUG     0x0002
+
+## Defines - File types
+DEFINE: FT_H          0x0001
+DEFINE: FT_CPP        0x0002
+DEFINE: FT_C          0x0003
+
+## Defines - Create context (m_creating)
+DEFINE: CR_NOTHING    0
+DEFINE: CR_PROJECT    1
+DEFINE: CR_ERROR      2
+DEFINE: CR_FIELD      3
+DEFINE: CR_METHOD     4
+DEFINE: CR_OPTION     5
+DEFINE: CR_NOTE       6
+DEFINE: CR_ICLS       7
+DEFINE: CR_IGNORE     8
+DEFINE: CR_CFUNC      9
+
+## Defines - Command argument flags
+DEFINE: AF_INOUT      0
+DEFINE: AF_IN         1
+DEFINE: AF_OUT        2
+
+## Defines - Signature types
+DEFINE: CSIG_CXXMEMBER       1
+DEFINE: CSIG_CMEMBER         2
+DEFINE: CSIG_FUNCTION        3
+DEFINE: CSIG_CXXWRAPPER_HEAD 4
+DEFINE: CSIG_CXXWRAPPER_CALL 5
+
+## Defines - FORBIDFLAG macro for the OnFlags() function
+DEFINE: FORBIDFLAG(A,B,C,D,E) if ((A&C) != (B&C)) ERRORMSG(ERR_INVALSUBKEY,D,E,0);
+
+## Defines - Fatal error exit
+DEFINE: EXIT(A,B,C,D) {IERROR(this,A,B,C,D); CDlpObject::ErrorLog(); exit(A);}
+
+## Additional header code
+HEADERCODE:
+  #ifndef ERRORRET
+    #define ERRORRET(ERR,A,B,C,RET) { IERROR(_this,ERR,A,B,C); return RET; }
+    #define ERRORMSG(ERR,A,B,C)       IERROR(_this,ERR,A,B,C)
+  #endif
+
+  #define CGEN_WORDS(A,B,C,D,E) { C*      lpItem;                             \\
+                                  SCGStr* lpTmpl=A.m_items;                   \\
+                                  while(lpTmpl)                               \\
+                                  {                                           \\
+                                    if(strstr(lpTmpl->lpName,B))              \\
+                                    {                                         \\
+                                      lpItem=D.m_items;                       \\
+                                      while(lpItem)                           \\
+                                      {                                       \\
+                                        if (!lpItem->bInherited)              \\
+                                          E(lpItem,lpTmpl,lpItem==D.m_items); \\
+                                        lpItem=lpItem->next;                  \\
+                                      }                                       \\
+                                    }                                         \\
+                                    lpTmpl=lpTmpl->next;                      \\
+                                 } }
+
+  #define CGEN_CODE(A,B,C)       { char _lpBuf[2048];                        \\
+                                   SCGStr *lpStr = C.m_items;                \\
+                                   while(lpStr)                              \\
+                                   {                                         \\
+                                     if (dlp_strlen(lpStr->lpName))          \\
+                                       sprintf(_lpBuf,"  %s",lpStr->lpName); \\
+                                     else                                    \\
+                                       strcpy(_lpBuf,"");                    \\
+                                     KillDollars(_lpBuf);                    \\
+                                     A.InsertItem(B,_lpBuf); B = B->next;    \\
+                                     lpStr = lpStr->next;                    \\
+                                 } }
+
+  #define BEGIN_FLAGS(A)        { char* _lpFlags = A; strcpy(_lpFlags,"");
+  #define END_FLAGS             if (!dlp_strlen(_lpFlags)) strcpy(_lpFlags,"0"); }
+  #define APPEND_FLAG(A,B)      if (A&B)                                            \\
+                                {                                                   \\
+                                  if (dlp_strlen(_lpFlags)) strcat(_lpFlags," | "); \\
+                                  strcat(_lpFlags,""#B"");                          \\
+                                }
+
+  typedef struct tagSCGStr
+  {
+    char       lpName[L_INPUTLINE];
+    INT16      nId;
+    tagSCGStr* next;
+  } SCGStr;
+
+  typedef struct tagSCGErr
+  {
+    char          lpName[100];
+    INT16         nId;
+    char          lpComment[255];
+    char          lpErrorLevel[50];
+    INT16         bInherited;
+    char          lpFile[L_PATH];
+    INT32         nLine;
+    INT16         bHtmlMan;
+    CList<SCGStr> lMan;
+    CList<SCGStr> lCman;
+    tagSCGErr*    next;
+  } SCGErr;
+
+  typedef struct tagSCGFile
+  {
+    char        lpName[255];
+    INT16       nId;
+    INT16       nFType;
+    tagSCGFile* next;
+  } SCGFile;
+
+  typedef struct tagSCGSyn
+  {
+    char       lpName[100];
+    INT16      nId;
+    INT16      nArgFlags;
+    char       lpType[100];
+    char       lpMdfr[100];
+    char       lpSupply[255];
+    char       lpDefaultVal[100];
+    tagSCGSyn* next;
+  } SCGSyn;
+
+  typedef struct tagSCGFld
+  {
+    char          lpName[100];
+    char          lpObsolete[100];
+    INT16         nId;
+    char          lpCName[100];
+    char          lpComment[255];
+    INT16         nType;              // SLC type code
+    char          lpCType[100];       // C/C++ type identifier
+    char          lpType[100];        // C/C++ pointer type ID or SLC RTTI name
+    INT32         nArrayLen;          // Length of simple variable array (std: 1)
+    char          lpArraySpec[100];   // C/C++ array tag ([nn][nn]...)
+    INT32         nFlags;
+    INT16         bInherited;
+    char          lpInit[100];
+    char          lpFile[L_PATH];
+    INT32         nLine;
+    INT16         bHtmlMan;
+    CList<SCGStr> lMan;
+    CList<SCGStr> lCman;
+    CList<SCGStr> lCode;
+    tagSCGFld*    next;
+  } SCGFld;
+
+  typedef struct tagSCGOpt
+  {
+    char          lpName[100];
+    char          lpObsolete[100];
+    INT16         nId;
+    char          lpCName[100];
+    char          lpComment[255];
+    INT32         nFlags;
+    INT16         bInherited;
+    char          lpFile[L_PATH];
+    INT32         nLine;
+    INT16         bHtmlMan;
+    CList<SCGStr> lMan;
+    CList<SCGStr> lCman;
+    CList<SCGStr> lCode;
+    tagSCGOpt*    next;
+  } SCGOpt;
+
+  typedef struct tagSCGMth
+  {
+    char          lpName[100];
+    char          lpObsolete[100];
+    INT16         nId;
+    char          lpCName[100];
+    char          lpComment[255];
+    char          lpUPNSyntax[255];
+    char          lpCSyntax[255];
+    char          lpPostsyn[100];
+    char          lpFile[L_PATH];
+    INT32         nFlags;
+    INT16         bInherited;
+    INT16         bOverwritten;
+    INT32         nLine;
+    INT16         bHtmlMan;
+    CList<SCGStr> lMan;
+    CList<SCGStr> lCman;
+    CList<SCGStr> lCode;
+    CList<SCGStr> lPCode;
+    CList<SCGSyn> lSyntax;
+    SCGSyn        lpReturn;
+    tagSCGMth*    next;
+  } SCGMth;
+
+  typedef struct tagSCGRnt
+  {
+    char          lpName[100];
+    INT16         nId;
+    char          lpComment[255];
+    INT16         bInherited;
+    char          lpFile[L_PATH];
+    INT32         nLine;
+    INT16         bHtmlMan;
+    CList<SCGStr> lMan;
+    CList<SCGStr> lCman;
+    tagSCGRnt*    next;
+  } SCGRnt;
+
+  typedef struct tagSCGIcl
+  {
+    char       lpName[100];
+    INT16      nId;
+    char       lpFile[L_PATH];
+    INT32      nLine;
+    char       lpMPath[L_PATH];
+    char       lpIPath[L_PATH];
+    char       lpLPath[L_PATH];
+    char       lpMFile[100];
+    char       lpHFile[100];
+    char       lpLFile[100];
+    tagSCGIcl* next;
+  } SCGIcl;
+END_CODE
+
+## Errors (manual pages in cgen_man.def)
+ERROR:   ERR_DEPRECATED
+COMMENT: %s is deprecated. %s
+LEVEL:   EL_WARNING
+
+ERROR:   ERR_EXPECTAFTER
+COMMENT: Expect %s after identifier '%s'.
+
+ERROR:   ERR_EXPECTIDAFTER
+COMMENT: Expect identifier after '%s' (creating '%s').
+
+ERROR:   ERR_DDEF_LIST
+COMMENT: %s '%s' is already defined. New definition ignored.
+LEVEL:   EL_WARNING
+
+ERROR:   ERR_CANNOTCREATE
+COMMENT: %s '%s' cannot be created.
+
+ERROR:   ERR_INVALMETHOD
+COMMENT: Method '%s' is not allowed in '%s' projects.
+LEVEL:   EL_WARNING
+
+ERROR:   ERR_INVALKEY
+COMMENT: Key '%s' is not allowed in '%s' projects.
+LEVEL:   EL_WARNING
+
+ERROR:   ERR_INVALSUBKEY
+COMMENT: Section '%s' does not allow the '%s' subkey.
+LEVEL:   EL_WARNING
+
+ERROR:   ERR_EXPGLOBALKEY
+COMMENT: Expect section keyword before '%s'.
+
+ERROR:   ERR_EXPPROJECT
+COMMENT: Expect 'PROJECT:' before '%s'.
+LEVEL:   EL_FATAL
+
+ERROR:   ERR_EXPECTENDMARK
+COMMENT: Unexpected end of file scanning for '%s'.
+
+ERROR:   ERR_TOOMANYPARS
+COMMENT: Too many actual parameters follow '%s' (creating '%s').
+LEVEL:   EL_WARNING
+
+ERROR:   ERR_UNKNOWNTYPE
+COMMENT: Field type '%s' unknown. Assuming pointer type.
+LEVEL:   EL_WARNING
+
+ERROR:   ERR_CREATEFILE
+COMMENT: Cannot create this file: '%s'.
+
+ERROR:   ERR_OPENFILE
+COMMENT: Cannot open this file or folder: '%s'.
+
+ERROR:   ERR_MISSCOMMENT
+COMMENT: No COMMENT: defined creating %s '%s'.
+LEVEL:   EL_WARNING
+
+ERROR:   ERR_MISSTYPE
+COMMENT: No TYPE: defined creating %s '%s'. Assuming type 'short'.
+LEVEL:   EL_WARNING
+
+ERROR:   ERR_MISSINIT
+COMMENT: No INIT: defined creating %s '%s'. Assuming %s.
+LEVEL:   EL_WARNING3
+
+ERROR:   ERR_MISSSYNTAX
+COMMENT: No SYNTAX: defined creating %s '%s'. Assuming none.
+LEVEL:   EL_WARNING
+
+ERROR:   ERR_BADSYNTAX
+COMMENT: Bad SYNTAX: description.
+
+ERROR:   ERR_BADRETTYPE
+COMMENT: Type '%s' is not supported for return values.
+
+ERROR:   ERR_MISSNOTE
+COMMENT: NOTE: '%s' does not contain a MAN text.
+LEVEL:   EL_WARNING3
+
+ERROR:   ERR_DATAUNDEFDW
+COMMENT: No %s defined creating %s. Assuming none.
+LEVEL:   EL_WARNING
+
+ERROR:   ERR_DATAUNDEFD
+COMMENT: Required parameter %s was not defined.
+
+ERROR:   ERR_VERIFYDATA
+COMMENT: Cannot make source files because of missing data.
+LEVEL:   EL_FATAL
+
+ERROR:   ERR_NOPLATFORM
+COMMENT: The platform '%s' is not supported or unknown.
+LEVEL:   EL_FATAL
+
+ERROR:   ERR_NOMSVCFOUND
+COMMENT: MS Visual C++ tools not found.
+LEVEL:   EL_FATAL
+
+ERROR:   ERR_WRONGMSVCVERSION
+COMMENT: Specified MS Visual C++ version not found. Changed to V%d.0!
+LEVEL:   EL_WARNING
+
+ERROR:   ERR_FILETYPE
+COMMENT: *%s - files are not supported as soures.
+
+ERROR:   ERR_POINTERINIT
+COMMENT: INIT: is not allowed on pointer types. Definition ignored.
+LEVEL:   EL_WARNING
+
+ERROR:   ERR_UNKNOWNARGTYPE
+COMMENT: Argument type '%s' unknown. Assuming instance type.
+LEVEL:   EL_WARNING
+
+#ERROR:   ERR_THIS
+#COMMENT: THIS symbol is obsolete. Remove from definition!
+#LEVEL:   EL_WARNING2
+
+ERROR:   ERR_INFUNCTION
+COMMENT: In function '%s' (%s:%d):
+LEVEL:   EL_WARNING2
+
+ERROR:   ERR_INFUNCTION2
+COMMENT: In function '%s' (%s:%d):
+LEVEL:   EL_WARNING3
+
+ERROR:   ERR_INLINE
+COMMENT: In line %s(%d):
+LEVEL:   EL_WARNING2
+
+ERROR:   ERR_PARSEERR
+COMMENT: Parse error in %s near '%s'.
+
+ERROR:   ERR_PARSEERR2
+COMMENT: Parse error: %s.
+
+ERROR:   ERR_PARSEERR_ARG
+COMMENT: Parse error in argument %d: %s.
+
+ERROR:   ERR_ELLIPSIS
+COMMENT: Ellipses not supported by generated C++ wrapper functions.
+LEVEL:   EL_WARNING
+
+ERROR:   ERR_CPROJECT
+COMMENT: Switched to C-mode because of C style member function(s).
+LEVEL:   EL_WARNING
+
+ERROR:   ERR_BADIDENTIFIER
+COMMENT: %s indentifier '%s' unknown.
+
+ERROR:   ERR_INVALARRLEN
+COMMENT: Invalid array length specifier '%s'.
+
+ERROR:   ERR_MULTIARRAY
+COMMENT: Multidimensional arrays are not supported.
+LEVEL:   EL_WARNING
+
+ERROR:   ERR_EXPECT
+COMMENT: Expect '%s'%s.
+
+ERROR:   ERR_TOOLEXEC
+COMMENT: Cannot execute '%s'.
+
+ERROR:   ERR_BADIDCHAR
+COMMENT: '%s': identifier must not contain '%c'.
+LEVEL:   EL_WARNING
+
+ERROR:   ERR_BADLEAD
+COMMENT: '%s': %ss should not start with '%c'.
+LEVEL:   EL_WARNING
+
+ERROR:   ERR_APPEND
+COMMENT: Cannot append to %s '%s'.
+
+ERROR:   ERR_NOBASECALL
+COMMENT: Base call ('%s') not found in %s. 
+LEVEL:   EL_WARNING
+
+ERROR:   ERR_BADOPTION
+COMMENT: Option %s can %s be used %s.
+
+ERROR:   ERR_UNEXPECTEDEOF
+COMMENT: Unexpected end of file scanning for %s.
+
+ERROR:   ERR_EXTRA_HTML
+COMMENT: Extra custom HTML code removed. See file '%s'.
+LEVEL:   EL_WARNING
+
+ERROR:   ERR_TOOLONG
+COMMENT: %s(%ld): %s too long.
+LEVEL:   EL_WARNING
+
+ERROR:   ERR_UNKNOWN
+COMMENT: Unknown %s '%s'. %s.
+LEVEL:   EL_WARNING
+
+ERROR:   ERR_RESJDLINK
+COMMENT: Cannot resolve JavaDoc link '%s'.
+LEVEL:   EL_WARNING
+
+ERROR:   ERR_INVALARGS
+COMMENT: Invalid command line arguments.
+
+## Fields
+FIELD: mainProject
+TYPE:  bool
+CNAME: m_bMainProject
+FLAGS: /hidden /noset
+
+FIELD: creating
+TYPE:  short
+INIT:  CR_NOTHING
+FLAGS: /hidden /noset
+
+FIELD: platform
+TYPE:  short
+FLAGS: /hidden /noset
+
+FIELD: class
+TYPE:  100
+FLAGS: /hidden /noset
+
+FIELD: obsolete
+TYPE:  100
+FLAGS: /hidden /noset
+
+FIELD: parent_project
+TYPE:  100
+FLAGS: /hidden /noset
+
+FIELD: dlc_parent
+TYPE:  100
+FLAGS: /hidden /noset
+
+FIELD: cxx_parent
+TYPE:  100
+FLAGS: /hidden /noset
+
+FIELD: cxx_more_parents
+TYPE:  100
+FLAGS: /hidden /noset
+
+FIELD: package
+TYPE:  100
+FLAGS: /hidden /noset
+
+FIELD: project
+TYPE:  100
+FLAGS: /hidden /noset
+
+FIELD: CSXXX
+TYPE:  long
+INIT:  CS_AUTOACTIVATE
+FLAGS: /hidden /noset
+
+FIELD: c_name
+TYPE:  100
+FLAGS: /hidden /noset
+
+FIELD: c_struct_name
+TYPE:  100
+FLAGS: /hidden /noset
+
+FIELD: comment
+TYPE:  255
+FLAGS: /hidden /noset
+
+FIELD: author
+TYPE:  100
+FLAGS: /hidden /noset
+
+FIELD: version
+TYPE:  20
+FLAGS: /hidden /noset
+
+FIELD: autoname
+TYPE:  100
+FLAGS: /hidden /noset
+
+FIELD: libfile
+TYPE:  64
+FLAGS: /hidden /noset
+
+FIELD: gcc_flags
+TYPE:  255
+FLAGS: /hidden /noset
+
+FIELD: msvc_flags
+TYPE:  255
+FLAGS: /hidden /noset
+
+FIELD: m_path
+TYPE:  255
+FLAGS: /hidden /noset
+
+FIELD: i_path
+TYPE:  255
+FLAGS: /hidden /noset
+
+FIELD: o_path
+TYPE:  255
+FLAGS: /hidden /noset
+
+FIELD: l_path
+TYPE:  255
+FLAGS: /hidden /noset
+
+FIELD: b_path
+TYPE:  255
+FLAGS: /hidden /noset
+
+FIELD: MSD_path
+TYPE:  255
+FLAGS: /hidden /noset
+
+FIELD: home_path
+TYPE:  255
+FLAGS: /hidden /noset
+
+FIELD: NMake_section
+TYPE:  short
+INIT:  NMS_RELEASE
+FLAGS: /hidden /noset
+
+FIELD: ancestor
+TYPE:  short
+FLAGS: /hidden /noset
+
+FIELD: fgen
+TYPE:  short
+FLAGS: /hidden /noset
+
+FIELD: hFileTmpl
+TYPE:  (CList<SCGStr>)
+FLAGS: /hidden /noset /nonautomatic
+
+FIELD: cppFileTmpl
+TYPE:  (CList<SCGStr>)
+FLAGS: /hidden /noset /nonautomatic
+
+FIELD: makFileTmpl
+TYPE:  (CList<SCGStr>)
+FLAGS: /hidden /noset /nonautomatic
+
+FIELD: nmakFileTmpl
+TYPE:  (CList<SCGStr>)
+FLAGS: /hidden /noset /nonautomatic
+
+FIELD: dspFileTmpl
+TYPE:  (CList<SCGStr>)
+FLAGS: /hidden /noset /nonautomatic
+
+FIELD: dswFileTmpl
+TYPE:  (CList<SCGStr>)
+FLAGS: /hidden /noset /nonautomatic
+
+FIELD: bsiFileTmpl
+TYPE:  (CList<SCGStr>)
+FLAGS: /hidden /noset /nonautomatic
+
+FIELD: files
+TYPE:  (CList<SCGFile>)
+FLAGS: /hidden /noset /nonautomatic
+
+FIELD: includes
+TYPE:  (CList<SCGStr>)
+FLAGS: /hidden /noset /nonautomatic
+
+FIELD: pincludes
+TYPE:  (CList<SCGStr>)
+FLAGS: /hidden /noset /nonautomatic
+
+FIELD: defines
+TYPE:  (CList<SCGStr>)
+FLAGS: /hidden /noset /nonautomatic
+
+FIELD: friends
+TYPE:  (CList<SCGStr>)
+FLAGS: /hidden /noset /nonautomatic
+
+FIELD: errors
+TYPE:  (CList<SCGErr>)
+FLAGS: /hidden /noset /nonautomatic
+
+FIELD: flds
+TYPE:  (CList<SCGFld>)
+FLAGS: /hidden /noset /nonautomatic
+
+FIELD: opts
+TYPE:  (CList<SCGOpt>)
+FLAGS: /hidden /noset /nonautomatic
+
+FIELD: mths
+TYPE:  (CList<SCGMth>)
+FLAGS: /hidden /noset /nonautomatic
+
+FIELD: cfns                            ## List of C/C++ functions which are NOT dLabPro methods
+TYPE:  (CList<SCGMth>)
+FLAGS: /hidden /noset /nonautomatic
+
+FIELD: rnts
+TYPE:  (CList<SCGRnt>)
+FLAGS: /hidden /noset /nonautomatic
+
+FIELD: icls
+TYPE:  (CList<SCGIcl>)
+FLAGS: /hidden /noset /nonautomatic
+
+FIELD: exports                         ## List of C++ method declarators scanned from c(pp) sources
+TYPE:  (CList<SCGStr>)
+FLAGS: /hidden /noset /nonautomatic
+
+FIELD: Cexports                        ## List of C function declarator scanned from c(pp) sources
+TYPE:  (CList<SCGStr>)
+FLAGS: /hidden /noset /nonautomatic
+
+FIELD: cxxWrappers                     ## List of C++ wrapper method definitions
+TYPE:  (CList<SCGStr>)
+FLAGS: /hidden /noset /nonautomatic
+
+FIELD: header_code                     ## C(++) code from HEADERCODE: Additional header code
+TYPE:  (CList<SCGStr>)
+FLAGS: /hidden /noset /nonautomatic
+
+FIELD: init_code                       ## C(++) code from INITCODE: Overwrite of CDlpInstance_Init
+TYPE:  (CList<SCGStr>)
+FLAGS: /hidden /noset /nonautomatic
+
+FIELD: done_code                       ## C(++) code from DONECODE: Overwrite of CDlpInstance_Destructor
+TYPE:  (CList<SCGStr>)
+FLAGS: /hidden /noset /nonautomatic
+
+FIELD: reset_code                      ## C(++) code from RESETCODE: Overwrite of CDlpInstance_Reset
+TYPE:  (CList<SCGStr>)
+FLAGS: /hidden /noset /nonautomatic
+
+FIELD: save_code                       ## C(++) code from SAVECODE: Overwrite of CDlpInstance_Save
+TYPE:  (CList<SCGStr>)
+FLAGS: /hidden /noset /nonautomatic
+
+FIELD: restore_code                    ## C(++) code from RESTORECODE: Overwrite of CDlpInstance_Restore
+TYPE:  (CList<SCGStr>)
+FLAGS: /hidden /noset /nonautomatic
+
+FIELD: copy_code                       ## C(++) code from COPYCODE: Overwrite of CDlpInstance_Copy
+TYPE:  (CList<SCGStr>)
+FLAGS: /hidden /noset /nonautomatic
+
+FIELD: class_code                      ## C(++) code from CLASSCODE: Overwrite of CDlpInstance_ClassProc
+TYPE:  (CList<SCGStr>)
+FLAGS: /hidden /noset /nonautomatic
+
+FIELD: install_code                    ## C(++) code from INSTALLCODE: Overwrite of CDlpInstance_InstallProc
+TYPE:  (CList<SCGStr>)
+FLAGS: /hidden /noset /nonautomatic
+
+FIELD: manual                          ## Class manual from DEF file
+TYPE:  (CList<SCGStr>)
+FLAGS: /hidden /noset /nonautomatic
+
+FIELD: cmanual                         ## Class custom HTML manual text scanned from HTML file
+TYPE:  (CList<SCGStr>)
+FLAGS: /hidden /noset /nonautomatic
+
+FIELD: cl_site_map                     ## Site map in HTML file template (SLC Visual Tools format)
+TYPE:  (CList<SCGStr>)
+FLAGS: /hidden /noset /nonautomatic
+
+FIELD: cl_toc                          ## TOC in HTML file template (JavaScript)
+TYPE:  (CList<SCGStr>)
+FLAGS: /hidden /noset /nonautomatic
+
+FIELD: l_files
+TYPE:  (CList<SCGStr>)
+FLAGS: /hidden /noset /nonautomatic
+
+FIELD: creating_err                    ## Buffer for creating new error
+TYPE:  SCGErr*
+FLAGS: /hidden /noset /nonautomatic
+
+FIELD: creating_fld                    ## Buffer for creating new field
+TYPE:  SCGFld*
+FLAGS: /hidden /noset /nonautomatic
+
+FIELD: creating_opt                    ## Buffer for creating new option
+TYPE:  SCGOpt*
+FLAGS: /hidden /noset /nonautomatic
+
+FIELD: creating_mth                    ## Buffer for creating new method
+TYPE:  SCGMth*
+FLAGS: /hidden /noset /nonautomatic
+
+FIELD: creating_rnt                    ## Buffer for creating new release note
+TYPE:  SCGRnt*
+FLAGS: /hidden /noset /nonautomatic
+
+FIELD: creating_icl
+TYPE:  SCGIcl*
+FLAGS: /hidden /noset /nonautomatic
+
+FIELD: def_list                        ## List of processed DEF-files
+TYPE:  (CList<SCGStr>)
+FLAGS: /hidden /noset /nonautomatic
+
+FIELD: HtmlMan
+CNAME: m_bHtmlMan
+TYPE:  short
+FLAGS: /hidden /noset /nonautomatic
+
+FIELD: parser
+TYPE:  INSTANCE(CDgen)
+FLAGS: /hidden /noset /nosave
+
+FIELD:   verbose
+COMMENT: The verbose level.
+TYPE:    int
+
+## Options
+OPTION:  /append
+COMMENT: Continue an existing section.
+
+OPTION:  /primary
+COMMENT: Primary method invocation CODE:
+
+OPTION:  /cLib
+CNAME:   m_bClib
+COMMENT: Generate documentation for a C/C++ library.
+FLAGS:   /nonautomatic
+
+OPTION:  /cProject
+COMMENT: Generate ANSI C compatible in interface code.
+CNAME:   m_bCProject
+FLAGS:   /nonautomatic
+
+OPTION:  /cxx_nconv
+COMMENT: Use strict C++ naming conventions for member identifiers.
+FLAGS:   /nonautomatic
+
+OPTION:  /html
+COMMENT: The following <MAN:> section is HTML code.
+
+OPTION:  /no_idcheck
+COMMENT: Do not use dLabPro naming conventions for members id's.
+FLAGS:   /nonautomatic
+
+OPTION:  /no_stdincl
+COMMENT: Do not use standard header files.
+FLAGS:   /nonautomatic
+
+OPTION:  /xDoc
+CNAME:   m_bXDoc
+COMMENT: Generate documentation for hidden and private members.
+FLAGS:   /nonautomatic
+
+## Methods - SECTION KEYS (manual pages in cgen_man.def)
+METHOD:  MAIN:
+COMMENT: SECTION KEY; Defines and names a main project.
+SYNTAX:  ()
+POSTSYN: <name>
+CNAME:   OnMain
+
+METHOD:  PROJECT:
+COMMENT: SECTION KEY; Defines and names a class project.
+SYNTAX:  ()
+POSTSYN: <name>
+CNAME:   OnProject
+
+METHOD:  ERROR:
+COMMENT: SECTION KEY; Defines an error member.
+SYNTAX:  ()
+POSTSYN: <identifier>
+CNAME:   OnError
+
+METHOD:   FIELD:
+OBSOLETE: PARAM:
+COMMENT:  SECTION KEY; Defines a field member.
+SYNTAX:   ()
+POSTSYN:  <identifier>
+CNAME:    OnField
+
+METHOD:  OPTION:
+COMMENT: SECTION KEY; Defines an option member.
+SYNTAX:  ()
+POSTSYN: <identifier>
+CNAME:   OnOption
+
+METHOD:   METHOD:
+OBSOLETE: COMMAND: 
+COMMENT:  SECTION KEY; Defines a method member.
+SYNTAX:   ()
+POSTSYN:  <identifier>
+CNAME:    OnMethod
+
+METHOD:  NOTE:
+COMMENT: SECTION KEY; Defines a release note.
+SYNTAX:  ()
+POSTSYN: <identifier>
+CNAME:   OnNote
+
+METHOD:  INSTALL:
+COMMENT: SECTION KEY; Installs a class in a main project.
+SYNTAX:  ()
+POSTSYN: <identifier>
+CNAME:   OnInstallClass
+
+## Methods - SUBKEYS
+METHOD:  AR:
+COMMENT: -- DEFUNCT SUBKEY --, ignored.
+SYNTAX:  ()
+POSTSYN: <filename>
+CNAME:   OnAr
+
+METHOD:  AUTHOR:
+COMMENT: SUBKEY; Name of autor(s).
+SYNTAX:  ()
+POSTSYN: <name>
+CNAME:   OnAuthor
+
+METHOD:  AUTOINSTANCE:
+COMMENT: SUBKEY; Identifier of automatically created instance.
+SYNTAX:  ()
+POSTSYN: <identifier>
+CNAME:   OnAutoinstance
+
+METHOD:   GCCFLAGS:
+OBSOLETE: CFLAGS:
+COMMENT:  SUBKEY; GCC C(++) compiler flags.
+SYNTAX:   ()
+POSTSYN:  <flags>
+CNAME:    OnGccFlags
+
+METHOD:  MSVCFLAGS:
+COMMENT: SUBKEY; MS Visual C++ compiler flags.
+SYNTAX:  ()
+POSTSYN: <flags>
+CNAME:   OnMsvcFlags
+
+METHOD:  CLASS:
+COMMENT: SUBKEY; dLabPro identifier of class or library.
+SYNTAX:  ()
+POSTSYN: <identifier>
+CNAME:   OnClass
+
+METHOD:  SUPERCLASS:
+COMMENT: SUBKEY; Definition file of super class. 
+SYNTAX:  ()
+POSTSYN: <filename>
+CNAME:   OnSuperClass
+
+METHOD:  CNAME:
+COMMENT: SUBKEY; C/C++ identifier of class, library or member.
+SYNTAX:  ()
+POSTSYN: <identifier>
+CNAME:   OnCname
+
+METHOD:  CODE:
+COMMENT: SUBKEY; Member code snippet.
+SYNTAX:  ()
+POSTSYN: ... END_CODE
+CNAME:   OnCode
+
+METHOD:  COMMENT:
+COMMENT: SUBKEY; Brief description of member (one line).
+SYNTAX:  ()
+POSTSYN: <description>
+CNAME:   OnComment
+
+METHOD:  COMPILER:
+COMMENT: -- DEFUNCT SUBKEY --, ignored.
+SYNTAX:  ()
+POSTSYN: <filename>
+CNAME:   OnCompiler
+
+METHOD:  CSTRUCTNAME:
+COMMENT: SUBKEY; C structure identifier of class (for backward compatibility only).
+SYNTAX:  ()
+POSTSYN: <identifier>
+CNAME:   OnCstructname
+
+METHOD:  FLAGS:
+COMMENT: SUBKEY; SEM/Member properties.
+SYNTAX:  ()
+POSTSYN: /hidden|/noset|/nosave|/nonautomatic|/noautoactivate|/singleton|/secondary|/nondistinct
+CNAME:   OnFlags
+
+METHOD:  HFILE:
+COMMENT: SUBKEY; Header file name.
+SYNTAX:  ()
+POSTSYN: <filename>
+CNAME:   OnHfile
+
+METHOD:  INIT:
+COMMENT: SUBKEY; Initial field value.
+SYNTAX:  ()
+POSTSYN: <value>
+CNAME:   OnInit
+
+METHOD:  IPATH:
+COMMENT: SUBKEY; Include path (relative to SEM home path).
+SYNTAX:  ()
+POSTSYN: <path>
+CNAME:   OnIpath
+
+METHOD:  MAN:
+COMMENT: SUBKEY; Manual page of SEM/member.
+SYNTAX:  ()
+POSTSYN: ... END_MAN
+CNAME:   OnMan
+
+METHOD:  MPATH:
+COMMENT: SUBKEY; Manual path (relative to SEM home path).
+SYNTAX:  ()
+POSTSYN: <path>
+CNAME:   OnMpath
+
+METHOD:  LEVEL:
+COMMENT: SUBKEY; Error level of (error) member.
+SYNTAX:  ()
+POSTSYN: EL_FATAL|EL_ERROR|EL_WARNING|EL_WARNING2
+CNAME:   OnLevel
+
+METHOD:  LFILE:
+COMMENT: SUBKEY; Library file name.
+SYNTAX:  ()
+POSTSYN: <filename>
+CNAME:   OnLfile
+
+METHOD:  LPATH:
+COMMENT: SUBKEY; Library path (relative to SEM home path).
+SYNTAX:  ()
+POSTSYN: <path>
+CNAME:   OnLpath
+
+METHOD:  OBSOLETE:
+COMMENT: SUBKEY; Obsolete SEM/member identifier.
+SYNTAX:  ()
+POSTSYN: <identifier>
+CNAME:   OnObsolete
+
+METHOD:  OPATH:
+COMMENT: SUBKEY; Object path (relative to SEM home path).
+SYNTAX:  ()
+POSTSYN: <path>
+CNAME:   OnOpath
+
+METHOD:  PARENT:
+COMMENT: SUBKEY; Base SEM, additional C++ base classes.
+SYNTAX:  ()
+POSTSYN: <identifier>[ C(public|protected <identifier>, ...)]
+CNAME:   OnParent
+
+METHOD:  PLATFORM:
+COMMENT: SUBKEY; C++ compiler platform.
+SYNTAX:  ()
+POSTSYN: GNUC++|MSDEV4|MSDEV5
+CNAME:   OnPlatform
+
+METHOD:  POSTSYN:
+COMMENT: SUBKEY; User interpreted post method syntax.
+SYNTAX:  ()
+POSTSYN: <regular expression>
+CNAME:   OnPostsyn
+
+METHOD:  TYPE:
+COMMENT: SUBKEY; Field variable type.
+SYNTAX:  ()
+POSTSYN: <identifier>
+CNAME:   OnType
+
+METHOD:  SYNTAX:
+COMMENT: SUBKEY; Method syntax description.
+SYNTAX:  ()
+POSTSYN: <syntax description>
+CNAME:   OnSyntax
+
+METHOD:  VERSION:
+COMMENT: SUBKEY; SEM version code.
+SYNTAX:  ()
+POSTSYN: <version>
+CNAME:   OnVersion
+
+## Methods -  LIST KEYWORDS
+METHOD:  DEFINE:
+COMMENT: LIST KEYWORD: Class header #define statement.
+SYNTAX:  ()
+POSTSYN: <statement>
+CNAME:   OnDefine
+
+METHOD:  FILE:
+COMMENT: LIST KEYWORD: Additional C/C++ source file.
+SYNTAX:  ()
+POSTSYN: <filename>
+CNAME:   OnFile
+
+METHOD:  INCLUDE:
+COMMENT: LIST KEYWORD: Additional include file (header).
+SYNTAX:  ()
+POSTSYN: <filename>
+CNAME:   OnInclude
+
+METHOD:  PINCLUDE:
+COMMENT: LIST KEYWORD: Additional include file (impl.).
+SYNTAX:  ()
+POSTSYN: <filename>
+CNAME:   OnPinclude
+
+METHOD:  FRIEND:
+SYNTAX:  ()
+POSTSYN: <friendclass>
+COMMENT: LIST KEYWORD: A friend class (dLabPro or C++ identifier)
+CNAME:   OnFriend
+
+## Methods - INTERFACE CODE SNIPPETS
+METHOD:  HEADERCODE:
+COMMENT: CODE SNIPPET: Additional class header code.
+SYNTAX:  ()
+POSTSYN: ... END_CODE
+CNAME:   OnHeadercode
+
+METHOD:  INITCODE:
+COMMENT: CODE SNIPPET: Custom one-time-initialization code.
+SYNTAX:  ()
+POSTSYN: ... END_CODE
+CNAME:   OnInitcode
+
+METHOD:  DONECODE:
+COMMENT: CODE SNIPPET: Custom one-time-destruction code.
+SYNTAX:  ()
+POSTSYN: ... END_CODE
+CNAME:   OnDonecode
+
+METHOD:  RESETCODE:
+COMMENT: CODE SNIPPET: Custom instance reset code.
+SYNTAX:  ()
+POSTSYN: ... END_CODE
+CNAME:   OnResetcode
+
+METHOD:  SAVECODE:
+COMMENT: CODE SNIPPET: Custom DN3-stream save code.
+SYNTAX:  ()
+POSTSYN: ... END_CODE
+CNAME:   OnSavecode
+
+METHOD:  RESTORECODE:
+COMMENT: CODE SNIPPET: Custom DN3-stream restore code.
+SYNTAX:  ()
+POSTSYN: ... END_CODE
+CNAME:   OnRestorecode
+
+METHOD:  COPYCODE:
+COMMENT: CODE SNIPPET: Custom instance copy code.
+SYNTAX:  ()
+POSTSYN: ... END_CODE
+CNAME:   OnCopycode
+
+METHOD:  CLASSCODE:
+COMMENT: CODE SNIPPET: Code executed interpreting instance identifier.
+SYNTAX:  ()
+POSTSYN: ... END_CODE
+CNAME:   OnClasscode
+
+METHOD:  INSTALLCODE:
+COMMENT: CODE SNIPPET: Class installation procedure
+SYNTAX:  ()
+POSTSYN: ... END_CODE
+CNAME:   OnInstallcode
+
+## Methods - Control
+METHOD:   -cgen
+COMMENT:  Generate source and project files.
+SYNTAX:   ()
+
+#METHOD:   include
+#SYNTAX:   (string sDefFile)
+#COMMENT:  Includes another definition file.
+#CODE:
+#  LoadEx(this,sDefFile);
+#END_CODE
+
+METHOD:   load
+SYNTAX:   (string sDefFile)
+COMMENT:  -- DEPRECATED -- Use include instead.
+CODE:
+  IERROR(this,ERR_DEPRECATED,"load","Use include instead!",0);
+  return Include(sDefFile);
+END_CODE
+
+METHOD:  -loadAncestor
+COMMENT: -- DEPRECATED -- Use SUPERCLASS: instead.
+SYNTAX:  ()
+
+METHOD:  quit
+COMMENT: Finish with definition script.
+SYNTAX:  ()
+
+## Methods - DEBUG
+METHOD:  -template
+COMMENT: -- undocumented feature --
+SYNTAX:  ()
+POSTSYN: h|cpp
+
+METHOD:  -listwords
+COMMENT: -- undocumented feature --
+SYNTAX:  ()
+POSTSYN: files|defines|includes|errors|fields|options|methods
+
+METHOD:  -listdef
+COMMENT: -- undocumented feature --
+SYNTAX:  ()
+CODE:
+    m_defList.PrintList();
+END_CODE
+
+## Interface code snippets
+INITCODE:
+  INIT;
+
+  // Initialize "creating" members
+  SetErrorLevel(3);             // Disable lowest level warnings
+  SetCreating(CR_NOTHING,NULL);
+END_CODE
+
+RESETCODE:
+  RESET;
+  IFIELD_RESET(CDgen,"parser");
+  m_iParser->Setup("def");
+END_CODE
+
+## Load manual keys and release notes
+"cgen_man.def" include
+"cgen_rn.def"  include
+
+## Generate files
+-cgen
+quit
+
+## EOF

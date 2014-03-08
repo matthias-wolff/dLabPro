@@ -1,0 +1,351 @@
+## dLabPro class CProcess (process)
+## - Definition file
+##
+## AUTHOR : Matthias Wolff
+## PACKAGE: dLabPro/classes
+## 
+## Copyright 2013 dLabPro contributors and others (see COPYRIGHT file) 
+## - Chair of System Theory and Speech Technology, TU Dresden
+## - Chair of Communications Engineering, BTU Cottbus
+## 
+## This file is part of dLabPro.
+## 
+## dLabPro is free software: you can redistribute it and/or modify it under the
+## terms of the GNU Lesser General Public License as published by the Free
+## Software Foundation, either version 3 of the License, or (at your option)
+## any later version.
+## 
+## dLabPro is distributed in the hope that it will be useful, but WITHOUT ANY
+## WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+## FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+## details.
+## 
+## You should have received a copy of the GNU Lesser General Public License
+## along with dLabPro. If not, see <http://www.gnu.org/licenses/>.
+
+PLATFORM: GNUC++
+COMPILER: gcc
+AR:       ar
+CFLAGS:   -Wno-trigraphs
+
+PROJECT: process
+CLASS:   process
+AUTHOR:  Matthias Wolff
+COMMENT: Parallel computing processor
+VERSION: 1.0.0
+/html MAN:
+  <p>This class facilitates parallel computing. The implementation is lightweight
+  and does only support a simple master/slave paradigm. Parallel jobs can be
+  started using the {@link -start} method. The {@link -wait} method rejoins a
+  job. You have a choice of two mechanisms:</p>
+  <ul>
+    <li><a href="#clp_001">parallel execution of programs</a> and</li>
+    <li><a href="#clp_002">parallel execution of functions</a>.</li>
+  </ul>
+  <p>A <code>process</code> instance retains a potentially great amout of
+  data transferred to and from the slave. Hence it is recommended to <a
+  href="function.html#mth_-destroy">destroy</a> the <code>process</code> after
+  calling {@link -wait}.</p>
+
+  <a name="clp_001"></a>
+  <h4>Parallel Execution of Programs</h4>
+  <p>The following example shows starting and rejoining multiple sessions of 
+  one dLabPro script. Of course you may execute any other program as well.</p>
+  <pre class="code">
+
+  <span class="c-cmt">## The slave</span>
+  "\$1" "--slave" == <a href="function.html#mth_if">if</a>                                  <span class="c-cmt"># 1st command line arg is "--slave" &gt;&gt;</span>
+    <a href="var.html">var</a> n; \$2 n =;                                      <span class="c-cmt">#   Get 2nd argument to variable n</span>
+    :42*n: <a href="function.html#mth_return">return</a>;                                      <span class="c-cmt">#   End dLabPro and return some value</span>
+  end                                                   <span class="c-cmt"># &lt;&lt;</span>
+
+  <span class="c-cmt">## The master</span>
+  <a href="var.html">var</a> nRetv;                                            <span class="c-cmt"># Return value of job function</span>
+  <a href="var.html">var</a> nJ;                                               <span class="c-cmt"># The job number</span>
+  <a href="var.html">var</a> nXJ; 4 nXJ =;                                     <span class="c-cmt"># The number of parallel jobs</span>
+
+  "\nStarting \$[nXJ] jobs" <a href="function.html#mth_-echo">-echo</a>;                       <span class="c-cmt"># Protocol</span>
+  0 nJ =; nJ nXJ &lt; <a href="function.html#mth_while">while</a>                                <span class="c-cmt"># Loop over jobs &gt;&gt;</span>
+    <span class="c-key">process</span> iJ\$[nJ];                                    <span class="c-cmt"># Create a new process with a unique name</span>
+    "dlabpro \$__FILE__ --slave \$[nJ]" iJ\$[nJ] {@link -start};   <span class="c-cmt">#   Start a program as process</span>
+    nJ ++=;                                             <span class="c-cmt">#   Next job</span>
+  <a href="function.html#mth_end">end</a>                                                   <span class="c-cmt"># &lt;&lt;</span>
+
+  "\nJobs on their way..." <a href="function.html#mth_-echo">-echo</a>;                       <span class="c-cmt"># Now all jobs running</span>
+  0 nJ =; nJ nXJ &lt; <a href="function.html#mth_while">while</a>                                <span class="c-cmt"># Loop over jobs &gt;&gt;</span>
+    ( nJ iJ\$[nJ] {@link -wait} ) nRetv =;                       <span class="c-cmt">#   Wait for job to complete</span>
+    iJ\$[nJ] <a href="function.html#mth_-destroy">-destroy</a>;                                   <span class="c-cmt">#   Destroy process instance</span>
+    "\n- Job #\$[nJ] returned \$[nRetv]" <a href="function.html#mth_-echo">-echo</a>;           <span class="c-cmt">#   See return code of job program</span>
+    nJ ++=;                                             <span class="c-cmt">#   Next job</span>
+  <a href="function.html#mth_end">end</a>                                                   <span class="c-cmt"># &lt;&lt;</span>
+
+  "\nAll jobs complete\n" <a href="function.html#mth_-echo">-echo</a>;                        <span class="c-cmt"># Now all jobs complete</span>
+  </pre>
+  <p>The expected output running this code snippet would be:</p>
+  <pre class="code">
+
+  Starting 4 jobs
+  Jobs on their way...
+  - Job #0 returned 0
+  - Job #1 returned 42
+  - Job #2 returned 84
+  - Job #3 returned 126
+  All jobs complete
+  dLabPro>_
+
+</pre>
+
+  <a name="clp_002"></a>
+  <h4>Parallel Execution of Functions</h4>
+  <p>The <code>process</code> class allows multiple instances of a function to
+  be simultaneously executed in <em>separate processes</em>. For convenience,
+  {@link -start} and {@link -wait} mimic an ordinary function call. That means
+  that after rejoining the job with {@link -wait}</p>
+  <ul>
+    <li>the return value of the job function is on top of the stack and</li>
+    <li>if the job function has modified any of its arguments, the respective
+    objects <em>are</em> modified in the calling function.</li>
+  </ul>
+  <p>Hence {@link -wait} behaves as if the job function would have been
+  called instead.</p>
+  <p>The following code snippet demonstrates the parallel execution of several
+  instances of the function <code>-do_job</code>. The function returns a value
+  and modifies its argument <code>x</code>. After {@link -wait}, the interpreter
+  is in the same state as after an ordinary call to the job function
+  (some limitations may apply :)</p>
+  <pre class="code">
+ 
+  <span class="c-cmt">## The parallel computing function</span>
+  <a href="function.html">function</a> -do_job(n,x)                                 <span class="c-cmt"># Some job function</span>
+  {                                                     <span class="c-cmt"># &gt;&gt;</span>
+    { { "#\$[n]" } } x <a href="data.html#mth_-join">-join</a>;                            <span class="c-cmt">#   Modify the argument x</span>
+    :42*n: <a href="function.html#mth_return">return</a>;                                      <span class="c-cmt">#   Return something</span>
+  }                                                     <span class="c-cmt"># &lt;&lt;</span>
+
+  <span class="c-cmt">## The main program</span>
+  <a href="function.html">data</a> x;   { { "The contribution of job " } } x =;     <span class="c-cmt"># A job argument being modified</span>
+  <a href="function.html">data</a> y;                                               <span class="c-cmt"># The collected job results</span>
+  <a href="function.html">var</a>  nRetv;                                           <span class="c-cmt"># Return value of job function</span>
+  <a href="function.html">var</a>  nJ;                                              <span class="c-cmt"># The job number</span>
+  <a href="function.html">var</a>  nXJ; 4 nXJ =;                                    <span class="c-cmt"># The number of parallel jobs</span>
+
+  "\nStarting \$[nXJ] jobs" <a href="function.html#mth_-echo">-echo</a>;                       <span class="c-cmt"># Protocol</span>
+  0 nJ =; nJ nXJ &lt; <a href="function.html#mth_while">while</a>                                <span class="c-cmt"># Loop over jobs &gt;&gt;</span>
+    <span class="c-key">process</span> iJ\$[nJ];                                    <span class="c-cmt"># Create a new process with a unique name</span>
+    nJ x <a href="function.html#opt__disarm">/disarm</a> -do_job iJ\$[nJ] {@link -start};                <span class="c-cmt">#   Start a function in the process</span>
+    nJ ++=;                                             <span class="c-cmt">#   Next job</span>
+  <a href="function.html#mth_end">end</a>                                                   <span class="c-cmt"># &lt;&lt;</span>
+
+  "\nJobs on their way..." -echo;                       <span class="c-cmt"># Now all jobs running</span>
+  0 nJ =; nJ nXJ &lt; <a href="function.html#mth_while">while</a>                                <span class="c-cmt"># Loop over jobs &gt;&gt;</span>
+    ( nJ iJ\$[nJ] {@link -wait} ) nRetv =;                       <span class="c-cmt">#   Wait for job to complete</span>
+    iJ\$[nJ] <a href="function.html#mth_-destroy">-destroy</a>;                                   <span class="c-cmt">#   Destroy process instance</span>
+    "\n- Job #\$[nJ] returned \$[nRetv]" <a href="function.html#mth_-echo">-echo</a>;           <span class="c-cmt">#   See what job function returned</span>
+    x y <a href="data.html#mth_-cat">-cat</a>;                                           <span class="c-cmt">#   x has been modified by the job!</span>
+    nJ ++=;                                             <span class="c-cmt">#   Next job</span>
+  <a href="function.html#mth_end">end</a>                                                   <span class="c-cmt"># &lt;&lt;</span>
+
+  "\nAll jobs complete\n" <a href="function.html#mth_-echo">-echo</a>;                        <span class="c-cmt"># Now all jobs complete</span>
+  y <a href="data.html#mth_-print">-print</a>;                                             <span class="c-cmt"># See modified x'es</span>
+  </pre>
+  <p>The expected output running this code snippet would be:</p>
+  <pre class="code">
+
+  Starting 4 jobs
+  Jobs on their way...
+  - Job #0 returned 0
+  - Job #1 returned 42
+  - Job #2 returned 84
+  - Job #3 returned 126
+  All jobs complete
+
+   data y
+  ------------------------------------------------------------------------------------------------------------------------
+                             0                       1                       2                       3
+       ....................... ....................... ....................... .......................
+   0 : The contribution of job The contribution of job The contribution of job The contribution of job
+   1 :                      #0                      #1                      #2                      #3
+  ------------------------------------------------------------------------------------------------------------------------
+  dLabPro>_
+
+</pre>
+
+  @see -status
+  @see /global
+  @see /include
+END_MAN
+
+INCLUDE: "dlp_function.h"
+INCLUDE: "dlp_var.h"
+FILE:    prc_impl.cpp
+
+DEFINE:  PRC_S_IDSIGN     "idSign"
+DEFINE:  PRC_S_IDGLOB     "idGlob"
+DEFINE:  PRC_S_IDINCL     "idInclude"
+DEFINE:  PRC_S_RETV       "~iRetv"
+DEFINE:  PRC_RUNNING      0x0001
+DEFINE:  PRC_COMPLETE     0x0002
+DEFINE:  PRC_KILLED       0x0004
+DEFINE:  PRC_DATASENT     0x0010
+DEFINE:  PRC_DATARECEIVED 0x0020
+
+ERROR:   PRC_TOOFEWARGS
+COMMENT: Too few arguments.
+
+ERROR:   PRC_CANTSTART
+COMMENT: Cannot start process. Reason: %s.
+
+ERROR:   PRC_CANTWAIT
+COMMENT: Cannot wait for process. Reason: %s.
+
+FIELD:   thread
+COMMENT: Watcher thread's handle
+TYPE:    (THREADHANDLE)
+CNAME:   m_hThread
+FLAGS:   /hidden /noset /nosave /nonautomatic
+
+FIELD:   pid
+COMMENT: Process id of client thread (for fork)
+TYPE:    (PROCESSID)
+CNAME:   m_hPid
+FLAGS:   /hidden /noset /nosave /nonautomatic
+
+FIELD:   tmp_file
+COMMENT: Prefix of this processes temporary files
+TYPE:    string
+CNAME:   m_psTmpFile
+FLAGS:   /noset /nosave
+
+FIELD:   cmd_line
+COMMENT: Command line of the processes executable
+TYPE:    string
+CNAME:   m_psCmdLine
+FLAGS:   /noset /nosave
+
+FIELD:   ret_val
+COMMENT: Return value of the processes executable
+TYPE:    int
+INIT:    -1
+CNAME:   m_nRetVal
+FLAGS:   /noset /nosave
+
+FIELD:   state
+COMMENT: Process state
+TYPE:    unsigned short
+CNAME:   m_nState
+FLAGS:   /noset /nosave
+
+FIELD:   dto
+COMMENT: Data transfer object
+TYPE:    INSTANCE()
+CNAME:   m_iDto
+FLAGS:   /noset /nosave 
+
+OPTION:  /global
+COMMENT: Make global instances available to function processes
+/html MAN:
+  <h4>{@link -start}</h4>
+  <p>This option must be used if {@link -start} is to execute a function which
+  uses global instances (i.e. instances in the root function). {@link /global}
+  will transfer these instances to the slave process thus making them available
+  to the job function.</p>
+  <h5>Example</h5>
+  <pre class="code">
+
+  <a href="data.html">data</a> x; { { 1 2 } { 3 4 } } x =;     <span class="c-cmt"># A global data instance</span>
+
+  <a href="function.html">function</a> -do_job(n)                  <span class="c-cmt"># Job function</span>
+  {                                    <span class="c-cmt"># >></span>
+    .x <a href="data.html#mth_-print">-print</a>;                         <span class="c-cmt">#   Print the global instance</span>
+  }                                    <span class="c-cmt"># <<</span>
+
+  <span class="c-key">process</span> iJ;                          <span class="c-cmt"># Create new process</span>
+  1 <a href="function.html#opt__disarm">/disarm</a> -do_job iJ <span class="c-key">/global</span> {@link -start}; <span class="c-cmt"># Execute job function</span>
+  </pre>
+  <h5>Remarks</h5>
+  <ul>
+    <li>{@link /global} may be memory and time consuming. Use this option only
+      if necessary.</li>
+    <li>Changes that the job function makes in global instances
+      will <em>not</em> be effective in the calling process!</li>
+  </ul>
+  @see /include
+  @see -start
+END_MAN
+
+OPTION:  /include
+COMMENT: Make includes available to function processes
+/html MAN:
+  <h4>{@link -start}</h4>
+  <p>This option must be used if {@link -start} is to execute a function which
+  uses functions defined in included sources. The option makes all includes of
+  the calling function avaiable to the job function.</p>
+  <h5>Remarks</h5>
+  <ul>
+    <li>{@link /include} may be memory and time consuming. Use this option only
+      if necessary.</li>
+  </ul>
+  @see /global
+  @see -start
+END_MAN
+
+METHOD:  -start
+COMMENT: Starts (a function as) a new process and returns immediately
+SYNTAX:  "[...] <process this>"
+/html MAN:
+  <p>See <a href="#">introduction</a> for further explanations and examples.</p>
+  @see -wait
+  @see -status
+  @see /global
+  @see /include
+END_MAN
+
+METHOD:  -wait
+COMMENT: Waits for the process to be completed
+SYNTAX:  ()
+/html MAN:
+  <p>See <a href="#">introduction</a> for further explanations and examples.</p>
+  @see -start
+  @see -status
+  @see /global
+  @see /include
+END_MAN
+
+METHOD:  -status
+COMMENT: Print status information
+SYNTAX:  ()
+
+METHOD:  ?running
+CNAME:   IsRunning
+COMMENT: Returns TRUE if the process is running
+SYNTAX:  BOOL()
+CODE:
+  return (m_nState & PRC_RUNNING);
+END_CODE
+
+METHOD:  ?complete
+CNAME:   IsComplete
+COMMENT: Returns TRUE if the process has completed
+SYNTAX:  BOOL()
+CODE:
+  return (m_nState & PRC_COMPLETE);
+END_CODE
+
+METHOD:  -marshal_retval
+COMMENT: -- For internal use only! --
+SYNTAX:  "[...] <object iDto> <process this>"
+/html MAN:
+  <p class="warning">Do not use this method!<p>
+END_MAN
+
+RESETCODE:
+  RESET;
+  if (m_iDto) IDESTROY(m_iDto); m_iDto=NULL;
+  m_psTmpFile = (char*)dlp_realloc(m_psTmpFile,L_PATH     ,sizeof(char));
+  m_psCmdLine = (char*)dlp_realloc(m_psCmdLine,L_INPUTLINE,sizeof(char));
+END_CODE
+
+-cgen
+quit
+
+## EOF

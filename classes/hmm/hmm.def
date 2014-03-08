@@ -1,0 +1,725 @@
+## dLabPro class CHmm (hmm)
+## - Definition script
+##
+## AUTHOR : Matthias Wolff
+## PACKAGE: dLabPro/classes
+## 
+## Copyright 2013 dLabPro contributors and others (see COPYRIGHT file) 
+## - Chair of System Theory and Speech Technology, TU Dresden
+## - Chair of Communications Engineering, BTU Cottbus
+## 
+## This file is part of dLabPro.
+## 
+## dLabPro is free software: you can redistribute it and/or modify it under the
+## terms of the GNU Lesser General Public License as published by the Free
+## Software Foundation, either version 3 of the License, or (at your option)
+## any later version.
+## 
+## dLabPro is distributed in the hope that it will be useful, but WITHOUT ANY
+## WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+## FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+## details.
+## 
+## You should have received a copy of the GNU Lesser General Public License
+## along with dLabPro. If not, see <http://www.gnu.org/licenses/>.
+
+PLATFORM: GNUC++
+COMPILER: gcc
+AR:       ar
+CFLAGS:   -Wno-trigraphs
+
+PROJECT: hmm
+CLASS:   hmm
+AUTHOR:  Matthias Wolff
+COMMENT: Multiclass hidden Markov model
+VERSION: 1.0.0
+SUPERCLASS: ../fst/fst.def                                                    # Derive from CFst
+/cxx_nconv                                                                      # Use strict C++ naming conventions
+/html MAN:
+  <span class="TODO">[<b>TODO:</b> ...]</span>
+  @cgen:TODO: HMM-implementation of <code>-order</code>,
+              <code>-wire</code>
+END_MAN
+
+## C/C++ files                                                                  # --------------------------------------
+INCLUDE: "dlp_gmm.h"                                                            # Include GMM class' header
+INCLUDE: "dlp_statistics.h"                                                     # Include statistics class' header
+FILE:    hmm_aux.cpp                                                            # Auxilary methods
+FILE:    hmm_iam.cpp                                                            # Interactive methods
+
+## Errors                                                                       # --------------------------------------
+#ERROR:   HMM_NOTSETUP
+#COMMENT: Model not properly set up%s.
+#/html MAN:
+#  @param 1 Error description or hint to further information
+#END_MAN
+
+ERROR:   HMM_DISCARDGMM
+COMMENT: Discarding GMM structures.
+LEVEL:   EL_WARNING
+/html MAN:
+  <p>This warning means that the GMMs stored in field {@link gm} or their
+  <a href="gmm.html">mixture or tying structure</a> were discarded.</p>
+  <h4>{@link -setup_gmm}</h4>
+  <p>The error occurs if there were GMMs present when invoking
+  {@link -setup_gmm} but there's something wrong with them so they had to be
+  ignored and their structure could not be preserved.</p>
+  <ol>
+    <li>Hint "<code>(GMMs corrupt)</code>":<br>
+      The present GMMs were not (properly) set up. Use
+      <code>&lt;this&gt;.{@link gm} <a class="code"
+      href="gmm.html#mth_-status">-status</a> (before invoking
+      {@link -setup_gmm}!) to get more details.</li>
+    <li>Hint "<code> (wrong number of GMMs)</code>":<br>
+      There were fewer or more GMMs present than there are classes in the
+      most significant feature statistics stored in field {@link pfsm}.</li>
+  </ol>
+  <p>The warning indicates that {@link -setup_gmm} created one single
+  Gaussians with full covariance matrix for each statistics class contained
+  in field {@link pfsm}.</p>
+END_MAN
+
+ERROR:   HMM_BADNOLAB
+COMMENT: %ld labels for %ld feature vectors. Truncating %s.
+LEVEL:   EL_WARNING
+/html MAN:
+  @param 1 Number of labels
+  @param 2 Number of feature vectors
+  @param 3 Name of truncated sequence
+  <h3>{@link -update}</h3>
+  <p>This warning occurs if the number of labels (excluding epsilon labels!) in
+    the Gaussian index sequence <code>idSrc</code> does not equal the number of
+    feature vectors in <code>idMsf</code> or <code>idLsf</code>. The data were
+    truncated to the shorter of both sequences.</p>
+END_MAN
+
+ERROR:   HMM_NOSPLIT
+COMMENT: No Gaussians split.
+LEVEL:   EL_WARNING
+/html MAN:
+  <h4>{@link -split}</h4>
+  <p>No Gaussian were split due to constraints (as e.g. minimal Gaussian
+  reference counter). This warning indicates the (normal) end of an iterative
+  HMM re-estimation procedure.</p>
+END_MAN
+
+ERROR:   HMM_INCOMPAT
+LEVEL:   EL_WARNING
+COMMENT: Incompatible statistics.
+/html MAN:
+  <p>This error occurs when attempting to <a href="#mth_-merge_stats">merge</a> the statistics of two incompatible
+  HMM instances. Two HMM instances are incompatible if the dimensions of their Gaussian reference counters (see
+  field {@link grc}) or their total transition number (see field {@link td}) do not match.</p>  
+END_MAN
+
+
+## Public fields                                                                # --------------------------------------
+
+## TODO: store split and iteration in HMM?
+#FIELD:   spl
+#COMMENT: Number of Gaussian splits
+#TYPE:    int
+#INIT:    -1
+#
+#FIELD:   ite
+#COMMENT: Number of training iteration (at current Gaussian split)
+#TYPE:    int
+#INIT:    -1
+
+FIELD:   gm
+COMMENT: Gaussians associated with HMM transitions.
+TYPE:    INSTANCE(gmm)
+
+FIELD:   pfsm
+COMMENT: Per frame statistics (most significant features).
+TYPE:    INSTANCE(statistics)
+
+FIELD:   pfsl
+COMMENT: Per frame statistics (least significant features).
+TYPE:    INSTANCE(statistics)
+
+FIELD:   pls
+COMMENT: Per HMM layer statistics.
+TYPE:    INSTANCE(statistics)
+
+FIELD:   pss
+COMMENT: Per HMM state statistics.
+TYPE:    INSTANCE(statistics)
+
+FIELD:   pms
+COMMENT: Per HMM statistics.
+TYPE:    INSTANCE(statistics)
+
+FIELD:   lsmean
+COMMENT: Means of least significant features.
+TYPE:    data
+
+FIELD:   grc
+COMMENT: Gaussian reference counter
+TYPE:    INSTANCE(data)
+
+## Hidden fields
+
+FIELD:   bwalpha_g
+TYPE:    INSTANCE(data)
+COMMENT: Internal use: Forward variables for alpha caluclation
+FLAGS:   /hidden /noset /nosave /nonautomatic
+
+FIELD:   bwalpha_h
+TYPE:    INSTANCE(data)
+COMMENT: Internal use: Backward variables for alpha caluclation
+FLAGS:   /hidden /noset /nosave /nonautomatic
+
+FIELD:   bwalpha_fstrev
+TYPE:    INSTANCE(fst)
+COMMENT: Internal use: Reverse fst of last alpha calculation
+CNAME:   m_iBwalphaFstRev
+FLAGS:   /hidden /noset /nosave /nonautomatic
+
+## Methods - Setup
+METHOD:  -setup
+COMMENT: Initilizes multiple HMMs.
+SYNTAX:  (int nMsf, data idHmms)
+CODE:
+  return SetupEx(nMsf,idHmms,0,0,0,0);
+END_CODE
+/html MAN:
+  <p>Creates a set of simple left-to-right HMMs and an empty feature statistics
+  according to the parameters passed.</p>
+  <h3>Remarks</h3>
+  <ul>
+    <li>The method creates as many <a href="fst.html">FST units</a> as there
+      are records in <code>idHmms</code>.</li>
+    <li>The method zero-initializes the most significant feature statistics
+      (field {@link pfsm}) and <em>destroys</em> the following statistics
+      fields:
+      <ul>
+        <li>least significant feature statistics (field {@link pfsl}),</li>
+        <li>per-HMM-layer statistics (field {@link pls}),</li>
+        <li>per-HMM-state statistics (field {@link pss}) and</li>
+        <li>per-HMM statistics (field {@link pms}).</li>
+      </ul></li>
+    <li>The method <em>does not</em> setup the Gaussian mixture models
+      (field {@link gm}) associated with the HMM graph's transition. Use
+      {@link -setup_gmm} for this purpose.</li>
+  </ul>
+  @param nMsf   Number of most significant features (dimensionality of <a
+                href="#fld_gm">Gaussians</a> and <a href="#fld_pfsm">most
+                significant feature statistics</a>).
+  @param idHmms A <a href="data.html" class="code">data</a> instance
+                containing a list of HMMs to be created. Each record defines
+                one HMM. The first component (index 0) is expected to contain
+                the HMM name (symbolic), the second component (index 1) is
+                expected to contain the initial number of HMM states (typically
+                3 or 5). Any further components will be included into the <a
+                href="fst.html#fld_ud">unit description table</a>.
+  @see -setup_ex
+  @see -setup_gmm
+END_MAN
+
+METHOD:  -setup_ex
+COMMENT: Initilizes multiple HMMs.
+SYNTAX:  (int nMsf, data idHmms, int nLsf, int nPlf, int nPsf, int nPmf)
+/html MAN:
+  <p>Creates a set of simple left-to-right HMMs and empty feature and extended
+  statistics according to the parameters passed.</p>
+  <h3>Remarks</h3>
+  <ul>
+    <li>The method creates as many <a href="fst.html">FST units</a> as there
+      are records in <code>idHmms</code>.</li>
+    <li>The method zero-initializes the following statistics fields:
+      <ul>
+        <li>most significant feature statistics (field {@link pfsm}),</li>
+        <li>least significant feature statistics (field {@link pfsl}),</li>
+        <li>per-HMM-layer statistics (field {@link pls}),</li>
+        <li>per-HMM-state statistics (field {@link pss}) and</li>
+        <li>per-HMM statistics (field {@link pms}).</li>
+      </ul></li>
+    <li>The method <em>does not</em> setup the Gaussian mixture models
+      (field {@link gm}) associated with the HMM graph's transition. Use
+      {@link -setup_gmm} for this purpose.</li>
+  </ul>
+  @param nMsf   Number of most significant features (dimensionality of <a
+                href="#fld_gm">Gaussians</a> and <a href="#fld_pfsm">most
+                significant feature statistics</a>).
+  @param idHmms A <a href="data.html" class="code">data</a> instance
+                containing a list of HMMs to be created. Each record defines
+                one HMM. The first component (index 0) is expected to contain
+                the HMM name (symbolic), the second component (index 1) is
+                expected to contain the initial number of HMM states (typically
+                3 or 5). Any further components will be included into the <a
+                href="fst.html#fld_ud">unit description table</a>.
+  @param nLsf   Number of least significant features (dimensionality of <a
+                href="#fld_pfsl">least significant feature statistics</a>).
+  @param nPlf   Number of per-HMM-layer-features (dimensionality of <a
+                href="#fld_pls">per HMM layer statistics</a>).
+  @param nPsf   Number of per-HMM-state-features (dimensionality of <a
+                href="#fld_pss">per HMM state statistics</a>).
+  @param nPmf   Number of per-HMM-features (dimensionality of <a
+                href="#fld_pms">per HMM statistics</a>).
+  @see -setup
+  @see -setup_gmm
+END_MAN
+
+METHOD:  -setup_gmm
+COMMENT: (Re-)initializes the GMMs from the most significant feature statistics.
+SYNTAX:  ()
+/html MAN:
+  <p>Extracts mean vectors and covariance matrices (or variance vectors, resp.)
+  from the most significant feature statistics stored in field {@link pfsm},
+  estimates new Gaussian mixture models and stores them in field
+  {@link gm}.</p>
+  <p>The behaviour of the method depends on whether there are GMMs present
+  before the method invocation or not.</p>
+  <ol>
+    <li><b>No GMMs present</b><br>
+      The method will create one Gaussian mixture model with full covariance
+      matrix for each statistics class contained in the most significant
+      feature statistics stored in field {@link pfsm}.<br>&nbsp;</li>
+    <li><b>GMMs present</b><br>
+      The method will try to preserve the <a href="gmm.html">structure</a> of
+      the present GMMs, that is:
+      <ul>
+        <li>the <a href="gmm.html#fld_mmap">mixture map</a>,</li>
+        <li>the <a href="gmm.html#fld_cmap">covariance tying map</a> and </li>
+        <li><a href="gmm.html#fld_ivar">individual variance vectors</a> for
+          tied covariance matrices</li>
+      </ul>
+      if such were present before.<br>&nbsp;<br>
+      List of preserved GMM modes (see <a href="gmm.html" class="code">gmm</a>
+      <a href="gmm.html#mth_-setup_ex" class="code">-setup_ex</a>):<br>&nbsp;<br>
+      <table class="indent" cellpadding="1pt">
+        <tr><th>Mode</th><th>Support</th></tr>
+        <tr><td class="rowgroup" colspan="2">Mixtures</td></tr>
+        <tr>
+          <td>Gaussian mixtures (mixture map)</td>
+          <td style="text-align:center"><img src="../resources/checkmark.gif"></td>
+        </tr>
+        <tr><td class="rowempty" colspan="2">&nbsp;</td></tr>
+        <tr><td class="rowgroup" colspan="2">(Co-)variance modeling</td></tr>
+        <tr>
+          <td>One variance value for all Gaussians and all dimensions</td>
+          <td style="text-align:center"><img src="../resources/error_obj.gif"></td>
+        </tr>
+        <tr>
+          <td>One variance value for all dimensions per Gaussian</td>
+          <td style="text-align:center"><img src="../resources/error_obj.gif"></td>
+        </tr>
+        <tr>
+          <td>One common variance vector for all Gaussians</td>
+          <td style="text-align:center"><img src="../resources/warning_obj.gif"></td>
+        </tr>
+        <tr>
+          <td>A set of variance vectors shared by the Gaussians = (co-)variance tying</td>
+          <td style="text-align:center"><img src="../resources/warning_obj.gif"></td>
+        </tr>
+        <tr>
+          <td>One variance vector for each Gaussian</td>
+          <td style="text-align:center"><img src="../resources/warning_obj.gif"></td>
+        </tr>
+        <tr>
+          <td>One common covariance matrix for all Gaussians<br>
+            - with individual variance vectors</td>
+          <td style="text-align:center"><img src="../resources/warning_obj.gif"><br>
+            <img src="../resources/warning_obj.gif"></td>
+        </tr>
+        <tr>
+          <td>A set of covariance matrices shared by the Gaussians = (co-)variance tying<br>
+            - with individual variance vectors</td>
+          <td style="text-align:center"><img src="../resources/warning_obj.gif"><br>
+            <img src="../resources/warning_obj.gif"></td>
+        </tr>
+        <tr>
+          <td>One covariance matrix for each Gaussian</td>
+          <td style="text-align:center"><img src="../resources/checkmark.gif"></td>
+        </tr>
+        <tr><td class="rowempty" colspan="2">&nbsp;</td></tr>
+      </table>
+      <table class="indent" cellpadding="1pt">
+        <tr><td class="hidden"><img src="../resources/error_obj.gif"></td><td class="hidden">: Not supported</td></tr>
+        <tr><td class="hidden"><img src="../resources/warning_obj.gif"></td><td class="hidden">: Supported, not tested</td></tr>
+        <tr><td class="hidden"><img src="../resources/checkmark.gif"></td><td class="hidden">: Supported</td></tr>
+      </table>
+      </li>
+  </ol>
+  <h3>Remarks</h3>
+  <ul>
+    <li>The method <em>does not</em> support single variance values. It will at
+      least create GMMs with variance vectors.</li>
+    <li>If <code>this</code> instance contains GMMs when invoking this method
+      and you do not want the mixture and tying maps to be preserved, you need
+      to reset the GMMs before: <code>&lt;this&gt;.{@link gm} <a
+      href="function.html#mth_-reset">-reset</a>.</li>
+  </ul>
+
+  @cgen:option /var Use variance vectors instead of full covariance matrices
+  @see -setup
+  @see gm
+  @see pfsm
+  @see <a href="gmm.html">class gmm</a>
+END_MAN
+
+METHOD:  -gmm_mix
+COMMENT: Combines Gaussians to mixtures
+SYNTAX:  ()
+/html MAN:
+  <p>This function tries to find Gaussians which can be combined to mixture Gaussians and combines them.</p>
+  <h3>Selection of Gaussians</h3>
+  <p>The selection of Gaussians which should be combined to mixtures is done in that way,
+  that all sets of Gaussians are detected in which all Gaussians occur at similiar edges.
+  Meaning that all starting and ending states of all edges where one Gaussian of the set
+  occurs, are the same for every other Gaussians in the set. So all the Gaussians in
+  the set can be fully replaced by a mixture for the set.</p>
+  <h3>Calculation of mixture rates and new transition probabilities</h3>
+  The Calculation of mixture rates is done so, that the sum of all mixture rates is one.
+  The relation between the mixture rates will be the geometrical average of the
+  relations between the non-zero old transition probabilities over all edges where the set
+  of Gaussians occur. The new transition probabilities are choose as the sum of
+  the old transition probabilities form the combined edges. So this probability
+  sum does not change.</p>
+  <p>For M similiar Gaussians in a new mixture and N transitions where each Gaussian
+  occurs it is done in the follwing way: (w are the transition weights and m the mixture
+  rates, i is the mixture component index and j the transition index, base is one
+  mixture component where all transition weights are non-zero)</p>
+  <img src="../resources/hmm/hmm_gmmmix.png" align="absmiddle" border="0">
+END_MAN
+
+## Methods - Update / split
+METHOD:  -reset_stats
+COMMENT: Resets the internal statistics of an HMM instance.
+SYNTAX:  ()
+/html MAN:
+  </p>This method should be called before a new HMM parameter estimation iteration (see {@link -update}). It
+  re-initializes the (existing)</p>
+  <ul>
+    <li>most significant feature statistics (field {@link pfsm}),</li>
+    <li>least significant feature statistics (field {@link pfsl}),</li>
+    <li>per-HMM statistics (field {@link pms}),</li>
+    <li>per-HMM-layer statistics (field {@link pls}) and</li>
+    <li>per-HMM-stats statistics (field {@link pss}).</li>
+  </ul>
+  <p>and resets all transition reference counters to 0. The dimensionality of all statistics instances will be
+  preserved, however, the method will ajust the number of statistics classes as follows:</p>
+  <table class="indent" cellpadding="2">
+    <tr><th>Statistics</th><th>New number of classes</th></tr>
+    <tr><td>most sign. features ({@link pfsm})</td>
+      <td>number of single Gaussians in {@link gm} (={@link gm}.<a href="gmm.html#fld_mean"
+        class="code">mean</a>.<a href="data.html#fld_nrec" class="code">nrec</a>)</td></tr>
+    <tr><td>least sign. features ({@link pfsl})</td>
+      <td>number of single Gaussians in {@link gm} (={@link gm}.<a href="gmm.html#fld_mean"
+        class="code">mean</a>.<a href="data.html#fld_nrec" class="code">nrec</a>)</td></tr>
+    <tr><td>per-HMM ({@link pms})</td>
+      <td>number of HMM's (={@link ud}.<a href="data.html#fld_nrec" class="code">nrec</a>)</td></tr>
+    <tr><td>per-HMM-state ({@link pss})</td>
+      <td>number of HMM states (={@link sd}.<a href="data.html#fld_nrec" class="code">nrec</a>)</td></tr>
+  </table>
+  <p>The method will <em>not</em> change the number of classes of the per-HMM-layer statistics (field {@link pls}).</p>
+  <h4>Remarks</h4>
+  <ul>
+    <li>There is no need to call this method after {@link -split} as this is done automatically.</li>
+  </ul>
+END_MAN
+
+METHOD:  -merge_stats
+COMMENT: Merges the internal statistics of two HMM instances
+SYNTAX:  (hmm iSrc)
+/html MAN:
+  Merges the statistics data contained in <code>iSrc</code> into this instance.
+  @param iSrc  Source HMM instance
+END_MAN
+
+METHOD:  -update
+COMMENT: Update HMM with feature vectors.
+SYNTAX:  (data idSrc, int nIcTis, int nIcTer, data idMsf, data idLsf, int nUnit)
+/html MAN:
+  <p></p>
+  @param idSrc  Gaussian index sequence; is to contain at least a sequence of Gaussian indices corresponding to the
+                feature vector sequences <code>idMsf</code> and <code>idLsf</code> and, optionally, a sequence of
+                (unit relative) terminal state indices for each Gaussian index. Other components will be ignored.
+  @param nIcTis Component index in <code>idSrc</code> containing the Gaussian index sequence
+  @param nIcTer Component index in <code>idSrc</code> containing a terminal state for each symbol (may be -1)
+  @param idMsf  Data instance containing a sequence of most significant feature vectors to update the Gaussians
+                associated with the transitions of the HMM transducer. There must be as many feature vectors (records)
+                in <code>idMsf</code> as there are non-epsilon symbols in the input symbol sequence in
+                <code>idUsq</code>. The dimensionality of the feature vectors must match the dimensionality of the
+                most significant features statistics (field {@link pfsm}).
+  @param idLsf  Data instance containing a sequence of least significant feature vectors to update the least
+                significant feature statistics associated with the transitions of the HMM transducer. There must be as
+                many feature vectors (records) in <code>idLsf</code> as there are non-epsilon symbols in the input
+                symbol sequence in <code>idUsq</code>. The dimensionality of the feature vectors must match the
+                dimensionality of the least significant features statistics (field {@link pfsl}).
+  @param nUnit  The unit to be updated
+
+  @cgen:option /fast Saves creating an internal temporary <code>data</code> instance but modifies <code>idSrc</code>. 
+
+  @see <code>fst <a href="fst.html#mth_-addseq">-addseq</a></code>
+END_MAN
+
+METHOD: -bwalpha
+SYNTAX: (int nUnit, data idWeights, data idAlpha)
+COMMENT: calculate alpha values for baum-welch-training
+/html MAN:
+  <p>Calculates alpha values for baum-welch-training by forward
+  and backward variables.</p>
+  <p><span class="warning">Warning:</span> Source transducer will be modified by -fsunify function from fst class.</p>
+END_MAN
+
+METHOD:  -bwupdate
+COMMENT: Update HMM with feature vectors (baum-welch-training).
+SYNTAX:  (data idAlpha, data idMsf, data idLsf, int nUnit)
+/html MAN:
+  @param idAlpha  Alpha values generated by hmm.-bwalpha.
+  @param idMsf    Most significant feature vectors.
+  @param idLsf    Least significant feature vectors.
+  @param nUnit    The unit to be updated.
+END_MAN
+
+
+METHOD:  -split
+COMMENT: Splits Gaussians and adjusts the HMM topology.
+SYNTAX:  (double nMinRc, int nMaxCnt, data idMap)
+/html MAN:
+  <p>Splits the Gaussians associated with the HMM transitions along their axis of greatest variance.</p>
+  <h3>Remarks</h3>
+  <ul>
+    <li>The method dissolves covariance tying.</li>
+    <li>The method dissolves mixture Gaussians (<span class="warning">warning:</span> this feature was not
+        tested!</span>).</li>
+  </ul>
+  @param nMinRc  Minimal Gaussian reference counter (= number of feature vectors used to estimate). Gaussians whose
+                 reference counters are less than <code>nMinRc</code> will not be split. If <code>nMinRc</code>&le;0,
+                 the method will split <em>all</em> Gaussians. A value of about 100 &middot; {@link -get_dim} should be
+                 a reasonable choice for this parameter.
+  @param nMaxCnt Maximal number of Gaussians to be split (may be negative or zero in oder to split all possible regarding
+                 <code>nMinRc</code>), as selection criterion variance is used, or RC if you use {@link /byrc}
+  @param idMap   Defines which Gaussians are candidates for spliting, if the map is NULL it all Gaussians are candidates for spliting.
+  @see <a class="code" href="gmm.html">gmm</a> <a class="code" href="gmm.html#mth_-split">-split</a>
+  @cgen:option /byrc Use RC instead of variance for selecting gausians to split specified by nMaxCnt
+END_MAN
+
+## Methods - Auxilary and Info
+METHOD:  -copy_fst
+COMMENT: Copies the automata graphs from an FST instance.
+SYNTAX:  (fst itSrc)
+/html MAN:
+  This method may be used to copy new HMM topologies into this instrance
+  without modifying the Gaussians or statistics.
+  @param itSrc The source fst(s)
+END_MAN
+
+METHOD:  -get_dim
+COMMENT: Get feature space dimensionality.
+SYNTAX:  int()
+
+METHOD:  -gen_map
+COMMENT: Generate GMM index map for label sequence.
+SYNTAX:  (data idLab, int nIcLab, int nIcOfs, int nIcLen, data idMap)
+/html MAN:
+  <p>Creates a map containing the GMM indices associated with the HMM's denoted by the label sequence. This map may be
+  used with <a class="code" href="gmm.html">gmm</a> <a class="code" href="gmm.html#mth_-distance">-distance</a> or
+  <a class="code" href="gmm.html">gmm</a> <a class="code" href="gmm.html#mth_-density">-density</a> to save computation
+  time for forced alignments.</p>
+  @param idLab  The label sequence to generate the GMM index map for.
+  @param nIcLab Component index in <code>idLab</code> containing the labels. If the component is of symbolic type, the
+                method will lookup the numeric label indices from the 0th component of the unit description table
+                <a class="code" href="fst.html#fld_ud">ud</a>.
+  @param nIcOfs Component index in <code>idLab</code> containing the offset for RLE decompression (see <a class="code"
+                href="data.html">data</a> <a class="code" href="data.html#mth_-expand">-expand</a>) of the label
+                sequence. May be -1 (indicating that the label sequence is not compressed).
+  @param nIcLen Component index in <code>idLab</code> containing the length for RLE decompression (see <a class="code"
+                href="data.html">data</a> <a class="code" href="data.html#mth_-expand">-expand</a>) of the label
+                sequence. May be -1 (indicating that the label sequence is not compressed).
+  @param idMap  The destination instance.
+  @see /nomix Ignore mixture map
+  @see <a class="code" href="gmm.html">gmm</a> <a class="code" href="gmm.html#mth_-distance">-distance</a>
+  @see <a class="code" href="gmm.html">gmm</a> <a class="code" href="gmm.html#mth_-density">-density</a>
+END_MAN
+
+## Methods - fst overwrites
+METHOD:  -union
+SYNTAX:  (hmm itSrc)
+CODE:
+  return Op(itSrc,NULL,0.,0.,AOP_UNION);
+END_CODE
+
+METHOD:  -intersect
+SYNTAX:  (hmm itSrc1, hmm itSrc2, int nUnit1, int nUnit2)
+CODE:
+  return Op(itSrc1,itSrc2,(double)nUnit1,(double)nUnit2,AOP_INTERS);
+END_CODE
+
+METHOD:  -close
+SYNTAX:  (hmm itSrc, int nUnit)
+CODE:
+  return Op(itSrc,NULL,(FLOAT64)nUnit,0.,AOP_CLOSE);
+END_CODE
+
+METHOD:  -invert
+CODE:
+  return Op(NULL,NULL,(FLOAT64)nUnit,0.,AOP_INV);
+END_CODE
+
+METHOD:  -project
+CODE:
+  return Op(NULL,NULL,0.,0.,AOP_PROJ);
+END_CODE
+
+METHOD:  -unweight
+CODE:
+  return Op(NULL,NULL,0.,0.,AOP_WRM);
+END_CODE
+
+METHOD:  -product
+SYNTAX:  (fst itSrc1, fst itSrc2, int nUnit1, int nUnit2)
+CODE:
+  return Op(itSrc1,itSrc2,(FLOAT64)nUnit1,(FLOAT64)nUnit2,AOP_PROD);
+END_CODE
+
+METHOD:  -compose
+SYNTAX:  (hmm itSrc1, fst itSrc2, int nUnit1, int nUnit2)
+CODE:
+  return Op(itSrc1,itSrc2,(FLOAT64)nUnit1,(FLOAT64)nUnit2,AOP_CMPS);
+END_CODE
+
+METHOD:  -determinize
+SYNTAX:  (hmm itSrc, int nUnit)
+CODE:
+  return Op(itSrc,NULL,(FLOAT64)nUnit,0.,AOP_DET);
+END_CODE
+
+METHOD:  -minimize
+SYNTAX:  (hmm itSrc, int nUnit)
+CODE:
+  return Op(itSrc,NULL,(FLOAT64)nUnit,0.,AOP_MIN);
+END_CODE
+
+METHOD:  -epsremove
+SYNTAX:  (hmm itSrc, int nUnit)
+CODE:
+  return Op(itSrc,NULL,(FLOAT64)nUnit,0.,AOP_ERM);
+END_CODE
+
+METHOD: -hmm
+SYNTAX:  (hmm itSrc, int nUnit)
+CODE:
+  return Op(itSrc,NULL,(FLOAT64)nUnit,0.,AOP_HMM);
+END_CODE
+
+METHOD: -cleanup
+COMMENT: Removes states and transitions not included in a path from start to end and deletes orphan gms
+SYNTAX:  (hmm itSrc)
+/html MAN:
+  Firstly all states and transitions are removed, which are not included
+  in a path from a start state to an end state. (-1 0 -trim)
+  After that all Gaussians in this->gm which are not assigned to a transition are deleted.
+  (<span class="warning">Warning:</span> when gm contains a mixture map or a covariance tying map only the first step will be done.)
+END_MAN
+
+METHOD:  -tree
+SYNTAX:  (hmm itSrc, int nUnit)
+CODE:
+  return Op(itSrc,NULL,(FLOAT64)nUnit,0.,AOP_TREE);
+END_CODE
+
+METHOD:  -best_n
+SYNTAX:  (hmm itSrc, int nUnit, int nPaths, int nPathlength)
+CODE:
+  return Op(itSrc,(CFst*)&nPathlength,(FLOAT64)nUnit,(FLOAT64)nPaths,AOP_BESTN);
+END_CODE
+
+METHOD:  -cat
+COMMENT: Concatenates HMMs
+SYNTAX:  (hmm itSrc)
+CODE:
+  return CopyUiEx(itSrc,NULL,-1,TRUE);
+END_CODE
+
+METHOD:  -copy_ui
+COMMENT: Copies HMMs according to a copying index.
+SYNTAX:  (hmm itSrc, data idIndex, int nPar)
+/html MAN:
+  <p>Copies units from <code>itSrc</code> to this instance according to the unit index sequence given by component
+  <code>nPar</code> of <code>idIndex</code>. After finishing the operation this instance will contain
+  <code>idIndex.nrec</code> units. Multiple unit references result in copies of the respective units. The order of
+  units in the destination index is given by <code>idIndex</code>.</p>
+  <p><code>idIndex</code> may be <code>NULL</code>. In this case <code>nPar</code> is interpreted as a unit index and
+  the one unit denoted by <code>nPar</code> will be copied.</p>
+  <p><code>itSrc</code> may be this instance.</p>
+  <h4>Remarks</h4>
+  <ul>
+    <li><span class="warning">Copying the mixture map is not yet implemented!
+       </span></li>
+    <li>The method resolves any covariance tying.</li>
+    <li>The method destroys all internal statistics instances.</li>
+  </ul>
+  @param itSrc   Automaton instance to copy units from (may be this instance)
+  @param idIndex A list of unit indices (in <code>itSrc</code>), order or reoccourences do not matter (may be
+                 <code>NULL</code>).
+  @param nPar    If <code>idIndex</code> is <i>not</i> <code>NULL</code>: Component index in <code>idIndex</code>
+                 containing the indices of units to be copied. If negative the first numeric component will be
+                 considered as index.<br>If <code>idIndex</code> is <code>NULL</code>: Index of unit to be copied.
+END_MAN
+CODE:
+  return CopyUiEx(itSrc,idIndex,nPar,FALSE);
+END_CODE
+
+OPTION:  /byrc
+COMMENT: Use RC instead of variance
+/html MAN:
+  <h4>{@link -split}</h4>
+  <p>Use RC instead of variance for selecting gausians to split specified by nMaxCnt.</p>
+END_MAN
+
+OPTION:  /fast
+COMMENT: Qick and dirty
+/html MAN:
+  <h4>{@link -update}</h4>
+  <p>Saves creating an internal temporary <code>data</code> instance but modifies <code>idSrc</code>.</p>
+END_MAN
+
+OPTION:  /nomix
+COMMENT: Ignore mixture map
+/html MAN:
+  <h4>{@link -gen_map}</h4>
+  <p>Ignores mixture map in map generation and create Gaussian specific not
+  mixture specific map. For use with <a class="code" href="gmm.html">gmm</a>
+  <a class="code" href="gmm.html#opt__nomix">/nomix</a> 
+  <a class="code" href="gmm.html#mth_-density">-density</a>.</p>
+END_MAN
+
+OPTION:  /var
+COMMENT: Use variance vectors
+/html MAN:
+  <h4>{@link -setup_gmm}</h4>
+  <p>Setup Gaussian mixture models with variance vectors (default is covariance
+  matrices).</p>
+END_MAN
+
+## dLabPro interface code snippets                                              # -------------------------------------
+RESETCODE:
+  RESET;
+  IFIELD_RESET(CData,"lsmean");
+  IDESTROY(m_iGm  );
+  IDESTROY(m_iPfsm);
+  IDESTROY(m_iPfsl);
+  IDESTROY(m_iPls );
+  IDESTROY(m_iPss );
+  IDESTROY(m_iPms );
+  IDESTROY(m_idGrc);
+  if(m_idBwalphaG) IDESTROY(m_idBwalphaG);
+  if(m_idBwalphaH) IDESTROY(m_idBwalphaH);
+  if(m_iBwalphaFstRev) IDESTROY(m_iBwalphaFstRev);
+END_CODE
+
+DONECODE:
+  if(m_idBwalphaG) IDESTROY(m_idBwalphaG);
+  if(m_idBwalphaH) IDESTROY(m_idBwalphaH);
+  if(m_iBwalphaFstRev) IDESTROY(m_iBwalphaFstRev);
+  DONE;
+END_CODE
+
+## Generate and quit                                                            # -------------------------------------
+-cgen
+quit
+
+## EOF
