@@ -347,6 +347,8 @@ void confidence(CFst* itDC, CFst* itDCr, const char *sLab)
     }
     routput(O_dbg,1,"rec nad: %.4g ned: %.4g tnad: %.4g tned: %.4g\n",nRNAD,nRNED,nRTNAD,nRTNED);
   }else if(rCfg.rSearch.eRejTyp==RR_off) nRAcc=1;
+  CData_AddComp(AS(CData,itDC->ud),"~ACC",T_INT);
+  CData_Dstore(AS(CData,itDC->ud),nRAcc,0,CData_GetNComps(AS(CData,itDC->ud))-1);
   /* COR = sRes==sRRes */
   nRCor = (sLab!=NULL && strlen(sLab)>0 && strncmp(sLab,"OOV",3)) ?
     (strlen(lpsRRes)==strlen(sLab) && !strncmp(sLab,lpsRRes,strlen(sLab))) :

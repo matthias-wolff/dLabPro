@@ -4,5 +4,12 @@
 /obj.release.x86-w32
 /lib.debug.x86-w32
 /lib.release.x86-w32
+/bin.debug.x86-w32.reco
+/bin.release.x86-w32.reco
+/obj.debug.x86-w32.reco
+/obj.release.x86-w32.reco
+/lib.debug.x86-w32.reco
+/lib.release.x86-w32.reco
 /.cproject
 /.project
+*.swp
