@@ -541,7 +541,7 @@ end:
   return ret;
 }
 
-INT32 delta(FLOAT32 *lpFrames, INT64 *nFDim, INT64 nXFrames, BOOL bFRing, INT64 nDim)
+INT32 delta(FLOAT32 *lpFrames, INT64 *nFDim, INT64 nXFrames, INT64 nDim)
 {
   INT64    nVDim;
   INT64    nADim;
@@ -549,11 +549,11 @@ INT32 delta(FLOAT32 *lpFrames, INT64 *nFDim, INT64 nXFrames, BOOL bFRing, INT64 
   if(*nFDim!=rCfg.rDFea.nPfaDim) return NOT_EXEC;
 
   /* Get number of nVDim and nADim */                                          /* ------------------------------------ */
-  dlm_fba_deltafba(NULL,rCfg.rDFea.lpDeltaT,rCfg.rDFea.lpDeltaW,nXFrames,bFRing,rCfg.rDFea.nDeltaWL,*nFDim,&nVDim,&nADim,0);
+  dlm_fba_deltafba(NULL,rCfg.rDFea.lpDeltaT,rCfg.rDFea.lpDeltaW,nXFrames,TRUE,rCfg.rDFea.nDeltaWL,*nFDim,&nVDim,&nADim,0);
 
   if(lpFrames)
   /* Compute dynamic features */                                                /* ------------------------------------ */
-    dlm_fba_deltafba(lpFrames,rCfg.rDFea.lpDeltaT,rCfg.rDFea.lpDeltaW,nXFrames,bFRing,rCfg.rDFea.nDeltaWL,*nFDim,&nVDim,&nADim,nDim);
+    dlm_fba_deltafba(lpFrames,rCfg.rDFea.lpDeltaT,rCfg.rDFea.lpDeltaW,nXFrames,TRUE,rCfg.rDFea.nDeltaWL,*nFDim,&nVDim,&nADim,nDim);
 
   *nFDim += nVDim+nADim;
 
@@ -568,24 +568,21 @@ INT32 delta(FLOAT32 *lpFrames, INT64 *nFDim, INT64 nXFrames, BOOL bFRing, INT64 
  * @param lpFea     Feature buffer (output) - size: nXFrames*nMsf
  * @param nFDim     Pointer to input dimensionality (default: 30) - is changed to delta vector dimensionality (default: 60)
  * @param nXFrames  Number of frames in input buffer (if nFrame>=0: minimum: rCfg.rDFea.nDeltaWL*4+1)
- * @param nFrame    <0: process all nXFrames - otherwise: process only frame number nFrame (lpFrames is assumed to be a ring buffer)
+ * @param nFrame    process only frame with index nFrame in lpFrames (lpFrames is assumed to be a ring buffer)
  * @param nMsf      Output dimensionality (default: 24)
  * @param nDim      Input vector buffer size (default: 512)
  */
 INT32 sfa(FLOAT32 *lpFrames, FLOAT32 *lpFea, INT64 *nFDim, INT64 nXFrames, INT64 nFrame, INT64 nMsf, INT64 nDim)
 {
-  INT64 nF;
   INT64 nC;
   INT64 nR;
 
-  delta(lpFrames,nFDim,nXFrames,nFrame>=0,nDim);
+  delta(lpFrames,nFDim,nXFrames,nDim);
 
-  memset(lpFea,0,sizeof(FLOAT32)*nMsf*(nFrame<0?nXFrames:1));
+  memset(lpFea,0,sizeof(FLOAT32)*nMsf);
 
-  for(nF=nFrame<0?0:nFrame;nF<(nFrame<0?nXFrames:nFrame+1);nF++){
-    for(nC=0;nC<nMsf;nC++) for(nR=0;nR<*nFDim;nR++)
-      lpFea[(nFrame<0?nF:0)*nMsf+nC]+=(lpFrames[nF*nDim+nR]+rCfg.rDFea.lpX[nR])*rCfg.rDFea.lpW[nR*(*nFDim)+nC];
-  }
+  for(nC=0;nC<nMsf;nC++) for(nR=0;nR<*nFDim;nR++)
+    lpFea[nC]+=(lpFrames[nFrame*nDim+nR]+rCfg.rDFea.lpX[nR])*rCfg.rDFea.lpW[nR*(*nFDim)+nC];
 
   return O_K;
 }
@@ -758,6 +755,8 @@ INT16 online(struct recosig *lpSig)
   FLOAT32 lpWindow[400];
 #endif
   INT64        nSigPos = 0;
+  FLOAT32     *lpDat=NULL;
+  INT32        nWlen=0;
   FLOAT32     *lpColSigBuf=NULL;
   INT32        nColSigBufPos=0;
   THREADHANDLE lpCmdThread;
@@ -802,7 +801,7 @@ INT16 online(struct recosig *lpSig)
 
   /* Get feature dimension after delta calculation */
   nXDelta=nPfaDim;
-  delta(NULL,&nXDelta,0,TRUE,nXDelta);
+  delta(NULL,&nXDelta,0,nXDelta);
   /* Calc SFA buffer size from delta length and VAD parameters */
   dlm_vad_initstate(&lpVadState,lpVadParam,rCfg.rDFea.nDeltaWL*2);
   nXSfa = rCfg.rDFea.nDeltaWL*2 + 1 + lpVadState.nDelay;
@@ -817,14 +816,14 @@ INT16 online(struct recosig *lpSig)
   lpSigMaxH = (INT32*)dlp_calloc(lpVadState.nDelay,sizeof(INT32));
 
   if(rCfg.sPostProc[0]){
-    lpColSigBuf=dlp_calloc(lpVadState.nDelay,sizeof(FLOAT32)*nCrate);
+    lpColSigBuf=dlp_calloc(lpVadState.nDelay+1,sizeof(FLOAT32)*nCrate);
     rTmp.lpColSig=dlp_malloc(rCfg.rVAD.nMaxSp*nCrate*sizeof(FLOAT32));
     rTmp.nColSigLen=0;
   }
 
   if(!lpSig) routput(O_sta,1,"online recognizer initialized\n");
   /* Loop until there is a signal */
-  while((!lpSig || nSigPos<lpSig->nLen) && !rCfg.bExit)
+  while((!lpSig || nSigPos<lpSig->nLen+lpVadState.nDelay*nCrate) && !rCfg.bExit)
   {
     if
     (
@@ -844,15 +843,15 @@ INT16 online(struct recosig *lpSig)
 #endif
     {
       INT32 nXProcess=1;
-      FLOAT32 *lpDat=NULL;
-      INT32  nWlen=0;
       INT32  nI;
       if(rCfg.bMeasureTime) measuretime(&tms_c_star);
 
       /* Get new Frame */
       if(lpSig){
-        lpDat=lpSig->lpSamples+nSigPos;
-        nWlen=MIN(lpSig->nLen-nSigPos,rCfg.rPfa.lpFba.nWlen);
+		if(nSigPos<lpSig->nLen){
+	        lpDat=lpSig->lpSamples+nSigPos;
+    	    nWlen=MIN(lpSig->nLen-nSigPos,rCfg.rPfa.lpFba.nWlen);
+		}
         nSigPos+=nCrate;
       }else{
 #ifdef __USE_PORTAUDIO
@@ -890,8 +889,8 @@ INT16 online(struct recosig *lpSig)
       /* Do primary feature analysis and vad decision for that frame */
       if(lpLog.fdRaw) fwrite(lpDat+nWlen-nCrate,sizeof(FLOAT32),nCrate,lpLog.fdRaw);
       if(rCfg.sPostProc[0]){
-        memcpy(lpColSigBuf+nCrate*nColSigBufPos,lpDat+nWlen-nCrate,sizeof(FLOAT32)*nCrate);
-        if(++nColSigBufPos>=lpVadState.nDelay) nColSigBufPos=0;
+        memcpy(lpColSigBuf+nCrate*nColSigBufPos,lpDat,sizeof(FLOAT32)*nCrate);
+        if(++nColSigBufPos>=lpVadState.nDelay+1) nColSigBufPos=0;
 #ifdef __USE_PORTAUDIO
         if(!lpSig) lpBuf.nPeak=0.;
 #endif
@@ -900,9 +899,10 @@ INT16 online(struct recosig *lpSig)
       bVadPfa=vad_pfa(lpFPfa);
 
       /* Do final Vad decision for last frame in pre buffer */
-      if (!rCfg.rVAD.bOffline) /* VAD is on-line */
+      if (!rCfg.rVAD.bOffline){ /* VAD is on-line */
         nVadSfa=dlm_vad_process(bVadPfa,&lpVadState)?1:0;
-      else /* VAD is off-line */
+		if(nFrame-lpVadState.nDelay<0) nVadSfa=0;
+	  }else /* VAD is off-line */
         nVadSfa=-1;
       if(rCfg.bVADForce || rCfg.bFSTForce){
         UINT8 nVal = (nFrame-lpVadState.nDelay)<0 || (nFrame-lpVadState.nDelay)>=rTmp.nNVadForce ? 0 : rTmp.lpVadForce[nFrame-lpVadState.nDelay];
@@ -953,7 +953,11 @@ INT16 online(struct recosig *lpSig)
       }
 
       /* Copy frame to buffer for SFA (lpFPfa -> lpFSfa[nFSfaW++]) */
-      memcpy(lpFSfa+nFSfaW*nXDelta, lpFPfa, sizeof(FLOAT32)*nPfaDim);
+	  if(!nFrame){
+		  INT64 nI;
+		  for(nI=0;nI<nXSfa;nI++)
+      		memcpy(lpFSfa+nI*nXDelta,     lpFPfa, sizeof(FLOAT32)*nPfaDim);
+	  }else memcpy(lpFSfa+nFSfaW*nXDelta, lpFPfa, sizeof(FLOAT32)*nPfaDim);
       if(++nFSfaW==nXSfa) nFSfaW=0;
 
       if(nVadSfa>0){
@@ -1006,7 +1010,7 @@ INT16 online(struct recosig *lpSig)
 #endif
 
     /* End of feature vector collection reached ? */
-    if(nFea && ((nVadSfa<=0) || nFea==lpVadParam->nMaxSp || (lpSig && nSigPos>=lpSig->nLen))){
+    if(nFea && ((nVadSfa<=0) || nFea==lpVadParam->nMaxSp || (lpSig && nSigPos>=lpSig->nLen+lpVadState.nDelay*nCrate))){
       if(rCfg.bMeasureTime) measuretime(&tms_c_star);
       routput(O_sta,1,"vad collected %3i frames from %3i (sigmax: %5i)\n",nFea,nFrame-1-lpVadState.nDelay-nFea,nSigMax);
       if(nFea>=rCfg.rVAD.nMinSp && nSigMax>rCfg.rVAD.nSigMin){
@@ -1154,6 +1158,7 @@ void processfile(struct recofile lpF){
   INT32 nC;
   FLOAT32 nNorm;
   const char *errstr="";
+  struct dlm_vad_state  lpVadState;
 
   rTmp.sSigFname=lpF.lpsFName;
   IF_NOK(CDlpFile_LibsndfileImport(rTmp.iFile, lpF.lpsFName, BASEINST(idSig), "wav")) goto err;
@@ -1177,7 +1182,6 @@ void processfile(struct recofile lpF){
   default:       nNorm=1.;          break;
   }
   CData_Tconvert(idSig, idSig, T_FLOAT);
-  CData_Reallocate(idSig,CData_GetNRecs(idSig)+15*160);
   lpSig.nLen=CData_GetNRecs(idSig);
   lpSig.lpSamples=(FLOAT32*)CData_XAddr(idSig,0,0);
   lpSig.lpsLab=lpF.lpsLab[0] ? lpF.lpsLab : NULL;
