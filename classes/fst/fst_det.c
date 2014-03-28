@@ -883,23 +883,27 @@ INT16 CGEN_PROTECTED CFst_MinimizeUnit(CFst* _this, CFst* itSrc, INT32 nUnit)
 /*
  * Manual page at fst_man.def
  */
+#define NS    4
+#define QNONE ((struct fstl_s*)-1)
+struct fstl_s;
+struct fstl_t;
+struct fstl_t {
+  struct fstl_t *nnxt,*nprv,*bnxt,*bprv;
+  struct fstl_s *b,*n;
+  BYTE *lpT;
+  INT32 id;
+};
+struct fstl_s {
+  struct fstl_s *qnxt;
+  struct fstl_t *b,*n;
+  INT32 xn,xb;
+  INT32 id;
+  char nodo;
+};
 INT16 CGEN_PROTECTED CFst_Lazymin(CFst* _this)
 {
-#  define NS    4
-#  define QNONE ((struct fstl_s*)-1)
-  struct fstl_t {
-    struct fstl_t *nnxt,*nprv,*bnxt,*bprv;
-    struct fstl_s *b,*n;
-    BYTE *lpT;
-    INT32 id;
-  } *rT;
-  struct fstl_s {
-    struct fstl_s *qnxt;
-    struct fstl_t *b,*n;
-    INT32 xn,xb;
-    INT32 id;
-    char nodo;
-  } *rS, *rQ=NULL;
+  struct fstl_t *rT;
+  struct fstl_s *rS, *rQ=NULL;
   FST_STYPE lpSDef[NS] = { -1, -1, -1, 0 }; /* Default symbols to use for IS,OS,PHN,STK */
   BYTE *lpT,*lpFT;                          /* Transition pointer */
   FST_TID_TYPE* lpTI;                       /* Transition iterator */
