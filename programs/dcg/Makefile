@@ -306,7 +306,7 @@ CLEANALL:
 $(CLEAN):
 	@echo '// ----- Make: program $(PROJNAME) -- cleaning $(TARGET) -----'
 	-rm -f $(OBJECTS) $(DEPENTS)
-	-touch -c --date=1990-01-01 $(PROJECT)
+	-touch -c -t 1990-01-01 $(PROJECT)
 
 $(CLEANALL): $(CLEAN)
 	$(LIBRARIES_CLEANALL)
