@@ -31,8 +31,8 @@
 #include "dlp_base.h"
 
 /* Currently used for SPTK */
-#define double FLOAT64
-#define float  FLOAT32
+// #define double FLOAT64
+// #define float  FLOAT32
 
 #endif /* if !defined __DLPTYPE_EXTERN_H */
 

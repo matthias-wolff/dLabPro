@@ -249,7 +249,7 @@ typedef  struct SNDFILE_tag  SNDFILE ;
 ** compiled. sf_count_t can be one of loff_t (Linux), off_t (*BSD),
 ** off64_t (Solaris), __int64_t (Win32) etc.
 */
-#ifdef __linux__
+#if defined( __linux__ ) || defined( __APPLE__ )
   #ifdef __x86_64__
     typedef off_t  sf_count_t ;
   #else
