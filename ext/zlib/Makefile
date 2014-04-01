@@ -10,6 +10,12 @@
 vpath %.h ../../include ../../include/automatic
 INCL = -I ../../include -I ../../include/automatic
 
+ifneq (${MACHINE},)
+  MEXT=.${MACHINE}
+else
+  MEXT=
+endif
+
 ## Compiler specific settings 
 ifeq (${DLABPRO_USE_MSVC},1)
   ## - MSVC
@@ -50,8 +56,8 @@ else
 endif
 
 ## Configuration - DEBUG (default)
-LIB_PATH = ../../lib.debug.${MACHINE}
-OBJ_PATH = ../../obj.debug.${MACHINE}
+LIB_PATH = ../../lib.debug${MEXT}
+OBJ_PATH = ../../obj.debug${MEXT}
 
 ifeq ($(MAKECMDGOALS),)
   MAKECMDGOALS = DEBUG
@@ -59,8 +65,8 @@ endif
 
 ## Configuration - RELEASE
 ifeq ($(MAKECMDGOALS),RELEASE)
-  LIB_PATH = ../../lib.release.${MACHINE}
-  OBJ_PATH = ../../obj.release.${MACHINE}
+  LIB_PATH = ../../lib.release${MEXT}
+  OBJ_PATH = ../../obj.release${MEXT}
   ifeq (${DLABPRO_USE_MSVC},1)
     CFLAGS  = -nologo -O2 -GL -D_RELEASE -EHsc -W3 -Wp64 -D_CRT_SECURE_NO_WARNINGS ${DLABPRO_MSVC_FLAGS_RELEASE}
     ARFLAGS = -nologo -LTCG
@@ -77,8 +83,8 @@ endif
 
 ## Configuration - clean_release
 ifeq ($(MAKECMDGOALS),clean_release)
-  LIB_PATH = ../../lib.release.${MACHINE}
-  OBJ_PATH = ../../obj.release.${MACHINE}
+  LIB_PATH = ../../lib.release${MEXT}
+  OBJ_PATH = ../../obj.release${MEXT}
 endif
 
 ## Target settings

@@ -33,6 +33,12 @@ endif
 vpath %.h ../../include ../../include/automatic
 INCL = -I ../../include -I ../../include/automatic
 
+ifneq (${MACHINE},)
+  MEXT=.${MACHINE}
+else
+  MEXT=
+endif
+
 ## Compiler specific settings 
 ifeq (${DLABPRO_USE_MSVC},1)
   ## - MSVC
@@ -72,8 +78,8 @@ else
 endif
 
 ## Configuration - DEBUG_CPP (Default)
-LIB_PATH = ../../lib.debug.${MACHINE}
-OBJ_PATH = ../../obj.debug.${MACHINE}
+LIB_PATH = ../../lib.debug${MEXT}
+OBJ_PATH = ../../obj.debug${MEXT}
 
 ifeq ($(MAKECMDGOALS),)
   MAKECMDGOALS = DEBUG_CPP
@@ -81,8 +87,8 @@ endif
 
 ## Configuration - DEBUG_C
 ifeq ($(MAKECMDGOALS),DEBUG_C)
-  LIB_PATH = ../../lib.debug.${MACHINE}
-  OBJ_PATH = ../../obj.debug.${MACHINE}
+  LIB_PATH = ../../lib.debug${MEXT}
+  OBJ_PATH = ../../obj.debug${MEXT}
   ifeq (${DLABPRO_USE_MSVC},1)
     CFLAGS = -nologo -Od -Gm -EHsc -RTC1 -Wp64 -ZI -TC -D_DEBUG -D_DLP_C -D_DLP_C ${DLABPRO_MSVC_FLAGS_DEBUG}
   else
@@ -97,8 +103,8 @@ endif
 
 ## Configuration - RELEASE_CPP
 ifeq ($(MAKECMDGOALS),RELEASE_CPP)
-  LIB_PATH = ../../lib.release.${MACHINE}
-  OBJ_PATH = ../../obj.release.${MACHINE}
+  LIB_PATH = ../../lib.release${MEXT}
+  OBJ_PATH = ../../obj.release${MEXT}
   ifeq (${DLABPRO_USE_MSVC},1)
     CFLAGS  = -nologo -O2 -GL -D_RELEASE -EHsc -W3 -Wp64 -TP -D_CRT_SECURE_NO_WARNINGS -D_DLP_CPP ${DLABPRO_MSVC_FLAGS_RELEASE}
     ARFLAGS = -nologo -LTCG
@@ -114,8 +120,8 @@ endif
 
 ## Configuration - RELEASE_C
 ifeq ($(MAKECMDGOALS),RELEASE_C)
-  LIB_PATH = ../../lib.release.${MACHINE}
-  OBJ_PATH = ../../obj.release.${MACHINE}
+  LIB_PATH = ../../lib.release${MEXT}
+  OBJ_PATH = ../../obj.release${MEXT}
   ifeq (${DLABPRO_USE_MSVC},1)
     CFLAGS  = -nologo -O2 -GL -D_RELEASE -EHsc -W3 -Wp64 -TC -D_CRT_SECURE_NO_WARNINGS -D_DLP_C ${DLABPRO_MSVC_FLAGS_RELEASE}
     ARFLAGS = -nologo -LTCG
@@ -131,8 +137,8 @@ endif
 
 ## Configuration - clean_release
 ifeq ($(MAKECMDGOALS),clean_release)
-  LIB_PATH = ../../lib.release.${MACHINE}
-  OBJ_PATH = ../../obj.release.${MACHINE}
+  LIB_PATH = ../../lib.release${MEXT}
+  OBJ_PATH = ../../obj.release${MEXT}
 endif
 
 ## Target settings

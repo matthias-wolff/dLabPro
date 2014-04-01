@@ -1,7 +1,7 @@
 ## dLabPro program recognizer (dLabPro recognizer)
 ## - standalone recognizer
 ##
-## AUTHOR : Guntram Strecha
+## AUTHOR : Frank Duckhorn
 ## PACKAGE: dLabPro/programs
 ## 
 ## Copyright 2013 dLabPro contributors and others (see COPYRIGHT file) 
@@ -23,38 +23,43 @@
 ## You should have received a copy of the GNU Lesser General Public License
 ## along with dLabPro. If not, see <http://www.gnu.org/licenses/>.
 
-DLABPRO_HOME = ../..
-
 ## Common settings
 ifdef (${CGENPATH})
-  CGEN = ${CGENPATH}/dcg
+  DCG = ${CGENPATH}/dcg
 else
-  CGEN = dcg
+  DCG = dcg
+endif
+
+ifeq (${DLABPRO_HOME},)
+  DLABPRO_HOME = ../..
 endif
 
 OS   := $(shell uname)
-INCL  = -I $(DLABPRO_HOME)/include -I $(DLABPRO_HOME)/include/automatic -I.. -I.
+INCL  = -I $(DLABPRO_HOME)/include -I $(DLABPRO_HOME)/include/automatic -I.
 vpath %.h $(DLABPRO_HOME)/include $(DLABPRO_HOME)/include/automatic
 PA_DIR := $(DLABPRO_HOME)/ext/portaudio/$(MACHINE)
 
-MACHINEORI:=$(MACHINE)
 ifneq ($(RECOGNIZER_SUBDIR),)
-  ifeq ($(findstring .reco,$(MACHINE)),)
-    MACHINE:=$(MACHINE).$(RECOGNIZER_SUBDIR)
+  ifeq ($(findstring _$(RECOGNIZER_SUBDIR),$(MACHINE)),)
+    MACHINE:=$(MACHINE)_$(RECOGNIZER_SUBDIR)
   endif
 endif
 
-## Get build ID
-BUILD := $(shell svnversion $(DLABPRO_HOME)/ 2> /dev/null)
+ifneq (${MACHINE},)
+  MEXT=.${MACHINE}
+else
+  MEXT=
+endif
 
 ## Paths
-BIN_PATH = $(DLABPRO_HOME)/bin.${TRGS}.${MACHINE}
-LIB_PATH = $(DLABPRO_HOME)/lib.${TRGS}.${MACHINE}
-OBJ_PATH = $(DLABPRO_HOME)/obj.${TRGS}.${MACHINE}
-DEP_PATH = $(DLABPRO_HOME)/dep.${TRGS}.${MACHINE}
+BIN_PATH = $(DLABPRO_HOME)/bin.${TRGS}${MEXT}
+LIB_PATH = $(DLABPRO_HOME)/lib.${TRGS}${MEXT}
+OBJ_PATH = $(DLABPRO_HOME)/obj.${TRGS}${MEXT}
+DEP_PATH = $(DLABPRO_HOME)/dep.${TRGS}${MEXT}
 BAS_PATH = $(DLABPRO_HOME)/base
 CLS_PATH = $(DLABPRO_HOME)/classes
 EXT_PATH = $(DLABPRO_HOME)/ext
+SDK_PATH = $(DLABPRO_HOME)/sdk
 INC_PATH = $(DLABPRO_HOME)/include
 CONFIG_DST = ${INC_PATH}/dlp_config.h
 CONFIG_SRC = dlp_config.h
@@ -62,11 +67,11 @@ DLPSVNREV  = ${INC_PATH}/automatic/dlp_svnrev.h
 
 ## Update dlp_svnrec.h if necessary
 ifeq ($(OS),Linux)
-	SVNREV := $(shell grep '\#define __DLP_BUILD "$(BUILD)"' $(DLPSVNREV))
+  SVNREV := $(shell grep '\#define __DLP_BUILD "$(BUILD)"' $(DLPSVNREV))
 endif
 ifeq ($(SVNREV),)
-	X := $(shell echo "// ----- Make: Updating dlp_svnrev.h ($(BUILD)) -----" >&2)
-	X := $(shell echo '\#define __DLP_BUILD "$(BUILD)"' >$(DLPSVNREV))
+  X := $(shell echo "// ----- Make: Updating dlp_svnrev.h ($(BUILD)) -----" >&2)
+  X := $(shell echo '\#define __DLP_BUILD "$(BUILD)"' >$(DLPSVNREV))
 endif
 
 ## Target settings
@@ -104,7 +109,7 @@ LIBS      = \
 
 ## Default make target
 ifeq ($(MAKECMDGOALS),)
-	MAKECMDGOALS = DEBUG
+  MAKECMDGOALS = DEBUG
 endif
 
 ## Common settings
@@ -143,27 +148,27 @@ else
     TOOLBOX = GCC
   endif
 endif
-ifeq (${MACHINEORI},$(filter ${MACHINEORI},x86-w32 x86-w64))
+ifeq ($(OS),MinGW)
   EEXT = .exe
 endif
 
 ## Special settings
 ifeq (${DLABPRO_USE_MSVC},1)
-	CFLAGS_DBG = -nologo -Od -Gm -EHsc -RTC1 -Wp64 -ZI -D_DEBUG -D_DLP_CPP ${DLABPRO_MSVC_FLAGS_DEBUG}
-	CFLAGS_REL = -nologo -O2 -GL -D_RELEASE -D_DLP_CPP -EHsc -W3 -Wp64 -D_CRT_SECURE_NO_WARNINGS ${DLABPRO_MSVC_FLAGS_RELEASE}
-	LFLAGS_DBG = -NOLOGO -INCREMENTAL -DEBUG -NODEFAULTLIB:libcmt libcmtd.lib
-	LFLAGS_REL = -NOLOGO -LTCG
+  CFLAGS_DBG = -nologo -Od -Gm -EHsc -RTC1 -Wp64 -ZI -D_DEBUG -D_DLP_CPP ${DLABPRO_MSVC_FLAGS_DEBUG}
+  CFLAGS_REL = -nologo -O2 -GL -D_RELEASE -D_DLP_CPP -EHsc -W3 -Wp64 -D_CRT_SECURE_NO_WARNINGS ${DLABPRO_MSVC_FLAGS_RELEASE}
+  LFLAGS_DBG = -NOLOGO -INCREMENTAL -DEBUG -NODEFAULTLIB:libcmt libcmtd.lib
+  LFLAGS_REL = -NOLOGO -LTCG
 else
 ifeq (${DLABPRO_USE_MSVC},2)
-	CFLAGS_DBG = -nologo -Od -Gm -EHsc -RTC1 -ZI -D_DEBUG -D_DLP_CPP ${DLABPRO_MSVC_FLAGS_DEBUG}
-	CFLAGS_REL = -nologo -O2 -D_RELEASE -D_DLP_CPP -EHsc -W3 -D_CRT_SECURE_NO_WARNINGS ${DLABPRO_MSVC_FLAGS_RELEASE}
-	LFLAGS_DBG = -NOLOGO -INCREMENTAL -DEBUG -NODEFAULTLIB:libcmt libcmtd.lib
-	LFLAGS_REL = -NOLOGO -LTCG
+  CFLAGS_DBG = -nologo -Od -Gm -EHsc -RTC1 -ZI -D_DEBUG -D_DLP_CPP ${DLABPRO_MSVC_FLAGS_DEBUG}
+  CFLAGS_REL = -nologo -O2 -D_RELEASE -D_DLP_CPP -EHsc -W3 -D_CRT_SECURE_NO_WARNINGS ${DLABPRO_MSVC_FLAGS_RELEASE}
+  LFLAGS_DBG = -NOLOGO -INCREMENTAL -DEBUG -NODEFAULTLIB:libcmt libcmtd.lib
+  LFLAGS_REL = -NOLOGO -LTCG
 else
-	CFLAGS_DBG = -g -D_DEBUG -D_DLP_CPP -ansi ${DLABPRO_GCC_CFLAGS_DEBUG}
-	CFLAGS_REL = -O2 -D_RELEASE -D_DLP_CPP -Wall -ansi ${DLABPRO_GCC_CFLAGS_RELEASE}
-	LFLAGS_DBG = -lm ${DLABPRO_GCC_LFLAGS_DEBUG}
-	LFLAGS_REL = -lm ${DLABPRO_GCC_LFLAGS_RELEASE}
+  CFLAGS_DBG = -g -D_DEBUG -D_DLP_CPP -ansi ${DLABPRO_GCC_CFLAGS_DEBUG}
+  CFLAGS_REL = -O2 -D_RELEASE -D_DLP_CPP -Wall -ansi ${DLABPRO_GCC_CFLAGS_RELEASE}
+  LFLAGS_DBG = -lm ${DLABPRO_GCC_LFLAGS_DEBUG}
+  LFLAGS_REL = -lm ${DLABPRO_GCC_LFLAGS_RELEASE}
 endif
 endif
 
@@ -179,47 +184,49 @@ TRGS   = debug
 TRGCLN = _debug
 DEPINC = yes
 ifeq ($(MAKECMDGOALS),RELEASE)
-	TARGET = RELEASE
+  TARGET = RELEASE
 endif
 ifeq ($(MAKECMDGOALS),clean_release)
-	TARGET = RELEASE
-	DEPINC = no
+  TARGET = RELEASE
+  DEPINC = no
 endif
 ifeq ($(MAKECMDGOALS),cleanall_release)
-	TARGET = RELEASE
-	DEPINC = no
+  TARGET = RELEASE
+  DEPINC = no
 endif
 ifeq ($(MAKECMDGOALS),clean)
-	DEPINC = no
+  DEPINC = no
 endif
 ifeq ($(MAKECMDGOALS),clean_debug)
-	DEPINC = no
+  DEPINC = no
 endif
 ifeq ($(MAKECMDGOALS),cleanall_debug)
-	DEPINC = no
+  DEPINC = no
 endif
 ifeq ($(MAKECMDGOALS),CLEANALL)
-	DEPINC = no
+  DEPINC = no
 endif
 ifeq ($(MAKECMDGOALS),distclean)
-	DEPINC = no
+  DEPINC = no
 endif
 
 ifeq ($(TARGET),RELEASE)
-	TRG    = REL
-	TRGS   = release
-	TRGCLN = _release
+  TRG    = REL
+  TRGS   = release
+  TRGCLN = _release
 endif
 
 ## Finalize library list
 CLS_LPTH  = $(LIB_PATH)
 BAS_LPTH  = $(LIB_PATH)
+SDK_LPTH  = $(LIB_PATH)
 EXT_LPTH  = $(LIB_PATH)
 LET       = .$(LEXT)
 LPOST     = 
 LIBRARIES := $(LIBS) $(LIBRARIES_EXTRA)
 CLS_LPTH  = $(MAKE) -C $(CLS_PATH)
 BAS_LPTH  = $(MAKE) -C $(BAS_PATH)
+SDK_LPTH  = $(MAKE) -C $(SDK_PATH)
 EXT_LPTH  = $(MAKE) -C $(EXT_PATH)
 LET       = 
 LPOST     = $(CLEAN) ;
@@ -244,9 +251,9 @@ X := $(shell cp -p $(CONFIG_SRC) $(CONFIG_DST))
 ## Use additional libraries depending on machine type
 
 ## Platform specific - GNU on Windows
-ifeq (${MACHINEORI},$(filter ${MACHINEORI},x86-w32 x86-w64))
+ifeq ($(OS),MinGW)
   ifneq (${DLABPRO_USE_MSVC},1)
-	  ifneq (${DLABPRO_USE_MSVC},2)
+    ifneq (${DLABPRO_USE_MSVC},2)
       PT_AVAILABLE := $(shell echo -e "\#include <pthread.h>\nint main(){ return 0; }" | $(CC) $(INCL) $(CFLAGS) -E - >/dev/null 2>&1 && echo yes || echo no)
       LFLAGS += -lwinmm
     endif
@@ -273,7 +280,7 @@ endif
 
 # Add pthread libary
 ifeq ($(OS),Linux)
-	LFLAGS  += -lpthread -lrt
+  LFLAGS  += -lpthread -lrt
 else
   ifeq ($(PT_AVAILABLE),yes)
     LFLAGS  += -lpthread
@@ -284,6 +291,7 @@ endif
 ## Create directories
 X:=$(shell mkdir -p $(OBJ_PATH))
 X:=$(shell mkdir -p $(BIN_PATH))
+X:=$(shell mkdir -p $(LIB_PATH))
 ifeq (${OS},Linux)
   X:=$(shell mkdir -p $(DEP_PATH))
 endif
@@ -295,8 +303,8 @@ endif
 DEBUG RELEASE: $(PROJECT)
 	@echo
 	@echo  '// ----- Make ($(TOOLBOX)): Build complete -----'
-	@echo  'build $(BUILD)'
-	@-which $(CGEN)
+	@echo  '$(PROJECT) build $(BUILD)'
+	@-which $(DCG)
 	@which $(CC)
 	@which $(AR)
 	@which $(LL)
@@ -313,6 +321,9 @@ $(LIB_PATH)/%.$(LEXT): $(BAS_PATH)/% FORCE
 $(LIB_PATH)/%.$(LEXT): $(CLS_PATH)/% FORCE
 	$(MAKE) -C $(CLS_PATH)/$*   $(TARGET)_$(SEXTB)
 
+$(LIB_PATH)/%.$(LEXT): $(SDK_PATH)/% FORCE
+	$(MAKE) -C $(SDK_PATH)/$*   $(TARGET)_$(SEXTB)
+
 $(LIB_PATH)/%.$(LEXT): $(EXT_PATH)/% FORCE
 	$(MAKE) -C $(EXT_PATH)/$*   $(TARGET)
 
@@ -328,7 +339,7 @@ endif
 
 $(OBJ_PATH)/%.$(OEXT): %.$(SEXT)
 	@echo
-	@echo '// ----- Make ($(TOOLBOX)): program $(PROJNAME) -- $(MAKECMDGOALS) -----'
+	@echo '// ----- Make ($(TOOLBOX)): Program $(PROJNAME) -- $(MAKECMDGOALS) -----'
 	$(CC) -c $(CFLAGS) $(INCL) $(CCoO)$@ $*.$(SEXT)
 
 cfgdef.c: recognizer.cfg
@@ -347,16 +358,16 @@ CLEANALL:
 	$(MAKE) cleanall_release
 
 $(CLEAN):
-	@echo '// ----- Make: program $(PROJNAME) -- cleaning $(TARGET) -----'
+	@echo '// ----- Make: Program $(PROJNAME) -- cleaning $(TARGET) -----'
 	-rm -f $(OBJECTS) $(DEPENTS)
-	-touch --date=1990-01-01 $(PROJECT)
+	-touch -c --date=1990-01-01 $(PROJECT)
 
 $(CLEANALL): $(CLEAN)
 	$(LIBRARIES_CLEANALL)
-	@echo '// ----- Make: $(PROJNAME) application -- cleaning all $(TARGET) -----'
+	@echo '// ----- Make: Program $(PROJNAME) -- cleaning all $(TARGET) -----'
 	-rm -f $(LIBRARIES)
-	-touch dlp_config.h
-	-find $(DLABPRO_HOME)/ . \( -name "*.def" \) -exec touch {} \;
+	-touch -c dlp_config.h
+	-find $(DLABPRO_HOME)/ \( -name "*.def" \) -exec touch {} \;
 
 
 distclean:
@@ -366,8 +377,6 @@ distclean:
 	-rm -rf $(DLABPRO_HOME)/obj.*
 	-rm -rf $(DLABPRO_HOME)/dep.*
 	-rm -rf $(DLABPRO_HOME)/manual
-	-find $(DLABPRO_HOME)/ . \( -name "core" -o -name "*~" -o -name "*.RUN" -o -name "*.plg" -o -name "*.ncb" -o -name "\#*\#" \) -exec rm -f {} \;
-
-PHONY:
+	-find $(DLABPRO_HOME)/ \( -name "core" -o -name "*~" -o -name "*.RUN" -o -name "*.plg" -o -name "*.ncb" -o -name "\#*\#" \) -exec rm -f {} \;
 
 ## EOF

@@ -25,28 +25,35 @@
 
 ## Common settings
 ifdef (${CGENPATH})
-  CGEN = ${CGENPATH}/dcg
+  DCG = ${CGENPATH}/dcg
 else
-  CGEN = dcg
+  DCG = dcg
+endif
+
+ifeq (${DLABPRO_HOME},)
+  DLABPRO_HOME = ../..
 endif
 
 OS   := $(shell uname)
-INCL  = -I ../../include -I ../../include/automatic 
-vpath %.h ../../include ../../include/automatic
+INCL  = -I $(DLABPRO_HOME)/include -I $(DLABPRO_HOME)/include/automatic 
+vpath %.h $(DLABPRO_HOME)/include $(DLABPRO_HOME)/include/automatic
 
-## Get build ID
-BUILD := $(shell svnversion ../../ 2> /dev/null)
+ifneq (${MACHINE},)
+  MEXT=.${MACHINE}
+else
+  MEXT=
+endif
 
 ## Paths
-BIN_PATH = ../../bin.${TRGS}.${MACHINE}
-LIB_PATH = ../../lib.${TRGS}.${MACHINE}
-OBJ_PATH = ../../obj.${TRGS}.${MACHINE}
-DEP_PATH = ../../dep.${TRGS}.${MACHINE}
-BAS_PATH = ../../base
-CLS_PATH = ../../classes
-SDK_PATH = ../../sdk
-EXT_PATH = ../../ext
-INC_PATH = ../../include
+BIN_PATH = $(DLABPRO_HOME)/bin.${TRGS}${MEXT}
+LIB_PATH = $(DLABPRO_HOME)/lib.${TRGS}${MEXT}
+OBJ_PATH = $(DLABPRO_HOME)/obj.${TRGS}${MEXT}
+DEP_PATH = $(DLABPRO_HOME)/dep.${TRGS}${MEXT}
+BAS_PATH = $(DLABPRO_HOME)/base
+CLS_PATH = $(DLABPRO_HOME)/classes
+EXT_PATH = $(DLABPRO_HOME)/ext
+SDK_PATH = $(DLABPRO_HOME)/sdk
+INC_PATH = $(DLABPRO_HOME)/include
 CONFIG_DST = ${INC_PATH}/dlp_config.h
 CONFIG_SRC = dlp_config.h
 DLPSVNREV  = ${INC_PATH}/automatic/dlp_svnrev.h
@@ -59,7 +66,6 @@ ifeq ($(SVNREV),)
   X := $(shell echo "// ----- Make: Updating dlp_svnrev.h ($(BUILD)) -----" >&2)
   X := $(shell echo '\#define __DLP_BUILD "$(BUILD)"' >$(DLPSVNREV))
 endif
-
 
 ## Target settings
 PROJNAME  = dlabpro
@@ -263,7 +269,7 @@ X := $(shell cp -p $(CONFIG_SRC) $(CONFIG_DST))
 ## Use additional libraries depending on machine type
 
 ## Platform specific - GNU on Windows
-ifeq (${MACHINE},$(filter ${MACHINE},x86-w32 x86-w64))
+ifeq ($(OS),MinGW)
   ifneq (${DLABPRO_USE_MSVC},1)
     ifneq (${DLABPRO_USE_MSVC},2)
       PT_AVAILABLE := $(shell echo -e "\#include <pthread.h>\nint main(){ return 0; }" | $(CC) $(INCL) $(CFLAGS) -E - >/dev/null 2>&1 && echo yes || echo no)
@@ -326,6 +332,7 @@ endif
 ## Create directories
 X:=$(shell mkdir -p $(OBJ_PATH))
 X:=$(shell mkdir -p $(BIN_PATH))
+X:=$(shell mkdir -p $(LIB_PATH))
 ifeq (${OS},Linux)
   X:=$(shell mkdir -p $(DEP_PATH))
 endif
@@ -337,8 +344,8 @@ endif
 DEBUG RELEASE: $(PROJECT)
 	@echo
 	@echo  '// ----- Make ($(TOOLBOX)): Build complete -----'
-	@echo  'build $(BUILD)'
-	@-which $(CGEN)
+	@echo  '$(PROJECT) build $(BUILD)'
+	@-which $(DCG)
 	@which $(CC)
 	@which $(AR)
 	@which $(LL)
@@ -396,16 +403,14 @@ $(CLEANALL): $(CLEAN)
 	@echo '// ----- Make: Program $(PROJNAME) -- cleaning all $(TARGET) -----'
 	-rm -f $(LIBRARIES)
 	-touch -c dlp_config.h
-	-find ../../ \( -name "*.def" \) -exec touch {} \;
+	-find $(DLABPRO_HOME)/ \( -name "*.def" \) -exec touch {} \;
 
 
 distclean:
-	-rm -rf ../../include/automatic
-	-rm -rf ../../bin.*
-	-rm -rf ../../lib.*
-	-rm -rf ../../obj.*
-	-rm -rf ../../dep.*
-	-rm -rf ../../manual
-	-find ../../ \( -name "core" -o -name "*~" -o -name "*.RUN" -o -name "*.plg" -o -name "*.ncb" -o -name "\#*\#" \) -exec rm -f {} \;
+	-rm -rf $(DLABPRO_HOME)/bin.*
+	-rm -rf $(DLABPRO_HOME)/lib.*
+	-rm -rf $(DLABPRO_HOME)/obj.*
+	-rm -rf $(DLABPRO_HOME)/dep.*
+	-find $(DLABPRO_HOME)/ \( -name "core" -o -name "*~" -o -name "*.RUN" -o -name "*.plg" -o -name "*.ncb" -o -name "\#*\#" \) -exec rm -f {} \;
 
 ## EOF
