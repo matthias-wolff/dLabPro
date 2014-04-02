@@ -141,7 +141,14 @@
 #include <float.h>
 #ifndef __TMS
   #include <sys/types.h>
+  #if defined __MINGW32__ && defined __STRICT_ANSI__
+    #undef __STRICT_ANSI__ /* struct stat is not accessible in new mingw version with -ansi */
+    #define __REDEF_STRICT_ANSI
+  #endif
   #include <sys/stat.h>
+  #ifdef __REDEF_STRICT_ANSI
+    #define __STRICT_ANSI__
+  #endif
   #include <memory.h>
 #endif
 #include <time.h>
@@ -948,7 +955,7 @@ typedef struct { FLOAT64 x; FLOAT64 y; } COMPLEX64;
 
 #endif
 
-#if !defined __MSOS
+#if !defined __MSOS && !defined __MINGW32__
   #define stricmp(A,B)    strcasecmp(A,B)
   #define strnicmp(A,B,N) strncasecmp(A,B,N)
 #endif
