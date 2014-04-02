@@ -51,7 +51,7 @@
    GLOBALS
    ---------------------------------------------------------------------------
 */
-short  derrno;
+short  derrno = 0;
 
 static struct ERR_TAB
 {

@@ -1053,7 +1053,7 @@
 
 
 
-#elif (defined(__APPLE__) && defined(__GNUC__) && (defined(__ppc__) || defined(_ARCH_PPC) ||  defined(__POWERPC__)))
+#elif defined(__APPLE__)
 /* src/config.h.  Generated from config.h.in by configure.  */
 /* src/config.h.in.  Generated from configure.ac by autoheader.  */
 

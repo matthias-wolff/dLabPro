@@ -25,6 +25,10 @@
 
 #include "dlp_function.h"
 
+#ifdef __APPLE__
+#include <sys/select.h>
+#endif
+
 #if (!defined __NOREADLINE && defined __LINUX)
 #  include <readline/readline.h>
 #  include <readline/history.h>

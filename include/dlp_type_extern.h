@@ -31,8 +31,10 @@
 #include "dlp_base.h"
 
 /* Currently used for SPTK */
+#ifndef __APPLE__ /* HACK: won't compile on OSX */
 #define double FLOAT64
 #define float  FLOAT32
+#endif /* #ifndef __APPLE__ */
 
 #endif /* if !defined __DLPTYPE_EXTERN_H */
 
