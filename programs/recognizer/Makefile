@@ -39,6 +39,10 @@ INCL  = -I $(DLABPRO_HOME)/include -I $(DLABPRO_HOME)/include/automatic -I.
 vpath %.h $(DLABPRO_HOME)/include $(DLABPRO_HOME)/include/automatic
 PA_DIR := $(DLABPRO_HOME)/ext/portaudio/$(MACHINE)
 
+ifneq ($(findstring MINGW,$(OS)),)
+  OS := MinGW
+endif
+
 ifneq ($(RECOGNIZER_SUBDIR),)
   ifeq ($(findstring _$(RECOGNIZER_SUBDIR),$(MACHINE)),)
     MACHINE:=$(MACHINE)_$(RECOGNIZER_SUBDIR)

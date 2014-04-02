@@ -38,6 +38,10 @@ OS   := $(shell uname)
 INCL  = -I $(DLABPRO_HOME)/include -I $(DLABPRO_HOME)/include/automatic 
 vpath %.h $(DLABPRO_HOME)/include $(DLABPRO_HOME)/include/automatic
 
+ifneq ($(findstring MINGW,$(OS)),)
+  OS := MinGW
+endif
+
 ifneq (${MACHINE},)
   MEXT=.${MACHINE}
 else
