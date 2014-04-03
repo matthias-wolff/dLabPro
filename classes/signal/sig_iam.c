@@ -2305,25 +2305,25 @@ INT16 CGEN_PUBLIC CSignal_Pitchmark(CData* idY, CData* idX, char* sMethod, INT32
 
   DLPASSERT((idY!=NULL)&&(idX!=NULL));
 
-  if(CData_GetDescr(BASEINST(idX),RINC) <= 0.0) {
+  if(CData_GetDescr(idX,RINC) <= 0.0) {
     CERROR(CSignal,FOP_ERR_INVDESCR,"sampling rate of input signal",0,0);
     return NOT_EXEC;
   }
 
   FOP_PRECALC(idX, idY, idS, idR, idL);
-  nSR = (INT32)(1000.0 / CData_GetDescr(BASEINST(idS),RINC) + 0.5);
-  nR = CData_GetNRecs(BASEINST(idS));
-  CData_Tconvert(BASEINST(idS), BASEINST(idS), T_DOUBLE);
+  nSR = (INT32)(1000.0 / CData_GetDescr(idS,RINC) + 0.5);
+  nR = CData_GetNRecs(idS);
+  CData_Tconvert(idS, idS, T_DOUBLE);
 
   if((sMethod == NULL) || (dlp_strlen(sMethod) <= 0) || !dlp_strcmp("gcida",sMethod)) {
-    dlm_gcida((FLOAT64*)CData_XAddr(BASEINST(idS),0,0),nR,&pP, &nP, nSR, nMin, nMean, nMax);
+    dlm_gcida((FLOAT64*)CData_XAddr(idS,0,0),nR,&pP, &nP, nSR, nMin, nMean, nMax);
   }
 
   CData_Reset(BASEINST(idR),TRUE);
   CData_CopyDescr(idR,idS);
-  CData_AddComp(BASEINST(idR),"pm",T_SHORT);
-  CData_AddComp(BASEINST(idR),"v/uv",T_SHORT);
-  CData_Allocate(BASEINST(idR), nP);
+  CData_AddComp(idR,"pm",T_SHORT);
+  CData_AddComp(idR,"v/uv",T_SHORT);
+  CData_Allocate(idR, nP);
 
   for(iP = 0; iP < nP; iP++) {
     CData_Dstore(idR,pP[iP].nPer, iP, 0);

@@ -546,7 +546,7 @@ CDlpObject* CGEN_PROTECTED CFunction::Instantiate
     return NULL;
   }
   SWord cwrd; iInst->GetInstanceInfo(&cwrd);
-  if (cwrd.nFlags & CS_AUTOACTIVATE && (cwrd.nFlags & CS_SECONDARY)==0)
+  if ((cwrd.nFlags & CS_AUTOACTIVATE) && (cwrd.nFlags & CS_SECONDARY)==0)
     if (dlp_strncmp(iInst->m_lpInstanceName,cwrd.ex.fct.lpAutoname,L_NAMES)!=0) //   Not the auto-instance
     {                                                                           //   >>
       PushInstance(iInst);
@@ -672,7 +672,7 @@ BOOL CGEN_SPRIVATE CFunction::DerefInstance
             iCont->GetFQName(__lpsFqid));                                       //         |
         *(CDlpObject**)lpWord->lpData = NULL;                                   //       Remove reference
       }                                                                         //     <<
-      else if (bDescent && !lpWord->nFlags&FF_NONAUTOMATIC)                     //     Otherwise if descending
+      else if (bDescent && (!lpWord->nFlags&FF_NONAUTOMATIC))                   //     Otherwise if descending
       {                                                                         //     >>
         if (nVerbose>=2) printf("\n%32sDescending to %s.%s","",iCont->m_lpInstanceName,lpWord->lpName);
         if (!DerefInstance(*(CDlpObject**)lpWord->lpData,iInst,TRUE,nVerbose))  //       Do descent
@@ -751,7 +751,7 @@ SWord* CGEN_PROTECTED CFunction::FindWordAi(const char* lpsIdentifier)
       lpRwrd = iFnc->FindWord(lpsId);                                           //     Get the root word
       if (lpRwrd && lpRwrd->nWordType==WL_TYPE_INSTANCE)                        //     Get the root instance
         iRinst = (CDlpObject*)lpRwrd->lpData;                                   //     ...
-      if (!iRinst || !iRinst->m_nInStyle&IS_GLOBAL) lpWord = NULL;              //     Not a global inst. -> don't use
+      if (!iRinst || (!iRinst->m_nInStyle&IS_GLOBAL)) lpWord = NULL;            //     Not a global inst. -> don't use
     }                                                                           //   <<
   return lpWord;                                                                // Return the word
 }
