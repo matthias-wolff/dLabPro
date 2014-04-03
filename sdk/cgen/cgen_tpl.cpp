@@ -653,7 +653,7 @@ INT16 CGEN_PROTECTED CCgen::WriteBackTemplate(CList<SCGStr> &tmpl, char* lpPath,
   dlp_chdir(lpPath,TRUE);
   if(getcwd(buf,255)==NULL) return IERROR(this,ERR_GETCWD,0,0,0);
   if (bPrint) printf("\n%s %s%c%s",GetVerboseLevel()>1?" ":"g -",buf,C_DIR,lpFName);
-  f = fopen(lpFName,"w");
+  f = fopen(lpFName,"wb");
   if (!f) ERRORRET(ERR_CREATEFILE,lpFName,0,0,NOT_EXEC);
   page =tmpl.m_items;
   while (page)

@@ -185,6 +185,13 @@ CODE:
     printf("\n\n%s\n\n",_this->m_greetingEnglish);
 END_CODE
 
+OPTION:  /adm
+COMMENT: Adaptive delta modulation (method -dm)
+
+METHOD:  -dm
+COMMENT: Delta modulation example
+SYNTAX:  (data idSrc, long nOversample, data idDst)
+
 ## dLabpro interface code
 INITCODE:
   INIT;

@@ -347,6 +347,7 @@ CAPTION,.small,.footnote
 .warning
 {
 	font-weight: bold;
+	color: red;
 }
 .authors
 {
