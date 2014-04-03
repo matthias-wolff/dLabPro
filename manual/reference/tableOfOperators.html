@@ -64,21 +64,1250 @@ if (top==self)
           <td width="50%">
             <h3 style="margin-top:2pt; margin-bottom:2pt">Contents</h3>
             <ul class="linklist">
-              <li class="linklist">-  <span class="TODO">[<b>TODO:</b> Link to anchor on this page]</span></li>
+              <li class="linklist"><a class="linklist" href="#svmo">Scalar, Vector and Matrix Operators</a></li>
+              <li class="linklist">- <a class="linklist" href="#svmo_symbols">Symbols</a></li>
+              <li class="linklist">- <a class="linklist" href="#svmo_unary">Unary Operators</a></li>
+              <li class="linklist">- <a class="linklist" href="#svmo_binary">Binary Operators</a></li>
+              <li class="linklist"><span class="TODO">[<b>TODO@gitgun:</b> <a class="linklist" href="#sigops">Signal Operators</a>]</span></li>
             </ul>
           </td>
           <td width="50%">
-            <h3 style="margin-top:2pt; margin-bottom:2pt">Links</h3>
+            <h3 style="margin-top:2pt; margin-bottom:2pt">Related Topics</h3>
             <ul class="linklist">
-              <li class="linklist">-  <span class="TODO">[<b>TODO:</b> Link to other page]</span></li>
+              <li class="linklist"><a class="linklist" href="dlabproScriptSyntax.html">dLabPro Script Syntax</a></li>
+              <li class="linklist"><a class="linklist" href="../automatic/data.html#mth_-aggregate">Aggregation Operations</a></li>
+              <li class="linklist"><a class="linklist" href="../automatic/data.html#mth_-strop">String Operations</a></li>
+              <li class="linklist"><a class="linklist" href="../automatic/function.html#mth_-list">Method -list (class function)</a></li>
             </ul>
           </td>
         </tr>
       </table>
     </div>
-  </div>
 
-  <span class="TODO">[<b>TODO:</b> Page content goes here...]</span>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <a name="svmo"></a>
+    <div id="clp_svmo">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td nowrap width="25%" class="navbar">
+            Scalar, Vector and Matrix Operators
+          </td>
+          <td nowrap width="75%" class="navbar" style="text-align:right;">
+            <a class="navbar" href="javascript:__PrintSection('clp_svmo','Scalar, Vector and Matrix Operators','..');"
+            ><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle;" alt="Print"></a> 
+            <a class="navbar" href="../home.html">Home</a>
+            <a class="navbar" href="index.html">Reference</a>
+            <a class="navbar" href="#top">Top</a>
+          </td>
+        </tr>
+      </table>
+      <div class="mframe2">
+      
+        <a name="svmo_symbols"></a><h3>Symbols</h3>
+        <ul>
+          <li>Scalars: <i>a</i>, <i>b</i>, <i>z</i></li>
+          <li>Vectors: <b><i>u</i></b>=(<i>u<sub>i</sub></i>), <b><i>v</i></b>=(<i>v<sub>i</sub></i>), <b><i>w</i></b>
+          <li>Matrices: <b><i>A</i></b>=(<i>a<sub>ik</sub></i>), <b><i>B</i></b>=(<i>b<sub>ik</sub></i>), <b><i>Z</i></b></li>
+          <li>Null-instance: <code>NULL</code></li>
+        </ul>
+              
+        <a name="svmo_unary"></a><h3>Unary Operators</h3>
+        <table class="indent" style="margin-top:6pt;" cellpadding="2" summary="">
+          <tr>
+            <th nowrap>Symbol<br>(dLabPro)</th>
+            <th nowrap>Code<br>(C/C++)</th>
+            <th nowrap>scalar op(<i>a</i>)</th> 
+            <th nowrap>vector op(<b><i>v</i></b>,<i>b</i>)</th>
+            <th nowrap>matrix op(<b><i>A</i></b>)</th>
+            <th nowrap>Description</th>
+          </tr>
+          <tr><td colspan="6">&nbsp;<br>Arithmetic operators and functions</td></tr>
+          <tr>
+            <td nowrap><code>neg</code></td>
+            <td nowrap><code>OP_NEG</code></td>
+            <td nowrap><i>z</i> = -<i>a</i></td>
+            <td nowrap><b><i>w</i></b> = (-<i>v<sub>i</sub></i>)</td>
+            <td nowrap><b><i>Z</i></b> = (-<i>a<sub>ik</sub></i>)</td>
+            <td nowrap>Negation</td>
+          </tr>
+          <tr>
+            <td nowrap><code>real</code></td>
+            <td nowrap><code>OP_REAL</code></td>
+            <td nowrap><i>z</i> = real(<i>a</i>)</td>
+            <td nowrap><b><i>w</i></b> = (real(<i>v<sub>i</sub></i>))</td>
+            <td nowrap><b><i>Z</i></b> = (real(<i>a<sub>ik</sub></i>))</td>
+            <td nowrap>Real part</td>
+          </tr>
+          <tr>
+            <td nowrap><code>imag</code></td>
+            <td nowrap><code>OP_IMAG</code></td>
+            <td nowrap><i>z</i> = imag(<i>a</i>)</td>
+            <td nowrap><b><i>w</i></b> = (imag(<i>v<sub>i</sub></i>))</td>
+            <td nowrap><b><i>Z</i></b> = (imag(<i>a<sub>ik</sub></i>))</td>
+            <td nowrap>Imaginary part</td>
+          </tr>
+          <tr>
+            <td nowrap><code>conj</code></td>
+            <td nowrap><code>OP_CONJ</code></td>
+            <td nowrap><i>z</i> = <i>a</i>*</td>
+            <td nowrap><b><i>w</i></b> = (<i>v<sub>i</sub></i>*)</td>
+            <td nowrap><b><i>Z</i></b> = (<i>a<sub>ik</sub></i>*)</td>
+            <td nowrap>Complex conjugate</td>
+          </tr>
+          <tr>
+            <td nowrap><code>sqr</code></td>
+            <td nowrap><code>OP_SQR</code></td>
+            <td nowrap><i>z</i> = <i>a</i><sup>2</sup></td>
+            <td nowrap><b><i>w</i></b> = (<i>v<sub>i</sub></i><sup>2</sup>)</td>
+            <td nowrap><b><i>Z</i></b> = (<i>a<sub>ik</sub></i><sup>2</sup>)</td>
+            <td nowrap>Square</td>
+          </tr>
+          <tr>
+            <td nowrap><code>abs</code></td>
+            <td nowrap><code>OP_ABS</code></td>
+            <td nowrap><i>z</i> = |<i>a</i>|</td>
+            <td nowrap><b><i>w</i></b> = (|<i>v<sub>i</sub></i>|)</td>
+            <td nowrap><b><i>Z</i></b> = (|<i>a<sub>ik</sub></i>|)</td>
+            <td nowrap>Absolute value</td>
+          </tr>
+          <tr>
+            <td nowrap><code>sqrt</code></td>
+            <td nowrap><code>OP_SQRT</code></td>
+            <td nowrap><i>z</i> = &radic;<i style="text-decoration:overline;">a</i></td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap><b><i>Z</i></b> = &radic;<i><b style="text-decoration:overline;">A</b></i>
+                       <sup><a href="#arop_fn1" title="Matrix/matrices must be square">1,</a><a href="#arop_fn2" title="Matrix/matrices must have real eigenvalues">2)</a></sup></td>
+            <td nowrap>Square root</td>
+          </tr>
+          <tr>
+            <td nowrap><code>.sqrt</code></td>
+            <td nowrap><code>OP_SQRT_EL</code></td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap><b><i>w</i></b> = (&radic;<i><span style="text-decoration:overline;">v</span><sub>i</sub></i>)</td>
+            <td nowrap><b><i>Z</i></b> = (&radic;<i><span style="text-decoration:overline;">a</span><sub>ik</sub></i>)</td>
+            <td nowrap>Elementwise square root</td>
+          </tr>
+          <tr>
+            <td nowrap><code>sign</code></td>
+            <td nowrap><code>OP_SIGN</code></td>
+            <td nowrap><i>z</i> = sgn(<i>a</i>)</td>
+            <td nowrap><b><i>w</i></b> = (sgn(<i>v<sub>i</sub></i>))</td>
+            <td nowrap><b><i>Z</i></b> = (sgn(<i>a<sub>ik</sub></i>))</td>
+            <td nowrap>Sign</td>
+          </tr>
+          <tr>
+            <td nowrap><code>ent</code></td>
+            <td nowrap><code>OP_ENT</code></td>
+            <td nowrap><i>z</i> = ent(<i>a</i>)</td>
+            <td nowrap><b><i>w</i></b> = (ent(<i>v<sub>i</sub></i>))</td>
+            <td nowrap><b><i>Z</i></b> = (ent(<i>a<sub>ik</sub></i>))</td>
+            <td nowrap>Entire value</td>
+          </tr>
+          <tr>
+            <td nowrap><code>inc, ++</code></td>
+            <td nowrap><code>OP_INC</code></td>
+            <td nowrap><i>z</i> = <i>a</i>+1</td>
+            <td nowrap><b><i>w</i></b> = (<i>v<sub>i</sub></i>+1)</td>
+            <td nowrap><b><i>Z</i></b> = (<i>a<sub>ik</sub></i>+1)</td>
+            <td nowrap>Increment (+1)</td>
+          </tr>
+          <tr>
+            <td nowrap><code>dec, --</code></td>
+            <td nowrap><code>OP_DEC</code></td>
+            <td nowrap><i>z</i> = <i>a</i>-1</td>
+            <td nowrap><b><i>w</i></b> = (<i>v<sub>i</sub></i>-1)</td>
+            <td nowrap><b><i>Z</i></b> = (<i>a<sub>ik</sub></i>-1)</td>
+            <td nowrap>Decrement (-1)</td>
+          </tr>
+          <tr>
+            <td nowrap><code>inv</code></td>
+            <td nowrap><code>OP_INVT</code></td>
+            <td nowrap><i>z</i> = <i>a</i><sup>-1</sup></td>
+            <td nowrap><b><i>w</i></b> = (<i>v<sub>i</sub></i><sup>-1</sup>)</td>
+            <td nowrap><b><i>Z</i></b> = <b><i>A</i></b><sup>-1</sup>
+                       <sup><a href="#arop_fn1" title="Matrix/matrices must be square">1)</a></sup></td>
+            <td nowrap>Invert</td>
+          </tr>
+          <tr>
+            <td nowrap><code>cholf</code></td>
+            <td nowrap><code>OP_CHOLF</code></td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap><b><i>Z</i></b> = cholf(<b><i>A</i></b>)
+                       <sup><a href="#arop_fn1" title="Matrix/matrices must be square">1,</a><a href="#arop_fn6" title="Matrix/matrices must be symmetric">6)</a></sup></td>
+            <td nowrap>Cholesky factorization</td>
+          </tr>
+          <tr>
+            <td nowrap><code>log</code></td>
+            <td nowrap><code>OP_LOG</code></td>
+            <td nowrap><i>z</i> = log<sub>10</sub> <i>a</i></td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap><b><i>Z</i></b> = log<sub>10</sub> <b><i>A</i></b>
+                       <sup><a href="#arop_fn1" title="Matrix/matrices must be square">1,</a><a href="#arop_fn2" title="Matrix/matrices must have real eigenvalues">2)</a></sup></td>
+            <td nowrap>Decadic logarithm</td>
+          </tr>
+          <tr>
+            <td nowrap><code>.log</code></td>
+            <td nowrap><code>OP_LOG_EL</code></td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap><b><i>w</i></b> = (log<sub>10</sub> <i>v<sub>i</sub></i>)</td>
+            <td nowrap><b><i>Z</i></b> = (log<sub>10</sub> <i>a<sub>ik</sub></i>)</td>
+            <td nowrap>Elementwise decadic logarithm</td>
+          </tr>
+          <tr>
+            <td nowrap><code>ln</code></td>
+            <td nowrap><code>OP_LN</code></td>
+            <td nowrap><i>z</i> = log <i>a</i></td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap><b><i>Z</i></b> = log <b><i>A</i></b>
+                       <sup><a href="#arop_fn1" title="Matrix/matrices must be square">1,</a><a href="#arop_fn2" title="Matrix/matrices must have real eigenvalues">2)</a></sup></td>
+            <td nowrap>Natural logarithm</td>
+          </tr>
+          <tr>
+            <td nowrap><code>.ln</code></td>
+            <td nowrap><code>OP_LN_EL</code></td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap><b><i>w</i></b> = (log <i>v<sub>i</sub></i>)</td>
+            <td nowrap><b><i>Z</i></b> = (log <i>a<sub>ik</sub></i>)</td>
+            <td nowrap>Elementwise natural logarithm</td>
+          </tr>
+          <tr>
+            <td nowrap><code>exp</code></td>
+            <td nowrap><code>OP_EXP</code></td>
+            <td nowrap><i>z</i> = <i>e</i><sup><i>a</i></sup></td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap><b><i>Z</i></b> = <i>e</i><sup><b><i>A</i></b></sup>
+                       <sup><a href="#arop_fn1" title="Matrix/matrices must be square">1,</a><a href="#arop_fn2" title="Matrix/matrices must have real eigenvalues">2)</a></sup></td>
+            <td nowrap>Exponential function</td>
+          </tr>
+          <tr>
+            <td nowrap><code>.exp</code></td>
+            <td nowrap><code>OP_EXP_EL</code></td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap><b><i>w</i></b> = (<i>e</i><sup><i>v<sub>i</sub></i></sup>)</td>
+            <td nowrap><b><i>Z</i></b> = (<i>e</i><sup><i>a<sub>ik</sub></i></sup>)</td>
+            <td nowrap>Elementwise exponential function</td>
+          </tr>
+          <tr>
+            <td nowrap><code>factorial, !</code></td>
+            <td nowrap><code>OP_FCTRL</code></td>
+            <td nowrap><i>z</i> = <i>a</i>!</td>
+            <td nowrap><b><i>w</i></b> = (<i>v<sub>i</sub></i>!)</td>
+            <td nowrap><b><i>Z</i></b> = (<i>a<sub>ik</sub></i>!)</td>
+            <td nowrap>Factorial</td>
+          </tr>
+          <tr>
+            <td nowrap><code>erf</code></td>
+            <td nowrap><code>OP_ERF</code></td>
+            <td nowrap><i>z</i> = erf(<i>a</i>)</td>
+            <td nowrap><b><i>w</i></b> = (erf(<i>v<sub>i</sub></i>))</td>
+            <td nowrap><b><i>Z</i></b> = (erf(<i>a<sub>ik</sub></i>))</td>
+            <td nowrap>Error function</td>
+          </tr>
+          <tr>
+            <td nowrap><code>erfc</code></td>
+            <td nowrap><code>OP_ERFC</code></td>
+            <td nowrap><i>z</i> = erfc(<i>a</i>)</td>
+            <td nowrap><b><i>w</i></b> = (erfc(<i>v<sub>i</sub></i>))</td>
+            <td nowrap><b><i>Z</i></b> = (erfc(<i>a<sub>ik</sub></i>))</td>
+            <td nowrap>Complementary error function</td>
+          </tr>
+          <tr><td colspan="6">&nbsp;<br>Trigonometric and hyperbolic functions</td></tr>
+          <tr>
+            <td nowrap><code>sin</code></td>
+            <td nowrap><code>OP_SIN</code></td>
+            <td nowrap><i>z</i> = sin <i>a</i></td>
+            <td nowrap><b><i>w</i></b> = (sin <i>v<sub>i</sub></i>)</td>
+            <td nowrap><b><i>Z</i></b> = (sin <i>a<sub>ik</sub></i>)</td>
+            <td nowrap>Sine</td>
+          </tr>
+          <tr>
+            <td nowrap><code>asin</code></td>
+            <td nowrap><code>OP_ASIN</code></td>
+            <td nowrap><i>z</i> = asin<sup>-1</sup> <i>a</i></td>
+            <td nowrap><b><i>w</i></b> = (asin<sup>-1</sup> <i>v<sub>i</sub></i>)</td>
+            <td nowrap><b><i>Z</i></b> = (asin<sup>-1</sup> <i>a<sub>ik</sub></i>)</td>
+            <td nowrap>Arc sine</td>
+          </tr>
+          <tr>
+            <td nowrap><code>sinh</code></td>
+            <td nowrap><code>OP_SINH</code></td>
+            <td nowrap><i>z</i> = sinh <i>a</i></td>
+            <td nowrap><b><i>w</i></b> = (sinh <i>v<sub>i</sub></i>)</td>
+            <td nowrap><b><i>Z</i></b> = (sinh <i>a<sub>ik</sub></i>)</td>
+            <td nowrap>Hyperbolic sine</td>
+          </tr>
+          <tr>
+            <td nowrap><code>asinh</code></td>
+            <td nowrap><code>OP_ASINH</code></td>
+            <td nowrap><i>z</i> = asinh <i>a</i></td>
+            <td nowrap><b><i>w</i></b> = (asinh <i>v<sub>i</sub></i>)</td>
+            <td nowrap><b><i>Z</i></b> = (asinh <i>a<sub>ik</sub></i>)</td>
+            <td nowrap>Arc hyperbolic sine</td>
+          </tr>
+          <tr>
+            <td nowrap><code>cos</code></td>
+            <td nowrap><code>OP_COS</code></td>
+            <td nowrap><i>z</i> = cos <i>a</i></td>
+            <td nowrap><b><i>w</i></b> = (cos <i>v<sub>i</sub></i>)</td>
+            <td nowrap><b><i>Z</i></b> = (cos <i>a<sub>ik</sub></i>)</td>
+            <td nowrap>Cosine</td>
+          </tr>
+          <tr>
+            <td nowrap><code>acos</code></td>
+            <td nowrap><code>OP_ACOS</code></td>
+            <td nowrap><i>z</i> = acos<sup>-1</sup> <i>a</i></td>
+            <td nowrap><b><i>w</i></b> = (acos<sup>-1</sup> <i>v<sub>i</sub></i>)</td>
+            <td nowrap><b><i>Z</i></b> = (acos<sup>-1</sup> <i>a<sub>ik</sub></i>)</td>
+            <td nowrap>Arc cosine</td>
+          </tr>
+          <tr>
+            <td nowrap><code>cosh</code></td>
+            <td nowrap><code>OP_COSH</code></td>
+            <td nowrap><i>z</i> = cosh <i>a</i></td>
+            <td nowrap><b><i>w</i></b> = (cosh <i>v<sub>i</sub></i>)</td>
+            <td nowrap><b><i>Z</i></b> = (cosh <i>a<sub>ik</sub></i>)</td>
+            <td nowrap>Hyperbolic cosine</td>
+          </tr>
+          <tr>
+            <td nowrap><code>acosh</code></td>
+            <td nowrap><code>OP_ACOSH</code></td>
+            <td nowrap><i>z</i> = acosh <i>a</i></td>
+            <td nowrap><b><i>w</i></b> = (acosh <i>v<sub>i</sub></i>)</td>
+            <td nowrap><b><i>Z</i></b> = (acosh <i>a<sub>ik</sub></i>)</td>
+            <td nowrap>Arc hyperbolic cosine</td>
+          </tr>
+          <tr>
+            <td nowrap><code>tan</code></td>
+            <td nowrap><code>OP_TAN</code></td>
+            <td nowrap><i>z</i> = tan <i>a</i></td>
+            <td nowrap><b><i>w</i></b> = (tan <i>v<sub>i</sub></i>)</td>
+            <td nowrap><b><i>Z</i></b> = (tan <i>a<sub>ik</sub></i>)</td>
+            <td nowrap>Tangent</td>
+          </tr>
+          <tr>
+            <td nowrap><code>atan</code></td>
+            <td nowrap><code>OP_ATAN</code></td>
+            <td nowrap><i>z</i> = atan<sup>-1</sup> <i>a</i></td>
+            <td nowrap><b><i>w</i></b> = (atan<sup>-1</sup> <i>v<sub>i</sub></i>)</td>
+            <td nowrap><b><i>Z</i></b> = (atan<sup>-1</sup> <i>a<sub>ik</sub></i>)</td>
+            <td nowrap>Arc tangent</td>
+          </tr>
+          <tr>
+            <td nowrap><code>tanh</code></td>
+            <td nowrap><code>OP_TANH</code></td>
+            <td nowrap><i>z</i> = tanh <i>a</i></td>
+            <td nowrap><b><i>w</i></b> = (tanh <i>v<sub>i</sub></i>)</td>
+            <td nowrap><b><i>Z</i></b> = (tanh <i>a<sub>ik</sub></i>)</td>
+            <td nowrap>Hyperbolic tangent</td>
+          </tr>
+          <tr>
+            <td nowrap><code>atanh</code></td>
+            <td nowrap><code>OP_ATANH</code></td>
+            <td nowrap><i>z</i> = atanh <i>a</i></td>
+            <td nowrap><b><i>w</i></b> = (atanh <i>v<sub>i</sub></i>)</td>
+            <td nowrap><b><i>Z</i></b> = (atanh <i>a<sub>ik</sub></i>)</td>
+            <td nowrap>Arc hyperbolic tangent</td>
+          </tr>
+          <tr>
+            <td nowrap><code>sinc</code></td>
+            <td nowrap><code>OP_SINC</code></td>
+            <td nowrap><i>z</i> = sinc <i>a</i></td>
+            <td nowrap><b><i>w</i></b> = (sinc <i>v<sub>i</sub></i>)</td>
+            <td nowrap><b><i>Z</i></b> = (sinc <i>a<sub>ik</sub></i>)</td>
+            <td nowrap>Sinc function (sin x / x)</td>
+          </tr>
+          <tr><td colspan="6">&nbsp;<br>Logical operators</td></tr>
+          <tr>
+            <td nowrap><code>not</code></td>
+            <td nowrap><code>OP_NOT</code></td>
+            <td nowrap><i>z</i> = &not;<i>a</i></td>
+            <td nowrap><b><i>w</i></b> := <b><i>v</i></b>&ne;<code>NULL</code></td>
+            <td nowrap><b><i>Z</i></b> := <b><i>A</i></b>&ne;<code>NULL</code></td>
+            <td nowrap>Logical not</td>
+          </tr>
+          <tr><td colspan="6">&nbsp;<br>Matrix operators</td></tr>
+          <tr>
+            <td nowrap><code>'</code></td>
+            <td nowrap><code>OP_TRANSPOSE</code></td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap><b><i>Z</i></b> = <b><i>v</i></b>'</td>
+            <td nowrap><b><i>Z</i></b> = <b><i>A</i></b>'</td>
+            <td nowrap>Transpose</td>
+          </tr>
+          <tr>
+            <td nowrap><code>diag</code></td>
+            <td nowrap><code>OP_DIAG</code></td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap><b><i>Z</i></b> = diag(<b><i>v</i></b>)</td>
+            <td nowrap><b><i>Z</i></b> = diag(<b><i>A</i></b>)
+                       <sup><a href="#arop_fn1" title="Matrix/matrices must be square">1)</a></sup></td>
+            <td nowrap>Make diagonal matrix</td>
+          </tr>
+          <tr>
+            <td nowrap><code>mdiag</code></td>
+            <td nowrap><code>OP_MDIAG</code></td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap><b><i>w</i></b> = (<i>a<sub>ii</sub></i>)
+                       <sup><a href="#arop_fn1" title="Matrix/matrices must be square">1)</a></sup></td>
+            <td nowrap>Get main diagonal</td>
+          </tr>
+          <tr>
+            <td nowrap><code>det</code></td>
+            <td nowrap><code>OP_DET</code></td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap><i>z</i> = det(<b><i>A</i></b>)
+                       <sup><a href="#arop_fn1" title="Matrix/matrices must be square">1)</a></sup></td>
+            <td nowrap>Determinant</td>
+          </tr>
+          <tr>
+            <td nowrap><code>tr</code></td>
+            <td nowrap><code>OP_TRACE</code></td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap><i>z</i> = tr(<b><i>A</i></b>)
+                       <sup><a href="#arop_fn1" title="Matrix/matrices must be square">1)</a></sup></td>
+            <td nowrap>Trace</td>
+          </tr>
+          <tr>
+            <td nowrap><code>rank</code></td>
+            <td nowrap><code>OP_RANK</code></td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap><i>z</i> = rank(<b><i>A</i></b>)
+                       <sup><a href="#arop_fn1" title="Matrix/matrices must be square">1)</a></sup></td>
+            <td nowrap>Rank</td>
+          </tr>
+          <tr>
+            <td nowrap><code>zeros</code></td>
+            <td nowrap><code>OP_ZEROS</code></td>
+            <td nowrap><b><i>Z</i></b> = <b>0</b><sub><i>a</i>,<i>b</i></sub></td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap><i>a</i>&times;<i>b</i> matrix of zeros</td>
+          </tr>
+          <tr>
+            <td nowrap><code>ones</code></td>
+            <td nowrap><code>OP_ONES</code></td>
+            <td nowrap><b><i>Z</i></b> = <b>1</b><sub><i>a</i>,<i>b</i></sub></td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap><i>a</i>&times;<i>b</i> matrix of ones</td>
+          </tr>
+          <tr>
+            <td nowrap><code>unit</code></td>
+            <td nowrap><code>OP_UNITMAT</code></td>
+            <td nowrap><b><i>Z</i></b> = <i><b>I</b><sub>a</sub></i></td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap><i>a</i>&times;<i>a</i> identity matrix</td>
+          </tr>
+          <tr>
+            <td nowrap><code>hilb</code></td>
+            <td nowrap><code>OP_HILBMAT</code></td>
+            <td nowrap><b><i>Z</i></b> = <i><b>H</b><sub>a</sub></i></td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap><i>a</i>&times;<i>a</i> Hilbert matrix</td>
+          </tr>
+          <tr>
+            <td nowrap><code>ihlb</code></td>
+            <td nowrap><code>OP_IHLBMAT</code></td>
+            <td nowrap><b><i>Z</i></b> = (<i><b>H</b><sub>a</sub></i>)<sup>-1</sup></td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap><i>a</i>&times;<i>a</i> inverse hilbert matrix</td>
+          </tr>
+          <tr>
+            <td nowrap><code>fft</code></td>
+            <td nowrap><code>OP_FFT</code></td>
+            <td nowrap><i>z</i> = fft(<i>A</i>)</td>
+            <td nowrap><b><i>w</i></b> = fft(<i>v<sub>i</sub></i>)</td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap>Fast Fourier Transform</td>
+          </tr>
+          <tr>
+            <td nowrap><code>ifft</code></td>
+            <td nowrap><code>OP_IFFT</code></td>
+            <td nowrap><i>z</i> = ifft(<i>A</i>)</td>
+            <td nowrap><b><i>w</i></b> = ifft(<i>v<sub>i</sub></i>)</td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap>Fast Fourier Transform</td>
+          </tr>
+          <tr><td colspan="6" class="rowempty">&nbsp;</td></tr>
+        </table>
+
+        <a name="svmo_binary"></a><h3>Binary Operators</h3>
+        <table class="indent" style="margin-top:6pt;" cellpadding="2" summary="">
+          <tr>
+            <th>Symbol<br>(dLabPro)</th>
+            <th>Code<br>(C/C++)</th>
+            <th>scalar/scalar<br>op(<i>a</i>,<i>b</i>)</th> 
+            <th>matrix/scalar&nbsp;op(<b><i>A</i></b>,<i>b</i>)<br>
+                scalar/matrix&nbsp;op(<i>a</i>,<b><i>B</i></b>)&nbsp;<sup><a href="#arop_fn3" title="also vector/scalar and scalar/vector">3)</a></sup></th>
+            <th>matrix/vector&nbsp;op(<b><i>A</i></b>,<b><i>v</i></b>)<br>
+                vector/matrix&nbsp;op(<b><i>v</i></b>,<b><i>B</i></b>)&nbsp;<sup><a href="#arop_fn4" title="also vector/vector">4)</a></sup></th>
+            <th>matrix/matrix<br>op(<b><i>A</i></b>,<b><i>B</i></b>)</th>
+            <th>Description</th>
+          </tr>
+          <tr><td colspan="7">&nbsp;<br>Arithmetic operators and functions</td></tr>
+          <tr>
+            <td nowrap><code>add, +</code></td>
+            <td nowrap><code>OP_ADD</code></td>
+            <td nowrap><i>z</i> = <i>a</i>+<i>b</i></td>
+            <td nowrap><b><i>Z</i></b> = (<i>a<sub>ik</sub></i>+<i>b</i>)<br>
+                       <b><i>Z</i></b> = (<i>a</i>+<i>b<sub>ik</sub></i>)</td>
+            <td nowrap><b><i>Z</i></b> = (<i>a<sub>ik</sub></i>+<i>v<sub>i</sub></i>)<br>
+                       <b><i>Z</i></b> = (<i>v<sub>i</sub></i>+<i>b<sub>ik</sub></i>)</td>
+            <td nowrap><b><i>Z</i></b> = <b><i>A</i></b>+<b><i>B</i></b></td>
+            <td nowrap>Addition</td>
+          </tr>
+          <tr>
+            <td nowrap><code>lsadd</code></td>
+            <td nowrap><code>OP_LSADD</code></td>
+            <td nowrap><i>z</i> = -log(<i>e</i><sup>-<i>a</i></sup>+<i>e</i><sup>-<i>b</i></sup>)</td>
+            <td nowrap><b><i>Z</i></b> = (-log(<i>e</i><sup>-<i>a<sub>ik</sub></i></sup>+<i>e</i><sup>-<i>b</i></sup>))<br>
+                       <b><i>Z</i></b> = (-log(<i>e</i><sup>-<i>a</i></sup>+<i>e</i><sup>-<i>b<sub>ik</sub></i></sup>))</td>
+            <td nowrap><b><i>Z</i></b> = (-log(<i>e</i><sup>-<i>a<sub>ik</sub></i></sup>+<i>e</i><sup>-<i>v<sub>i</sub></i></sup>))<br>
+                       <b><i>Z</i></b> = (-log(<i>e</i><sup>-<i>v<sub>i</sub></i></sup>+<i>e</i><sup>-<i>b<sub>ik</sub></i></sup>))</td>
+            <td nowrap><b>Z</b> = (-log(<i>e</i><sup>-<i>a<sub>ik</sub></i></sup>+<i>e</i><sup>-<i>b<sub>ik</sub></i></sup>))</td>
+            <td nowrap>Log. semiring addition</td>
+          </tr>
+          <tr>
+            <td><code>expadd</code></td>
+            <td><code>OP_EXPADD</code></td>
+            <td nowrap><i>z</i> = log(<i>e</i><sup><i>a</i></sup>+<i>e</i><sup><i>b</i></sup>)</td>
+            <td nowrap><b><i>Z</i></b> = (log(<i>e</i><sup><i>a<sub>ik</sub></i></sup>+<i>e</i><sup><i>b</i></sup>))<br>
+                       <b><i>Z</i></b> = (log(<i>e</i><sup><i>a</i></sup>+<i>e</i><sup><i>b<sub>ik</sub></i></sup>))</td>
+            <td nowrap><b><i>Z</i></b> = (log(<i>e</i><sup><i>a<sub>ik</sub></i></sup>+<i>e</i><sup><i>v<sub>i</sub></i></sup>))<br>
+                       <b><i>Z</i></b> = (log(<i>e</i><sup><i>v<sub>i</sub></i></sup>+<i>e</i><sup><i>b<sub>ik</sub></i></sup>))</td>
+            <td nowrap><b>Z</b> = (log(<i>e</i><sup><i>a<sub>ik</sub></i></sup>+<i>e</i><sup><i>b<sub>ik</sub></i></sup>))</td>
+            <td>Exponential addition</td>
+          </tr>
+          <tr>
+            <td nowrap><code>diff, -</code></td>
+            <td nowrap><code>OP_DIFF</code></td>
+            <td nowrap><i>z</i> = <i>a</i>-<i>b</i></td>
+            <td nowrap><b><i>Z</i></b> = (<i>a<sub>ik</sub></i>-<i>b</i>)<br>
+                       <b><i>Z</i></b> = (<i>a</i>-<i>b<sub>ik</sub></i>)</td>
+            <td nowrap><b><i>Z</i></b> = (<i>a<sub>ik</sub></i>-<i>v<sub>i</sub></i>)<br>
+                       <b><i>Z</i></b> = (<i>v<sub>i</sub></i>-<i>b<sub>ik</sub></i>)</td>
+            <td nowrap><b><i>Z</i></b> = <b><i>A</i></b>-<b><i>B</i></b></td>
+            <td nowrap>Subtraction</td>
+          </tr>
+          <tr>
+            <td nowrap><code>absdiff</code></td>
+            <td nowrap><code>OP_ABSDIFF</code></td>
+            <td nowrap><i>z</i> = |<i>a</i>-<i>b</i>|</td>
+            <td nowrap><b><i>Z</i></b> = (|<i>a<sub>ik</sub></i>-<i>b</i>|)<br>
+                       <b><i>Z</i></b> = (|<i>a</i>-<i>b<sub>ik</sub></i>|)</td>
+            <td nowrap><b><i>Z</i></b> = (|<i>a<sub>ik</sub></i>-<i>v<sub>i</sub></i>|)<br>
+                       <b><i>Z</i></b> = (|<i>v<sub>i</sub></i>-<i>b<sub>ik</sub></i>|)</td>
+            <td nowrap><b><i>Z</i></b> = (|<i>a<sub>ik</sub></i>-<i>b<sub>ik</sub></i>|)</td>
+            <td nowrap>Absolute difference</td>
+          </tr>
+          <tr>
+            <td nowrap><code>qabsdiff</code></td>
+            <td nowrap><code>OP_QABSDIFF</code></td>
+            <td nowrap><i>z</i> = |<i>a</i>-<i>b</i>|<sup><i>2</i></sup></td>
+            <td nowrap><b><i>Z</i></b> = (|<i>a<sub>ik</sub></i>-<i>b</i>|<sup><i>2</i></sup>)<br>
+                       <b><i>Z</i></b> = (|<i>a</i>-<i>b<sub>ik</sub></i>|<sup><i>2</i></sup>)</td>
+            <td nowrap><b><i>Z</i></b> = (|<i>a<sub>ik</sub></i>-<i>v<sub>i</sub></i>|<sup><i>2</i></sup>)<br>
+                       <b><i>Z</i></b> = (|<i>v<sub>i</sub></i>-<i>b<sub>ik</sub></i>|<sup><i>2</i></sup>)</td>
+            <td nowrap><b><i>Z</i></b> = (|<i>a<sub>ik</sub></i>-<i>b<sub>ik</sub></i>|<sup><i>2</i></sup>)</td>
+            <td nowrap>Quadratic absolute difference</td>
+          </tr>
+          <tr>
+            <td nowrap><code>qdiff</code></td>
+            <td nowrap><code>OP_QDIFF</code></td>
+            <td nowrap><i>z</i> = (<i>a</i>-<i>b</i>)<sup>2</sup></td>
+            <td nowrap><b><i>Z</i></b> = ((<i>a<sub>ik</sub></i>-<i>b</i>)<sup>2</sup>)<br>
+                       <b><i>Z</i></b> = ((<i>a</i>-<i>b<sub>ik</sub></i>)<sup>2</sup>)</td>
+            <td nowrap><b><i>Z</i></b> = ((<i>a<sub>ik</sub></i>-<i>v<sub>i</sub></i>)<sup>2</sup>)<br>
+                       <b><i>Z</i></b> = ((<i>v<sub>i</sub></i>-<i>b<sub>ik</sub></i>)<sup>2</sup>)</td>
+            <td nowrap><b><i>Z</i></b> = ((<i>a<sub>ik</sub></i>-<i>b<sub>ik</sub></i>)<sup>2</sup>)</td>
+            <td nowrap>Quadratic difference</td>
+          </tr>
+          <tr>
+            <td nowrap><code>mult, *</code></td>
+            <td nowrap><code>OP_MULT</code></td>
+            <td nowrap><i>z</i> = <i>a</i>&middot;<i>b</i></td>
+            <td nowrap><b><i>Z</i></b> = (<i>a<sub>ik</sub></i>&middot;<i>b</i>)<br>
+                       <b><i>Z</i></b> = (<i>a</i>&middot;<i>b<sub>ik</sub></i>)</td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap><b><i>Z</i></b> = <b><i>A</i></b>&middot;<b><i>B</i></b></td>
+            <td nowrap>Multiplication</td>
+          </tr>
+          <tr>
+            <td nowrap><code>.*</code></td>
+            <td nowrap><code>OP_MULT_EL</code></td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap><b><i>Z</i></b> = (<i>a<sub>ik</sub></i>&middot;<i>b</i>)<br>
+                       <b><i>Z</i></b> = (<i>a</i>&middot;<i>b<sub>ik</sub></i>)</td>
+            <td nowrap><b><i>Z</i></b> = (<i>a<sub>ik</sub></i>&middot;<i>v<sub>i</sub></i>)<br>
+                       <b><i>Z</i></b> = (<i>v<sub>i</sub></i>&middot;<i>b<sub>ik</sub></i>)</td>
+            <td nowrap><b><i>Z</i></b> = (<i>a<sub>ik</sub></i>&middot;<i>b<sub>ik</sub></i>)</td>
+            <td nowrap>Elementwise multiplication</td>
+          </tr>
+          <tr>
+            <td nowrap><code>.*.</code></td>
+            <td nowrap><code>OP_MULT_KRON</code></td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap><b><i>Z</i></b> = (<i>a<sub>ik</sub></i>&middot;<b><i>v</i></b>)<br>
+                       <b><i>Z</i></b> = (<i>v<sub>i</sub></i>&middot;<b>B</b>)</td>
+            <td nowrap><b><i>Z</i></b> = (<i>a<sub>ik</sub></i>&middot;<b><i>B</i></b>)</td>
+            <td nowrap>Kronecker product</td>
+          </tr>
+          <tr>
+            <td nowrap><code>akat</code></td>
+            <td nowrap><code>OP_MULT_AKAT</code></td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap><b><i>Z</i></b> = <b><i>A</i></b>&middot;<b><i>B</i></b>&middot;<b><i>A</i></b>'
+                       <sup><a href="#arop_fn1" title="Matrix/matrices must be square">1)</a></sup></td>
+            <td nowrap>Matrix product <b><i>A</i></b>&middot;<b><i>B</i></b>&middot;<b><i>A</i></b>'</td>
+          </tr>
+          <tr>
+            <td nowrap><code>div, /</code></td>
+            <td nowrap><code>OP_DIV</code></td>
+            <td nowrap><i>z</i> = <i>a</i>/<i>b</i></td>
+            <td nowrap><b><i>Z</i></b> = (<i>a<sub>ik</sub></i>/<i>b</i>)<br>
+                       <b><i>Z</i></b> = (<i>a</i>/<i>b<sub>ik</sub></i>)</td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap><b><i>Z</i></b> = <b><i>A</i></b>/<b><i>B</i></b> <sup><a href="arop_fn!!" title="NOT YET IMPLEMENTED!" style="color:red">!!)</a></sup></td>
+            <td nowrap>Division</td>
+          </tr>
+          <tr>
+            <td nowrap><code>\</code></td>
+            <td nowrap><code>OP_LDIV</code></td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap><b><i>Z</i></b> = <b><i>A</i></b>\<b><i>B</i></b> <sup><a href="arop_fn!!" title="NOT YET IMPLEMENTED!" style="color:red">!!)</a></sup></td>
+            <td nowrap>Left division</td>
+          </tr>
+          <tr>
+            <td nowrap><code>./</code></td>
+            <td nowrap><code>OP_DIV_EL</code></td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap><b><i>Z</i></b> = (<i>a<sub>ik</sub></i>/<i>b</i>)<br>
+                       <b><i>Z</i></b> = (<i>a</i>/<i>b<sub>ik</sub></i>)</td>
+            <td nowrap><b><i>Z</i></b> = (<i>a<sub>ik</sub></i>/<i>v<sub>i</sub></i>)<br>
+                       <b><i>Z</i></b> = (<i>v<sub>i</sub></i>/<i>b<sub>ik</sub></i>)</td>
+            <td nowrap><b><i>Z</i></b> = (<i>a<sub>ik</sub></i>/<i>b<sub>ik</sub></i>)</td>
+            <td nowrap>Elementwise division</td>
+          </tr>
+          <tr>
+            <td nowrap><code>mod, %</code></td>
+            <td nowrap><code>OP_MOD</code></td>
+            <td nowrap><i>z</i> = <i>a</i>%<i>b</i></td>
+            <td nowrap><b><i>Z</i></b> = (<i>a<sub>ik</sub></i>%<i>b</i>)<br>
+                       <b><i>Z</i></b> = (<i>a</i>%<i>b<sub>ik</sub></i>)</td>
+            <td nowrap><b><i>Z</i></b> = (<i>a<sub>ik</sub></i>%<i>v<sub>i</sub></i>)<br>
+                       <b><i>Z</i></b> = (<i>v<sub>i</sub></i>%<i>b<sub>ik</sub></i>)</td>
+            <td nowrap><b><i>Z</i></b> = (<i>a<sub>ik</sub></i>%<i>b<sub>ik</sub></i>)</td>
+            <td nowrap>Modulus</td>
+          </tr>
+          <tr>
+            <td nowrap><code>lnl</code></td>
+            <td nowrap><code>OP_LNL</code></td>
+            <td nowrap><i>z</i> = max(log(<i>a</i>,<i>b</i>))</td>
+            <td nowrap><b><i>Z</i></b> = (max(log(<i>a<sub>ik</sub></i>,<i>b</i>)))<br>
+                       <b><i>Z</i></b> = (max(log(<i>a</i>,<i>b<sub>ik</sub></i>)))</td>
+            <td nowrap><b><i>Z</i></b> = (max(log(<i>a<sub>ik</sub></i>,<i>v<sub>i</sub></i>)))<br>
+                       <b><i>Z</i></b> = (max(log(<i>v<sub>i</sub></i>,<i>b<sub>ik</sub></i>)))</td>
+            <td nowrap><b><i>Z</i></b> = (max(log(<i>a<sub>ik</sub></i>,<i>b<sub>ik</sub></i>)))</td>
+            <td nowrap>Natural logarithm, limited</td>
+          </tr>
+          <tr>
+            <td nowrap><code>pow, ^</code></td>
+            <td nowrap><code>OP_POWER</code></td>
+            <td nowrap><i>z</i> = <i>a</i><sup><i>b</i></sup></td>
+            <td nowrap><b><i>Z</i></b> = <b><i>A</i></b><sup><i>b</i></sup> <sup><a href="#arop_fn1" title="Matrix/matrices must be square">1)</a></sup><br>
+                       <b><i>Z</i></b> = <i>a</i><sup><b><i>B</i></b></sup> <sup><a href="#arop_fn1" title="Matrix/matrices must be square">1)</a></sup></td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap>Power</td>
+          </tr>
+          <tr>
+            <td nowrap><code>.^</code></td>
+            <td nowrap><code>OP_POW_EL</code></td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap><b><i>Z</i></b> = (<i>a<sub>ik</sub></i><sup><i>b</i></sup>)<br>
+                       <b><i>Z</i></b> = (<i>a</i><sup><i>b<sub>ik</sub></i></sup>)</td>
+            <td nowrap><b><i>Z</i></b> = (<i>a<sub>ik</sub></i><sup><i>v<sub>i</sub></i></sup>)<br>
+                       <b><i>Z</i></b> = (<i>v<sub>i</sub></i><sup><i>b<sub>ik</sub></i></sup>)</td>
+            <td nowrap><b><i>Z</i></b> = (<i>a<sub>ik</sub></i><sup><i>b<sub>ik</sub></i></sup>)</td>
+            <td nowrap>Elementwise power</td>
+          </tr>
+          <tr>
+            <td nowrap><code>over</code></td>
+            <td nowrap><code>OP_NOVERK</code></td>
+            <td nowrap><table summary="">
+              <tr>
+                <td rowspan="2" class="hidden" style="vertical-align:middle"><i>z</i> =</td>
+                <td rowspan="2" class="hidden" style="vertical-align:middle; font-size:16pt">(</td>
+                <td class="hidden"><i>a</i></td>
+                <td rowspan="2" class="hidden" style="vertical-align:middle; font-size:16pt">)</td>
+              </tr>
+              <tr><td class="hidden"><i>b</i></td></tr>
+            </table></td>
+            <td nowrap><table style="margin-bottom:-5pt" summary="">
+              <tr>
+                <td rowspan="2" class="hidden" style="vertical-align:middle"><i><b>Z</b></i> =</td>
+                <td rowspan="2" class="hidden" style="vertical-align:middle; font-size:16pt">(</td>
+                <td class="hidden"><i>a<sub>ik</sub></i></td>
+                <td rowspan="2" class="hidden" style="vertical-align:middle; font-size:16pt">)</td>
+              </tr>
+              <tr><td class="hidden"><i>b</i></td></tr>
+            </table><br><table style="margin-top:-5pt" summary="">
+              <tr>
+                <td rowspan="2" class="hidden" style="vertical-align:middle"><i><b>Z</b></i> =</td>
+                <td rowspan="2" class="hidden" style="vertical-align:middle; font-size:16pt">(</td>
+                <td class="hidden"><i>a</i></td>
+                <td rowspan="2" class="hidden" style="vertical-align:middle; font-size:16pt">)</td>
+              </tr>
+              <tr><td class="hidden"><i>b<sub>ik</sub></i></td></tr>
+            </table></td>
+            <td nowrap><table style="margin-bottom:-5pt" summary="">
+              <tr>
+                <td rowspan="2" class="hidden" style="vertical-align:middle"><i><b>Z</b></i> =</td>
+                <td rowspan="2" class="hidden" style="vertical-align:middle; font-size:16pt">(</td>
+                <td class="hidden"><i>a<sub>ik</sub></i></td>
+                <td rowspan="2" class="hidden" style="vertical-align:middle; font-size:16pt">)</td>
+              </tr>
+              <tr><td class="hidden"><i>v<sub>i</sub></i></td></tr>
+            </table><br><table style="margin-top:-5pt" summary="">
+              <tr>
+                <td rowspan="2" class="hidden" style="vertical-align:middle"><i><b>Z</b></i> =</td>
+                <td rowspan="2" class="hidden" style="vertical-align:middle; font-size:16pt">(</td>
+                <td class="hidden"><i>v<sub>i</sub></i></td>
+                <td rowspan="2" class="hidden" style="vertical-align:middle; font-size:16pt">)</td>
+              </tr>
+              <tr><td class="hidden"><i>b<sub>ik</sub></i></td></tr>
+            </table></td>
+            <td nowrap><table summary="">
+              <tr>
+                <td rowspan="2" class="hidden" style="vertical-align:middle"><i><b>Z</b></i> =</td>
+                <td rowspan="2" class="hidden" style="vertical-align:middle; font-size:16pt">(</td>
+                <td class="hidden"><i>a<sub>ik</sub></i></td>
+                <td rowspan="2" class="hidden" style="vertical-align:middle; font-size:16pt">)</td>
+              </tr>
+              <tr><td class="hidden"><i>b<sub>ik</sub></i></td></tr>
+            </table></td>
+            <td nowrap>n over k</td>
+          </tr>
+          <tr>
+            <td nowrap><code>gauss</code></td>
+            <td nowrap><code>OP_GAUSS</code></td>
+            <td nowrap><i>z</i> = <i>e</i><span style="vertical-align:super">-<i>a</i><sup>2</sup>/<i>b</i><sup>2</sup></span></td>
+            <td nowrap><b><i>Z</i></b> = (<i>e</i><span style="vertical-align:super">-<i>a<sub>ik</sub></i><sup>2</sup>/<i>b</i><sup>2</sup></span>)<br>
+                       <b><i>Z</i></b> = (<i>e</i><span style="vertical-align:super">-<i>a</i><sup>2</sup>/<i>b<sub>ik</sub></i><sup>2</sup></span>)</td>
+            <td nowrap><b><i>Z</i></b> = (<i>e</i><span style="vertical-align:super">-<i>a<sub>ik</sub></i><sup>2</sup>/<i>v<sub>i</sub></i><sup>2</sup></span>)<br>
+                       <b><i>Z</i></b> = (<i>e</i><span style="vertical-align:super">-<i>v<sub>i</sub></i><sup>2</sup>/<i>b<sub>ik</sub></i><sup>2</sup></span>)</td>
+            <td nowrap><b><i>Z</i></b> = (<i>e</i><span style="vertical-align:super">-<i>a<sub>ik</sub></i><sup>2</sup>/<i>b<sub>ik</sub></i><sup>2</sup></span>)</td>
+            <td nowrap>Gaussian function</td>
+          </tr>
+          <tr>
+            <td nowrap><code>sigmoid</code></td>
+            <td nowrap><code>OP_SIGMOID</code></td>
+            <td nowrap><i>z</i> = 1/(1-<i>e</i><sup><i>a</i>/<i>b</i></sup>)</td>
+            <td nowrap><b><i>Z</i></b> = (1/(1-<i>e</i><sup><i>a<sub>ik</sub></i>/<i>b</i></sup>))<br>
+                       <b><i>Z</i></b> = (1/(1-<i>e</i><sup><i>a</i>/<i>b<sub>ik</sub></i></sup>))</td>
+            <td nowrap><b><i>Z</i></b> = (1/(1-<i>e</i><sup><i>a<sub>ik</sub></i>/<i>v<sub>i</sub></i></sup>))<br>
+                       <b><i>Z</i></b> = (1/(1-<i>e</i><sup><i>v<sub>i</sub></i>/<i>b<sub>ik</sub></i></sup>))</td>
+            <td nowrap><b><i>Z</i></b> = (1/(1-<i>e</i><sup><i>a<sub>ik</sub></i>/<i>b<sub>ik</sub></i></sup>))</td>
+            <td nowrap>Sigmoid function</td>
+          </tr>
+          <tr>
+            <td nowrap><code>max</code></td>
+            <td nowrap><code>OP_MAX</code></td>
+            <td nowrap><i>z</i> = max(<i>a</i>,<i>b</i>)</td>
+            <td nowrap><b><i>Z</i></b> = max(<i>a<sub>ik</sub></i>,<i>b</i>)<br>
+                       <b><i>Z</i></b> = max(<i>a</i>,<i>b<sub>ik</sub></i>)</td>
+            <td nowrap><b><i>Z</i></b> = max(<i>a<sub>ik</sub></i>,<i>v<sub>i</sub></i>)<br>
+                       <b><i>Z</i></b> = max(<i>v<sub>i</sub></i>,<i>b<sub>ik</sub></i>)</td>
+            <td nowrap><b><i>Z</i></b> = max(<i>a<sub>ik</sub></i>,<i>b<sub>ik</sub></i>)</td>
+            <td nowrap>Maximum</td>
+          </tr>
+          <tr>
+            <td nowrap><code>amax</code></td>
+            <td nowrap><code>OP_AMAX</code></td>
+            <td nowrap><i>z</i> = max(|<i>a</i>|,|<i>b</i>|)</td>
+            <td nowrap><b><i>Z</i></b> = max(|<i>a<sub>ik</sub></i>|,|<i>b</i>|)<br>
+                       <b><i>Z</i></b> = max(|<i>a</i>|,|<i>b<sub>ik</sub></i>|)</td>
+            <td nowrap><b><i>Z</i></b> = max(|<i>a<sub>ik</sub></i>|,|<i>v<sub>i</sub></i>|)<br>
+                       <b><i>Z</i></b> = max(|<i>v<sub>i</sub></i>|,|<i>b<sub>ik</sub></i>|)</td>
+            <td nowrap><b><i>Z</i></b> = max(|<i>a<sub>ik</sub></i>|,|<i>b<sub>ik</sub></i>|)</td>
+            <td nowrap>Absolute maximum</td>
+          </tr>
+          <tr>
+            <td nowrap><code>amax</code></td>
+            <td nowrap><code>OP_SMAX</code></td>
+            <td nowrap><table summary="">
+              <tr>
+                <td rowspan="2" class="hidden" style="vertical-align:middle"><i>z</i> =</td>
+                <td rowspan="2" class="hidden" style="vertical-align:middle; font-size:16pt">{</td>
+                <td class="hidden"><i>a</i></td>
+                <td class="hidden">: |<i>a</i>|&gt;|<i>b</i>|</td>
+              </tr>
+              <tr>
+                <td class="hidden"><i>b</i></td>
+                <td class="hidden">: otherwise</td>
+              </tr>
+            </table></td>
+            <td nowrap><table style="margin-bottom:-5pt" summary="">
+              <tr>
+                <td rowspan="2" class="hidden" style="vertical-align:middle"><i><b>Z</b></i> =</td>
+                <td rowspan="2" class="hidden" style="vertical-align:middle; font-size:16pt">{</td>
+                <td class="hidden"><i>a<sub>ik</sub></i></td>
+                <td class="hidden">: |<i>a<sub>ik</sub></i>|&gt;|<i>b</i>|</td>
+              </tr>
+              <tr>
+                <td class="hidden"><i>b</i></td>
+                <td class="hidden">: otherwise</td>
+              </tr>
+            </table><br><table style="margin-top:-5pt" summary="">
+              <tr>
+                <td rowspan="2" class="hidden" style="vertical-align:middle"><i><b>Z</b></i> =</td>
+                <td rowspan="2" class="hidden" style="vertical-align:middle; font-size:16pt">{</td>
+                <td class="hidden"><i>a</i></td>
+                <td class="hidden">: |<i>a</i>|&gt;|<i>b<sub>ik</sub></i>|</td>
+              </tr>
+              <tr>
+                <td class="hidden"><i>b<sub>ik</sub></i></td>
+                <td class="hidden">: otherwise</td>
+              </tr>
+            </table></td>
+            <td nowrap><table style="margin-bottom:-5pt" summary="">
+              <tr>
+                <td rowspan="2" class="hidden" style="vertical-align:middle"><i><b>Z</b></i> =</td>
+                <td rowspan="2" class="hidden" style="vertical-align:middle; font-size:16pt">{</td>
+                <td class="hidden"><i>a<sub>ik</sub></i></td>
+                <td class="hidden">: |<i>a<sub>ik</sub></i>|&gt;|<i>v<sub>i</sub></i>|</td>
+              </tr>
+              <tr>
+                <td class="hidden"><i>v<sub>i</sub></i></td>
+                <td class="hidden">: otherwise</td>
+              </tr>
+            </table><br><table style="margin-top:-5pt" summary="">
+              <tr>
+                <td rowspan="2" class="hidden" style="vertical-align:middle"><i><b>Z</b></i> =</td>
+                <td rowspan="2" class="hidden" style="vertical-align:middle; font-size:16pt">{</td>
+                <td class="hidden"><i>v<sub>i</sub></i></td>
+                <td class="hidden">: |<i>v<sub>i</sub></i>|&gt;|<i>b<sub>ik</sub></i>|</td>
+              </tr>
+              <tr>
+                <td class="hidden"><i>b<sub>ik</sub></i></td>
+                <td class="hidden">: otherwise</td>
+              </tr>
+            </table></td>
+            <td nowrap><table summary="">
+              <tr>
+                <td rowspan="2" class="hidden" style="vertical-align:middle"><i><b>Z</b></i> =</td>
+                <td rowspan="2" class="hidden" style="vertical-align:middle; font-size:16pt">{</td>
+                <td class="hidden"><i>a<sub>ik</sub></i></td>
+                <td class="hidden">: |<i>a<sub>ik</sub></i>|&gt;|<i>b<sub>ik</sub></i>|</td>
+              </tr>
+              <tr>
+                <td class="hidden"><i>b<sub>ik</sub></i></td>
+                <td class="hidden">: otherwise</td>
+              </tr>
+            </table></td>
+            <td nowrap>Signed absolute maximum</td>
+          </tr>
+          <tr>
+            <td nowrap><code>min</code></td>
+            <td nowrap><code>OP_MIN</code></td>
+            <td nowrap><i>z</i> = min(<i>a</i>,<i>b</i>)</td>
+            <td nowrap><b><i>Z</i></b> = min(<i>a<sub>ik</sub></i>,<i>b</i>)<br>
+                       <b><i>Z</i></b> = min(<i>a</i>,<i>b<sub>ik</sub></i>)</td>
+            <td nowrap><b><i>Z</i></b> = min(<i>a<sub>ik</sub></i>,<i>v<sub>i</sub></i>)<br>
+                       <b><i>Z</i></b> = min(<i>v<sub>i</sub></i>,<i>b<sub>ik</sub></i>)</td>
+            <td nowrap><b><i>Z</i></b> = min(<i>a<sub>ik</sub></i>,<i>b<sub>ik</sub></i>)</td>
+            <td nowrap>Minimum</td>
+          </tr>
+          <tr>
+            <td nowrap><code>amin</code></td>
+            <td nowrap><code>OP_AMIN</code></td>
+            <td nowrap><i>z</i> = min(|<i>a</i>|,|<i>b</i>|)</td>
+            <td nowrap><b><i>Z</i></b> = min(|<i>a<sub>ik</sub></i>|,|<i>b</i>|)<br>
+                       <b><i>Z</i></b> = min(|<i>a</i>|,|<i>b<sub>ik</sub></i>|)</td>
+            <td nowrap><b><i>Z</i></b> = min(|<i>a<sub>ik</sub></i>|,|<i>v<sub>i</sub></i>|)<br>
+                       <b><i>Z</i></b> = min(|<i>v<sub>i</sub></i>|,|<i>b<sub>ik</sub></i>|)</td>
+            <td nowrap><b><i>Z</i></b> = min(|<i>a<sub>ik</sub></i>|,|<i>b<sub>ik</sub></i>|)</td>
+            <td nowrap>Absolute minimum</td>
+          </tr>
+          <tr>
+            <td nowrap><code>amin</code></td>
+            <td nowrap><code>OP_SMIN</code></td>
+            <td nowrap><table summary="">
+              <tr>
+                <td rowspan="2" class="hidden" style="vertical-align:middle"><i>z</i> =</td>
+                <td rowspan="2" class="hidden" style="vertical-align:middle; font-size:16pt">{</td>
+                <td class="hidden"><i>a</i></td>
+                <td class="hidden">: |<i>a</i>|&lt;|<i>b</i>|</td>
+              </tr>
+              <tr>
+                <td class="hidden"><i>b</i></td>
+                <td class="hidden">: otherwise</td>
+              </tr>
+            </table></td>
+            <td nowrap><table style="margin-bottom:-5pt" summary="">
+              <tr>
+                <td rowspan="2" class="hidden" style="vertical-align:middle"><i><b>Z</b></i> =</td>
+                <td rowspan="2" class="hidden" style="vertical-align:middle; font-size:16pt">{</td>
+                <td class="hidden"><i>a<sub>ik</sub></i></td>
+                <td class="hidden">: |<i>a<sub>ik</sub></i>|&lt;|<i>b</i>|</td>
+              </tr>
+              <tr>
+                <td class="hidden"><i>b</i></td>
+                <td class="hidden">: otherwise</td>
+              </tr>
+            </table><br><table style="margin-top:-5pt" summary="">
+              <tr>
+                <td rowspan="2" class="hidden" style="vertical-align:middle"><i><b>Z</b></i> =</td>
+                <td rowspan="2" class="hidden" style="vertical-align:middle; font-size:16pt">{</td>
+                <td class="hidden"><i>a</i></td>
+                <td class="hidden">: |<i>a</i>|&lt;|<i>b<sub>ik</sub></i>|</td>
+              </tr>
+              <tr>
+                <td class="hidden"><i>b<sub>ik</sub></i></td>
+                <td class="hidden">: otherwise</td>
+              </tr>
+            </table></td>
+            <td nowrap><table style="margin-bottom:-5pt" summary="">
+              <tr>
+                <td rowspan="2" class="hidden" style="vertical-align:middle"><i><b>Z</b></i> =</td>
+                <td rowspan="2" class="hidden" style="vertical-align:middle; font-size:16pt">{</td>
+                <td class="hidden"><i>a<sub>ik</sub></i></td>
+                <td class="hidden">: |<i>a<sub>ik</sub></i>|&lt;|<i>v<sub>i</sub></i>|</td>
+              </tr>
+              <tr>
+                <td class="hidden"><i>v<sub>i</sub></i></td>
+                <td class="hidden">: otherwise</td>
+              </tr>
+            </table><br><table style="margin-top:-5pt" summary="">
+              <tr>
+                <td rowspan="2" class="hidden" style="vertical-align:middle"><i><b>Z</b></i> =</td>
+                <td rowspan="2" class="hidden" style="vertical-align:middle; font-size:16pt">{</td>
+                <td class="hidden"><i>v<sub>i</sub></i></td>
+                <td class="hidden">: |<i>v<sub>i</sub></i>|&lt;|<i>b<sub>ik</sub></i>|</td>
+              </tr>
+              <tr>
+                <td class="hidden"><i>b<sub>ik</sub></i></td>
+                <td class="hidden">: otherwise</td>
+              </tr>
+            </table></td>
+            <td nowrap><table summary="">
+              <tr>
+                <td rowspan="2" class="hidden" style="vertical-align:middle"><i><b>Z</b></i> =</td>
+                <td rowspan="2" class="hidden" style="vertical-align:middle; font-size:16pt">{</td>
+                <td class="hidden"><i>a<sub>ik</sub></i></td>
+                <td class="hidden">: |<i>a<sub>ik</sub></i>|&lt;|<i>b<sub>ik</sub></i>|</td>
+              </tr>
+              <tr>
+                <td class="hidden"><i>b<sub>ik</sub></i></td>
+                <td class="hidden">: otherwise</td>
+              </tr>
+            </table></td>
+            <td nowrap>Signed absolute minimum</td>
+          </tr>
+          <tr><td colspan="7">&nbsp;<br>Logical and comparison operators</td></tr>
+          <tr>
+            <td nowrap><code>or, ||</code></td>
+            <td nowrap><code>OP_OR</code></td>
+            <td nowrap><i>z</i> = <i>a</i>&or;<i>b</i></td>
+            <td nowrap><i>z</i> = <i><b>A</b></i>&ne;<code>NULL</code> &or; <i>b</i><br>
+                       <i>z</i> = <i>a</i> &or; <i><b>B</b></i>&ne;<code>NULL</code></td>
+            <td nowrap><i>z</i> = <i><b>A</b></i>&ne;<code>NULL</code> &or; <i><b>v</b></i>&ne;<code>NULL</code><br>
+                       <i>z</i> = <i><b>v</b></i>&ne;<code>NULL</code> &or; <i><b>B</b></i>&ne;<code>NULL</code></td>
+            <td nowrap><i>z</i> = <i><b>A</b></i>&ne;<code>NULL</code> &or; <i><b>B</b></i>&ne;<code>NULL</code></td>
+            <td nowrap>Logical or</td>
+          </tr>
+          <tr>
+            <td nowrap><code>.||</code></td>
+            <td nowrap><code>OP_OR_EL</code></td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap><b><i>Z</i></b> = (<i>a<sub>ik</sub></i> &or; <i>b</i>)<br>
+                       <b><i>Z</i></b> = (<i>a</i> &or; <i>b<sub>ik</sub></i>)</td>
+            <td nowrap><b><i>Z</i></b> = (<i>a<sub>ik</sub></i> &or; <i>v<sub>i</sub></i>)<br>
+                       <b><i>Z</i></b> = (<i>v<sub>i</sub></i> &or; <i>b<sub>ik</sub></i>)</td>
+            <td nowrap><b><i>Z</i></b> = (<i>a<sub>ik</sub></i> &or; <i>b<sub>ik</sub></i>)</td>
+            <td nowrap>Elementwise logical or</td>
+          </tr>
+          <tr>
+            <td nowrap><code>bitor, |</code></td>
+            <td nowrap><code>OP_BITOR</code></td>
+            <td nowrap><i>z</i> = <i>a</i>|<i>b</i></td>
+            <td nowrap><i>z</i> = <i><b>A</b></i>&ne;<code>NULL</code> | <i>b</i><br>
+                       <i>z</i> = <i>a</i> | <i><b>B</b></i>&ne;<code>NULL</code></td>
+            <td nowrap><i>z</i> = <i><b>A</b></i>&ne;<code>NULL</code> | <i><b>v</b></i>&ne;<code>NULL</code><br>
+                       <i>z</i> = <i><b>v</b></i>&ne;<code>NULL</code> | <i><b>B</b></i>&ne;<code>NULL</code></td>
+            <td nowrap><i>z</i> = <i><b>A</b></i>&ne;<code>NULL</code> | <i><b>B</b></i>&ne;<code>NULL</code></td>
+            <td nowrap>Bitwise or</td>
+          </tr>
+          <tr>
+            <td nowrap><code>.|</code></td>
+            <td nowrap><code>OP_BITOR_EL</code></td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap><b><i>Z</i></b> = (<i>a<sub>ik</sub></i> | <i>b</i>)<br>
+                       <b><i>Z</i></b> = (<i>a</i> | <i>b<sub>ik</sub></i>)</td>
+            <td nowrap><b><i>Z</i></b> = (<i>a<sub>ik</sub></i> | <i>v<sub>i</sub></i>)<br>
+                       <b><i>Z</i></b> = (<i>v<sub>i</sub></i> | <i>b<sub>ik</sub></i>)</td>
+            <td nowrap><b><i>Z</i></b> = (<i>a<sub>ik</sub></i> | <i>b<sub>ik</sub></i>)</td>
+            <td nowrap>Elementwise bitwise or</td>
+          <tr>
+            <td nowrap><code>and, &amp;&amp;</code></td>
+            <td nowrap><code>OP_AND</code></td>
+            <td nowrap><i>z</i> = <i>a</i>&and;<i>b</i></td>
+            <td nowrap><i>z</i> = <i><b>A</b></i>&ne;<code>NULL</code> &and; <i>b</i><br>
+                       <i>z</i> = <i>a</i> &and; <i><b>B</b></i>&ne;<code>NULL</code></td>
+            <td nowrap><i>z</i> = <i><b>A</b></i>&ne;<code>NULL</code> &and; <i><b>v</b></i>&ne;<code>NULL</code><br>
+                       <i>z</i> = <i><b>v</b></i>&ne;<code>NULL</code> &and; <i><b>B</b></i>&ne;<code>NULL</code></td>
+            <td nowrap><i>z</i> = <i><b>A</b></i>&ne;<code>NULL</code> &and; <i><b>B</b></i>&ne;<code>NULL</code></td>
+            <td nowrap>Logical and</td>
+          </tr>
+          <tr>
+            <td nowrap><code>.&amp;&amp;</code></td>
+            <td nowrap><code>OP_AND_EL</code></td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap><b><i>Z</i></b> = (<i>a<sub>ik</sub></i> &and; <i>b</i>)<br>
+                       <b><i>Z</i></b> = (<i>a</i> &and; <i>b<sub>ik</sub></i>)</td>
+            <td nowrap><b><i>Z</i></b> = (<i>a<sub>ik</sub></i> &and; <i>v<sub>i</sub></i>)<br>
+                       <b><i>Z</i></b> = (<i>v<sub>i</sub></i> &and; <i>b<sub>ik</sub></i>)</td>
+            <td nowrap><b><i>Z</i></b> = (<i>a<sub>ik</sub></i> &and; <i>b<sub>ik</sub></i>)</td>
+            <td nowrap>Elementwise logical and</td>
+          </tr>
+          <tr>
+            <td nowrap><code>bitand, &amp;</code></td>
+            <td nowrap><code>OP_BITAND</code></td>
+            <td nowrap><i>z</i> = <i>a</i>&amp;<i>b</i></td>
+            <td nowrap><i>z</i> = <i><b>A</b></i>&ne;<code>NULL</code> &amp; <i>b</i><br>
+                       <i>z</i> = <i>a</i> &amp; <i><b>B</b></i>&ne;<code>NULL</code></td>
+            <td nowrap><i>z</i> = <i><b>A</b></i>&ne;<code>NULL</code> &amp; <i><b>v</b></i>&ne;<code>NULL</code><br>
+                       <i>z</i> = <i><b>v</b></i>&ne;<code>NULL</code> &amp; <i><b>B</b></i>&ne;<code>NULL</code></td>
+            <td nowrap><i>z</i> = <i><b>A</b></i>&ne;<code>NULL</code> &amp; <i><b>B</b></i>&ne;<code>NULL</code></td>
+            <td nowrap>Bitwise and</td>
+          </tr>
+          <tr>
+            <td nowrap><code>.&amp;</code></td>
+            <td nowrap><code>OP_BITAND_EL</code></td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap><b><i>Z</i></b> = (<i>a<sub>ik</sub></i> &amp; <i>b</i>)<br>
+                       <b><i>Z</i></b> = (<i>a</i> &amp; <i>b<sub>ik</sub></i>)</td>
+            <td nowrap><b><i>Z</i></b> = (<i>a<sub>ik</sub></i> &amp; <i>v<sub>i</sub></i>)<br>
+                       <b><i>Z</i></b> = (<i>v<sub>i</sub></i> &amp; <i>b<sub>ik</sub></i>)</td>
+            <td nowrap><b><i>Z</i></b> = (<i>a<sub>ik</sub></i> &amp; <i>b<sub>ik</sub></i>)</td>
+            <td nowrap>Elementwise bitwise and</td>
+          </tr>
+          <tr>
+            <td nowrap><code>eq, ==</code></td>
+            <td nowrap><code>OP_EQUAL</code></td>
+            <td nowrap><i>z</i> := <i>a</i>=<i>b</i></td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap><i>z</i> := <i><b>A</b></i>=<i><b>v</b></i><br>
+                       <i>z</i> := <i><b>v</b></i>=<i><b>B</b></i></td>
+            <td nowrap><i>z</i> := <i><b>A</b></i>=<i><b>B</b></i></td>
+            <td nowrap>Equal</td>
+          </tr>
+          <tr>
+            <td nowrap><code>.==</code></td>
+            <td nowrap><code>OP_EQUAL_EL</code></td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap><b><i>Z</i></b> := (<i>a<sub>ik</sub></i>=<i>b</i>)<br>
+                       <b><i>Z</i></b> := (<i>a</i>=<i>b<sub>ik</sub></i>)</td>
+            <td nowrap><b><i>Z</i></b> := (<i>a<sub>ik</sub></i>=<i>v<sub>i</sub></i>)<br>
+                       <b><i>Z</i></b> := (<i>v<sub>i</sub></i>=<i>b<sub>ik</sub></i>)</td>
+            <td nowrap><b><i>Z</i></b> := (<i>a<sub>ik</sub></i>=<i>b<sub>ik</sub></i>)</td>
+            <td nowrap>Elementwise equal</td>
+          </tr>
+          <tr>
+            <td nowrap><code>neq, !=</code></td>
+            <td nowrap><code>OP_NEQUAL</code></td>
+            <td nowrap><i>z</i> := <i>a</i>&ne;<i>b</i></td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap><i>z</i> := <i><b>A</b></i>&ne;=<i><b>v</b></i><br>
+                       <i>z</i> := <i><b>v</b></i>&ne;<i><b>B</b></i></td>
+            <td nowrap><i>z</i> := <i><b>A</b></i>&ne;<i><b>B</b></i></td>
+            <td nowrap>Not equal</td>
+          </tr>
+          <tr>
+            <td nowrap><code>.!=</code></td>
+            <td nowrap><code>OP_NEQUAL_EL</code></td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap><b><i>Z</i></b> := (<i>a<sub>ik</sub></i>&ne;<i>b</i>)<br>
+                       <b><i>Z</i></b> := (<i>a</i>&ne;<i>b<sub>ik</sub></i>)</td>
+            <td nowrap><b><i>Z</i></b> := (<i>a<sub>ik</sub></i>&ne;<i>v<sub>i</sub></i>)<br>
+                       <b><i>Z</i></b> := (<i>v<sub>i</sub></i>&ne;<i>b<sub>ik</sub></i>)</td>
+            <td nowrap><b><i>Z</i></b> := (<i>a<sub>ik</sub></i>&ne;<i>b<sub>ik</sub></i>)</td>
+            <td nowrap>Elementwise not equal</td>
+          </tr>
+          <tr>
+            <td nowrap><code>less, &lt;</code></td>
+            <td nowrap><code>OP_LESS</code></td>
+            <td nowrap><i>z</i> := <i>a</i>&lt;<i>b</i></td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap>Less than</td>
+          </tr>
+          <tr>
+            <td nowrap><code>.&lt;</code></td>
+            <td nowrap><code>OP_LESS_EL</code></td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap><b><i>Z</i></b> := (<i>a<sub>ik</sub></i>&lt;<i>b</i>)<br>
+                       <b><i>Z</i></b> := (<i>a</i>&lt;<i>b<sub>ik</sub></i>)</td>
+            <td nowrap><b><i>Z</i></b> := (<i>a<sub>ik</sub></i>&lt;<i>v<sub>i</sub></i>)<br>
+                       <b><i>Z</i></b> := (<i>v<sub>i</sub></i>&lt;<i>b<sub>ik</sub></i>)</td>
+            <td nowrap><b><i>Z</i></b> := (<i>a<sub>ik</sub></i>&lt;<i>b<sub>ik</sub></i>)</td>
+            <td nowrap>Elementwise less than</td>
+          </tr>
+          <tr>
+            <td nowrap><code>greater, &gt;</code></td>
+            <td nowrap><code>OP_GREATER</code></td>
+            <td nowrap><i>z</i> := <i>a</i>&gt;<i>b</i></td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap>Greater than</td>
+          </tr>
+          <tr>
+            <td nowrap><code>.&gt;</code></td>
+            <td nowrap><code>OP_GREATER_EL</code></td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap><b><i>Z</i></b> := (<i>a<sub>ik</sub></i>&gt;<i>b</i>)<br>
+                       <b><i>Z</i></b> := (<i>a</i>&gt;<i>b<sub>ik</sub></i>)</td>
+            <td nowrap><b><i>Z</i></b> := (<i>a<sub>ik</sub></i>&gt;<i>v<sub>i</sub></i>)<br>
+                       <b><i>Z</i></b> := (<i>v<sub>i</sub></i>&gt;<i>b<sub>ik</sub></i>)</td>
+            <td nowrap><b><i>Z</i></b> := (<i>a<sub>ik</sub></i>&gt;<i>b<sub>ik</sub></i>)</td>
+            <td nowrap>Elementwise greater than</td>
+          </tr>
+          <tr>
+            <td nowrap><code>leq, &lt;=</code></td>
+            <td nowrap><code>OP_LEQ</code></td>
+            <td nowrap><i>z</i> := <i>a</i>&le;<i>b</i></td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap>Less or equal</td>
+          </tr>
+          <tr>
+            <td nowrap><code>.&lt;=</code></td>
+            <td nowrap><code>OP_LEQ_EL</code></td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap><b><i>Z</i></b> := (<i>a<sub>ik</sub></i>&le;<i>b</i>)<br>
+                       <b><i>Z</i></b> := (<i>a</i>&le;<i>b<sub>ik</sub></i>)</td>
+            <td nowrap><b><i>Z</i></b> := (<i>a<sub>ik</sub></i>&le;<i>v<sub>i</sub></i>)<br>
+                       <b><i>Z</i></b> := (<i>v<sub>i</sub></i>&le;<i>b<sub>ik</sub></i>)</td>
+            <td nowrap><b><i>Z</i></b> := (<i>a<sub>ik</sub></i>&le;<i>b<sub>ik</sub></i>)</td>
+            <td nowrap>Elementwise less or equal</td>
+          </tr>
+          <tr>
+            <td nowrap><code>geq, &gt;=</code></td>
+            <td nowrap><code>OP_GEQ</code></td>
+            <td nowrap><i>z</i> := <i>a</i>&ge;<i>b</i></td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap>Greater or equal</td>
+          </tr>
+          <tr>
+            <td nowrap><code>.&gt;=</code></td>
+            <td nowrap><code>OP_GEQ_EL</code></td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap><b><i>Z</i></b> := (<i>a<sub>ik</sub></i>&ge;<i>b</i>)<br>
+                       <b><i>Z</i></b> := (<i>a</i>&ge;<i>b<sub>ik</sub></i>)</td>
+            <td nowrap><b><i>Z</i></b> := (<i>a<sub>ik</sub></i>&ge;<i>v<sub>i</sub></i>)<br>
+                       <b><i>Z</i></b> := (<i>v<sub>i</sub></i>&ge;<i>b<sub>ik</sub></i>)</td>
+            <td nowrap><b><i>Z</i></b> := (<i>a<sub>ik</sub></i>&ge;<i>b<sub>ik</sub></i>)</td>
+            <td nowrap>Elementwise greater or equal</td>
+          </tr>
+          <tr><td colspan="7">&nbsp;<br>Vector operators</td></tr>
+          <tr>
+            <td nowrap><code>ccf</code></td>
+            <td nowrap><code>OP_CCF</code></td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap><i><b>w</b></i> = ccf(<i><b>v</b></i>,<i><b>u</b></i>)
+                       <sup><a href="#arop_fn1" title="Vector/vector ONLY">5)</a></sup></td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap>Cross correlation function</td>
+          </tr>
+          <tr>
+            <td nowrap><code>conv</code></td>
+            <td nowrap><code>OP_CONV</code></td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap><i><b>w</b></i> = <i><b>v</b></i>*<i><b>u</b></i>
+                       <sup><a href="#arop_fn1" title="Vector/vector ONLY">5)</a></sup></td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap>Convolution</td>
+          </tr>
+        </table>
+
+        <table class="indent">
+          <tr><td colspan="2" class="hidden">&nbsp;</td></tr>
+          <tr>
+            <td class="hidden"><a name="arop_fn1"></a><sup>1)</sup>&nbsp;</td>
+            <td class="hidden">Matrix/matrices must be square</td>
+          </tr>
+          <tr>
+            <td class="hidden"><a name="arop_fn2"></a><sup>2)</sup>&nbsp;</td>
+            <td class="hidden">Matrix/matrices must have real eigenvalues</td>
+          </tr>
+          <tr>
+            <td class="hidden"><a name="arop_fn3"></a><sup>3)</sup>&nbsp;</td>
+            <td class="hidden">also vector/scalar op(<b><i>v</i></b>,b) and scalar/vector op(a,<b><i>v</i></b>)</td>
+          </tr>
+          <tr>
+            <td class="hidden"><a name="arop_fn4"></a><sup>4)</sup>&nbsp;</td>
+            <td class="hidden">also vector/vector op(<b><i>v</i></b>,<b><i>u</i></b>)</td>
+          </tr>
+          <tr>
+            <td class="hidden"><a name="arop_fn5"></a><sup>5)</sup>&nbsp;</td>
+            <td class="hidden">vector/vector <em>only</em></td>
+          </tr>
+          <tr>
+            <td class="hidden"><a name="arop_fn6"></a><sup>6)</sup>&nbsp;</td>
+            <td class="hidden">Matrix/matrices must be symmetric</td>
+          </tr>
+          <tr>
+            <td class="hidden"><a name="arop_fn!!"></a><sup>!!)</sup>&nbsp;</td>
+            <td class="hidden" style="color:red">Not yet implemented</td>
+          </tr>
+        </table>
+
+      </div>
+    </div>
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <a name="sigops"></a>
+    <div id="clp_sigops">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td nowrap width="25%" class="navbar">
+            Signal Operators
+          </td>
+          <td nowrap width="75%" class="navbar" style="text-align:right;">
+            <a class="navbar" href="javascript:__PrintSection('clp_sigops','Signal Operators','..');"
+            ><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle;" alt="Print"></a> 
+            <a class="navbar" href="../home.html">Home</a>
+            <a class="navbar" href="index.html">Reference</a>
+            <a class="navbar" href="#top">Top</a>
+          </td>
+        </tr>
+      </table>
+      <div class="mframe2">
+        <span class="TODO">[<b>TODO@gitgun:</b> ...]</span>
+      </div>
+    </div>
+
+  </div>
 
   <div class="footer">End of page</div>
 
