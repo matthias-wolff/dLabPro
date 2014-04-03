@@ -165,7 +165,7 @@ END_MAN
 OPTION:  /german
 COMMENT: switch to german
 CODE:
-	printf("\nMake it German, baby!");
+	printf("\nSwitch to German...");
 END_CODE
 MAN:  
   This option switches to german greeting.
@@ -184,13 +184,6 @@ CODE:
   else
     printf("\n\n%s\n\n",_this->m_greetingEnglish);
 END_CODE
-
-OPTION:  /adm
-COMMENT: Adaptive delta modulation (method -dm)
-
-METHOD:  -dm
-COMMENT: Delta modulation example
-SYNTAX:  (data idSrc, long nOversample, data idDst)
 
 ## dLabpro interface code
 INITCODE:

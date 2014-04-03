@@ -4,7 +4,7 @@
 // AUTHOR : Matthias Wolff
 // PACKAGE: dLabPro/programs
 // 
-// Copyright 2013 dLabPro contributors and others (see COPYRIGHT file) 
+// Copyright 2013-2014 dLabPro contributors and others (see COPYRIGHT file)
 // - Chair of System Theory and Speech Technology, TU Dresden
 // - Chair of Communications Engineering, BTU Cottbus
 // 
@@ -73,8 +73,7 @@ void usage()
 {
   dlp_set_binary_name("dLabPro");
   printf("\n// %s",dlp_get_version_info());
-  printf("\n\n   SYNOPSIS:"                                                  );
-  printf(  "\n     Signal processing and pattern recognition toolbox."       );
+  printf("\n\n   A signal processing and pattern recognition toolbox."       );
   printf("\n\n   USAGE:"                                                     );
   printf(  "\n     dlabpro <options> <script file> <script args...>"         );
   printf("\n\n   ARGUMENTS:"                                                 );
@@ -90,11 +89,8 @@ void usage()
   printf(  "\n        --trace-mem  Print list of memory leaks at shutdown"   );
   printf(  "\n        --verbose=N  Set verbose level of root function"       );
   printf(  "\n        --version    Print version info and exit"              );
-  printf("\n\n    (c) 1995-2013 IAS, TU Dresden, Germany"                    );
-  printf(  "\n        www.ias.et.tu-dresden.de"                              );
-  printf("\n\n    (c) 2011-2013 Chair of Communications Engineering,"        );
-  printf(  "\n        BTU Cottbus, Germany"                                  );
-  printf(  "\n        www.tu-cottbus.de/kommunikationstechnik"               );
+  printf("\n\n    Copyright 2013-2014 dLabPro contributors and others (see"  );
+  printf(  "\n    COPYRIGHT file)"                                           );
   printf("\n\n"                                                              );
 }
 

@@ -1622,7 +1622,7 @@ INT16 CGEN_PUBLIC CData_Status(CData* _this)
     }
   }
   printf("\n"); dlp_fprint_x_line(stdout,'-',dlp_maxprintcols());
-  printf("\nUse <-print> to view the data content.\n");
+  printf("\n   To view the data content type %s -print;\n",BASEINST(_this)->m_lpInstanceName);
   return O_K;
 }
 

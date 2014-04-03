@@ -171,7 +171,7 @@ INT16 CGEN_PUBLIC CFunction::Status()
   printf("\n                        01: %s",m_iAi2?m_iAi2->m_lpInstanceName:"-");
   printf("\n                        02: %s",_this->m_lpInstanceName);
   printf("\n"); dlp_fprint_x_line(stdout,'-',dlp_maxprintcols());
-  printf("\n   Use <-list> for further information.\n");
+  printf("\n   For more information type -list help;\n");
   return O_K;
 }
 
@@ -312,7 +312,7 @@ INT16 CGEN_PUBLIC CFunction::List(const char* lpsWhat)
       PrintCode(5,"   ");
       dlp_fprint_x_line(stdout,'-',dlp_maxprintcols());
     }
-    printf("\n   For more information use: -list help;");
+    printf("\n   For more information type -list help;");
   }
   else if (dlp_strcmp(lpsWhat,"help"   )==0)
   {
