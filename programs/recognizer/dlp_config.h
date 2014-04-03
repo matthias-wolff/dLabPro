@@ -34,11 +34,14 @@
 /*#define __NODN3STREAM   / * Do not use DNorm3 serialization (CDn3Stream) */
 /*#define __NOZLIB        / * Do not use file compression (zlib)           */
 #define __UNENTANGLE_FST  /* Stand alone class CFst            */
-#define __NOREADLINE    /* Do not use readline library*/
 #define __DEFAULT_FILEFORMAT_DN3 /* Set default file format for -save and -restore to dn3 */
 /*#define __DEFAULT_FILEFORMAT_XML / * Set default file format for -save and -restore to xml */
 /*#define __NOLIBSNDFILE            / * Do not use Libsndfile library */
 #define __MAX_TYPE_32BIT   /* Use maximum 32bit for numeric data types */
+
+#ifndef __NOREADLINE
+#define __NOREADLINE    /* Do not use readline library*/
+#endif /* #ifndef __NOREADLINE */
 
 /*#define __OPTIMIZATIONS      / * Switch ALL optimizations OFF */
 #ifdef __OPTIMIZATIONS
