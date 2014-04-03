@@ -29,7 +29,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <meta http-equiv="Content-Style-Type" content="text/css">
-  <title>dLabPro Basics</title>
+  <title>Tutorial 1 - dLabPro Basics</title>
   <link rel=stylesheet type="text/css" href="../default.css">
 </head>
 <script type="text/javascript">
@@ -48,10 +48,10 @@ if (top==self)
     <table width="100%" cellpadding="0" cellspacing="0" border="0">
       <tr>
         <td nowrap width="25%" class="navbar">
-          dLabPro Basics
+          Tutorial 1 - dLabPro Basics
         </td>
         <td nowrap width="75%" class="navbar" style="text-align:right;">
-          <a class="navbar" href="javascript:__PrintSection('clp_top','dLabPro Basics','..');"
+          <a class="navbar" href="javascript:__PrintSection('clp_top','Tutorial 1 - dLabPro Basics','..');"
           ><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle;" 
           alt="Print"></a>
           <a class="navbar" href="../home.html">Home</a>
@@ -68,14 +68,15 @@ if (top==self)
               <li class="linklist"><a class="Linklist" href="#session">Running a dLabPro Session</a></li>
               <li class="linklist"><a class="Linklist" href="#syntax" >The Syntax</a></li>
               <li class="linklist"><a class="Linklist" href="#stack"  >The Stack</a></li>
-              <li class="linklist"><a class="Linklist" href="#Classes">Working with Classes</a></li>
+              <li class="linklist"><a class="Linklist" href="#classes">Working with Classes</a></li>
+              <li class="linklist"><a class="Linklist" href="#further">Further Reading</a></li>
             </ul>
           </td>
           <td width="50%">
             <h3 style="margin-top:2pt; margin-bottom:2pt">Related Topics</h3>
             <ul class="linklist">
-              <li class="linklist"><a class="Linklist" href="t002.html">Variables and Data Containers</a></li>
-              <li class="linklist"><a class="Linklist" href="t003.html">Writing Scripts</a></li>
+              <li class="linklist"><a class="Linklist" href="t002.html">Tutorial 2 - Variables and Data Containers</a></li>
+              <li class="linklist"><a class="Linklist" href="t003.html">Tutorial 3 - Writing Scripts</a></li>
             </ul>
           </td>
         </tr>
@@ -891,7 +892,8 @@ dLabPro&gt;_</pre>
    |
    '-- INSTANCES
 
-----------------------------------------------------------------------</pre>
+----------------------------------------------------------------------
+dLabPro&gt;_</pre>
     <p>This help table shows the members of the <a
       href="../automatic/helloworld.html"><code class="link">Helloworld</code></a>-class.
     Remember that method identifiers usually start with '-' and option
@@ -900,28 +902,31 @@ dLabPro&gt;_</pre>
     has got one method (<a
       href="../automatic/helloworld.html#mth_-sayhello"><code class="link">-sayhello</code></a>)
     which we'll use now:</p>
-    <pre class="code">dLabPro&gt; iHello -sayhello;  <span class="c-cmt"># Invoke method -sayhello</span>
+    <pre class="code">dLabPro&gt; iHello -sayhello;         <span class="c-cmt"># Invoke method -sayhello</span>
 
 
 Hello World!
 
-dLabPro&gt; /german -sayhello <span class="c-cmt"># Invoke the same method nut using the option /german</span>
+dLabPro&gt; iHello /german -sayhello; <span class="c-cmt"># Invoke the same method nut using the option /german</span>
 
-Switch to German...        <span class="c-cmt"># Printed by /german</span>
+Switch to German...                <span class="c-cmt"># Printed by /german</span>
 
-Hallo Welt!                <span class="c-cmt"># Printed by -sayhello</span>
-</pre>
+Hallo Welt!                        <span class="c-cmt"># Printed by -sayhello</span>
+
+dLabPro&gt;_</pre>
     <p>To manipulate the displayed text you can change the content of the
     field <a href="../automatic/helloworld.html#fld_greeting_english"><code
       class="link">greeting_english</code></a> with the method <a
       href="../automatic/function.html#mth_-set"><code class="link">-set</code></a>
     (of the interpreter) like this:</p>
-    <pre class="code">dLabPro.iHello&gt; "hi!" iHello <a
+    <pre class="code">dLabPro&gt; "hi!" iHello <a
       href="../automatic/function.html#mth_-set"><code class="link">-set</code></a> greeting_english;
-dLabPro&gt; iHello -sayhello
+dLabPro&gt; iHello -sayhello;
 
 
-hi!</pre>
+hi!
+
+dLabPro&gt;_</pre>
     <p>Remember the basic structure of dLabPro commands (see section "<a
       href="#synt">The syntax</a>" above):</p>
     <pre class="code">[&lt;arguments&gt;] &lt;instance&gt; [&lt;options&gt;] &lt;method&gt; [&lt;postfix_arguments&gt;];</pre>
@@ -949,14 +954,39 @@ hi!</pre>
       class="c-cmt"># Delete instance iHello</span>
 dLabPro&gt; iHello                         <span
       class="c-cmt"># What happened to iHello?</span>
-error function1010: 'iHello' undefined.
+error function1011: 'iHello' undefined.
 dLabPro&gt;_                               <span
       class="c-cmt"># iHello doesn't exist anymore</span></pre>
     <p>Please note that instances have a global scope in dLabPro. They
     will be visible at any place and at any time from instanciation to
     destruction. However, instanciation takes place locally on function
     level. Local instance identifiers shadow global ones. For details see
-    <a href="t003.html">tutorial III "Writing Scripts"</a>.</p>
+    <a href="t003.html">Tutorial 3 - "Writing Scripts"</a>.</p>
+    </div>
+  </div>
+
+  <a name="further"></a>
+  <div id="clp_further">
+    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+      <tr>
+        <td nowrap width="25%" class="navbar">
+          Further Reading
+        </td>
+        <td nowrap width="75%" class="navbar" style="text-align:right;">
+          <a class="navbar" href="javascript:__PrintSection('clp_further','Further Reading','..');"
+          ><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle;" alt="Print"></a> 
+        </td>
+      </tr>
+    </table>
+    <div class="mframe2">
+      <ul class="linklist">
+        <li class="linklist"><a href="../automatic/function.html"><img
+        src="../resources/class_obj.gif" width="16" height="16" border="0"
+        style="vertical-align:middle" alt="class icon">&nbsp;Class function</a></li>
+        <li class="linklist"><a href="t002.html"><img
+        src="../resources/file.gif" width="16" height="16" border="0"
+        style="vertical-align:middle" alt="class icon">&nbsp;Tutorial 2 - Variables and Data Containers</a></li>
+      </ul>
     </div>
   </div>
   
