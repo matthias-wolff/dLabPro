@@ -401,7 +401,7 @@ INT16 CHelloworld_OnGermanSet(CDlpObject* __this)
 {
 	GET_THIS_VIRTUAL_RV(CHelloworld,NOT_EXEC);
 	{
-  	printf(   "\nMake it German, baby!");
+  	printf(  "\nSwitch to German...");
 	}
 
 	return O_K;
