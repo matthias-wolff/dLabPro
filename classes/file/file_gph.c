@@ -557,7 +557,7 @@ INT16 CGEN_PROTECTED CDlpFile_Gph_ImportFsm
       }
       else
       {
-        nBuf2=strtod(sBuf2,NULL);
+        nBuf2=dlp_strtod(sBuf2,NULL);
         CData_Dstore(gi.idTd,nBuf2,nXT,gi.nIcTdW);
       }
 

@@ -36,13 +36,8 @@ static const opcode_table __ctab[] =
   { OP_TRUE   ,1,0,"d:o", "Logical true"              ,"TRUE"    },
   { OP_FALSE  ,1,0,"d:o", "Logical false"             ,"FALSE"   },
   { OP_NULL   ,1,0,"d:o", "Null pointer"              ,"NULL"    },
-  { OP_INF    ,1,0,"d:o", "Infinity"                  ,"INF"     },
-  { OP_NINF   ,1,0,"d:o", "Minus infinity"            ,"-INF"    },
-  { OP_NAN    ,1,0,"d:o", "Not-a-number"              ,"NAN"     },
-  { OP_NAN    ,1,0,"d:o", "Not-a-number"              ,"nan"     },
   { OP_PI     ,1,0,"d:o", "Pi"                        ,"PI"      },
   { OP_E      ,1,0,"d:o", "Euler constant"            ,"E"       },
-  { OP_I      ,1,0,"d:o", "Imaginary unit"            ,"I"       },
   /* do not change the following line!               */
   /* The values are used for end of table detection. */
   { -1        ,0,0,"",    "?"                         ,""        }
@@ -452,12 +447,8 @@ COMPLEX64 dlp_constant(INT16 nOpcode)
   case OP_TRUE : { return CMPLX(1.);                                                     }
   case OP_FALSE: { return CMPLX(0.);                                                     }
   case OP_NULL : { return CMPLX(0.);                                                     }
-  case OP_INF  : { return CMPLX(dlp_scalop(1.,0.,OP_DIV));                               }
-  case OP_NINF : { return CMPLX(-dlp_scalop(1.,0.,OP_DIV));                              }
-  case OP_NAN  : { return CMPLX(dlp_scalop(0.,0.,OP_DIV));                               }
   case OP_PI   : { return CMPLX(F_PI);                                                   }
   case OP_E    : { return CMPLX(F_E);                                                    }
-  case OP_I    : { return CMPLXY(0,1);                                                   }
   default      : { DLPASSERT(FMSG("Unknown constant operation code")); return CMPLX(0.); }
   }
 }

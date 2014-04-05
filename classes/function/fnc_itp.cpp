@@ -241,8 +241,11 @@ INT16 CGEN_PROTECTED CFunction::ItpAsNumber(const char* lpsToken)
   char   sBuf[L_SSTR];
   if (!dlp_strlen(lpsToken)                ) return NOT_EXEC;                   // Empty token cannot be a number
   if (NOK(dlp_sscanx(lpsToken,T_COMPLEX,&n))) return NOT_EXEC;                  // Scan token, failure -> not a number
-  dlp_sprintx(sBuf,(char*)&n,T_COMPLEX,TRUE);                                   // HACK: 64-bit compatible print
-  FNC_MSG(2,"  - Constant number %s",dlp_strtrimleft(sBuf),0,0,0,0);            // Protocol
+  IFCHECKEX(2)
+  {
+    dlp_sprintx(sBuf,(char*)&n,T_COMPLEX,TRUE);                                 //   HACK: 64-bit compatible print
+    FNC_MSG(2,"  - Constant number %s",dlp_strtrimleft(sBuf),0,0,0,0);          //   Protocol
+  }
   PushNumber(n);                                                                // Push the number
   return O_K;                                                                   // Yes, it was a number
 }

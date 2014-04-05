@@ -403,6 +403,12 @@ typedef struct { FLOAT64 x; FLOAT64 y; } COMPLEX64;
 #define F_PI             3.1415926535897932384626433832795                      /* PI                                */
 #define F_E              2.7182818284590452353602874713527                      /* Euler constant                    */
 #define F_TINY           1e-20                                                  /* Tiny float or double              */
+#ifndef NAN                                                                     /* Should be defined <math.h> >>     */
+#define NAN              ((FLOAT64)(0.0/0.0))                                   /*   If not: define own NaN          */
+#endif                                                                          /* <<                                */
+#ifndef INFINITY                                                                /* Should be defined <math.h> >>     */
+#define INFINITY         ((FLOAT64)(1.0/0.0))                                   /*   If not: define own inf          */
+#endif                                                                          /* <<                                */
 
 /* Defines - Declspecs */
 #ifdef __MSVC
@@ -576,12 +582,8 @@ typedef struct { FLOAT64 x; FLOAT64 y; } COMPLEX64;
 #define OP_TRUE             1                                                   /* Logical true                      */
 #define OP_FALSE            2                                                   /* Logical false                     */
 #define OP_NULL             3                                                   /* Null-pointer                      */
-#define OP_INF              4                                                   /* Infinity                          */
-#define OP_NINF             5                                                   /* Minus infinity                    */
-#define OP_NAN              6                                                   /* Not-a-number                      */
-#define OP_PI               7                                                   /* Pi                                */
-#define OP_E                8                                                   /* Euler constant                    */
-#define OP_I                9                                                   /* Imaginary unit                    */
+#define OP_PI               4                                                   /* Pi                                */
+#define OP_E                5                                                   /* Euler constant                    */
 /* - Logical operations */                                                      /* - - - - - - - - - - - - - - - - - */
 #define OP_OR            1001                                                   /* Logical or                        */
 #define OP_AND           1002                                                   /* Logical and                       */
@@ -1323,6 +1325,7 @@ INT16         dlp_strreplace(char* lpsText, const char* lpsKey, const char* lpsR
 char*         dlp_strsep(char** stringp, const char* delim, char* del);
 INT16         dlp_strstartswith(const char* lpsStr, const char* lpsOther);
 INT16         dlp_strendswith(const char* lpsStr, const char* lpsOther);
+FLOAT64       dlp_strtod(const char* lpsStr, char** lpsEndPtr);
 
 /* Functions - dlp_type.c */
 void          dlp_type_printtab();

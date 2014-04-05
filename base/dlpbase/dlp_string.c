@@ -842,4 +842,45 @@ INT16 dlp_strendswith(const char* lpsStr, const char* lpsOther)
   return TRUE;
 }
 
+/**
+ * Protected implementation of the strtod function. Convert the initial portion
+ * of the string pointed to by <code>lpsStr</code> to a <code>FLOAT64</code>
+ * floating point number.
+ *
+ * <p>NOTE: The strtod function in older MingGWs does not handle <code>nan</code>
+ * and <code>inf</code>.</p>
+ *
+ * @param lpsStr
+ *          The string to be converted.
+ * @param lpsEndPtr
+ *          Fill with a pointer to the first character in <code>lpsStr</code>
+ *          does not belong to the floating point number.
+ * @return The floating point number (or 0. in case of errors).
+ */
+FLOAT64 dlp_strtod(const char* lpsStr, char** lpsEndPtr)
+{
+  FLOAT64 val = 0.;                                                             /* Return value                      */
+  FLOAT64 sgn = 1.;                                                             /* Sign of return value              */
+  char*   tx  = NULL;                                                           /* Auxiliary string pointer          */
+  char*   ty  = NULL;                                                           /* Auxiliary string pointer #2       */
+
+  if (lpsEndPtr!=NULL) *lpsEndPtr = NULL;                                       /* Initialize end pointer            */
+  if (lpsStr==NULL) return 0.;                                                  /* No argument, no service           */
+
+  val = strtod(lpsStr,&ty);                                                     /* Invoke stdlib function            */
+  if (lpsStr==ty)                                                               /* No result -> try for ourselves... */
+  {                                                                             /* >>                                */
+    /* HACK: (for older MinGWs) Convert nan and infinity */                     /*                                   */
+    tx = (char*)lpsStr; while (iswspace(*tx)) tx++;                             /*   Skip leading white spaces       */
+    if (*tx=='-') { tx++; sgn=-1.0; } else if (*tx=='+') tx++;                  /*   Skip + or -                     */
+    if (dlp_strnicmp(tx,"infinity",8)==0) { val = INFINITY; ty = tx+8; }        /*   Test for "infinity"             */
+    else if (dlp_strnicmp(tx,"inf",3)==0) { val = INFINITY; ty = tx+3; }        /*   Test for "inf"                  */
+    else if (dlp_strnicmp(tx,"nan",3)==0) { val = NAN;      ty = tx+3; }        /*   Test for "nan"                  */
+  }                                                                             /* <<                                */
+
+  /* Aftermath */                                                               /* --------------------------------- */
+  if (lpsEndPtr!=NULL) *lpsEndPtr=ty;                                           /* Store end pointer                 */
+  return sgn*val;                                                               /* Return result                     */
+}
+
 /* EOF */

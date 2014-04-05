@@ -500,18 +500,9 @@ INT16 dlp_getx(INT16 nType, void* lpDest)
 INT16 CGEN_IGNORE dlp_sscanc(const char* lpsStr, COMPLEX64* lpnDst) {
   const char* ctx = lpsStr;                                                     /* TODO: ...                         */
   char* tx        = NULL;                                                       /* Char pointer                      */
-  BOOL  bNan      = FALSE;                                                      /* Input is means NaN                */
 
   *lpnDst = CMPLX(0.);                                                          /* Initialize output                 */
-  bNan  = (dlp_stricmp(lpsStr,"nan")==0)||(dlp_stricmp(lpsStr,"-nan")==0);      /* Real NaN                          */
-  bNan |= (dlp_stricmp(lpsStr,"nan+nani")==0);                                  /* Complex NaN                       */
-  if (bNan)                                                                     /* Input is NaN                      */
-  {                                                                             /* >>                                */
-    lpnDst->x=0.0/0.0; lpnDst->y=0.0/0.0;                                       /*   Store complex NaN               */
-    return O_K;                                                                 /*   Return ok                       */
-  }                                                                             /* <<                                */
-
-  lpnDst->x = strtod(ctx,&tx);                                                  /* Get number                        */
+  lpnDst->x = dlp_strtod(ctx,&tx);                                              /* Get number                        */
   if(tx == ctx) {                                                               /* Doesn't start with number         */
     if((*ctx=='i') && (*(ctx+1)=='\0')) {                                       /* Only imaginary unit -> ok         */
       lpnDst->x=0;lpnDst->y= 1;                                                 /*   |                               */
@@ -532,12 +523,12 @@ INT16 CGEN_IGNORE dlp_sscanc(const char* lpsStr, COMPLEX64* lpnDst) {
   case 'i' :                                                                    /*   Is it the imaginary part        */
     lpnDst->y = lpnDst->x;                                                      /*   Store it                        */
     ctx = tx+1;                                                                 /*   Skip 'i'                        */
-    lpnDst->x = strtod(ctx,&tx);                                                /*   Get real part                   */
+    lpnDst->x = dlp_strtod(ctx,&tx);                                            /*   Get real part                   */
     if (*tx=='\0') return O_K;                                                  /*     End of input -> ok            */
     break;
   default:                                                                      /* Number is not imaginary part      */
     ctx = tx;                                                                   /*   Set start                       */
-    lpnDst->y = strtod(ctx,&tx);                                                /*   Get imaginary part              */
+    lpnDst->y = dlp_strtod(ctx,&tx);                                            /*   Get imaginary part              */
     switch(*tx) {                                                               /*   What is next?                   */
     case 'i'  :                                                                 /*     i                             */
       if( *(tx+1)=='\0')                  {              return O_K; } break;   /*       ok                          */
@@ -695,7 +686,7 @@ const char* CGEN_IGNORE dlp_sfmtexactd(const char *fmt,double x){
   static char buf[L_NAMES];
   for(len=15;len<=17;len++){
     snprintf(buf,L_NAMES,fmt,len,x);
-    if(strtod(buf,NULL)==x) break;
+    if(dlp_strtod(buf,NULL)==x) break;
   }
   return buf;
 }
