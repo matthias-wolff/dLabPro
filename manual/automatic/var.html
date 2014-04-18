@@ -104,17 +104,17 @@ var.html var CVar [
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cls">Class <span 
-        class="mid">var</span></a></td>
+        name="cls"></a>Class <span 
+        class="mid">var</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cls','Class var');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -231,13 +231,46 @@ Variable
 
   <h3><a name="cls_members">Class Members</a></h3>
   <table cellpadding="4" cellspacing="0" border="0">
-    <tr><td class="rowgroup" colspan="2"><a name="fld">Fields</a></td></tr>
+    <tr>
+      <td class="rowgroup"><a name="fld">Fields</a></td>
+      <td class="rowgroup" style="text-align:right">
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
     <tr><td colspan="2">This class does not have visible fields.</td></tr>
     <tr><td colspan="2" class="rowempty">&nbsp;</td></tr>
-    <tr><td class="rowgroup" colspan="2"><a name="opt">Options</a></td></tr>
+    <tr>
+      <td class="rowgroup"><a name="opt">Options</a></td>
+      <td class="rowgroup" style="text-align:right">
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
     <tr><td colspan="2">This class does not have options.</td></tr>
     <tr><td colspan="2" class="rowempty">&nbsp;</td></tr>
-    <tr><td class="rowgroup" colspan="2"><a name="mth">Methods</a></td></tr>
+    <tr>
+      <td class="rowgroup"><a name="mth">Methods</a></td>
+      <td class="rowgroup" style="text-align:right">
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
     <tr><td><a href="#mth_*="><code class="link">*=</code></a></td><td><code>&lt;value&gt; &lt;var this&gt; <b>*=</b> </code><br> Multiply variable with value</td></tr>
     <tr><td><a href="#mth_++="><code class="link">++=</code></a></td><td><code>&lt;var this&gt; <b>++=</b> </code><br> Increment variable</td></tr>
     <tr><td><a href="#mth_+="><code class="link">+=</code></a></td><td><code>&lt;value&gt; &lt;var this&gt; <b>+=</b> </code><br> Add value to variable</td></tr>
@@ -253,7 +286,18 @@ Variable
     <tr><td><a href="#mth__="><code class="link">/=</code></a></td><td><code>&lt;value&gt; &lt;var this&gt; <b>/=</b> </code><br> Divide variable by value</td></tr>
     <tr><td><a href="#mth_="><code class="link">=</code></a></td><td><code>&lt;value&gt; &lt;var this&gt; <b>=</b> </code><br> Set variable value</td></tr>
     <tr><td colspan="2" class="rowempty">&nbsp;</td></tr>
-    <tr><td class="rowgroup" colspan="2"><a name="cfn">C/C++ API</a></td></tr>
+    <tr>
+      <td class="rowgroup"><a name="cfn">C/C++ API</a></td>
+      <td class="rowgroup" style="text-align:right">
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
 <tr><td class="rowgroup" colspan="2" style="font-weight:normal"> (see 
 <a href="#mth"><u>method list</u></a>
  for additional C/C++ functions)
@@ -262,7 +306,18 @@ Variable
     <tr><td><a href="#cfn_001"><code class="link">CVar_PopOwnValue</code></a></td><td><code>void <b>CVar_PopOwnValue</b>(CVar _this);<br>protected: void <b>CVar::PopOwnValue</b>();<br></code><br>  Removes the variable's value from the stack.</td></tr>
     <tr><td><a href="#cfn_000"><code class="link">CVar_SetOp</code></a></td><td><code>INT16 <b>CVar_SetOp</b>(CVar _this, const char* lpsOpname);<br>protected: INT16 <b>CVar::SetOp</b>(const char* lpsOpname);<br></code><br>  Polymorphic set operations.</td></tr>
     <tr><td colspan="2" class="rowempty">&nbsp;</td></tr>
-    <tr><td class="rowgroup" colspan="2"><a name="err">Errors</a></td></tr>
+    <tr>
+      <td class="rowgroup"><a name="err">Errors</a></td>
+      <td class="rowgroup" style="text-align:right">
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
     <tr><td><a href="#err_VAR_NOTSUPPORTED"><code class="link">var1001</code></a></td><td> %s not supported%s.</td></tr>
     <tr><td colspan="2" class="rowempty">&nbsp;</td></tr>
   </table>
@@ -270,80 +325,21 @@ Variable
   <img src="../resources/blank_stc.gif" height="10">
   </div>
 
-  <div id="err_VAR_NOTSUPPORTED">
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-    <tr>
-      <td nowrap width="25%" class="navbar"><a 
-        name="err_VAR_NOTSUPPORTED">Error <span 
-        class="mid">var1001</span></a></td>
-      <td nowrap width="75%" class="navbar" style="text-align:right;">
-        <a class="navbar" href="javascript:__PrintSection('err_VAR_NOTSUPPORTED','Class var');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
-        <a class="navbar" href="#fld">Fields</a>
-        <a class="navbar" href="#opt">Options</a>
-        <a class="navbar" href="#mth">Methods</a>
-        <a class="navbar" href="#cfn">C/C++</a>
-      </td>
-    </tr>
-  </table>
-  <div class="mframe"><table cellpadding="0" cellspacing="0" border="0">
-    <tr>
-      <td class="hidden">dLabPro</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Identifier</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden"><code><b>var1001</b></code></td>
-    </tr>
-    <tr>
-      <td class="hidden">&nbsp;</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Error Level</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">EL_ERROR</td>
-    </tr>
-    <tr>
-      <td class="hidden" colspan="5">&nbsp;</td>
-    </tr>
-    <tr>
-      <td class="hidden">C/C++</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Symbol</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden"><code>#define VAR_NOTSUPPORTED -1001</code></td>
-    </tr>
-  </table></div>
-  <div class="mframe2">
-  <h3>Synopsis</h3>
-  <p>
-%s not supported%s.
-  </p>
-  <h3>Description</h3>
-  <h4>      "Polymorphic signatures not supported by method caller."</h4>
-  <p>Some methods (like <a href="#mth_="><code class="link">=</code></a>, <a href="#mth_++="><code class="link">++=</code></a>, <a href="#mth_+="><code class="link">+=</code></a>, etc.) are not supported in dLabPro 2.4 compatibility mode.</p>
-  <h4>       "Operator XXX not supported for this variable type."</h4>
-  <p>Some methods (like <a href="#mth_++="><code class="link">++=</code></a>, <a href="#mth_*="><code class="link">*=</code></a>, etc.) are not supported for all variable types.</p>
-  <!--{{ CUSTOM_DOC -->
-  <!--}} CUSTOM_DOC -->
-  </div>
-  <img src="../resources/blank_stc.gif" height="10">
-  </div>
   <div id="mth_*=">
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_*=">Method <span 
-        class="mid">*=</span></a></td>
+        name="mth_*="></a>Method <span 
+        class="mid">*=</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth_*=','Class var');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -407,17 +403,17 @@ Multiply variable with value
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_++=">Method <span 
-        class="mid">++=</span></a></td>
+        name="mth_++="></a>Method <span 
+        class="mid">++=</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth_++=','Class var');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -481,17 +477,17 @@ Increment variable
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_+=">Method <span 
-        class="mid">+=</span></a></td>
+        name="mth_+="></a>Method <span 
+        class="mid">+=</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth_+=','Class var');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -555,17 +551,17 @@ Add value to variable
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_--=">Method <span 
-        class="mid">--=</span></a></td>
+        name="mth_--="></a>Method <span 
+        class="mid">--=</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth_--=','Class var');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -629,17 +625,17 @@ Decrement variable
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_-=">Method <span 
-        class="mid">-=</span></a></td>
+        name="mth_-="></a>Method <span 
+        class="mid">-=</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth_-=','Class var');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -703,17 +699,17 @@ Subtract value from variable
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_-bset">Method <span 
-        class="mid">-bset</span></a></td>
+        name="mth_-bset"></a>Method <span 
+        class="mid">-bset</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth_-bset','Class var');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -801,17 +797,17 @@ Set boolean value
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_-intv">Method <span 
-        class="mid">-intv</span></a></td>
+        name="mth_-intv"></a>Method <span 
+        class="mid">-intv</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth_-intv','Class var');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -887,17 +883,17 @@ Define interval for randomized selection.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_-iset">Method <span 
-        class="mid">-iset</span></a></td>
+        name="mth_-iset"></a>Method <span 
+        class="mid">-iset</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth_-iset','Class var');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -988,17 +984,17 @@ Set instance value
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_-rset">Method <span 
-        class="mid">-rset</span></a></td>
+        name="mth_-rset"></a>Method <span 
+        class="mid">-rset</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth_-rset','Class var');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1076,17 +1072,17 @@ Assign data instance for randomized selection
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_-sset">Method <span 
-        class="mid">-sset</span></a></td>
+        name="mth_-sset"></a>Method <span 
+        class="mid">-sset</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth_-sset','Class var');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1176,17 +1172,17 @@ Set string value
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_-status">Method <span 
-        class="mid">-status</span></a></td>
+        name="mth_-status"></a>Method <span 
+        class="mid">-status</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth_-status','Class var');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1245,17 +1241,17 @@ Print status of var
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_-vset">Method <span 
-        class="mid">-vset</span></a></td>
+        name="mth_-vset"></a>Method <span 
+        class="mid">-vset</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth_-vset','Class var');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1347,17 +1343,17 @@ Set numeric value
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth__=">Method <span 
-        class="mid">/=</span></a></td>
+        name="mth__="></a>Method <span 
+        class="mid">/=</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth__=','Class var');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1421,17 +1417,17 @@ Divide variable by value
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_=">Method <span 
-        class="mid">=</span></a></td>
+        name="mth_="></a>Method <span 
+        class="mid">=</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth_=','Class var');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1495,17 +1491,17 @@ Set variable value
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_002">C/C++ Function <span 
-        class="mid">CVar_Exec</span></a></td>
+        name="cfn_002"></a>C/C++ Function <span 
+        class="mid">CVar_Exec</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_002','Class var');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1541,17 +1537,17 @@ void <b>CVar_Exec</b>(CVar _this);<br>protected: void <b>CVar::Exec</b>();<br>
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_001">C/C++ Function <span 
-        class="mid">CVar_PopOwnValue</span></a></td>
+        name="cfn_001"></a>C/C++ Function <span 
+        class="mid">CVar_PopOwnValue</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_001','Class var');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1596,17 +1592,17 @@ void <b>CVar_PopOwnValue</b>(CVar _this);<br>protected: void <b>CVar::PopOwnValu
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_000">C/C++ Function <span 
-        class="mid">CVar_SetOp</span></a></td>
+        name="cfn_000"></a>C/C++ Function <span 
+        class="mid">CVar_SetOp</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_000','Class var');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1665,6 +1661,65 @@ lpsOpname
 	<p>
 <code>O_K</code> if successfull, a (negative) error code otherwise
 	</p>
+  <!--{{ CUSTOM_DOC -->
+  <!--}} CUSTOM_DOC -->
+  </div>
+  <img src="../resources/blank_stc.gif" height="10">
+  </div>
+  <div id="err_VAR_NOTSUPPORTED">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td nowrap width="25%" class="navbar"><a 
+        name="err_VAR_NOTSUPPORTED"></a>Error <span 
+        class="mid">var1001</span></td>
+      <td nowrap width="75%" class="navbar" style="text-align:right;">
+        <a class="navbar" href="javascript:__PrintSection('err_VAR_NOTSUPPORTED','Class var');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
+  </table>
+  <div class="mframe"><table cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td class="hidden">dLabPro</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Identifier</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code><b>var1001</b></code></td>
+    </tr>
+    <tr>
+      <td class="hidden">&nbsp;</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Error Level</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">EL_ERROR</td>
+    </tr>
+    <tr>
+      <td class="hidden" colspan="5">&nbsp;</td>
+    </tr>
+    <tr>
+      <td class="hidden">C/C++</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Symbol</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code>#define VAR_NOTSUPPORTED -1001</code></td>
+    </tr>
+  </table></div>
+  <div class="mframe2">
+  <h3>Synopsis</h3>
+  <p>
+%s not supported%s.
+  </p>
+  <h3>Description</h3>
+  <h4>      "Polymorphic signatures not supported by method caller."</h4>
+  <p>Some methods (like <a href="#mth_="><code class="link">=</code></a>, <a href="#mth_++="><code class="link">++=</code></a>, <a href="#mth_+="><code class="link">+=</code></a>, etc.) are not supported in dLabPro 2.4 compatibility mode.</p>
+  <h4>       "Operator XXX not supported for this variable type."</h4>
+  <p>Some methods (like <a href="#mth_++="><code class="link">++=</code></a>, <a href="#mth_*="><code class="link">*=</code></a>, etc.) are not supported for all variable types.</p>
   <!--{{ CUSTOM_DOC -->
   <!--}} CUSTOM_DOC -->
   </div>

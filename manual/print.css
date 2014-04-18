@@ -247,11 +247,15 @@ PRE.code
   margin-bottom: 0pt;
   padding: 6pt;
 }
-.c-cmt,.red
+.c-cmt,.c-key
+{
+	color: black;
+}
+.red
 {
 	color: red;
 }
-.c-key,.blue
+.blue
 {
 	color: rgb(21,74,196)
 }

@@ -576,6 +576,7 @@ public:
 	protected: void HtmlMemberOverview(CList<SCGStr>& htmFileTmpl, INT16 nMemberType);
 	protected: void HtmlAllMembers(CList<SCGStr>& htmFileTmpl, INT16 nMemberType);
 	protected: void HtmlMember(CList<SCGStr>& htmFileTmpl, void* lpSCGMember, INT16 nMemberType);
+	protected: void HtmlNaviBar(CList<SCGStr>& htmFileTmpl);
 	protected: char* HtmlStrCnvt(char* lpDest, char* lpSrc);
 	protected: char* HtmlGetDivId(char* lpStr, void* lpSCGMember, INT16 nMemberType);
 	protected: char* HtmlGetUpnSignature(char* lpStr, void* lpSCGMember, INT16 nMemberType);

@@ -110,17 +110,17 @@ melproc.html MELproc CMELproc [
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cls">Class <span 
-        class="mid">MELproc</span></a></td>
+        name="cls"></a>Class <span 
+        class="mid">MELproc</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cls','Class MELproc');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -484,19 +484,52 @@ The transformation of the linear frequency line into the mel-scale is done by a 
 
   <h3><a name="cls_members">Class Members</a></h3>
   <table cellpadding="4" cellspacing="0" border="0">
-    <tr><td class="rowgroup" colspan="2"><a name="fld">Fields</a></td></tr>
+    <tr>
+      <td class="rowgroup"><a name="fld">Fields</a></td>
+      <td class="rowgroup" style="text-align:right">
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
     <tr><td><a href="#fld_coeff"><code class="link">coeff</code></a></td><td> size of feature vector.</td></tr>
     <tr><td><a href="#fld_mf_type"><code class="link">mf_type</code></a></td><td> Type of melfilter.</td></tr>
     <tr><td><a href="#fld_pade_order"><code class="link">pade_order</code></a></td><td> Pade order for cepstral synthesis filter</td></tr>
 <tr><td colspan="2">[<a href="fbaproc.html#fld" class="code">Inherited fields</a>]</td></tr>
     <tr><td colspan="2" class="rowempty">&nbsp;</td></tr>
-    <tr><td class="rowgroup" colspan="2"><a name="opt">Options</a></td></tr>
+    <tr>
+      <td class="rowgroup"><a name="opt">Options</a></td>
+      <td class="rowgroup" style="text-align:right">
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
     <tr><td><a href="#opt__syn_cep"><code class="link">/syn_cep</code></a></td><td> Use mel-cepstrum to cepstrum transformation and cepstral synthesis filter for synthesis.</td></tr>
     <tr><td><a href="#opt__syn_mcep"><code class="link">/syn_mcep</code></a></td><td> Use mel-cepstral synthesis filter for synthesis.</td></tr>
     <tr><td><a href="#opt__syn_mlsadf"><code class="link">/syn_mlsadf</code></a></td><td> Use MLSADF cepstral synthesis filter for synthesis.</td></tr>
 <tr><td colspan="2">[<a href="fbaproc.html#opt" class="code">Inherited oprtions</a>]</td></tr>
     <tr><td colspan="2" class="rowempty">&nbsp;</td></tr>
-    <tr><td class="rowgroup" colspan="2"><a name="mth">Methods</a></td></tr>
+    <tr>
+      <td class="rowgroup"><a name="mth">Methods</a></td>
+      <td class="rowgroup" style="text-align:right">
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
     <tr><td><a href="#mth_-analyze"><code class="link">-analyze</code></a></td><td><code>&lt;data dSignal&gt; &lt;data dPitch&gt; &lt;data dReal&gt; &lt;data dImag&gt; &lt;MELproc this&gt; <b>-analyze</b> </code><br> Run mel filtering.</td></tr>
     <tr><td><a href="#mth_-dequantize"><code class="link">-dequantize</code></a></td><td><code>&lt;data idFea&gt; &lt;int first&gt; &lt;int count&gt; &lt;int bitwidth&gt; &lt;MELproc this&gt; <b>-dequantize</b> </code><br> This is the inverse of -quantize.</td></tr>
     <tr><td><a href="#mth_-mf2mcep"><code class="link">-mf2mcep</code></a></td><td><code>&lt;data dMel&gt; &lt;data dCep&gt; &lt;int nCepCoeff&gt; &lt;MELproc this&gt; <b>-mf2mcep</b> </code><br> Converts mel-filter coefficients to mel-cepstrum.</td></tr>
@@ -504,7 +537,18 @@ The transformation of the linear frequency line into the mel-scale is done by a 
     <tr><td><a href="#mth_-status"><code class="link">-status</code></a></td><td><code>&lt;MELproc this&gt; <b>-status</b> </code><br> Display status information.</td></tr>
 <tr><td colspan="2">[<a href="fbaproc.html#mth" class="code">Inherited methods</a>]</td></tr>
     <tr><td colspan="2" class="rowempty">&nbsp;</td></tr>
-    <tr><td class="rowgroup" colspan="2"><a name="cfn">C/C++ API</a></td></tr>
+    <tr>
+      <td class="rowgroup"><a name="cfn">C/C++ API</a></td>
+      <td class="rowgroup" style="text-align:right">
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
 <tr><td class="rowgroup" colspan="2" style="font-weight:normal"> (see 
 <a href="#mth"><u>method list</u></a>
  and 
@@ -520,7 +564,18 @@ The transformation of the linear frequency line into the mel-scale is done by a 
     <tr><td><a href="#cfn_001"><code class="link">CMELproc::SynthesizeUsingInto</code></a></td><td><code>protected: virtual INT16 <b>CMELproc::SynthesizeUsingInto</b>(data* idFea, data* idInto, data* idSyn);<br></code><br> </td></tr>
     <tr><td><a href="#cfn_000"><code class="link">CMELproc::SynthesizeUsingPM</code></a></td><td><code>protected: virtual INT16 <b>CMELproc::SynthesizeUsingPM</b>(CData* idFea, CData* idPm, CData* idSyn);<br></code><br> </td></tr>
     <tr><td colspan="2" class="rowempty">&nbsp;</td></tr>
-    <tr><td class="rowgroup" colspan="2"><a name="err">Errors</a></td></tr>
+    <tr>
+      <td class="rowgroup"><a name="err">Errors</a></td>
+      <td class="rowgroup" style="text-align:right">
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
     <tr><td colspan="2">This class does not have errors.</td></tr>
 <tr><td colspan="2">[<a href="fbaproc.html#err" class="code">Inherited errors</a>]</td></tr>
     <tr><td colspan="2" class="rowempty">&nbsp;</td></tr>
@@ -533,17 +588,17 @@ The transformation of the linear frequency line into the mel-scale is done by a 
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="fld_coeff">Field <span 
-        class="mid">coeff</span></a></td>
+        name="fld_coeff"></a>Field <span 
+        class="mid">coeff</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('fld_coeff','Class MELproc');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -609,17 +664,17 @@ size of feature vector.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="fld_mf_type">Field <span 
-        class="mid">mf_type</span></a></td>
+        name="fld_mf_type"></a>Field <span 
+        class="mid">mf_type</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('fld_mf_type','Class MELproc');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -695,17 +750,17 @@ Sets the type of melfilter.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="fld_pade_order">Field <span 
-        class="mid">pade_order</span></a></td>
+        name="fld_pade_order"></a>Field <span 
+        class="mid">pade_order</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('fld_pade_order','Class MELproc');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -776,17 +831,17 @@ Pade order for the cepstral synthesis filter.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="opt__syn_cep">Option <span 
-        class="mid">/syn_cep</span></a></td>
+        name="opt__syn_cep"></a>Option <span 
+        class="mid">/syn_cep</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('opt__syn_cep','Class MELproc');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -825,17 +880,17 @@ Use mel-cepstrum to cepstrum transformation and cepstral synthesis filter for sy
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="opt__syn_mcep">Option <span 
-        class="mid">/syn_mcep</span></a></td>
+        name="opt__syn_mcep"></a>Option <span 
+        class="mid">/syn_mcep</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('opt__syn_mcep','Class MELproc');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -874,17 +929,17 @@ Use mel-cepstral synthesis filter for synthesis.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="opt__syn_mlsadf">Option <span 
-        class="mid">/syn_mlsadf</span></a></td>
+        name="opt__syn_mlsadf"></a>Option <span 
+        class="mid">/syn_mlsadf</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('opt__syn_mlsadf','Class MELproc');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -923,17 +978,17 @@ Use MLSADF cepstral synthesis filter for synthesis.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_-analyze">Method <span 
-        class="mid">-analyze</span></a></td>
+        name="mth_-analyze"></a>Method <span 
+        class="mid">-analyze</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth_-analyze','Class MELproc');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -992,17 +1047,17 @@ Run mel filtering.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_-dequantize">Method <span 
-        class="mid">-dequantize</span></a></td>
+        name="mth_-dequantize"></a>Method <span 
+        class="mid">-dequantize</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth_-dequantize','Class MELproc');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1057,17 +1112,17 @@ This is the inverse of -quantize.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_-mf2mcep">Method <span 
-        class="mid">-mf2mcep</span></a></td>
+        name="mth_-mf2mcep"></a>Method <span 
+        class="mid">-mf2mcep</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth_-mf2mcep','Class MELproc');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1140,17 +1195,17 @@ Converts mel-filter coefficients to mel-cepstrum.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_-quantize">Method <span 
-        class="mid">-quantize</span></a></td>
+        name="mth_-quantize"></a>Method <span 
+        class="mid">-quantize</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth_-quantize','Class MELproc');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1205,17 +1260,17 @@ Feature dependent quantization for (lossy) converting to fixpoint type of specif
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_-status">Method <span 
-        class="mid">-status</span></a></td>
+        name="mth_-status"></a>Method <span 
+        class="mid">-status</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth_-status','Class MELproc');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1272,17 +1327,17 @@ Display status information.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_003">C/C++ Function <span 
-        class="mid">CMELproc::AnalyzeFrame</span></a></td>
+        name="cfn_003"></a>C/C++ Function <span 
+        class="mid">CMELproc::AnalyzeFrame</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_003','Class MELproc');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1323,17 +1378,17 @@ O_K if successfull, NOT_EXEC otherwise
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_007">C/C++ Function <span 
-        class="mid">CMELproc::DequantizeImpl</span></a></td>
+        name="cfn_007"></a>C/C++ Function <span 
+        class="mid">CMELproc::DequantizeImpl</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_007','Class MELproc');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1365,17 +1420,17 @@ public: INT16 <b>CMELproc::DequantizeImpl</b>(CData* idMel, INT32 nCS, INT32 nCC
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_005">C/C++ Function <span 
-        class="mid">CMELproc::OnPfaLambdaChangedImpl</span></a></td>
+        name="cfn_005"></a>C/C++ Function <span 
+        class="mid">CMELproc::OnPfaLambdaChangedImpl</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_005','Class MELproc');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1407,17 +1462,17 @@ protected: virtual INT16 <b>CMELproc::OnPfaLambdaChangedImpl</b>();<br>
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_004">C/C++ Function <span 
-        class="mid">CMELproc::PrepareOutput</span></a></td>
+        name="cfn_004"></a>C/C++ Function <span 
+        class="mid">CMELproc::PrepareOutput</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_004','Class MELproc');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1449,17 +1504,17 @@ public: virtual void <b>CMELproc::PrepareOutput</b>(CData* dResult);<br>
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_006">C/C++ Function <span 
-        class="mid">CMELproc::QuantizeImpl</span></a></td>
+        name="cfn_006"></a>C/C++ Function <span 
+        class="mid">CMELproc::QuantizeImpl</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_006','Class MELproc');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1491,17 +1546,17 @@ public: INT16 <b>CMELproc::QuantizeImpl</b>(CData* idMel, INT32 nCS, INT32 nCC, 
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_002">C/C++ Function <span 
-        class="mid">CMELproc::SynthesizeFrameImpl</span></a></td>
+        name="cfn_002"></a>C/C++ Function <span 
+        class="mid">CMELproc::SynthesizeFrameImpl</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_002','Class MELproc');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1533,17 +1588,17 @@ protected: virtual INT16 <b>CMELproc::SynthesizeFrameImpl</b>(FLOAT64* mcep, INT
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_001">C/C++ Function <span 
-        class="mid">CMELproc::SynthesizeUsingInto</span></a></td>
+        name="cfn_001"></a>C/C++ Function <span 
+        class="mid">CMELproc::SynthesizeUsingInto</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_001','Class MELproc');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1575,17 +1630,17 @@ protected: virtual INT16 <b>CMELproc::SynthesizeUsingInto</b>(data* idFea, data*
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_000">C/C++ Function <span 
-        class="mid">CMELproc::SynthesizeUsingPM</span></a></td>
+        name="cfn_000"></a>C/C++ Function <span 
+        class="mid">CMELproc::SynthesizeUsingPM</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_000','Class MELproc');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>

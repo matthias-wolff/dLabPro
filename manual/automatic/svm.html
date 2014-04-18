@@ -148,17 +148,17 @@ svm.html svm CSvm [
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cls">Class <span 
-        class="mid">svm</span></a></td>
+        name="cls"></a>Class <span 
+        class="mid">svm</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cls','Class svm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -391,7 +391,18 @@ unified and controlled text output (incl. number of iterations, working set size
 
   <h3><a name="cls_members">Class Members</a></h3>
   <table cellpadding="4" cellspacing="0" border="0">
-    <tr><td class="rowgroup" colspan="2"><a name="fld">Fields</a></td></tr>
+    <tr>
+      <td class="rowgroup"><a name="fld">Fields</a></td>
+      <td class="rowgroup" style="text-align:right">
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
     <tr><td><a href="#fld_model_alphas"><code class="link">model_alphas</code></a></td><td> alphas corresponding to support vectors of each classifier</td></tr>
     <tr><td><a href="#fld_model_b"><code class="link">model_b</code></a></td><td> decision function bias (b) of each classifier</td></tr>
     <tr><td><a href="#fld_model_classes"><code class="link">model_classes</code></a></td><td> class labels of the training set</td></tr>
@@ -409,7 +420,18 @@ unified and controlled text output (incl. number of iterations, working set size
     <tr><td><a href="#fld_stat_errs"><code class="link">stat_errs</code></a></td><td> statistics about mispredictions</td></tr>
     <tr><td><a href="#fld_stat_rates"><code class="link">stat_rates</code></a></td><td> statistics about precision/recall rates</td></tr>
     <tr><td colspan="2" class="rowempty">&nbsp;</td></tr>
-    <tr><td class="rowgroup" colspan="2"><a name="opt">Options</a></td></tr>
+    <tr>
+      <td class="rowgroup"><a name="opt">Options</a></td>
+      <td class="rowgroup" style="text-align:right">
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
     <tr><td><a href="#opt__2norm"><code class="link">/2norm</code></a></td><td> compute the 2-norm of the soft-margin slack instead of the 1-norm</td></tr>
     <tr><td><a href="#opt__hard_margin"><code class="link">/hard_margin</code></a></td><td> always disallow support vectors to lie beyond their class margin</td></tr>
     <tr><td><a href="#opt__incremental"><code class="link">/incremental</code></a></td><td> improve the existing model when training with new data</td></tr>
@@ -417,14 +439,36 @@ unified and controlled text output (incl. number of iterations, working set size
     <tr><td><a href="#opt__no_shrinking"><code class="link">/no_shrinking</code></a></td><td> do not use shrinking heuristics when training</td></tr>
     <tr><td><a href="#opt__probabilities"><code class="link">/probabilities</code></a></td><td> estimate a-posteriori class probabilities</td></tr>
     <tr><td colspan="2" class="rowempty">&nbsp;</td></tr>
-    <tr><td class="rowgroup" colspan="2"><a name="mth">Methods</a></td></tr>
+    <tr>
+      <td class="rowgroup"><a name="mth">Methods</a></td>
+      <td class="rowgroup" style="text-align:right">
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
     <tr><td><a href="#mth_-classify"><code class="link">-classify</code></a></td><td><code>&lt;data testset&gt; &lt;data results&gt; &lt;svm this&gt; <b>-classify</b> </code><br> classify sample data from the SVM model</td></tr>
     <tr><td><a href="#mth_-crossvalidate"><code class="link">-crossvalidate</code></a></td><td><code>&lt;short n_fold&gt; &lt;data trainset&gt; &lt;svm this&gt; <b>-crossvalidate</b> </code><br> cross-validate the parameters from sample data</td></tr>
     <tr><td><a href="#mth_-is_trained"><code class="link">-is_trained</code></a></td><td><code>&lt;svm this&gt; <b>-is_trained</b> </code><br> is the instance ready for classification?</td></tr>
     <tr><td><a href="#mth_-status"><code class="link">-status</code></a></td><td><code>&lt;svm this&gt; <b>-status</b> </code><br> print information about the parameters and model</td></tr>
     <tr><td><a href="#mth_-train"><code class="link">-train</code></a></td><td><code>&lt;data trainset&gt; &lt;svm this&gt; <b>-train</b> </code><br> train the SVM model from sample data</td></tr>
     <tr><td colspan="2" class="rowempty">&nbsp;</td></tr>
-    <tr><td class="rowgroup" colspan="2"><a name="cfn">C/C++ API</a></td></tr>
+    <tr>
+      <td class="rowgroup"><a name="cfn">C/C++ API</a></td>
+      <td class="rowgroup" style="text-align:right">
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
 <tr><td class="rowgroup" colspan="2" style="font-weight:normal"> (see 
 <a href="#mth"><u>method list</u></a>
  for additional C/C++ functions)
@@ -432,7 +476,18 @@ unified and controlled text output (incl. number of iterations, working set size
     <tr><td><a href="#cfn_001"><code class="link">CSvm_TrainIncremental</code></a></td><td><code>INT16 <b>CSvm_TrainIncremental</b>(CSvm _this, CData* trainset);<br>protected: INT16 <b>CSvm::TrainIncremental</b>(CData* trainset);<br></code><br> </td></tr>
     <tr><td><a href="#cfn_000"><code class="link">PrintParams</code></a></td><td><code>void <b>CSvm_PrintParams</b>(CSvm _this, struct svm_parameter* param);<br>public: void <b>CSvm::PrintParams</b>(struct svm_parameter* param);<br></code><br> </td></tr>
     <tr><td colspan="2" class="rowempty">&nbsp;</td></tr>
-    <tr><td class="rowgroup" colspan="2"><a name="err">Errors</a></td></tr>
+    <tr>
+      <td class="rowgroup"><a name="err">Errors</a></td>
+      <td class="rowgroup" style="text-align:right">
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
     <tr><td><a href="#err_SVM_NOTALLOWED"><code class="link">svm1001</code></a></td><td> this parameter value is forbidden (%s)</td></tr>
     <tr><td><a href="#err_SVM_LABELS"><code class="link">svm1002</code></a></td><td> class label is not allowed (%s)</td></tr>
     <tr><td><a href="#err_SVM_INCONSISTENT"><code class="link">svm1003</code></a></td><td> model is inconsistent (%s)</td></tr>
@@ -448,507 +503,21 @@ unified and controlled text output (incl. number of iterations, working set size
   <img src="../resources/blank_stc.gif" height="10">
   </div>
 
-  <div id="err_SVM_NOTALLOWED">
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-    <tr>
-      <td nowrap width="25%" class="navbar"><a 
-        name="err_SVM_NOTALLOWED">Error <span 
-        class="mid">svm1001</span></a></td>
-      <td nowrap width="75%" class="navbar" style="text-align:right;">
-        <a class="navbar" href="javascript:__PrintSection('err_SVM_NOTALLOWED','Class svm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
-        <a class="navbar" href="#fld">Fields</a>
-        <a class="navbar" href="#opt">Options</a>
-        <a class="navbar" href="#mth">Methods</a>
-        <a class="navbar" href="#cfn">C/C++</a>
-      </td>
-    </tr>
-  </table>
-  <div class="mframe"><table cellpadding="0" cellspacing="0" border="0">
-    <tr>
-      <td class="hidden">dLabPro</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Identifier</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden"><code><b>svm1001</b></code></td>
-    </tr>
-    <tr>
-      <td class="hidden">&nbsp;</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Error Level</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">EL_ERROR</td>
-    </tr>
-    <tr>
-      <td class="hidden" colspan="5">&nbsp;</td>
-    </tr>
-    <tr>
-      <td class="hidden">C/C++</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Symbol</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden"><code>#define SVM_NOTALLOWED -1001</code></td>
-    </tr>
-  </table></div>
-  <div class="mframe2">
-  <h3>Synopsis</h3>
-  <p>
-this parameter value is forbidden (%s)
-  </p>
-  <!--{{ CUSTOM_DOC -->
-  <!--}} CUSTOM_DOC -->
-  </div>
-  <img src="../resources/blank_stc.gif" height="10">
-  </div>
-  <div id="err_SVM_LABELS">
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-    <tr>
-      <td nowrap width="25%" class="navbar"><a 
-        name="err_SVM_LABELS">Error <span 
-        class="mid">svm1002</span></a></td>
-      <td nowrap width="75%" class="navbar" style="text-align:right;">
-        <a class="navbar" href="javascript:__PrintSection('err_SVM_LABELS','Class svm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
-        <a class="navbar" href="#fld">Fields</a>
-        <a class="navbar" href="#opt">Options</a>
-        <a class="navbar" href="#mth">Methods</a>
-        <a class="navbar" href="#cfn">C/C++</a>
-      </td>
-    </tr>
-  </table>
-  <div class="mframe"><table cellpadding="0" cellspacing="0" border="0">
-    <tr>
-      <td class="hidden">dLabPro</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Identifier</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden"><code><b>svm1002</b></code></td>
-    </tr>
-    <tr>
-      <td class="hidden">&nbsp;</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Error Level</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">EL_ERROR</td>
-    </tr>
-    <tr>
-      <td class="hidden" colspan="5">&nbsp;</td>
-    </tr>
-    <tr>
-      <td class="hidden">C/C++</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Symbol</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden"><code>#define SVM_LABELS -1002</code></td>
-    </tr>
-  </table></div>
-  <div class="mframe2">
-  <h3>Synopsis</h3>
-  <p>
-class label is not allowed (%s)
-  </p>
-  <!--{{ CUSTOM_DOC -->
-  <!--}} CUSTOM_DOC -->
-  </div>
-  <img src="../resources/blank_stc.gif" height="10">
-  </div>
-  <div id="err_SVM_INCONSISTENT">
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-    <tr>
-      <td nowrap width="25%" class="navbar"><a 
-        name="err_SVM_INCONSISTENT">Warning <span 
-        class="mid">svm1003</span></a></td>
-      <td nowrap width="75%" class="navbar" style="text-align:right;">
-        <a class="navbar" href="javascript:__PrintSection('err_SVM_INCONSISTENT','Class svm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
-        <a class="navbar" href="#fld">Fields</a>
-        <a class="navbar" href="#opt">Options</a>
-        <a class="navbar" href="#mth">Methods</a>
-        <a class="navbar" href="#cfn">C/C++</a>
-      </td>
-    </tr>
-  </table>
-  <div class="mframe"><table cellpadding="0" cellspacing="0" border="0">
-    <tr>
-      <td class="hidden">dLabPro</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Identifier</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden"><code><b>svm1003</b></code></td>
-    </tr>
-    <tr>
-      <td class="hidden">&nbsp;</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Error Level</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">EL_WARNING</td>
-    </tr>
-    <tr>
-      <td class="hidden" colspan="5">&nbsp;</td>
-    </tr>
-    <tr>
-      <td class="hidden">C/C++</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Symbol</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden"><code>#define SVM_INCONSISTENT -1003</code></td>
-    </tr>
-  </table></div>
-  <div class="mframe2">
-  <h3>Synopsis</h3>
-  <p>
-model is inconsistent (%s)
-  </p>
-  <!--{{ CUSTOM_DOC -->
-  <!--}} CUSTOM_DOC -->
-  </div>
-  <img src="../resources/blank_stc.gif" height="10">
-  </div>
-  <div id="err_SVM_PARAMETERS">
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-    <tr>
-      <td nowrap width="25%" class="navbar"><a 
-        name="err_SVM_PARAMETERS">Error <span 
-        class="mid">svm1004</span></a></td>
-      <td nowrap width="75%" class="navbar" style="text-align:right;">
-        <a class="navbar" href="javascript:__PrintSection('err_SVM_PARAMETERS','Class svm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
-        <a class="navbar" href="#fld">Fields</a>
-        <a class="navbar" href="#opt">Options</a>
-        <a class="navbar" href="#mth">Methods</a>
-        <a class="navbar" href="#cfn">C/C++</a>
-      </td>
-    </tr>
-  </table>
-  <div class="mframe"><table cellpadding="0" cellspacing="0" border="0">
-    <tr>
-      <td class="hidden">dLabPro</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Identifier</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden"><code><b>svm1004</b></code></td>
-    </tr>
-    <tr>
-      <td class="hidden">&nbsp;</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Error Level</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">EL_ERROR</td>
-    </tr>
-    <tr>
-      <td class="hidden" colspan="5">&nbsp;</td>
-    </tr>
-    <tr>
-      <td class="hidden">C/C++</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Symbol</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden"><code>#define SVM_PARAMETERS -1004</code></td>
-    </tr>
-  </table></div>
-  <div class="mframe2">
-  <h3>Synopsis</h3>
-  <p>
-given problem set does not match training parameters (%s)
-  </p>
-  <!--{{ CUSTOM_DOC -->
-  <!--}} CUSTOM_DOC -->
-  </div>
-  <img src="../resources/blank_stc.gif" height="10">
-  </div>
-  <div id="err_SVM_CONVERT">
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-    <tr>
-      <td nowrap width="25%" class="navbar"><a 
-        name="err_SVM_CONVERT">Error <span 
-        class="mid">svm1005</span></a></td>
-      <td nowrap width="75%" class="navbar" style="text-align:right;">
-        <a class="navbar" href="javascript:__PrintSection('err_SVM_CONVERT','Class svm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
-        <a class="navbar" href="#fld">Fields</a>
-        <a class="navbar" href="#opt">Options</a>
-        <a class="navbar" href="#mth">Methods</a>
-        <a class="navbar" href="#cfn">C/C++</a>
-      </td>
-    </tr>
-  </table>
-  <div class="mframe"><table cellpadding="0" cellspacing="0" border="0">
-    <tr>
-      <td class="hidden">dLabPro</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Identifier</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden"><code><b>svm1005</b></code></td>
-    </tr>
-    <tr>
-      <td class="hidden">&nbsp;</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Error Level</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">EL_ERROR</td>
-    </tr>
-    <tr>
-      <td class="hidden" colspan="5">&nbsp;</td>
-    </tr>
-    <tr>
-      <td class="hidden">C/C++</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Symbol</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden"><code>#define SVM_CONVERT -1005</code></td>
-    </tr>
-  </table></div>
-  <div class="mframe2">
-  <h3>Synopsis</h3>
-  <p>
-Data conversion error (%s%d%s).
-  </p>
-  <!--{{ CUSTOM_DOC -->
-  <!--}} CUSTOM_DOC -->
-  </div>
-  <img src="../resources/blank_stc.gif" height="10">
-  </div>
-  <div id="err_SVM_NOMODEL">
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-    <tr>
-      <td nowrap width="25%" class="navbar"><a 
-        name="err_SVM_NOMODEL">Error <span 
-        class="mid">svm1006</span></a></td>
-      <td nowrap width="75%" class="navbar" style="text-align:right;">
-        <a class="navbar" href="javascript:__PrintSection('err_SVM_NOMODEL','Class svm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
-        <a class="navbar" href="#fld">Fields</a>
-        <a class="navbar" href="#opt">Options</a>
-        <a class="navbar" href="#mth">Methods</a>
-        <a class="navbar" href="#cfn">C/C++</a>
-      </td>
-    </tr>
-  </table>
-  <div class="mframe"><table cellpadding="0" cellspacing="0" border="0">
-    <tr>
-      <td class="hidden">dLabPro</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Identifier</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden"><code><b>svm1006</b></code></td>
-    </tr>
-    <tr>
-      <td class="hidden">&nbsp;</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Error Level</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">EL_ERROR</td>
-    </tr>
-    <tr>
-      <td class="hidden" colspan="5">&nbsp;</td>
-    </tr>
-    <tr>
-      <td class="hidden">C/C++</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Symbol</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden"><code>#define SVM_NOMODEL -1006</code></td>
-    </tr>
-  </table></div>
-  <div class="mframe2">
-  <h3>Synopsis</h3>
-  <p>
-no consistent model available, train one first
-  </p>
-  <!--{{ CUSTOM_DOC -->
-  <!--}} CUSTOM_DOC -->
-  </div>
-  <img src="../resources/blank_stc.gif" height="10">
-  </div>
-  <div id="err_SVM_NOTIMPL">
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-    <tr>
-      <td nowrap width="25%" class="navbar"><a 
-        name="err_SVM_NOTIMPL">Error <span 
-        class="mid">svm1007</span></a></td>
-      <td nowrap width="75%" class="navbar" style="text-align:right;">
-        <a class="navbar" href="javascript:__PrintSection('err_SVM_NOTIMPL','Class svm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
-        <a class="navbar" href="#fld">Fields</a>
-        <a class="navbar" href="#opt">Options</a>
-        <a class="navbar" href="#mth">Methods</a>
-        <a class="navbar" href="#cfn">C/C++</a>
-      </td>
-    </tr>
-  </table>
-  <div class="mframe"><table cellpadding="0" cellspacing="0" border="0">
-    <tr>
-      <td class="hidden">dLabPro</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Identifier</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden"><code><b>svm1007</b></code></td>
-    </tr>
-    <tr>
-      <td class="hidden">&nbsp;</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Error Level</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">EL_ERROR</td>
-    </tr>
-    <tr>
-      <td class="hidden" colspan="5">&nbsp;</td>
-    </tr>
-    <tr>
-      <td class="hidden">C/C++</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Symbol</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden"><code>#define SVM_NOTIMPL -1007</code></td>
-    </tr>
-  </table></div>
-  <div class="mframe2">
-  <h3>Synopsis</h3>
-  <p>
-the requested feature is not implemented, please use the customised LIBSVM
-  </p>
-  <!--{{ CUSTOM_DOC -->
-  <!--}} CUSTOM_DOC -->
-  </div>
-  <img src="../resources/blank_stc.gif" height="10">
-  </div>
-  <div id="err_SVM_LABNOTFOUND">
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-    <tr>
-      <td nowrap width="25%" class="navbar"><a 
-        name="err_SVM_LABNOTFOUND">Warning <span 
-        class="mid">svm1008</span></a></td>
-      <td nowrap width="75%" class="navbar" style="text-align:right;">
-        <a class="navbar" href="javascript:__PrintSection('err_SVM_LABNOTFOUND','Class svm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
-        <a class="navbar" href="#fld">Fields</a>
-        <a class="navbar" href="#opt">Options</a>
-        <a class="navbar" href="#mth">Methods</a>
-        <a class="navbar" href="#cfn">C/C++</a>
-      </td>
-    </tr>
-  </table>
-  <div class="mframe"><table cellpadding="0" cellspacing="0" border="0">
-    <tr>
-      <td class="hidden">dLabPro</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Identifier</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden"><code><b>svm1008</b></code></td>
-    </tr>
-    <tr>
-      <td class="hidden">&nbsp;</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Error Level</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">EL_WARNING</td>
-    </tr>
-    <tr>
-      <td class="hidden" colspan="5">&nbsp;</td>
-    </tr>
-    <tr>
-      <td class="hidden">C/C++</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Symbol</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden"><code>#define SVM_LABNOTFOUND -1008</code></td>
-    </tr>
-  </table></div>
-  <div class="mframe2">
-  <h3>Synopsis</h3>
-  <p>
-class label %ld not found in model
-  </p>
-  <!--{{ CUSTOM_DOC -->
-  <!--}} CUSTOM_DOC -->
-  </div>
-  <img src="../resources/blank_stc.gif" height="10">
-  </div>
-  <div id="err_SVM_INTERNAL">
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-    <tr>
-      <td nowrap width="25%" class="navbar"><a 
-        name="err_SVM_INTERNAL">Error <span 
-        class="mid">svm1009</span></a></td>
-      <td nowrap width="75%" class="navbar" style="text-align:right;">
-        <a class="navbar" href="javascript:__PrintSection('err_SVM_INTERNAL','Class svm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
-        <a class="navbar" href="#fld">Fields</a>
-        <a class="navbar" href="#opt">Options</a>
-        <a class="navbar" href="#mth">Methods</a>
-        <a class="navbar" href="#cfn">C/C++</a>
-      </td>
-    </tr>
-  </table>
-  <div class="mframe"><table cellpadding="0" cellspacing="0" border="0">
-    <tr>
-      <td class="hidden">dLabPro</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Identifier</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden"><code><b>svm1009</b></code></td>
-    </tr>
-    <tr>
-      <td class="hidden">&nbsp;</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Error Level</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">EL_ERROR</td>
-    </tr>
-    <tr>
-      <td class="hidden" colspan="5">&nbsp;</td>
-    </tr>
-    <tr>
-      <td class="hidden">C/C++</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Symbol</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden"><code>#define SVM_INTERNAL -1009</code></td>
-    </tr>
-  </table></div>
-  <div class="mframe2">
-  <h3>Synopsis</h3>
-  <p>
-Internal error (%s)
-  </p>
-  <!--{{ CUSTOM_DOC -->
-  <!--}} CUSTOM_DOC -->
-  </div>
-  <img src="../resources/blank_stc.gif" height="10">
-  </div>
   <div id="fld_model_alphas">
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="fld_model_alphas">Field <span 
-        class="mid">model_alphas</span></a></td>
+        name="fld_model_alphas"></a>Field <span 
+        class="mid">model_alphas</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('fld_model_alphas','Class svm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1038,17 +607,17 @@ alphas corresponding to support vectors of each classifier
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="fld_model_b">Field <span 
-        class="mid">model_b</span></a></td>
+        name="fld_model_b"></a>Field <span 
+        class="mid">model_b</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('fld_model_b','Class svm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1128,17 +697,17 @@ decision function bias (b) of each classifier
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="fld_model_classes">Field <span 
-        class="mid">model_classes</span></a></td>
+        name="fld_model_classes"></a>Field <span 
+        class="mid">model_classes</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('fld_model_classes','Class svm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1204,17 +773,17 @@ class labels of the training set
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="fld_model_prob_A">Field <span 
-        class="mid">model_prob_A</span></a></td>
+        name="fld_model_prob_A"></a>Field <span 
+        class="mid">model_prob_A</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('fld_model_prob_A','Class svm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1305,17 +874,17 @@ parameters A of the sigmoid class pdf estimates used for probability estimates
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="fld_model_prob_B">Field <span 
-        class="mid">model_prob_B</span></a></td>
+        name="fld_model_prob_B"></a>Field <span 
+        class="mid">model_prob_B</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('fld_model_prob_B','Class svm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1406,17 +975,17 @@ parameters B of the sigmoid class pdf estimates used for probability estimates
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="fld_model_SVs">Field <span 
-        class="mid">model_SVs</span></a></td>
+        name="fld_model_SVs"></a>Field <span 
+        class="mid">model_SVs</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('fld_model_SVs','Class svm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1495,17 +1064,17 @@ labelled support vectors
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="fld_param_C">Field <span 
-        class="mid">param_C</span></a></td>
+        name="fld_param_C"></a>Field <span 
+        class="mid">param_C</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('fld_param_C','Class svm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1592,17 +1161,17 @@ regularisation parameter, upper bound on alphas
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="fld_param_C_weights">Field <span 
-        class="mid">param_C_weights</span></a></td>
+        name="fld_param_C_weights"></a>Field <span 
+        class="mid">param_C_weights</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('fld_param_C_weights','Class svm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1683,17 +1252,17 @@ factors/weights to the C parameter for each class (for unbalanced data)
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="fld_param_epsilon">Field <span 
-        class="mid">param_epsilon</span></a></td>
+        name="fld_param_epsilon"></a>Field <span 
+        class="mid">param_epsilon</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('fld_param_epsilon','Class svm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1765,17 +1334,17 @@ termination criterion tolerance
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="fld_param_knl_degree">Field <span 
-        class="mid">param_knl_degree</span></a></td>
+        name="fld_param_knl_degree"></a>Field <span 
+        class="mid">param_knl_degree</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('fld_param_knl_degree','Class svm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1843,17 +1412,17 @@ degree parameter in polynomial kernel
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="fld_param_knl_gradient">Field <span 
-        class="mid">param_knl_gradient</span></a></td>
+        name="fld_param_knl_gradient"></a>Field <span 
+        class="mid">param_knl_gradient</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('fld_param_knl_gradient','Class svm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1924,17 +1493,17 @@ factor parameter in polynomial, RBF, and sigmoid kernels
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="fld_param_knl_offset">Field <span 
-        class="mid">param_knl_offset</span></a></td>
+        name="fld_param_knl_offset"></a>Field <span 
+        class="mid">param_knl_offset</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('fld_param_knl_offset','Class svm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -2002,17 +1571,17 @@ addend parameter in polynomial and sigmoid kernels
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="fld_param_knl_type">Field <span 
-        class="mid">param_knl_type</span></a></td>
+        name="fld_param_knl_type"></a>Field <span 
+        class="mid">param_knl_type</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('fld_param_knl_type','Class svm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -2093,17 +1662,17 @@ type of kernel for the implicit non-linear mapping from input to feature space
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="fld_param_threshold">Field <span 
-        class="mid">param_threshold</span></a></td>
+        name="fld_param_threshold"></a>Field <span 
+        class="mid">param_threshold</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('fld_param_threshold','Class svm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -2190,17 +1759,17 @@ modulus of the decision function treshold for rejection
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="fld_stat_errs">Field <span 
-        class="mid">stat_errs</span></a></td>
+        name="fld_stat_errs"></a>Field <span 
+        class="mid">stat_errs</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('fld_stat_errs','Class svm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -2294,17 +1863,17 @@ statistics about mispredictions
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="fld_stat_rates">Field <span 
-        class="mid">stat_rates</span></a></td>
+        name="fld_stat_rates"></a>Field <span 
+        class="mid">stat_rates</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('fld_stat_rates','Class svm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -2421,17 +1990,17 @@ statistics about precision/recall rates
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="opt__2norm">Option <span 
-        class="mid">/2norm</span></a></td>
+        name="opt__2norm"></a>Option <span 
+        class="mid">/2norm</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('opt__2norm','Class svm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -2491,17 +2060,17 @@ compute the 2-norm of the soft-margin slack instead of the 1-norm
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="opt__hard_margin">Option <span 
-        class="mid">/hard_margin</span></a></td>
+        name="opt__hard_margin"></a>Option <span 
+        class="mid">/hard_margin</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('opt__hard_margin','Class svm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -2560,17 +2129,17 @@ always disallow support vectors to lie beyond their class margin
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="opt__incremental">Option <span 
-        class="mid">/incremental</span></a></td>
+        name="opt__incremental"></a>Option <span 
+        class="mid">/incremental</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('opt__incremental','Class svm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -2644,17 +2213,17 @@ D. Gunopulos. <i>Incremental Support Vector Machine Construction.</i> In ICDM,
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="opt__newstats">Option <span 
-        class="mid">/newstats</span></a></td>
+        name="opt__newstats"></a>Option <span 
+        class="mid">/newstats</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('opt__newstats','Class svm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -2711,17 +2280,17 @@ clear error and performance statistics before prediction
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="opt__no_shrinking">Option <span 
-        class="mid">/no_shrinking</span></a></td>
+        name="opt__no_shrinking"></a>Option <span 
+        class="mid">/no_shrinking</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('opt__no_shrinking','Class svm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -2773,17 +2342,17 @@ do not use shrinking heuristics when training
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="opt__probabilities">Option <span 
-        class="mid">/probabilities</span></a></td>
+        name="opt__probabilities"></a>Option <span 
+        class="mid">/probabilities</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('opt__probabilities','Class svm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -2905,17 +2474,17 @@ Research 5/2004.</a>
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_-classify">Method <span 
-        class="mid">-classify</span></a></td>
+        name="mth_-classify"></a>Method <span 
+        class="mid">-classify</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth_-classify','Class svm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -3043,17 +2612,17 @@ posterior probability.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_-crossvalidate">Method <span 
-        class="mid">-crossvalidate</span></a></td>
+        name="mth_-crossvalidate"></a>Method <span 
+        class="mid">-crossvalidate</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth_-crossvalidate','Class svm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -3193,17 +2762,17 @@ The average accuracy in percent.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_-is_trained">Method <span 
-        class="mid">-is_trained</span></a></td>
+        name="mth_-is_trained"></a>Method <span 
+        class="mid">-is_trained</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth_-is_trained','Class svm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -3265,17 +2834,17 @@ TRUE if this instance already has a full, consistent model
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_-status">Method <span 
-        class="mid">-status</span></a></td>
+        name="mth_-status"></a>Method <span 
+        class="mid">-status</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth_-status','Class svm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -3336,17 +2905,17 @@ print information about the parameters and model
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_-train">Method <span 
-        class="mid">-train</span></a></td>
+        name="mth_-train"></a>Method <span 
+        class="mid">-train</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth_-train','Class svm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -3488,17 +3057,17 @@ randomised.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_001">C/C++ Function <span 
-        class="mid">CSvm_TrainIncremental</span></a></td>
+        name="cfn_001"></a>C/C++ Function <span 
+        class="mid">CSvm_TrainIncremental</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_001','Class svm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -3530,17 +3099,17 @@ INT16 <b>CSvm_TrainIncremental</b>(CSvm _this, CData* trainset);<br>protected: I
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_000">C/C++ Function <span 
-        class="mid">PrintParams</span></a></td>
+        name="cfn_000"></a>C/C++ Function <span 
+        class="mid">PrintParams</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_000','Class svm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -3563,6 +3132,492 @@ void <b>CSvm_PrintParams</b>(CSvm _this, struct svm_parameter* param);<br>public
     </tr>
   </table></div>
   <div class="mframe2">
+  <!--{{ CUSTOM_DOC -->
+  <!--}} CUSTOM_DOC -->
+  </div>
+  <img src="../resources/blank_stc.gif" height="10">
+  </div>
+  <div id="err_SVM_NOTALLOWED">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td nowrap width="25%" class="navbar"><a 
+        name="err_SVM_NOTALLOWED"></a>Error <span 
+        class="mid">svm1001</span></td>
+      <td nowrap width="75%" class="navbar" style="text-align:right;">
+        <a class="navbar" href="javascript:__PrintSection('err_SVM_NOTALLOWED','Class svm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
+  </table>
+  <div class="mframe"><table cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td class="hidden">dLabPro</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Identifier</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code><b>svm1001</b></code></td>
+    </tr>
+    <tr>
+      <td class="hidden">&nbsp;</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Error Level</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">EL_ERROR</td>
+    </tr>
+    <tr>
+      <td class="hidden" colspan="5">&nbsp;</td>
+    </tr>
+    <tr>
+      <td class="hidden">C/C++</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Symbol</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code>#define SVM_NOTALLOWED -1001</code></td>
+    </tr>
+  </table></div>
+  <div class="mframe2">
+  <h3>Synopsis</h3>
+  <p>
+this parameter value is forbidden (%s)
+  </p>
+  <!--{{ CUSTOM_DOC -->
+  <!--}} CUSTOM_DOC -->
+  </div>
+  <img src="../resources/blank_stc.gif" height="10">
+  </div>
+  <div id="err_SVM_LABELS">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td nowrap width="25%" class="navbar"><a 
+        name="err_SVM_LABELS"></a>Error <span 
+        class="mid">svm1002</span></td>
+      <td nowrap width="75%" class="navbar" style="text-align:right;">
+        <a class="navbar" href="javascript:__PrintSection('err_SVM_LABELS','Class svm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
+  </table>
+  <div class="mframe"><table cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td class="hidden">dLabPro</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Identifier</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code><b>svm1002</b></code></td>
+    </tr>
+    <tr>
+      <td class="hidden">&nbsp;</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Error Level</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">EL_ERROR</td>
+    </tr>
+    <tr>
+      <td class="hidden" colspan="5">&nbsp;</td>
+    </tr>
+    <tr>
+      <td class="hidden">C/C++</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Symbol</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code>#define SVM_LABELS -1002</code></td>
+    </tr>
+  </table></div>
+  <div class="mframe2">
+  <h3>Synopsis</h3>
+  <p>
+class label is not allowed (%s)
+  </p>
+  <!--{{ CUSTOM_DOC -->
+  <!--}} CUSTOM_DOC -->
+  </div>
+  <img src="../resources/blank_stc.gif" height="10">
+  </div>
+  <div id="err_SVM_INCONSISTENT">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td nowrap width="25%" class="navbar"><a 
+        name="err_SVM_INCONSISTENT"></a>Warning <span 
+        class="mid">svm1003</span></td>
+      <td nowrap width="75%" class="navbar" style="text-align:right;">
+        <a class="navbar" href="javascript:__PrintSection('err_SVM_INCONSISTENT','Class svm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
+  </table>
+  <div class="mframe"><table cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td class="hidden">dLabPro</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Identifier</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code><b>svm1003</b></code></td>
+    </tr>
+    <tr>
+      <td class="hidden">&nbsp;</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Error Level</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">EL_WARNING</td>
+    </tr>
+    <tr>
+      <td class="hidden" colspan="5">&nbsp;</td>
+    </tr>
+    <tr>
+      <td class="hidden">C/C++</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Symbol</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code>#define SVM_INCONSISTENT -1003</code></td>
+    </tr>
+  </table></div>
+  <div class="mframe2">
+  <h3>Synopsis</h3>
+  <p>
+model is inconsistent (%s)
+  </p>
+  <!--{{ CUSTOM_DOC -->
+  <!--}} CUSTOM_DOC -->
+  </div>
+  <img src="../resources/blank_stc.gif" height="10">
+  </div>
+  <div id="err_SVM_PARAMETERS">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td nowrap width="25%" class="navbar"><a 
+        name="err_SVM_PARAMETERS"></a>Error <span 
+        class="mid">svm1004</span></td>
+      <td nowrap width="75%" class="navbar" style="text-align:right;">
+        <a class="navbar" href="javascript:__PrintSection('err_SVM_PARAMETERS','Class svm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
+  </table>
+  <div class="mframe"><table cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td class="hidden">dLabPro</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Identifier</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code><b>svm1004</b></code></td>
+    </tr>
+    <tr>
+      <td class="hidden">&nbsp;</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Error Level</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">EL_ERROR</td>
+    </tr>
+    <tr>
+      <td class="hidden" colspan="5">&nbsp;</td>
+    </tr>
+    <tr>
+      <td class="hidden">C/C++</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Symbol</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code>#define SVM_PARAMETERS -1004</code></td>
+    </tr>
+  </table></div>
+  <div class="mframe2">
+  <h3>Synopsis</h3>
+  <p>
+given problem set does not match training parameters (%s)
+  </p>
+  <!--{{ CUSTOM_DOC -->
+  <!--}} CUSTOM_DOC -->
+  </div>
+  <img src="../resources/blank_stc.gif" height="10">
+  </div>
+  <div id="err_SVM_CONVERT">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td nowrap width="25%" class="navbar"><a 
+        name="err_SVM_CONVERT"></a>Error <span 
+        class="mid">svm1005</span></td>
+      <td nowrap width="75%" class="navbar" style="text-align:right;">
+        <a class="navbar" href="javascript:__PrintSection('err_SVM_CONVERT','Class svm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
+  </table>
+  <div class="mframe"><table cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td class="hidden">dLabPro</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Identifier</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code><b>svm1005</b></code></td>
+    </tr>
+    <tr>
+      <td class="hidden">&nbsp;</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Error Level</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">EL_ERROR</td>
+    </tr>
+    <tr>
+      <td class="hidden" colspan="5">&nbsp;</td>
+    </tr>
+    <tr>
+      <td class="hidden">C/C++</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Symbol</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code>#define SVM_CONVERT -1005</code></td>
+    </tr>
+  </table></div>
+  <div class="mframe2">
+  <h3>Synopsis</h3>
+  <p>
+Data conversion error (%s%d%s).
+  </p>
+  <!--{{ CUSTOM_DOC -->
+  <!--}} CUSTOM_DOC -->
+  </div>
+  <img src="../resources/blank_stc.gif" height="10">
+  </div>
+  <div id="err_SVM_NOMODEL">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td nowrap width="25%" class="navbar"><a 
+        name="err_SVM_NOMODEL"></a>Error <span 
+        class="mid">svm1006</span></td>
+      <td nowrap width="75%" class="navbar" style="text-align:right;">
+        <a class="navbar" href="javascript:__PrintSection('err_SVM_NOMODEL','Class svm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
+  </table>
+  <div class="mframe"><table cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td class="hidden">dLabPro</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Identifier</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code><b>svm1006</b></code></td>
+    </tr>
+    <tr>
+      <td class="hidden">&nbsp;</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Error Level</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">EL_ERROR</td>
+    </tr>
+    <tr>
+      <td class="hidden" colspan="5">&nbsp;</td>
+    </tr>
+    <tr>
+      <td class="hidden">C/C++</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Symbol</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code>#define SVM_NOMODEL -1006</code></td>
+    </tr>
+  </table></div>
+  <div class="mframe2">
+  <h3>Synopsis</h3>
+  <p>
+no consistent model available, train one first
+  </p>
+  <!--{{ CUSTOM_DOC -->
+  <!--}} CUSTOM_DOC -->
+  </div>
+  <img src="../resources/blank_stc.gif" height="10">
+  </div>
+  <div id="err_SVM_NOTIMPL">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td nowrap width="25%" class="navbar"><a 
+        name="err_SVM_NOTIMPL"></a>Error <span 
+        class="mid">svm1007</span></td>
+      <td nowrap width="75%" class="navbar" style="text-align:right;">
+        <a class="navbar" href="javascript:__PrintSection('err_SVM_NOTIMPL','Class svm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
+  </table>
+  <div class="mframe"><table cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td class="hidden">dLabPro</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Identifier</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code><b>svm1007</b></code></td>
+    </tr>
+    <tr>
+      <td class="hidden">&nbsp;</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Error Level</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">EL_ERROR</td>
+    </tr>
+    <tr>
+      <td class="hidden" colspan="5">&nbsp;</td>
+    </tr>
+    <tr>
+      <td class="hidden">C/C++</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Symbol</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code>#define SVM_NOTIMPL -1007</code></td>
+    </tr>
+  </table></div>
+  <div class="mframe2">
+  <h3>Synopsis</h3>
+  <p>
+the requested feature is not implemented, please use the customised LIBSVM
+  </p>
+  <!--{{ CUSTOM_DOC -->
+  <!--}} CUSTOM_DOC -->
+  </div>
+  <img src="../resources/blank_stc.gif" height="10">
+  </div>
+  <div id="err_SVM_LABNOTFOUND">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td nowrap width="25%" class="navbar"><a 
+        name="err_SVM_LABNOTFOUND"></a>Warning <span 
+        class="mid">svm1008</span></td>
+      <td nowrap width="75%" class="navbar" style="text-align:right;">
+        <a class="navbar" href="javascript:__PrintSection('err_SVM_LABNOTFOUND','Class svm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
+  </table>
+  <div class="mframe"><table cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td class="hidden">dLabPro</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Identifier</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code><b>svm1008</b></code></td>
+    </tr>
+    <tr>
+      <td class="hidden">&nbsp;</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Error Level</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">EL_WARNING</td>
+    </tr>
+    <tr>
+      <td class="hidden" colspan="5">&nbsp;</td>
+    </tr>
+    <tr>
+      <td class="hidden">C/C++</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Symbol</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code>#define SVM_LABNOTFOUND -1008</code></td>
+    </tr>
+  </table></div>
+  <div class="mframe2">
+  <h3>Synopsis</h3>
+  <p>
+class label %ld not found in model
+  </p>
+  <!--{{ CUSTOM_DOC -->
+  <!--}} CUSTOM_DOC -->
+  </div>
+  <img src="../resources/blank_stc.gif" height="10">
+  </div>
+  <div id="err_SVM_INTERNAL">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td nowrap width="25%" class="navbar"><a 
+        name="err_SVM_INTERNAL"></a>Error <span 
+        class="mid">svm1009</span></td>
+      <td nowrap width="75%" class="navbar" style="text-align:right;">
+        <a class="navbar" href="javascript:__PrintSection('err_SVM_INTERNAL','Class svm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
+  </table>
+  <div class="mframe"><table cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td class="hidden">dLabPro</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Identifier</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code><b>svm1009</b></code></td>
+    </tr>
+    <tr>
+      <td class="hidden">&nbsp;</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Error Level</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">EL_ERROR</td>
+    </tr>
+    <tr>
+      <td class="hidden" colspan="5">&nbsp;</td>
+    </tr>
+    <tr>
+      <td class="hidden">C/C++</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Symbol</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code>#define SVM_INTERNAL -1009</code></td>
+    </tr>
+  </table></div>
+  <div class="mframe2">
+  <h3>Synopsis</h3>
+  <p>
+Internal error (%s)
+  </p>
   <!--{{ CUSTOM_DOC -->
   <!--}} CUSTOM_DOC -->
   </div>

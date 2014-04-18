@@ -128,17 +128,17 @@ fstsearch.html fstsearch CFstsearch [
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cls">Class <span 
-        class="mid">fstsearch</span></a></td>
+        name="cls"></a>Class <span 
+        class="mid">fstsearch</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cls','Class fstsearch');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -226,7 +226,18 @@ Search algorithms for FSTs
 
   <h3><a name="cls_members">Class Members</a></h3>
   <table cellpadding="4" cellspacing="0" border="0">
-    <tr><td class="rowgroup" colspan="2"><a name="fld">Fields</a></td></tr>
+    <tr>
+      <td class="rowgroup"><a name="fld">Fields</a></td>
+      <td class="rowgroup" style="text-align:right">
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
     <tr><td><a href="#fld_algo"><code class="link">algo</code></a></td><td> Search algorithm to use</td></tr>
     <tr><td><a href="#fld_as_aheutype"><code class="link">as_aheutype</code></a></td><td> Timeinvariant heurisitc type.</td></tr>
     <tr><td><a href="#fld_as_prnf"><code class="link">as_prnf</code></a></td><td> Frame prune threshold</td></tr>
@@ -247,25 +258,69 @@ Search algorithms for FSTs
     <tr><td><a href="#fld_tp_prnw"><code class="link">tp_prnw</code></a></td><td> Weight pruning threshold</td></tr>
     <tr><td><a href="#fld_tp_threads"><code class="link">tp_threads</code></a></td><td> Number of threads to use for decoding</td></tr>
     <tr><td colspan="2" class="rowempty">&nbsp;</td></tr>
-    <tr><td class="rowgroup" colspan="2"><a name="opt">Options</a></td></tr>
+    <tr>
+      <td class="rowgroup"><a name="opt">Options</a></td>
+      <td class="rowgroup" style="text-align:right">
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
     <tr><td><a href="#opt__fast"><code class="link">/fast</code></a></td><td> Do not copy the source automaton for backtracking</td></tr>
     <tr><td><a href="#opt__final"><code class="link">/final</code></a></td><td> Decode until a final state is reached</td></tr>
     <tr><td colspan="2" class="rowempty">&nbsp;</td></tr>
-    <tr><td class="rowgroup" colspan="2"><a name="mth">Methods</a></td></tr>
+    <tr>
+      <td class="rowgroup"><a name="mth">Methods</a></td>
+      <td class="rowgroup" style="text-align:right">
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
     <tr><td><a href="#mth_-backtrack"><code class="link">-backtrack</code></a></td><td><code>&lt;fst itDst&gt; &lt;fstsearch this&gt; <b>-backtrack</b> </code><br> Backtrack from the current decoding state</td></tr>
     <tr><td><a href="#mth_-isearch"><code class="link">-isearch</code></a></td><td><code>&lt;data idWeights&gt; &lt;fstsearch this&gt; <b>-isearch</b> </code><br> Iterative search: decode frames in idWeights</td></tr>
     <tr><td><a href="#mth_-load"><code class="link">-load</code></a></td><td><code>&lt;fst itSrc&gt; &lt;long nUnit&gt; &lt;fstsearch this&gt; <b>-load</b> </code><br> Load the source automaton</td></tr>
     <tr><td><a href="#mth_-restart"><code class="link">-restart</code></a></td><td><code>&lt;fstsearch this&gt; <b>-restart</b> </code><br> Reset iterative search</td></tr>
     <tr><td><a href="#mth_-search"><code class="link">-search</code></a></td><td><code>&lt;fst itSrc&gt; &lt;long nUnit&gt; &lt;data idWeights&gt; &lt;fst itDst&gt; &lt;fstsearch this&gt; <b>-search</b> </code><br> All steps in one method</td></tr>
     <tr><td colspan="2" class="rowempty">&nbsp;</td></tr>
-    <tr><td class="rowgroup" colspan="2"><a name="cfn">C/C++ API</a></td></tr>
+    <tr>
+      <td class="rowgroup"><a name="cfn">C/C++ API</a></td>
+      <td class="rowgroup" style="text-align:right">
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
 <tr><td class="rowgroup" colspan="2" style="font-weight:normal"> (see 
 <a href="#mth"><u>method list</u></a>
  for additional C/C++ functions)
 </td></tr>
     <tr><td><a href="#cfn_000"><code class="link">CFstsearch_Unload</code></a></td><td><code>INT16 <b>CFstsearch_Unload</b>(CFstsearch _this);<br>public: INT16 <b>CFstsearch::Unload</b>();<br></code><br> </td></tr>
     <tr><td colspan="2" class="rowempty">&nbsp;</td></tr>
-    <tr><td class="rowgroup" colspan="2"><a name="err">Errors</a></td></tr>
+    <tr>
+      <td class="rowgroup"><a name="err">Errors</a></td>
+      <td class="rowgroup" style="text-align:right">
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
     <tr><td><a href="#err_FSTS_STR"><code class="link">fstsearch1001</code></a></td><td> %s</td></tr>
     <tr><td colspan="2" class="rowempty">&nbsp;</td></tr>
   </table>
@@ -273,75 +328,21 @@ Search algorithms for FSTs
   <img src="../resources/blank_stc.gif" height="10">
   </div>
 
-  <div id="err_FSTS_STR">
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-    <tr>
-      <td nowrap width="25%" class="navbar"><a 
-        name="err_FSTS_STR">Error <span 
-        class="mid">fstsearch1001</span></a></td>
-      <td nowrap width="75%" class="navbar" style="text-align:right;">
-        <a class="navbar" href="javascript:__PrintSection('err_FSTS_STR','Class fstsearch');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
-        <a class="navbar" href="#fld">Fields</a>
-        <a class="navbar" href="#opt">Options</a>
-        <a class="navbar" href="#mth">Methods</a>
-        <a class="navbar" href="#cfn">C/C++</a>
-      </td>
-    </tr>
-  </table>
-  <div class="mframe"><table cellpadding="0" cellspacing="0" border="0">
-    <tr>
-      <td class="hidden">dLabPro</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Identifier</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden"><code><b>fstsearch1001</b></code></td>
-    </tr>
-    <tr>
-      <td class="hidden">&nbsp;</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Error Level</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">EL_ERROR</td>
-    </tr>
-    <tr>
-      <td class="hidden" colspan="5">&nbsp;</td>
-    </tr>
-    <tr>
-      <td class="hidden">C/C++</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Symbol</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden"><code>#define FSTS_STR -1001</code></td>
-    </tr>
-  </table></div>
-  <div class="mframe2">
-  <h3>Synopsis</h3>
-  <p>
-%s
-  </p>
-  <!--{{ CUSTOM_DOC -->
-  <!--}} CUSTOM_DOC -->
-  </div>
-  <img src="../resources/blank_stc.gif" height="10">
-  </div>
   <div id="fld_algo">
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="fld_algo">Field <span 
-        class="mid">algo</span></a></td>
+        name="fld_algo"></a>Field <span 
+        class="mid">algo</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('fld_algo','Class fstsearch');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -415,17 +416,17 @@ Search algorithm to use
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="fld_as_aheutype">Field <span 
-        class="mid">as_aheutype</span></a></td>
+        name="fld_as_aheutype"></a>Field <span 
+        class="mid">as_aheutype</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('fld_as_aheutype','Class fstsearch');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -497,17 +498,17 @@ Timeinvariant heurisitc type.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="fld_as_prnf">Field <span 
-        class="mid">as_prnf</span></a></td>
+        name="fld_as_prnf"></a>Field <span 
+        class="mid">as_prnf</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('fld_as_prnf','Class fstsearch');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -577,17 +578,17 @@ Frame prune threshold
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="fld_as_prnw">Field <span 
-        class="mid">as_prnw</span></a></td>
+        name="fld_as_prnw"></a>Field <span 
+        class="mid">as_prnw</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('fld_as_prnw','Class fstsearch');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -657,17 +658,17 @@ Weight prune threshold
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="fld_as_qsize">Field <span 
-        class="mid">as_qsize</span></a></td>
+        name="fld_as_qsize"></a>Field <span 
+        class="mid">as_qsize</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('fld_as_qsize','Class fstsearch');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -738,17 +739,17 @@ Queue size
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="fld_as_sheutype">Field <span 
-        class="mid">as_sheutype</span></a></td>
+        name="fld_as_sheutype"></a>Field <span 
+        class="mid">as_sheutype</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('fld_as_sheutype','Class fstsearch');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -821,17 +822,17 @@ Timevariant heurisitc type.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="fld_bt">Field <span 
-        class="mid">bt</span></a></td>
+        name="fld_bt"></a>Field <span 
+        class="mid">bt</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('fld_bt','Class fstsearch');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -908,17 +909,17 @@ Backtrack type
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="fld_latprn">Field <span 
-        class="mid">latprn</span></a></td>
+        name="fld_latprn"></a>Field <span 
+        class="mid">latprn</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('fld_latprn','Class fstsearch');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -998,17 +999,17 @@ Lattice pruning threshold
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="fld_loaded">Field <span 
-        class="mid">loaded</span></a></td>
+        name="fld_loaded"></a>Field <span 
+        class="mid">loaded</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('fld_loaded','Class fstsearch');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1074,17 +1075,17 @@ TRUE if a transducer is loaded and the decoder ready
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="fld_mem">Field <span 
-        class="mid">mem</span></a></td>
+        name="fld_mem"></a>Field <span 
+        class="mid">mem</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('fld_mem','Class fstsearch');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1150,17 +1151,17 @@ Memory used for last decoding including backtracking in Bytes
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="fld_numpaths">Field <span 
-        class="mid">numpaths</span></a></td>
+        name="fld_numpaths"></a>Field <span 
+        class="mid">numpaths</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('fld_numpaths','Class fstsearch');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1226,17 +1227,17 @@ Number of paths to decode
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="fld_sdp_epsremove">Field <span 
-        class="mid">sdp_epsremove</span></a></td>
+        name="fld_sdp_epsremove"></a>Field <span 
+        class="mid">sdp_epsremove</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('fld_sdp_epsremove','Class fstsearch');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1305,17 +1306,17 @@ Removes epsilon transitions
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="fld_sdp_fwd">Field <span 
-        class="mid">sdp_fwd</span></a></td>
+        name="fld_sdp_fwd"></a>Field <span 
+        class="mid">sdp_fwd</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('fld_sdp_fwd','Class fstsearch');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1393,17 +1394,17 @@ variables in time.</p>
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="fld_sdp_prn">Field <span 
-        class="mid">sdp_prn</span></a></td>
+        name="fld_sdp_prn"></a>Field <span 
+        class="mid">sdp_prn</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('fld_sdp_prn','Class fstsearch');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1472,17 +1473,17 @@ Pruning constant
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="fld_stkprn">Field <span 
-        class="mid">stkprn</span></a></td>
+        name="fld_stkprn"></a>Field <span 
+        class="mid">stkprn</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('fld_stkprn','Class fstsearch');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1554,17 +1555,17 @@ Prune hypothesis with different pushdown memory
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="fld_time">Field <span 
-        class="mid">time</span></a></td>
+        name="fld_time"></a>Field <span 
+        class="mid">time</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('fld_time','Class fstsearch');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1630,17 +1631,17 @@ Time used for last decoding including backtracking in milliseconds (only Linux!)
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="fld_tp_prnh">Field <span 
-        class="mid">tp_prnh</span></a></td>
+        name="fld_tp_prnh"></a>Field <span 
+        class="mid">tp_prnh</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('fld_tp_prnh','Class fstsearch');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1718,17 +1719,17 @@ Hypothesis number pruning threshold
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="fld_tp_prnw">Field <span 
-        class="mid">tp_prnw</span></a></td>
+        name="fld_tp_prnw"></a>Field <span 
+        class="mid">tp_prnw</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('fld_tp_prnw','Class fstsearch');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1807,17 +1808,17 @@ Weight pruning threshold
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="fld_tp_threads">Field <span 
-        class="mid">tp_threads</span></a></td>
+        name="fld_tp_threads"></a>Field <span 
+        class="mid">tp_threads</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('fld_tp_threads','Class fstsearch');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1886,17 +1887,17 @@ Number of threads to use for decoding
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="opt__fast">Option <span 
-        class="mid">/fast</span></a></td>
+        name="opt__fast"></a>Option <span 
+        class="mid">/fast</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('opt__fast','Class fstsearch');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1947,17 +1948,17 @@ Do not copy the source automaton for backtracking
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="opt__final">Option <span 
-        class="mid">/final</span></a></td>
+        name="opt__final"></a>Option <span 
+        class="mid">/final</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('opt__final','Class fstsearch');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -2016,17 +2017,17 @@ Decode until a final state is reached
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_-backtrack">Method <span 
-        class="mid">-backtrack</span></a></td>
+        name="mth_-backtrack"></a>Method <span 
+        class="mid">-backtrack</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth_-backtrack','Class fstsearch');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -2109,17 +2110,17 @@ Destination transducer
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_-isearch">Method <span 
-        class="mid">-isearch</span></a></td>
+        name="mth_-isearch"></a>Method <span 
+        class="mid">-isearch</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth_-isearch','Class fstsearch');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -2213,17 +2214,17 @@ Timevariant weight array.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_-load">Method <span 
-        class="mid">-load</span></a></td>
+        name="mth_-load"></a>Method <span 
+        class="mid">-load</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth_-load','Class fstsearch');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -2337,17 +2338,17 @@ Zero-based unit index in itSrc
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_-restart">Method <span 
-        class="mid">-restart</span></a></td>
+        name="mth_-restart"></a>Method <span 
+        class="mid">-restart</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth_-restart','Class fstsearch');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -2405,17 +2406,17 @@ Reset iterative search
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_-search">Method <span 
-        class="mid">-search</span></a></td>
+        name="mth_-search"></a>Method <span 
+        class="mid">-search</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth_-search','Class fstsearch');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -2501,17 +2502,17 @@ All steps in one method
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_000">C/C++ Function <span 
-        class="mid">CFstsearch_Unload</span></a></td>
+        name="cfn_000"></a>C/C++ Function <span 
+        class="mid">CFstsearch_Unload</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_000','Class fstsearch');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -2534,6 +2535,60 @@ INT16 <b>CFstsearch_Unload</b>(CFstsearch _this);<br>public: INT16 <b>CFstsearch
     </tr>
   </table></div>
   <div class="mframe2">
+  <!--{{ CUSTOM_DOC -->
+  <!--}} CUSTOM_DOC -->
+  </div>
+  <img src="../resources/blank_stc.gif" height="10">
+  </div>
+  <div id="err_FSTS_STR">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td nowrap width="25%" class="navbar"><a 
+        name="err_FSTS_STR"></a>Error <span 
+        class="mid">fstsearch1001</span></td>
+      <td nowrap width="75%" class="navbar" style="text-align:right;">
+        <a class="navbar" href="javascript:__PrintSection('err_FSTS_STR','Class fstsearch');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
+  </table>
+  <div class="mframe"><table cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td class="hidden">dLabPro</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Identifier</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code><b>fstsearch1001</b></code></td>
+    </tr>
+    <tr>
+      <td class="hidden">&nbsp;</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Error Level</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">EL_ERROR</td>
+    </tr>
+    <tr>
+      <td class="hidden" colspan="5">&nbsp;</td>
+    </tr>
+    <tr>
+      <td class="hidden">C/C++</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Symbol</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code>#define FSTS_STR -1001</code></td>
+    </tr>
+  </table></div>
+  <div class="mframe2">
+  <h3>Synopsis</h3>
+  <p>
+%s
+  </p>
   <!--{{ CUSTOM_DOC -->
   <!--}} CUSTOM_DOC -->
   </div>

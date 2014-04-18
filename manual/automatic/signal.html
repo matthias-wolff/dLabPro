@@ -212,17 +212,17 @@ signal.html signal CSignal [
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cls">Class <span 
-        class="mid">signal</span></a></td>
+        name="cls"></a>Class <span 
+        class="mid">signal</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cls','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -385,16 +385,60 @@ Signal operations
 
   <h3><a name="cls_members">Class Members</a></h3>
   <table cellpadding="4" cellspacing="0" border="0">
-    <tr><td class="rowgroup" colspan="2"><a name="fld">Fields</a></td></tr>
+    <tr>
+      <td class="rowgroup"><a name="fld">Fields</a></td>
+      <td class="rowgroup" style="text-align:right">
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
     <tr><td colspan="2">This class does not have visible fields.</td></tr>
     <tr><td colspan="2" class="rowempty">&nbsp;</td></tr>
-    <tr><td class="rowgroup" colspan="2"><a name="opt">Options</a></td></tr>
+    <tr>
+      <td class="rowgroup"><a name="opt">Options</a></td>
+      <td class="rowgroup" style="text-align:right">
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
     <tr><td colspan="2">This class does not have options.</td></tr>
     <tr><td colspan="2" class="rowempty">&nbsp;</td></tr>
-    <tr><td class="rowgroup" colspan="2"><a name="mth">Methods</a></td></tr>
+    <tr>
+      <td class="rowgroup"><a name="mth">Methods</a></td>
+      <td class="rowgroup" style="text-align:right">
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
     <tr><td colspan="2">This class does not have methods.</td></tr>
     <tr><td colspan="2" class="rowempty">&nbsp;</td></tr>
-    <tr><td class="rowgroup" colspan="2"><a name="cfn">C/C++ API</a></td></tr>
+    <tr>
+      <td class="rowgroup"><a name="cfn">C/C++ API</a></td>
+      <td class="rowgroup" style="text-align:right">
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
     <tr><td><a href="#cfn_003"><code class="link">CSignal_Cep</code></a></td><td><code>INT16 <b>CSignal_Cep</b>(CData* idY, CData* idX, INT32 nCoeff);<br>public: static INT16 <b>CSignal::Cep</b>(CData* idY, CData* idX, INT32 nCoeff);<br></code><br>  Cepstrum analysis.</td></tr>
     <tr><td><a href="#cfn_001"><code class="link">CSignal_Cep2Lpc</code></a></td><td><code>INT16 <b>CSignal_Cep2Lpc</b>(CData* idA, CData* idG, CData* idC, INT32 n);<br>public: static INT16 <b>CSignal::Cep2Lpc</b>(CData* idA, CData* idG, CData* idC, INT32 n);<br></code><br>  Cepstrum to LPC transform.</td></tr>
     <tr><td><a href="#cfn_002"><code class="link">CSignal_Cep2MCep</code></a></td><td><code>INT16 <b>CSignal_Cep2MCep</b>(CData* idC2, CData* idC1, FLOAT64 nLambda2, INT32 n);<br>public: static INT16 <b>CSignal::Cep2MCep</b>(CData* idC2, CData* idC1, FLOAT64 nLambda2, INT32 n);<br></code><br>  Cepstrum to Mel-Cepstrum transform.</td></tr>
@@ -465,7 +509,18 @@ Signal operations
     <tr><td><a href="#cfn_066"><code class="link">CSignal_Window</code></a></td><td><code>INT16 <b>CSignal_Window</b>(CData* idY, CData* idX, INT32 nLenIn, INT32 nLenOut, const char* lpsWindow, BOOL bNorm);<br>public: static INT16 <b>CSignal::Window</b>(CData* idY, CData* idX, INT32 nLenIn, INT32 nLenOut, const char* lpsWindow, BOOL bNorm);<br></code><br>  Frame windowing.</td></tr>
     <tr><td><a href="#cfn_067"><code class="link">CSignal_Zcr</code></a></td><td><code>INT16 <b>CSignal_Zcr</b>(CData* idY, CData* idX, CData* idP);<br>public: static INT16 <b>CSignal::Zcr</b>(CData* idY, CData* idX, CData* idP);<br></code><br>  Zero-crossing counter  This operation counts the zero-crossing instances selective to their step sizes falling in the intervals given in  idP.</td></tr>
     <tr><td colspan="2" class="rowempty">&nbsp;</td></tr>
-    <tr><td class="rowgroup" colspan="2"><a name="err">Errors</a></td></tr>
+    <tr>
+      <td class="rowgroup"><a name="err">Errors</a></td>
+      <td class="rowgroup" style="text-align:right">
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
     <tr><td><a href="#err_FOP_ERR_FAIL"><code class="link">signal1001</code></a></td><td> Execution of \"%s\" failed.</td></tr>
     <tr><td><a href="#err_FOP_ERR_NOTSUPP"><code class="link">signal1002</code></a></td><td> Operation %s is not implemented yet or not supported.</td></tr>
     <tr><td><a href="#err_FOP_ERR_INVARG"><code class="link">signal1003</code></a></td><td> Argument %s = \"%s\" is invalid%s.</td></tr>
@@ -476,237 +531,21 @@ Signal operations
   <img src="../resources/blank_stc.gif" height="10">
   </div>
 
-  <div id="err_FOP_ERR_FAIL">
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-    <tr>
-      <td nowrap width="25%" class="navbar"><a 
-        name="err_FOP_ERR_FAIL">Error <span 
-        class="mid">signal1001</span></a></td>
-      <td nowrap width="75%" class="navbar" style="text-align:right;">
-        <a class="navbar" href="javascript:__PrintSection('err_FOP_ERR_FAIL','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
-        <a class="navbar" href="#fld">Fields</a>
-        <a class="navbar" href="#opt">Options</a>
-        <a class="navbar" href="#mth">Methods</a>
-        <a class="navbar" href="#cfn">C/C++</a>
-      </td>
-    </tr>
-  </table>
-  <div class="mframe"><table cellpadding="0" cellspacing="0" border="0">
-    <tr>
-      <td class="hidden">dLabPro</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Identifier</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden"><code><b>signal1001</b></code></td>
-    </tr>
-    <tr>
-      <td class="hidden">&nbsp;</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Error Level</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">EL_ERROR</td>
-    </tr>
-    <tr>
-      <td class="hidden" colspan="5">&nbsp;</td>
-    </tr>
-    <tr>
-      <td class="hidden">C/C++</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Symbol</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden"><code>#define FOP_ERR_FAIL -1001</code></td>
-    </tr>
-  </table></div>
-  <div class="mframe2">
-  <h3>Synopsis</h3>
-  <p>
-Execution of \"%s\" failed.
-  </p>
-  <!--{{ CUSTOM_DOC -->
-  <!--}} CUSTOM_DOC -->
-  </div>
-  <img src="../resources/blank_stc.gif" height="10">
-  </div>
-  <div id="err_FOP_ERR_NOTSUPP">
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-    <tr>
-      <td nowrap width="25%" class="navbar"><a 
-        name="err_FOP_ERR_NOTSUPP">Error <span 
-        class="mid">signal1002</span></a></td>
-      <td nowrap width="75%" class="navbar" style="text-align:right;">
-        <a class="navbar" href="javascript:__PrintSection('err_FOP_ERR_NOTSUPP','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
-        <a class="navbar" href="#fld">Fields</a>
-        <a class="navbar" href="#opt">Options</a>
-        <a class="navbar" href="#mth">Methods</a>
-        <a class="navbar" href="#cfn">C/C++</a>
-      </td>
-    </tr>
-  </table>
-  <div class="mframe"><table cellpadding="0" cellspacing="0" border="0">
-    <tr>
-      <td class="hidden">dLabPro</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Identifier</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden"><code><b>signal1002</b></code></td>
-    </tr>
-    <tr>
-      <td class="hidden">&nbsp;</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Error Level</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">EL_ERROR</td>
-    </tr>
-    <tr>
-      <td class="hidden" colspan="5">&nbsp;</td>
-    </tr>
-    <tr>
-      <td class="hidden">C/C++</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Symbol</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden"><code>#define FOP_ERR_NOTSUPP -1002</code></td>
-    </tr>
-  </table></div>
-  <div class="mframe2">
-  <h3>Synopsis</h3>
-  <p>
-Operation %s is not implemented yet or not supported.
-  </p>
-  <!--{{ CUSTOM_DOC -->
-  <!--}} CUSTOM_DOC -->
-  </div>
-  <img src="../resources/blank_stc.gif" height="10">
-  </div>
-  <div id="err_FOP_ERR_INVARG">
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-    <tr>
-      <td nowrap width="25%" class="navbar"><a 
-        name="err_FOP_ERR_INVARG">Error <span 
-        class="mid">signal1003</span></a></td>
-      <td nowrap width="75%" class="navbar" style="text-align:right;">
-        <a class="navbar" href="javascript:__PrintSection('err_FOP_ERR_INVARG','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
-        <a class="navbar" href="#fld">Fields</a>
-        <a class="navbar" href="#opt">Options</a>
-        <a class="navbar" href="#mth">Methods</a>
-        <a class="navbar" href="#cfn">C/C++</a>
-      </td>
-    </tr>
-  </table>
-  <div class="mframe"><table cellpadding="0" cellspacing="0" border="0">
-    <tr>
-      <td class="hidden">dLabPro</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Identifier</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden"><code><b>signal1003</b></code></td>
-    </tr>
-    <tr>
-      <td class="hidden">&nbsp;</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Error Level</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">EL_ERROR</td>
-    </tr>
-    <tr>
-      <td class="hidden" colspan="5">&nbsp;</td>
-    </tr>
-    <tr>
-      <td class="hidden">C/C++</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Symbol</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden"><code>#define FOP_ERR_INVARG -1003</code></td>
-    </tr>
-  </table></div>
-  <div class="mframe2">
-  <h3>Synopsis</h3>
-  <p>
-Argument %s = \"%s\" is invalid%s.
-  </p>
-  <!--{{ CUSTOM_DOC -->
-  <!--}} CUSTOM_DOC -->
-  </div>
-  <img src="../resources/blank_stc.gif" height="10">
-  </div>
-  <div id="err_FOP_ERR_INVDESCR">
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-    <tr>
-      <td nowrap width="25%" class="navbar"><a 
-        name="err_FOP_ERR_INVDESCR">Error <span 
-        class="mid">signal1004</span></a></td>
-      <td nowrap width="75%" class="navbar" style="text-align:right;">
-        <a class="navbar" href="javascript:__PrintSection('err_FOP_ERR_INVDESCR','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
-        <a class="navbar" href="#fld">Fields</a>
-        <a class="navbar" href="#opt">Options</a>
-        <a class="navbar" href="#mth">Methods</a>
-        <a class="navbar" href="#cfn">C/C++</a>
-      </td>
-    </tr>
-  </table>
-  <div class="mframe"><table cellpadding="0" cellspacing="0" border="0">
-    <tr>
-      <td class="hidden">dLabPro</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Identifier</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden"><code><b>signal1004</b></code></td>
-    </tr>
-    <tr>
-      <td class="hidden">&nbsp;</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Error Level</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">EL_ERROR</td>
-    </tr>
-    <tr>
-      <td class="hidden" colspan="5">&nbsp;</td>
-    </tr>
-    <tr>
-      <td class="hidden">C/C++</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Symbol</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden"><code>#define FOP_ERR_INVDESCR -1004</code></td>
-    </tr>
-  </table></div>
-  <div class="mframe2">
-  <h3>Synopsis</h3>
-  <p>
-Value of %s is not valid.
-  </p>
-  <!--{{ CUSTOM_DOC -->
-  <!--}} CUSTOM_DOC -->
-  </div>
-  <img src="../resources/blank_stc.gif" height="10">
-  </div>
   <div id="cfn_003">
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_003">C/C++ Function <span 
-        class="mid">CSignal_Cep</span></a></td>
+        name="cfn_003"></a>C/C++ Function <span 
+        class="mid">CSignal_Cep</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_003','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -776,17 +615,17 @@ Number of Cepstrum coefficients to calculate.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_001">C/C++ Function <span 
-        class="mid">CSignal_Cep2Lpc</span></a></td>
+        name="cfn_001"></a>C/C++ Function <span 
+        class="mid">CSignal_Cep2Lpc</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_001','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -865,17 +704,17 @@ Number of LPC coefficients to calculate.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_002">C/C++ Function <span 
-        class="mid">CSignal_Cep2MCep</span></a></td>
+        name="cfn_002"></a>C/C++ Function <span 
+        class="mid">CSignal_Cep2MCep</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_002','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -955,17 +794,17 @@ Number of Mel-Cepstrum coefficients to calculate.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_004">C/C++ Function <span 
-        class="mid">CSignal_DeFrame</span></a></td>
+        name="cfn_004"></a>C/C++ Function <span 
+        class="mid">CSignal_DeFrame</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_004','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1049,17 +888,17 @@ Amount of samples taken from each frame.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_036">C/C++ Function <span 
-        class="mid">CSignal_Denoise</span></a></td>
+        name="cfn_036"></a>C/C++ Function <span 
+        class="mid">CSignal_Denoise</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_036','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1162,17 +1001,17 @@ Type of input (signal, spectrum, cepstrum)
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_005">C/C++ Function <span 
-        class="mid">CSignal_DeScale</span></a></td>
+        name="cfn_005"></a>C/C++ Function <span 
+        class="mid">CSignal_DeScale</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_005','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1245,17 +1084,17 @@ Output data instance.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_006">C/C++ Function <span 
-        class="mid">CSignal_Distribution</span></a></td>
+        name="cfn_006"></a>C/C++ Function <span 
+        class="mid">CSignal_Distribution</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_006','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1331,17 +1170,17 @@ Input data instance defining the intervals
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_007">C/C++ Function <span 
-        class="mid">CSignal_Dtw</span></a></td>
+        name="cfn_007"></a>C/C++ Function <span 
+        class="mid">CSignal_Dtw</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_007','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1417,17 +1256,17 @@ Output data instance containing the alignment path and errors.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_008">C/C++ Function <span 
-        class="mid">CSignal_F02Exc</span></a></td>
+        name="cfn_008"></a>C/C++ Function <span 
+        class="mid">CSignal_F02Exc</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_008','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1536,17 +1375,17 @@ E
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_009">C/C++ Function <span 
-        class="mid">CSignal_Fft</span></a></td>
+        name="cfn_009"></a>C/C++ Function <span 
+        class="mid">CSignal_Fft</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_009','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1628,17 +1467,17 @@ Output data instance
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_010">C/C++ Function <span 
-        class="mid">CSignal_Filter</span></a></td>
+        name="cfn_010"></a>C/C++ Function <span 
+        class="mid">CSignal_Filter</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_010','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1748,17 +1587,17 @@ Filter states
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_011">C/C++ Function <span 
-        class="mid">CSignal_Fir</span></a></td>
+        name="cfn_011"></a>C/C++ Function <span 
+        class="mid">CSignal_Fir</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_011','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1857,17 +1696,17 @@ Equal to <a href="#cfn_041"><code class="link">CSignal_MFir</code></a>.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_012">C/C++ Function <span 
-        class="mid">CSignal_Frame</span></a></td>
+        name="cfn_012"></a>C/C++ Function <span 
+        class="mid">CSignal_Frame</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_012','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1965,17 +1804,17 @@ idY
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_013">C/C++ Function <span 
-        class="mid">CSignal_GCep</span></a></td>
+        name="cfn_013"></a>C/C++ Function <span 
+        class="mid">CSignal_GCep</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_013','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -2064,17 +1903,17 @@ Number of G-Cepstrum-coefficients to calculate.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_014">C/C++ Function <span 
-        class="mid">CSignal_GCep2GCep</span></a></td>
+        name="cfn_014"></a>C/C++ Function <span 
+        class="mid">CSignal_GCep2GCep</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_014','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -2168,17 +2007,17 @@ Number of Mel-Generalized Cepstrum coeffizients of output.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_015">C/C++ Function <span 
-        class="mid">CSignal_GCep2Lpc</span></a></td>
+        name="cfn_015"></a>C/C++ Function <span 
+        class="mid">CSignal_GCep2Lpc</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_015','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -2258,17 +2097,17 @@ Number of Mel-LPC-coefficients to calculate.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_016">C/C++ Function <span 
-        class="mid">CSignal_GCep2MLpc</span></a></td>
+        name="cfn_016"></a>C/C++ Function <span 
+        class="mid">CSignal_GCep2MLpc</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_016','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -2358,17 +2197,17 @@ Number of Mel-LPC-coefficients to calculate.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_017">C/C++ Function <span 
-        class="mid">CSignal_GCepNorm</span></a></td>
+        name="cfn_017"></a>C/C++ Function <span 
+        class="mid">CSignal_GCepNorm</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_017','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -2452,17 +2291,17 @@ Input data instance.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_018">C/C++ Function <span 
-        class="mid">CSignal_GetF0</span></a></td>
+        name="cfn_018"></a>C/C++ Function <span 
+        class="mid">CSignal_GetF0</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_018','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -2552,17 +2391,17 @@ Algorithm used for calculation
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_019">C/C++ Function <span 
-        class="mid">CSignal_GMult</span></a></td>
+        name="cfn_019"></a>C/C++ Function <span 
+        class="mid">CSignal_GMult</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_019','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -2626,17 +2465,17 @@ Input data instance.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_020">C/C++ Function <span 
-        class="mid">CSignal_IFft</span></a></td>
+        name="cfn_020"></a>C/C++ Function <span 
+        class="mid">CSignal_IFft</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_020','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -2679,17 +2518,17 @@ INT16 <b>CSignal_IFft</b>(CData* idY, CData* idX);<br>public: static INT16 <b>CS
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_021">C/C++ Function <span 
-        class="mid">CSignal_IGCepNorm</span></a></td>
+        name="cfn_021"></a>C/C++ Function <span 
+        class="mid">CSignal_IGCepNorm</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_021','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -2770,17 +2609,17 @@ Input data instance.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_022">C/C++ Function <span 
-        class="mid">CSignal_IGMult</span></a></td>
+        name="cfn_022"></a>C/C++ Function <span 
+        class="mid">CSignal_IGMult</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_022','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -2843,17 +2682,17 @@ Input data instance.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_023">C/C++ Function <span 
-        class="mid">CSignal_Iir</span></a></td>
+        name="cfn_023"></a>C/C++ Function <span 
+        class="mid">CSignal_Iir</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_023','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -2952,17 +2791,17 @@ Equal to <a href="#cfn_046"><code class="link">CSignal_MIir</code></a>.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_024">C/C++ Function <span 
-        class="mid">CSignal_IMCep</span></a></td>
+        name="cfn_024"></a>C/C++ Function <span 
+        class="mid">CSignal_IMCep</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_024','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -3045,17 +2884,17 @@ Output (framed) speech signal
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_025">C/C++ Function <span 
-        class="mid">CSignal_IMlt</span></a></td>
+        name="cfn_025"></a>C/C++ Function <span 
+        class="mid">CSignal_IMlt</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_025','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -3124,17 +2963,17 @@ frame length of output signal.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_051">C/C++ Function <span 
-        class="mid">CSignal_ISvq</span></a></td>
+        name="cfn_051"></a>C/C++ Function <span 
+        class="mid">CSignal_ISvq</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_051','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -3173,17 +3012,17 @@ INT16 <b>CSignal_ISvq</b>(CData* idY, CData* idI, CData* idQ);<br>public: static
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_052">C/C++ Function <span 
-        class="mid">CSignal_IVq</span></a></td>
+        name="cfn_052"></a>C/C++ Function <span 
+        class="mid">CSignal_IVq</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_052','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -3265,17 +3104,17 @@ Output vector sequence
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_026">C/C++ Function <span 
-        class="mid">CSignal_Lpc</span></a></td>
+        name="cfn_026"></a>C/C++ Function <span 
+        class="mid">CSignal_Lpc</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_026','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -3369,17 +3208,17 @@ Calculation method.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_027">C/C++ Function <span 
-        class="mid">CSignal_Lpc2Cep</span></a></td>
+        name="cfn_027"></a>C/C++ Function <span 
+        class="mid">CSignal_Lpc2Cep</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_027','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -3459,17 +3298,17 @@ Number of G-Cepstrum coefficients to calculate.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_028">C/C++ Function <span 
-        class="mid">CSignal_Lpc2GCep</span></a></td>
+        name="cfn_028"></a>C/C++ Function <span 
+        class="mid">CSignal_Lpc2GCep</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_028','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -3560,17 +3399,17 @@ Number of G-Cepstrum coefficients to calculate.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_029">C/C++ Function <span 
-        class="mid">CSignal_Lpc2MGCep</span></a></td>
+        name="cfn_029"></a>C/C++ Function <span 
+        class="mid">CSignal_Lpc2MGCep</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_029','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -3670,17 +3509,17 @@ Number of G-Cepstrum coefficients to calculate.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_030">C/C++ Function <span 
-        class="mid">CSignal_Lpc2MLpc</span></a></td>
+        name="cfn_030"></a>C/C++ Function <span 
+        class="mid">CSignal_Lpc2MLpc</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_030','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -3780,17 +3619,17 @@ Number of Mel-LPC coefficients to calculate.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_031">C/C++ Function <span 
-        class="mid">CSignal_Lsf2Poly</span></a></td>
+        name="cfn_031"></a>C/C++ Function <span 
+        class="mid">CSignal_Lsf2Poly</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_031','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -3849,17 +3688,17 @@ Input data instance.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_035">C/C++ Function <span 
-        class="mid">CSignal_MCep</span></a></td>
+        name="cfn_035"></a>C/C++ Function <span 
+        class="mid">CSignal_MCep</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_035','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -3939,17 +3778,17 @@ Warping factor.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_032">C/C++ Function <span 
-        class="mid">CSignal_MCep2Cep</span></a></td>
+        name="cfn_032"></a>C/C++ Function <span 
+        class="mid">CSignal_MCep2Cep</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_032','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -4018,17 +3857,17 @@ Number of Cepstrum coefficients to calculate.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_033">C/C++ Function <span 
-        class="mid">CSignal_MCep2MCep</span></a></td>
+        name="cfn_033"></a>C/C++ Function <span 
+        class="mid">CSignal_MCep2MCep</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_033','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -4108,17 +3947,17 @@ Number of Mel-Cepstrum coefficients to calculate.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_034">C/C++ Function <span 
-        class="mid">CSignal_MCep2MLpc</span></a></td>
+        name="cfn_034"></a>C/C++ Function <span 
+        class="mid">CSignal_MCep2MLpc</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_034','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -4208,17 +4047,17 @@ Number of Mel-LPC-coefficients to calculate.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_037">C/C++ Function <span 
-        class="mid">CSignal_MCepEnhance</span></a></td>
+        name="cfn_037"></a>C/C++ Function <span 
+        class="mid">CSignal_MCepEnhance</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_037','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -4277,17 +4116,17 @@ Output Mel-Cepstrum sequence
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_038">C/C++ Function <span 
-        class="mid">CSignal_MFb</span></a></td>
+        name="cfn_038"></a>C/C++ Function <span 
+        class="mid">CSignal_MFb</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_038','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -4383,17 +4222,17 @@ Calculation method.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_039">C/C++ Function <span 
-        class="mid">CSignal_Mfft</span></a></td>
+        name="cfn_039"></a>C/C++ Function <span 
+        class="mid">CSignal_Mfft</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_039','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -4476,17 +4315,17 @@ Warping factor.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_040">C/C++ Function <span 
-        class="mid">CSignal_MFilter</span></a></td>
+        name="cfn_040"></a>C/C++ Function <span 
+        class="mid">CSignal_MFilter</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_040','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -4611,17 +4450,17 @@ Filter states
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_041">C/C++ Function <span 
-        class="mid">CSignal_MFir</span></a></td>
+        name="cfn_041"></a>C/C++ Function <span 
+        class="mid">CSignal_MFir</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_041','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -4733,17 +4572,17 @@ Equal to <a href="#cfn_040"><code class="link">CSignal_MFilter</code></a>.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_042">C/C++ Function <span 
-        class="mid">CSignal_MGCep</span></a></td>
+        name="cfn_042"></a>C/C++ Function <span 
+        class="mid">CSignal_MGCep</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_042','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -4833,17 +4672,17 @@ Number of Mel-Generalized-Cepstrum coefficients to calculate.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_043">C/C++ Function <span 
-        class="mid">CSignal_MGCep2Lpc</span></a></td>
+        name="cfn_043"></a>C/C++ Function <span 
+        class="mid">CSignal_MGCep2Lpc</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_043','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -4923,17 +4762,17 @@ Number of Mel-LPC-coefficients to calculate.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_044">C/C++ Function <span 
-        class="mid">CSignal_MGCep2MGCep</span></a></td>
+        name="cfn_044"></a>C/C++ Function <span 
+        class="mid">CSignal_MGCep2MGCep</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_044','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -5037,17 +4876,17 @@ Number of Mel-Generalized Cepstrum coeffizients of output.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_045">C/C++ Function <span 
-        class="mid">CSignal_MGCep2MLpc</span></a></td>
+        name="cfn_045"></a>C/C++ Function <span 
+        class="mid">CSignal_MGCep2MLpc</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_045','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -5137,17 +4976,17 @@ Number of Mel-LPC-coefficients to calculate.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_046">C/C++ Function <span 
-        class="mid">CSignal_MIir</span></a></td>
+        name="cfn_046"></a>C/C++ Function <span 
+        class="mid">CSignal_MIir</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_046','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -5259,17 +5098,17 @@ Equal to <a href="#cfn_040"><code class="link">CSignal_MFilter</code></a>.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_047">C/C++ Function <span 
-        class="mid">CSignal_MLpc</span></a></td>
+        name="cfn_047"></a>C/C++ Function <span 
+        class="mid">CSignal_MLpc</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_047','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -5374,17 +5213,17 @@ Calculation method.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_048">C/C++ Function <span 
-        class="mid">CSignal_MLpc2GCep</span></a></td>
+        name="cfn_048"></a>C/C++ Function <span 
+        class="mid">CSignal_MLpc2GCep</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_048','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -5474,17 +5313,17 @@ Number of G-Cepstrum coefficients to calculate.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_049">C/C++ Function <span 
-        class="mid">CSignal_MLpc2Lpc</span></a></td>
+        name="cfn_049"></a>C/C++ Function <span 
+        class="mid">CSignal_MLpc2Lpc</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_049','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -5574,17 +5413,17 @@ Number of Mel-LPC coefficients to calculate.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_050">C/C++ Function <span 
-        class="mid">CSignal_MLpc2MCep</span></a></td>
+        name="cfn_050"></a>C/C++ Function <span 
+        class="mid">CSignal_MLpc2MCep</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_050','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -5673,17 +5512,17 @@ Number of Mel-Cepstrum coefficients to calculate.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_053">C/C++ Function <span 
-        class="mid">CSignal_MLpc2MGCep</span></a></td>
+        name="cfn_053"></a>C/C++ Function <span 
+        class="mid">CSignal_MLpc2MGCep</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_053','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -5783,17 +5622,17 @@ Number of G-Cepstrum coefficients to calculate.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_054">C/C++ Function <span 
-        class="mid">CSignal_MLpc2MLpc</span></a></td>
+        name="cfn_054"></a>C/C++ Function <span 
+        class="mid">CSignal_MLpc2MLpc</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_054','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -5893,17 +5732,17 @@ Number of Mel-LPC coefficients to calculate.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_055">C/C++ Function <span 
-        class="mid">CSignal_MLsf2MLsf</span></a></td>
+        name="cfn_055"></a>C/C++ Function <span 
+        class="mid">CSignal_MLsf2MLsf</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_055','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -5973,17 +5812,17 @@ Target warping factor.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_056">C/C++ Function <span 
-        class="mid">CSignal_Mlt</span></a></td>
+        name="cfn_056"></a>C/C++ Function <span 
+        class="mid">CSignal_Mlt</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_056','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -6042,17 +5881,17 @@ Input data instance holding the framed signal.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_057">C/C++ Function <span 
-        class="mid">CSignal_Noisify</span></a></td>
+        name="cfn_057"></a>C/C++ Function <span 
+        class="mid">CSignal_Noisify</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_057','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -6112,17 +5951,17 @@ Input data instance.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_000">C/C++ Function <span 
-        class="mid">CSignal_Op</span></a></td>
+        name="cfn_000"></a>C/C++ Function <span 
+        class="mid">CSignal_Op</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_000','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -6193,17 +6032,17 @@ P
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_058">C/C++ Function <span 
-        class="mid">CSignal_Pitchmark</span></a></td>
+        name="cfn_058"></a>C/C++ Function <span 
+        class="mid">CSignal_Pitchmark</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_058','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -6311,17 +6150,17 @@ nMax
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_059">C/C++ Function <span 
-        class="mid">CSignal_Poly2Lsf</span></a></td>
+        name="cfn_059"></a>C/C++ Function <span 
+        class="mid">CSignal_Poly2Lsf</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_059','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -6380,17 +6219,17 @@ Input data instance.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_060">C/C++ Function <span 
-        class="mid">CSignal_Rmdc</span></a></td>
+        name="cfn_060"></a>C/C++ Function <span 
+        class="mid">CSignal_Rmdc</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_060','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -6453,17 +6292,17 @@ Input data instance.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_061">C/C++ Function <span 
-        class="mid">CSignal_Roots</span></a></td>
+        name="cfn_061"></a>C/C++ Function <span 
+        class="mid">CSignal_Roots</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_061','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -6526,17 +6365,17 @@ Input data instance.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_062">C/C++ Function <span 
-        class="mid">CSignal_Scale</span></a></td>
+        name="cfn_062"></a>C/C++ Function <span 
+        class="mid">CSignal_Scale</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_062','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -6622,17 +6461,17 @@ Scale factor
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_068">C/C++ Function <span 
-        class="mid">CSignal_SetScale</span></a></td>
+        name="cfn_068"></a>C/C++ Function <span 
+        class="mid">CSignal_SetScale</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_068','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -6693,17 +6532,17 @@ Scale factor
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_063">C/C++ Function <span 
-        class="mid">CSignal_Svq</span></a></td>
+        name="cfn_063"></a>C/C++ Function <span 
+        class="mid">CSignal_Svq</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_063','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -6745,17 +6584,17 @@ INT16 <b>CSignal_Svq</b>(CData* idQ, CData* idI, CData* idX, CData* idB);<br>pub
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_064">C/C++ Function <span 
-        class="mid">CSignal_Unwrap</span></a></td>
+        name="cfn_064"></a>C/C++ Function <span 
+        class="mid">CSignal_Unwrap</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_064','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -6818,17 +6657,17 @@ Output complex (radian) data instance containing unwrapped phase in imaginary pa
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_065">C/C++ Function <span 
-        class="mid">CSignal_Vq</span></a></td>
+        name="cfn_065"></a>C/C++ Function <span 
+        class="mid">CSignal_Vq</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_065','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -6924,17 +6763,17 @@ String indicating cluster method: <code>LBG</code> or <code>PAM</code> currently
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_066">C/C++ Function <span 
-        class="mid">CSignal_Window</span></a></td>
+        name="cfn_066"></a>C/C++ Function <span 
+        class="mid">CSignal_Window</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_066','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -7041,17 +6880,17 @@ Window normalization.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_067">C/C++ Function <span 
-        class="mid">CSignal_Zcr</span></a></td>
+        name="cfn_067"></a>C/C++ Function <span 
+        class="mid">CSignal_Zcr</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_067','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -7116,6 +6955,222 @@ Input data instance defining the intervals
 	<p>
 <code>O_K</code>
 	</p>
+  <!--{{ CUSTOM_DOC -->
+  <!--}} CUSTOM_DOC -->
+  </div>
+  <img src="../resources/blank_stc.gif" height="10">
+  </div>
+  <div id="err_FOP_ERR_FAIL">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td nowrap width="25%" class="navbar"><a 
+        name="err_FOP_ERR_FAIL"></a>Error <span 
+        class="mid">signal1001</span></td>
+      <td nowrap width="75%" class="navbar" style="text-align:right;">
+        <a class="navbar" href="javascript:__PrintSection('err_FOP_ERR_FAIL','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
+  </table>
+  <div class="mframe"><table cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td class="hidden">dLabPro</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Identifier</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code><b>signal1001</b></code></td>
+    </tr>
+    <tr>
+      <td class="hidden">&nbsp;</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Error Level</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">EL_ERROR</td>
+    </tr>
+    <tr>
+      <td class="hidden" colspan="5">&nbsp;</td>
+    </tr>
+    <tr>
+      <td class="hidden">C/C++</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Symbol</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code>#define FOP_ERR_FAIL -1001</code></td>
+    </tr>
+  </table></div>
+  <div class="mframe2">
+  <h3>Synopsis</h3>
+  <p>
+Execution of \"%s\" failed.
+  </p>
+  <!--{{ CUSTOM_DOC -->
+  <!--}} CUSTOM_DOC -->
+  </div>
+  <img src="../resources/blank_stc.gif" height="10">
+  </div>
+  <div id="err_FOP_ERR_NOTSUPP">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td nowrap width="25%" class="navbar"><a 
+        name="err_FOP_ERR_NOTSUPP"></a>Error <span 
+        class="mid">signal1002</span></td>
+      <td nowrap width="75%" class="navbar" style="text-align:right;">
+        <a class="navbar" href="javascript:__PrintSection('err_FOP_ERR_NOTSUPP','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
+  </table>
+  <div class="mframe"><table cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td class="hidden">dLabPro</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Identifier</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code><b>signal1002</b></code></td>
+    </tr>
+    <tr>
+      <td class="hidden">&nbsp;</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Error Level</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">EL_ERROR</td>
+    </tr>
+    <tr>
+      <td class="hidden" colspan="5">&nbsp;</td>
+    </tr>
+    <tr>
+      <td class="hidden">C/C++</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Symbol</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code>#define FOP_ERR_NOTSUPP -1002</code></td>
+    </tr>
+  </table></div>
+  <div class="mframe2">
+  <h3>Synopsis</h3>
+  <p>
+Operation %s is not implemented yet or not supported.
+  </p>
+  <!--{{ CUSTOM_DOC -->
+  <!--}} CUSTOM_DOC -->
+  </div>
+  <img src="../resources/blank_stc.gif" height="10">
+  </div>
+  <div id="err_FOP_ERR_INVARG">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td nowrap width="25%" class="navbar"><a 
+        name="err_FOP_ERR_INVARG"></a>Error <span 
+        class="mid">signal1003</span></td>
+      <td nowrap width="75%" class="navbar" style="text-align:right;">
+        <a class="navbar" href="javascript:__PrintSection('err_FOP_ERR_INVARG','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
+  </table>
+  <div class="mframe"><table cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td class="hidden">dLabPro</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Identifier</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code><b>signal1003</b></code></td>
+    </tr>
+    <tr>
+      <td class="hidden">&nbsp;</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Error Level</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">EL_ERROR</td>
+    </tr>
+    <tr>
+      <td class="hidden" colspan="5">&nbsp;</td>
+    </tr>
+    <tr>
+      <td class="hidden">C/C++</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Symbol</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code>#define FOP_ERR_INVARG -1003</code></td>
+    </tr>
+  </table></div>
+  <div class="mframe2">
+  <h3>Synopsis</h3>
+  <p>
+Argument %s = \"%s\" is invalid%s.
+  </p>
+  <!--{{ CUSTOM_DOC -->
+  <!--}} CUSTOM_DOC -->
+  </div>
+  <img src="../resources/blank_stc.gif" height="10">
+  </div>
+  <div id="err_FOP_ERR_INVDESCR">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td nowrap width="25%" class="navbar"><a 
+        name="err_FOP_ERR_INVDESCR"></a>Error <span 
+        class="mid">signal1004</span></td>
+      <td nowrap width="75%" class="navbar" style="text-align:right;">
+        <a class="navbar" href="javascript:__PrintSection('err_FOP_ERR_INVDESCR','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
+  </table>
+  <div class="mframe"><table cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td class="hidden">dLabPro</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Identifier</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code><b>signal1004</b></code></td>
+    </tr>
+    <tr>
+      <td class="hidden">&nbsp;</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Error Level</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">EL_ERROR</td>
+    </tr>
+    <tr>
+      <td class="hidden" colspan="5">&nbsp;</td>
+    </tr>
+    <tr>
+      <td class="hidden">C/C++</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Symbol</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code>#define FOP_ERR_INVDESCR -1004</code></td>
+    </tr>
+  </table></div>
+  <div class="mframe2">
+  <h3>Synopsis</h3>
+  <p>
+Value of %s is not valid.
+  </p>
   <!--{{ CUSTOM_DOC -->
   <!--}} CUSTOM_DOC -->
   </div>

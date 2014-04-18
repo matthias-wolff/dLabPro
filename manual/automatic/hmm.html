@@ -184,17 +184,17 @@ hmm.html hmm CHmm [
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cls">Class <span 
-        class="mid">hmm</span></a></td>
+        name="cls"></a>Class <span 
+        class="mid">hmm</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cls','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -291,7 +291,18 @@ HMM-implementation of <code>-order</code>,
 
   <h3><a name="cls_members">Class Members</a></h3>
   <table cellpadding="4" cellspacing="0" border="0">
-    <tr><td class="rowgroup" colspan="2"><a name="fld">Fields</a></td></tr>
+    <tr>
+      <td class="rowgroup"><a name="fld">Fields</a></td>
+      <td class="rowgroup" style="text-align:right">
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
     <tr><td><a href="#fld_bwalpha_fstrev"><code class="link">bwalpha_fstrev</code></a></td><td> Internal use: Reverse fst of last alpha calculation</td></tr>
     <tr><td><a href="#fld_bwalpha_g"><code class="link">bwalpha_g</code></a></td><td> Internal use: Forward variables for alpha caluclation</td></tr>
     <tr><td><a href="#fld_bwalpha_h"><code class="link">bwalpha_h</code></a></td><td> Internal use: Backward variables for alpha caluclation</td></tr>
@@ -305,14 +316,36 @@ HMM-implementation of <code>-order</code>,
     <tr><td><a href="#fld_pss"><code class="link">pss</code></a></td><td> Per HMM state statistics.</td></tr>
 <tr><td colspan="2">[<a href="fst.html#fld" class="code">Inherited fields</a>]</td></tr>
     <tr><td colspan="2" class="rowempty">&nbsp;</td></tr>
-    <tr><td class="rowgroup" colspan="2"><a name="opt">Options</a></td></tr>
+    <tr>
+      <td class="rowgroup"><a name="opt">Options</a></td>
+      <td class="rowgroup" style="text-align:right">
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
     <tr><td><a href="#opt__byrc"><code class="link">/byrc</code></a></td><td> Use RC instead of variance</td></tr>
     <tr><td><a href="#opt__fast"><code class="link">/fast</code></a></td><td> Qick and dirty</td></tr>
     <tr><td><a href="#opt__nomix"><code class="link">/nomix</code></a></td><td> Ignore mixture map</td></tr>
     <tr><td><a href="#opt__var"><code class="link">/var</code></a></td><td> Use variance vectors</td></tr>
 <tr><td colspan="2">[<a href="fst.html#opt" class="code">Inherited oprtions</a>]</td></tr>
     <tr><td colspan="2" class="rowempty">&nbsp;</td></tr>
-    <tr><td class="rowgroup" colspan="2"><a name="mth">Methods</a></td></tr>
+    <tr>
+      <td class="rowgroup"><a name="mth">Methods</a></td>
+      <td class="rowgroup" style="text-align:right">
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
     <tr><td><a href="#mth_-best_n"><code class="link">-best_n</code></a></td><td><code>&lt;hmm itSrc&gt; &lt;int nUnit&gt; &lt;int nPaths&gt; &lt;int nPathlength&gt; &lt;hmm this&gt; <b>-best_n</b> </code><br> Creates a tree with the best N paths taken from the source Fsm</td></tr>
     <tr><td><a href="#mth_-bwalpha"><code class="link">-bwalpha</code></a></td><td><code>&lt;int nUnit&gt; &lt;data idWeights&gt; &lt;data idAlpha&gt; &lt;hmm this&gt; <b>-bwalpha</b> </code><br> calculate alpha values for baum-welch-training</td></tr>
     <tr><td><a href="#mth_-bwupdate"><code class="link">-bwupdate</code></a></td><td><code>&lt;data idAlpha&gt; &lt;data idMsf&gt; &lt;data idLsf&gt; &lt;int nUnit&gt; &lt;hmm this&gt; <b>-bwupdate</b> </code><br> Update HMM with feature vectors (baum-welch-training).</td></tr>
@@ -345,7 +378,18 @@ HMM-implementation of <code>-order</code>,
     <tr><td><a href="#mth_-update"><code class="link">-update</code></a></td><td><code>&lt;data idSrc&gt; &lt;int nIcTis&gt; &lt;int nIcTer&gt; &lt;data idMsf&gt; &lt;data idLsf&gt; &lt;int nUnit&gt; &lt;hmm this&gt; <b>-update</b> </code><br> Update HMM with feature vectors.</td></tr>
 <tr><td colspan="2">[<a href="fst.html#mth" class="code">Inherited methods</a>]</td></tr>
     <tr><td colspan="2" class="rowempty">&nbsp;</td></tr>
-    <tr><td class="rowgroup" colspan="2"><a name="cfn">C/C++ API</a></td></tr>
+    <tr>
+      <td class="rowgroup"><a name="cfn">C/C++ API</a></td>
+      <td class="rowgroup" style="text-align:right">
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
 <tr><td class="rowgroup" colspan="2" style="font-weight:normal"> (see 
 <a href="#mth"><u>method list</u></a>
  and 
@@ -360,7 +404,18 @@ HMM-implementation of <code>-order</code>,
     <tr><td><a href="#cfn_001"><code class="link">CHmm::Op</code></a></td><td><code>public: INT16 <b>CHmm::Op</b>(CFst* itSrc1, CFst* itSrc2, FLOAT64 nPar1, FLOAT64 nPar2, INT16 nOpc);<br></code><br>  Wrapper method for the HMM implementation of all automaton operations.</td></tr>
     <tr><td><a href="#cfn_006"><code class="link">CHmm::UpdateStatInt</code></a></td><td><code>private: INT16 <b>CHmm::UpdateStatInt</b>(CStatistics* iStat, CData* idVec, CData* idLab);<br></code><br>  Updates an internal statistics with a set of labelled feature vectors.</td></tr>
     <tr><td colspan="2" class="rowempty">&nbsp;</td></tr>
-    <tr><td class="rowgroup" colspan="2"><a name="err">Errors</a></td></tr>
+    <tr>
+      <td class="rowgroup"><a name="err">Errors</a></td>
+      <td class="rowgroup" style="text-align:right">
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
     <tr><td><a href="#err_HMM_DISCARDGMM"><code class="link">hmm1024</code></a></td><td> Discarding GMM structures.</td></tr>
     <tr><td><a href="#err_HMM_BADNOLAB"><code class="link">hmm1025</code></a></td><td> %ld labels for %ld feature vectors. Truncating %s.</td></tr>
     <tr><td><a href="#err_HMM_NOSPLIT"><code class="link">hmm1026</code></a></td><td> No Gaussians split.</td></tr>
@@ -372,305 +427,21 @@ HMM-implementation of <code>-order</code>,
   <img src="../resources/blank_stc.gif" height="10">
   </div>
 
-  <div id="err_HMM_DISCARDGMM">
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-    <tr>
-      <td nowrap width="25%" class="navbar"><a 
-        name="err_HMM_DISCARDGMM">Warning <span 
-        class="mid">hmm1024</span></a></td>
-      <td nowrap width="75%" class="navbar" style="text-align:right;">
-        <a class="navbar" href="javascript:__PrintSection('err_HMM_DISCARDGMM','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
-        <a class="navbar" href="#fld">Fields</a>
-        <a class="navbar" href="#opt">Options</a>
-        <a class="navbar" href="#mth">Methods</a>
-        <a class="navbar" href="#cfn">C/C++</a>
-      </td>
-    </tr>
-  </table>
-  <div class="mframe"><table cellpadding="0" cellspacing="0" border="0">
-    <tr>
-      <td class="hidden">dLabPro</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Identifier</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden"><code><b>hmm1024</b></code></td>
-    </tr>
-    <tr>
-      <td class="hidden">&nbsp;</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Error Level</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">EL_WARNING</td>
-    </tr>
-    <tr>
-      <td class="hidden" colspan="5">&nbsp;</td>
-    </tr>
-    <tr>
-      <td class="hidden">C/C++</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Symbol</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden"><code>#define HMM_DISCARDGMM -1024</code></td>
-    </tr>
-  </table></div>
-  <div class="mframe2">
-  <h3>Synopsis</h3>
-  <p>
-Discarding GMM structures.
-  </p>
-  <h3>Description</h3>
-  <p>This warning means that the GMMs stored in field <a href="#fld_gm"><code class="link">gm</code></a> or their
-  <a href="gmm.html">mixture or tying structure</a> were discarded.</p>
-  <h4><a href="#mth_-setup_gmm"><code class="link">-setup_gmm</code></a></h4>
-  <p>The error occurs if there were GMMs present when invoking
-  <a href="#mth_-setup_gmm"><code class="link">-setup_gmm</code></a> but there's something wrong with them so they had to be
-  ignored and their structure could not be preserved.</p>
-  <ol>
-    <li>Hint  "<code>(GMMs corrupt)</code>":<br>
-      The present GMMs were not (properly) set up. Use
-      <code>&lt;this&gt;.<a href="#fld_gm"><code class="link">gm</code></a> <a class="code"
-      href="gmm.html#mth_-status">-status</a> (before invoking
-      <a href="#mth_-setup_gmm"><code class="link">-setup_gmm</code></a>!) to get more details.</li>
-    <li>Hint     "<code> (wrong number of GMMs)</code>":<br>
-      There were fewer or more GMMs present than there are classes in the
-      most significant feature statistics stored in field <a href="#fld_pfsm"><code class="link">pfsm</code></a>.</li>
-  </ol>
-  <p>The warning indicates that <a href="#mth_-setup_gmm"><code class="link">-setup_gmm</code></a> created one single
-  Gaussians with full covariance matrix for each statistics class contained
-  in field <a href="#fld_pfsm"><code class="link">pfsm</code></a>.</p>
-  <!--{{ CUSTOM_DOC -->
-  <!--}} CUSTOM_DOC -->
-  </div>
-  <img src="../resources/blank_stc.gif" height="10">
-  </div>
-  <div id="err_HMM_BADNOLAB">
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-    <tr>
-      <td nowrap width="25%" class="navbar"><a 
-        name="err_HMM_BADNOLAB">Warning <span 
-        class="mid">hmm1025</span></a></td>
-      <td nowrap width="75%" class="navbar" style="text-align:right;">
-        <a class="navbar" href="javascript:__PrintSection('err_HMM_BADNOLAB','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
-        <a class="navbar" href="#fld">Fields</a>
-        <a class="navbar" href="#opt">Options</a>
-        <a class="navbar" href="#mth">Methods</a>
-        <a class="navbar" href="#cfn">C/C++</a>
-      </td>
-    </tr>
-  </table>
-  <div class="mframe"><table cellpadding="0" cellspacing="0" border="0">
-    <tr>
-      <td class="hidden">dLabPro</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Identifier</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden"><code><b>hmm1025</b></code></td>
-    </tr>
-    <tr>
-      <td class="hidden">&nbsp;</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Error Level</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">EL_WARNING</td>
-    </tr>
-    <tr>
-      <td class="hidden" colspan="5">&nbsp;</td>
-    </tr>
-    <tr>
-      <td class="hidden">C/C++</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Symbol</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden"><code>#define HMM_BADNOLAB -1025</code></td>
-    </tr>
-  </table></div>
-  <div class="mframe2">
-  <h3>Synopsis</h3>
-  <p>
-%ld labels for %ld feature vectors. Truncating %s.
-  </p>
-  <h3>Description</h3>
-	<h3>Parameters</h3>
-	<table>
-		<tr>
-			<td class="hidden">&nbsp;&nbsp;</td>
-			<td class="hidden"><b><code>
-1
-</code></b></td>
-			<td class="hidden">&nbsp;</td>
-			<td class="hidden">
-Number of labels
-			</td>
-		</tr>
-		<tr>
-			<td class="hidden">&nbsp;&nbsp;</td>
-			<td class="hidden"><b><code>
-2
-</code></b></td>
-			<td class="hidden">&nbsp;</td>
-			<td class="hidden">
-Number of feature vectors
-			</td>
-		</tr>
-		<tr>
-			<td class="hidden">&nbsp;&nbsp;</td>
-			<td class="hidden"><b><code>
-3
-</code></b></td>
-			<td class="hidden">&nbsp;</td>
-			<td class="hidden">
-Name of truncated sequence
-<h3><a href="#mth_-update"><code class="link">-update</code></a></h3>
-<p>This warning occurs if the number of labels (excluding epsilon labels!) in
-the Gaussian index sequence <code>idSrc</code> does not equal the number of
-feature vectors in <code>idMsf</code> or <code>idLsf</code>. The data were
-truncated to the shorter of both sequences.</p>
-			</td>
-		</tr>
-	</table>
-  <!--{{ CUSTOM_DOC -->
-  <!--}} CUSTOM_DOC -->
-  </div>
-  <img src="../resources/blank_stc.gif" height="10">
-  </div>
-  <div id="err_HMM_NOSPLIT">
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-    <tr>
-      <td nowrap width="25%" class="navbar"><a 
-        name="err_HMM_NOSPLIT">Warning <span 
-        class="mid">hmm1026</span></a></td>
-      <td nowrap width="75%" class="navbar" style="text-align:right;">
-        <a class="navbar" href="javascript:__PrintSection('err_HMM_NOSPLIT','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
-        <a class="navbar" href="#fld">Fields</a>
-        <a class="navbar" href="#opt">Options</a>
-        <a class="navbar" href="#mth">Methods</a>
-        <a class="navbar" href="#cfn">C/C++</a>
-      </td>
-    </tr>
-  </table>
-  <div class="mframe"><table cellpadding="0" cellspacing="0" border="0">
-    <tr>
-      <td class="hidden">dLabPro</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Identifier</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden"><code><b>hmm1026</b></code></td>
-    </tr>
-    <tr>
-      <td class="hidden">&nbsp;</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Error Level</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">EL_WARNING</td>
-    </tr>
-    <tr>
-      <td class="hidden" colspan="5">&nbsp;</td>
-    </tr>
-    <tr>
-      <td class="hidden">C/C++</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Symbol</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden"><code>#define HMM_NOSPLIT -1026</code></td>
-    </tr>
-  </table></div>
-  <div class="mframe2">
-  <h3>Synopsis</h3>
-  <p>
-No Gaussians split.
-  </p>
-  <h3>Description</h3>
-  <h4><a href="#mth_-split"><code class="link">-split</code></a></h4>
-  <p>No Gaussian were split due to constraints (as e.g. minimal Gaussian
-  reference counter). This warning indicates the (normal) end of an iterative
-  HMM re-estimation procedure.</p>
-  <!--{{ CUSTOM_DOC -->
-  <!--}} CUSTOM_DOC -->
-  </div>
-  <img src="../resources/blank_stc.gif" height="10">
-  </div>
-  <div id="err_HMM_INCOMPAT">
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-    <tr>
-      <td nowrap width="25%" class="navbar"><a 
-        name="err_HMM_INCOMPAT">Warning <span 
-        class="mid">hmm1027</span></a></td>
-      <td nowrap width="75%" class="navbar" style="text-align:right;">
-        <a class="navbar" href="javascript:__PrintSection('err_HMM_INCOMPAT','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
-        <a class="navbar" href="#fld">Fields</a>
-        <a class="navbar" href="#opt">Options</a>
-        <a class="navbar" href="#mth">Methods</a>
-        <a class="navbar" href="#cfn">C/C++</a>
-      </td>
-    </tr>
-  </table>
-  <div class="mframe"><table cellpadding="0" cellspacing="0" border="0">
-    <tr>
-      <td class="hidden">dLabPro</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Identifier</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden"><code><b>hmm1027</b></code></td>
-    </tr>
-    <tr>
-      <td class="hidden">&nbsp;</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Error Level</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">EL_WARNING</td>
-    </tr>
-    <tr>
-      <td class="hidden" colspan="5">&nbsp;</td>
-    </tr>
-    <tr>
-      <td class="hidden">C/C++</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Symbol</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden"><code>#define HMM_INCOMPAT -1027</code></td>
-    </tr>
-  </table></div>
-  <div class="mframe2">
-  <h3>Synopsis</h3>
-  <p>
-Incompatible statistics.
-  </p>
-  <h3>Description</h3>
-  <p>This error occurs when attempting to <a href="#mth_-merge_stats">merge</a> the statistics of two incompatible
-  HMM instances. Two HMM instances are incompatible if the dimensions of their Gaussian reference counters (see
-  field <a href="#fld_grc"><code class="link">grc</code></a>) or their total transition number (see field <a href="#fld_td"><code class="link">td</code></a>) do not match.</p>
-  <!--{{ CUSTOM_DOC -->
-  <!--}} CUSTOM_DOC -->
-  </div>
-  <img src="../resources/blank_stc.gif" height="10">
-  </div>
   <div id="fld_bwalpha_fstrev">
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="fld_bwalpha_fstrev">Field <span 
-        class="mid">bwalpha_fstrev</span></a></td>
+        name="fld_bwalpha_fstrev"></a>Field <span 
+        class="mid">bwalpha_fstrev</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('fld_bwalpha_fstrev','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -736,17 +507,17 @@ Internal use: Reverse fst of last alpha calculation
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="fld_bwalpha_g">Field <span 
-        class="mid">bwalpha_g</span></a></td>
+        name="fld_bwalpha_g"></a>Field <span 
+        class="mid">bwalpha_g</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('fld_bwalpha_g','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -812,17 +583,17 @@ Internal use: Forward variables for alpha caluclation
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="fld_bwalpha_h">Field <span 
-        class="mid">bwalpha_h</span></a></td>
+        name="fld_bwalpha_h"></a>Field <span 
+        class="mid">bwalpha_h</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('fld_bwalpha_h','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -888,17 +659,17 @@ Internal use: Backward variables for alpha caluclation
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="fld_gm">Field <span 
-        class="mid">gm</span></a></td>
+        name="fld_gm"></a>Field <span 
+        class="mid">gm</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('fld_gm','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -964,17 +735,17 @@ Gaussians associated with HMM transitions.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="fld_grc">Field <span 
-        class="mid">grc</span></a></td>
+        name="fld_grc"></a>Field <span 
+        class="mid">grc</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('fld_grc','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1040,17 +811,17 @@ Gaussian reference counter
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="fld_lsmean">Field <span 
-        class="mid">lsmean</span></a></td>
+        name="fld_lsmean"></a>Field <span 
+        class="mid">lsmean</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('fld_lsmean','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1116,17 +887,17 @@ Means of least significant features.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="fld_pfsl">Field <span 
-        class="mid">pfsl</span></a></td>
+        name="fld_pfsl"></a>Field <span 
+        class="mid">pfsl</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('fld_pfsl','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1192,17 +963,17 @@ Per frame statistics (least significant features).
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="fld_pfsm">Field <span 
-        class="mid">pfsm</span></a></td>
+        name="fld_pfsm"></a>Field <span 
+        class="mid">pfsm</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('fld_pfsm','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1268,17 +1039,17 @@ Per frame statistics (most significant features).
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="fld_pls">Field <span 
-        class="mid">pls</span></a></td>
+        name="fld_pls"></a>Field <span 
+        class="mid">pls</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('fld_pls','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1344,17 +1115,17 @@ Per HMM layer statistics.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="fld_pms">Field <span 
-        class="mid">pms</span></a></td>
+        name="fld_pms"></a>Field <span 
+        class="mid">pms</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('fld_pms','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1420,17 +1191,17 @@ Per HMM statistics.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="fld_pss">Field <span 
-        class="mid">pss</span></a></td>
+        name="fld_pss"></a>Field <span 
+        class="mid">pss</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('fld_pss','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1496,17 +1267,17 @@ Per HMM state statistics.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="opt__byrc">Option <span 
-        class="mid">/byrc</span></a></td>
+        name="opt__byrc"></a>Option <span 
+        class="mid">/byrc</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('opt__byrc','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1548,17 +1319,17 @@ Use RC instead of variance
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="opt__fast">Option <span 
-        class="mid">/fast</span></a></td>
+        name="opt__fast"></a>Option <span 
+        class="mid">/fast</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('opt__fast','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1600,17 +1371,17 @@ Qick and dirty
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="opt__nomix">Option <span 
-        class="mid">/nomix</span></a></td>
+        name="opt__nomix"></a>Option <span 
+        class="mid">/nomix</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('opt__nomix','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1655,17 +1426,17 @@ Ignore mixture map
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="opt__var">Option <span 
-        class="mid">/var</span></a></td>
+        name="opt__var"></a>Option <span 
+        class="mid">/var</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('opt__var','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1708,17 +1479,17 @@ Use variance vectors
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_-best_n">Method <span 
-        class="mid">-best_n</span></a></td>
+        name="mth_-best_n"></a>Method <span 
+        class="mid">-best_n</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth_-best_n','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1860,17 +1631,17 @@ Method looses state qualifications; to be fixed.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_-bwalpha">Method <span 
-        class="mid">-bwalpha</span></a></td>
+        name="mth_-bwalpha"></a>Method <span 
+        class="mid">-bwalpha</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth_-bwalpha','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -1929,17 +1700,17 @@ calculate alpha values for baum-welch-training
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_-bwupdate">Method <span 
-        class="mid">-bwupdate</span></a></td>
+        name="mth_-bwupdate"></a>Method <span 
+        class="mid">-bwupdate</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth_-bwupdate','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -2038,17 +1809,17 @@ nUnit
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_-cat">Method <span 
-        class="mid">-cat</span></a></td>
+        name="mth_-cat"></a>Method <span 
+        class="mid">-cat</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth_-cat','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -2127,17 +1898,17 @@ The source instance
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_-cleanup">Method <span 
-        class="mid">-cleanup</span></a></td>
+        name="mth_-cleanup"></a>Method <span 
+        class="mid">-cleanup</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth_-cleanup','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -2197,17 +1968,17 @@ Removes states and transitions not included in a path from start to end and dele
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_-close">Method <span 
-        class="mid">-close</span></a></td>
+        name="mth_-close"></a>Method <span 
+        class="mid">-close</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth_-close','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -2262,17 +2033,17 @@ Kleene closure
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_-compose">Method <span 
-        class="mid">-compose</span></a></td>
+        name="mth_-compose"></a>Method <span 
+        class="mid">-compose</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth_-compose','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -2470,17 +2241,17 @@ nUnit2
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_-copy_fst">Method <span 
-        class="mid">-copy_fst</span></a></td>
+        name="mth_-copy_fst"></a>Method <span 
+        class="mid">-copy_fst</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth_-copy_fst','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -2537,17 +2308,17 @@ Copies the automata graphs from an FST instance.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_-copy_ui">Method <span 
-        class="mid">-copy_ui</span></a></td>
+        name="mth_-copy_ui"></a>Method <span 
+        class="mid">-copy_ui</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth_-copy_ui','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -2653,17 +2424,17 @@ considered as index.<br>If <code>idIndex</code> is <code>NULL</code>: Index of u
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_-determinize">Method <span 
-        class="mid">-determinize</span></a></td>
+        name="mth_-determinize"></a>Method <span 
+        class="mid">-determinize</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth_-determinize','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -2718,17 +2489,17 @@ Determinizes a (weighted) acceptor or transducer
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_-epsremove">Method <span 
-        class="mid">-epsremove</span></a></td>
+        name="mth_-epsremove"></a>Method <span 
+        class="mid">-epsremove</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth_-epsremove','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -2819,17 +2590,17 @@ Unit to process
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_-gen_map">Method <span 
-        class="mid">-gen_map</span></a></td>
+        name="mth_-gen_map"></a>Method <span 
+        class="mid">-gen_map</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth_-gen_map','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -2969,17 +2740,17 @@ idMap
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_-get_dim">Method <span 
-        class="mid">-get_dim</span></a></td>
+        name="mth_-get_dim"></a>Method <span 
+        class="mid">-get_dim</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth_-get_dim','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -3034,17 +2805,17 @@ Get feature space dimensionality.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_-gmm_mix">Method <span 
-        class="mid">-gmm_mix</span></a></td>
+        name="mth_-gmm_mix"></a>Method <span 
+        class="mid">-gmm_mix</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth_-gmm_mix','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -3119,17 +2890,17 @@ Combines Gaussians to mixtures
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_-hmm">Method <span 
-        class="mid">-hmm</span></a></td>
+        name="mth_-hmm"></a>Method <span 
+        class="mid">-hmm</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth_-hmm','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -3212,17 +2983,17 @@ Index of unit to be processed (-1 for all units)
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_-intersect">Method <span 
-        class="mid">-intersect</span></a></td>
+        name="mth_-intersect"></a>Method <span 
+        class="mid">-intersect</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth_-intersect','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -3328,17 +3099,17 @@ Unit to be processed in left operand
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_-invert">Method <span 
-        class="mid">-invert</span></a></td>
+        name="mth_-invert"></a>Method <span 
+        class="mid">-invert</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth_-invert','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -3393,17 +3164,17 @@ Swap input and output symbols
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_-merge_stats">Method <span 
-        class="mid">-merge_stats</span></a></td>
+        name="mth_-merge_stats"></a>Method <span 
+        class="mid">-merge_stats</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth_-merge_stats','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -3473,17 +3244,17 @@ iSrc
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_-minimize">Method <span 
-        class="mid">-minimize</span></a></td>
+        name="mth_-minimize"></a>Method <span 
+        class="mid">-minimize</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth_-minimize','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -3548,17 +3319,17 @@ Minimizes a (weighted) acceptor or transducer
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_-product">Method <span 
-        class="mid">-product</span></a></td>
+        name="mth_-product"></a>Method <span 
+        class="mid">-product</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth_-product','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -3613,17 +3384,17 @@ Calculates the cartesian product of two graphs
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_-project">Method <span 
-        class="mid">-project</span></a></td>
+        name="mth_-project"></a>Method <span 
+        class="mid">-project</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth_-project','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -3678,17 +3449,17 @@ Remove output symbols
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_-reset_stats">Method <span 
-        class="mid">-reset_stats</span></a></td>
+        name="mth_-reset_stats"></a>Method <span 
+        class="mid">-reset_stats</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth_-reset_stats','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -3773,17 +3544,17 @@ Resets the internal statistics of an HMM instance.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_-setup">Method <span 
-        class="mid">-setup</span></a></td>
+        name="mth_-setup"></a>Method <span 
+        class="mid">-setup</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth_-setup','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -3904,17 +3675,17 @@ href="fst.html#fld_ud">unit description table</a>.
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_-setup_ex">Method <span 
-        class="mid">-setup_ex</span></a></td>
+        name="mth_-setup_ex"></a>Method <span 
+        class="mid">-setup_ex</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth_-setup_ex','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -4078,17 +3849,17 @@ href="#fld_pms">per HMM statistics</a>).
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_-setup_gmm">Method <span 
-        class="mid">-setup_gmm</span></a></td>
+        name="mth_-setup_gmm"></a>Method <span 
+        class="mid">-setup_gmm</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth_-setup_gmm','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -4271,17 +4042,17 @@ Use variance vectors instead of full covariance matrices
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_-split">Method <span 
-        class="mid">-split</span></a></td>
+        name="mth_-split"></a>Method <span 
+        class="mid">-split</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth_-split','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -4403,17 +4174,17 @@ Use RC instead of variance for selecting gausians to split specified by nMaxCnt
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_-tree">Method <span 
-        class="mid">-tree</span></a></td>
+        name="mth_-tree"></a>Method <span 
+        class="mid">-tree</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth_-tree','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -4537,17 +4308,17 @@ expanding self loops just like normal cycles)
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_-union">Method <span 
-        class="mid">-union</span></a></td>
+        name="mth_-union"></a>Method <span 
+        class="mid">-union</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth_-union','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -4602,17 +4373,17 @@ Union
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_-unweight">Method <span 
-        class="mid">-unweight</span></a></td>
+        name="mth_-unweight"></a>Method <span 
+        class="mid">-unweight</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth_-unweight','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -4667,17 +4438,17 @@ Remove transition weights
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_-update">Method <span 
-        class="mid">-update</span></a></td>
+        name="mth_-update"></a>Method <span 
+        class="mid">-update</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('mth_-update','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -4829,17 +4600,17 @@ Saves creating an internal temporary <code>data</code> instance but modifies <co
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_000">C/C++ Function <span 
-        class="mid">CHmm::CopyUiEx</span></a></td>
+        name="cfn_000"></a>C/C++ Function <span 
+        class="mid">CHmm::CopyUiEx</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_000','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -4942,17 +4713,17 @@ bCat
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_003">C/C++ Function <span 
-        class="mid">CHmm::GmmMix_CompareGauss</span></a></td>
+        name="cfn_003"></a>C/C++ Function <span 
+        class="mid">CHmm::GmmMix_CompareGauss</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_003','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -4984,17 +4755,17 @@ private: char <b>CHmm::GmmMix_CompareGauss</b>(struct ssTperG* lpTperG1, struct 
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_004">C/C++ Function <span 
-        class="mid">CHmm::GmmMix_CreateMixture</span></a></td>
+        name="cfn_004"></a>C/C++ Function <span 
+        class="mid">CHmm::GmmMix_CreateMixture</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_004','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -5026,17 +4797,17 @@ private: void <b>CHmm::GmmMix_CreateMixture</b>(INT32* lpGinMix, INT32 nNG, INT3
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_002">C/C++ Function <span 
-        class="mid">CHmm::GrcNormalize</span></a></td>
+        name="cfn_002"></a>C/C++ Function <span 
+        class="mid">CHmm::GrcNormalize</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_002','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -5068,17 +4839,17 @@ private: INT16 <b>CHmm::GrcNormalize</b>();<br>
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_005">C/C++ Function <span 
-        class="mid">CHmm::MergeStatsInt</span></a></td>
+        name="cfn_005"></a>C/C++ Function <span 
+        class="mid">CHmm::MergeStatsInt</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_005','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -5112,17 +4883,17 @@ private: INT16 <b>CHmm::MergeStatsInt</b>(CHmm* iSrc, const char* lpsFid);<br>
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_001">C/C++ Function <span 
-        class="mid">CHmm::Op</span></a></td>
+        name="cfn_001"></a>C/C++ Function <span 
+        class="mid">CHmm::Op</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_001','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -5227,17 +4998,17 @@ nOpc
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_006">C/C++ Function <span 
-        class="mid">CHmm::UpdateStatInt</span></a></td>
+        name="cfn_006"></a>C/C++ Function <span 
+        class="mid">CHmm::UpdateStatInt</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_006','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">dLabPro</a>
-        <a class="navbar" href="#cls">Class</a>
-        <a class="navbar" href="#err">Errors</a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
         <a class="navbar" href="#opt">Options</a>
         <a class="navbar" href="#mth">Methods</a>
         <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
   </table>
@@ -5303,6 +5074,290 @@ idLab
 	<p>
 <code>O_K</code> if successfull, a (negative) error code otherwise
 	</p>
+  <!--{{ CUSTOM_DOC -->
+  <!--}} CUSTOM_DOC -->
+  </div>
+  <img src="../resources/blank_stc.gif" height="10">
+  </div>
+  <div id="err_HMM_DISCARDGMM">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td nowrap width="25%" class="navbar"><a 
+        name="err_HMM_DISCARDGMM"></a>Warning <span 
+        class="mid">hmm1024</span></td>
+      <td nowrap width="75%" class="navbar" style="text-align:right;">
+        <a class="navbar" href="javascript:__PrintSection('err_HMM_DISCARDGMM','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
+  </table>
+  <div class="mframe"><table cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td class="hidden">dLabPro</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Identifier</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code><b>hmm1024</b></code></td>
+    </tr>
+    <tr>
+      <td class="hidden">&nbsp;</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Error Level</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">EL_WARNING</td>
+    </tr>
+    <tr>
+      <td class="hidden" colspan="5">&nbsp;</td>
+    </tr>
+    <tr>
+      <td class="hidden">C/C++</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Symbol</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code>#define HMM_DISCARDGMM -1024</code></td>
+    </tr>
+  </table></div>
+  <div class="mframe2">
+  <h3>Synopsis</h3>
+  <p>
+Discarding GMM structures.
+  </p>
+  <h3>Description</h3>
+  <p>This warning means that the GMMs stored in field <a href="#fld_gm"><code class="link">gm</code></a> or their
+  <a href="gmm.html">mixture or tying structure</a> were discarded.</p>
+  <h4><a href="#mth_-setup_gmm"><code class="link">-setup_gmm</code></a></h4>
+  <p>The error occurs if there were GMMs present when invoking
+  <a href="#mth_-setup_gmm"><code class="link">-setup_gmm</code></a> but there's something wrong with them so they had to be
+  ignored and their structure could not be preserved.</p>
+  <ol>
+    <li>Hint  "<code>(GMMs corrupt)</code>":<br>
+      The present GMMs were not (properly) set up. Use
+      <code>&lt;this&gt;.<a href="#fld_gm"><code class="link">gm</code></a> <a class="code"
+      href="gmm.html#mth_-status">-status</a> (before invoking
+      <a href="#mth_-setup_gmm"><code class="link">-setup_gmm</code></a>!) to get more details.</li>
+    <li>Hint     "<code> (wrong number of GMMs)</code>":<br>
+      There were fewer or more GMMs present than there are classes in the
+      most significant feature statistics stored in field <a href="#fld_pfsm"><code class="link">pfsm</code></a>.</li>
+  </ol>
+  <p>The warning indicates that <a href="#mth_-setup_gmm"><code class="link">-setup_gmm</code></a> created one single
+  Gaussians with full covariance matrix for each statistics class contained
+  in field <a href="#fld_pfsm"><code class="link">pfsm</code></a>.</p>
+  <!--{{ CUSTOM_DOC -->
+  <!--}} CUSTOM_DOC -->
+  </div>
+  <img src="../resources/blank_stc.gif" height="10">
+  </div>
+  <div id="err_HMM_BADNOLAB">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td nowrap width="25%" class="navbar"><a 
+        name="err_HMM_BADNOLAB"></a>Warning <span 
+        class="mid">hmm1025</span></td>
+      <td nowrap width="75%" class="navbar" style="text-align:right;">
+        <a class="navbar" href="javascript:__PrintSection('err_HMM_BADNOLAB','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
+  </table>
+  <div class="mframe"><table cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td class="hidden">dLabPro</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Identifier</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code><b>hmm1025</b></code></td>
+    </tr>
+    <tr>
+      <td class="hidden">&nbsp;</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Error Level</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">EL_WARNING</td>
+    </tr>
+    <tr>
+      <td class="hidden" colspan="5">&nbsp;</td>
+    </tr>
+    <tr>
+      <td class="hidden">C/C++</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Symbol</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code>#define HMM_BADNOLAB -1025</code></td>
+    </tr>
+  </table></div>
+  <div class="mframe2">
+  <h3>Synopsis</h3>
+  <p>
+%ld labels for %ld feature vectors. Truncating %s.
+  </p>
+  <h3>Description</h3>
+	<h3>Parameters</h3>
+	<table>
+		<tr>
+			<td class="hidden">&nbsp;&nbsp;</td>
+			<td class="hidden"><b><code>
+1
+</code></b></td>
+			<td class="hidden">&nbsp;</td>
+			<td class="hidden">
+Number of labels
+			</td>
+		</tr>
+		<tr>
+			<td class="hidden">&nbsp;&nbsp;</td>
+			<td class="hidden"><b><code>
+2
+</code></b></td>
+			<td class="hidden">&nbsp;</td>
+			<td class="hidden">
+Number of feature vectors
+			</td>
+		</tr>
+		<tr>
+			<td class="hidden">&nbsp;&nbsp;</td>
+			<td class="hidden"><b><code>
+3
+</code></b></td>
+			<td class="hidden">&nbsp;</td>
+			<td class="hidden">
+Name of truncated sequence
+<h3><a href="#mth_-update"><code class="link">-update</code></a></h3>
+<p>This warning occurs if the number of labels (excluding epsilon labels!) in
+the Gaussian index sequence <code>idSrc</code> does not equal the number of
+feature vectors in <code>idMsf</code> or <code>idLsf</code>. The data were
+truncated to the shorter of both sequences.</p>
+			</td>
+		</tr>
+	</table>
+  <!--{{ CUSTOM_DOC -->
+  <!--}} CUSTOM_DOC -->
+  </div>
+  <img src="../resources/blank_stc.gif" height="10">
+  </div>
+  <div id="err_HMM_NOSPLIT">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td nowrap width="25%" class="navbar"><a 
+        name="err_HMM_NOSPLIT"></a>Warning <span 
+        class="mid">hmm1026</span></td>
+      <td nowrap width="75%" class="navbar" style="text-align:right;">
+        <a class="navbar" href="javascript:__PrintSection('err_HMM_NOSPLIT','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
+  </table>
+  <div class="mframe"><table cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td class="hidden">dLabPro</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Identifier</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code><b>hmm1026</b></code></td>
+    </tr>
+    <tr>
+      <td class="hidden">&nbsp;</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Error Level</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">EL_WARNING</td>
+    </tr>
+    <tr>
+      <td class="hidden" colspan="5">&nbsp;</td>
+    </tr>
+    <tr>
+      <td class="hidden">C/C++</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Symbol</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code>#define HMM_NOSPLIT -1026</code></td>
+    </tr>
+  </table></div>
+  <div class="mframe2">
+  <h3>Synopsis</h3>
+  <p>
+No Gaussians split.
+  </p>
+  <h3>Description</h3>
+  <h4><a href="#mth_-split"><code class="link">-split</code></a></h4>
+  <p>No Gaussian were split due to constraints (as e.g. minimal Gaussian
+  reference counter). This warning indicates the (normal) end of an iterative
+  HMM re-estimation procedure.</p>
+  <!--{{ CUSTOM_DOC -->
+  <!--}} CUSTOM_DOC -->
+  </div>
+  <img src="../resources/blank_stc.gif" height="10">
+  </div>
+  <div id="err_HMM_INCOMPAT">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td nowrap width="25%" class="navbar"><a 
+        name="err_HMM_INCOMPAT"></a>Warning <span 
+        class="mid">hmm1027</span></td>
+      <td nowrap width="75%" class="navbar" style="text-align:right;">
+        <a class="navbar" href="javascript:__PrintSection('err_HMM_INCOMPAT','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
+  </table>
+  <div class="mframe"><table cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td class="hidden">dLabPro</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Identifier</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code><b>hmm1027</b></code></td>
+    </tr>
+    <tr>
+      <td class="hidden">&nbsp;</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Error Level</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">EL_WARNING</td>
+    </tr>
+    <tr>
+      <td class="hidden" colspan="5">&nbsp;</td>
+    </tr>
+    <tr>
+      <td class="hidden">C/C++</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Symbol</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code>#define HMM_INCOMPAT -1027</code></td>
+    </tr>
+  </table></div>
+  <div class="mframe2">
+  <h3>Synopsis</h3>
+  <p>
+Incompatible statistics.
+  </p>
+  <h3>Description</h3>
+  <p>This error occurs when attempting to <a href="#mth_-merge_stats">merge</a> the statistics of two incompatible
+  HMM instances. Two HMM instances are incompatible if the dimensions of their Gaussian reference counters (see
+  field <a href="#fld_grc"><code class="link">grc</code></a>) or their total transition number (see field <a href="#fld_td"><code class="link">td</code></a>) do not match.</p>
   <!--{{ CUSTOM_DOC -->
   <!--}} CUSTOM_DOC -->
   </div>

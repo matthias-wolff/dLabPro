@@ -274,11 +274,11 @@ INT16 CGEN_PROTECTED CCgen::CreateHtmlManual()
   HtmlMember(htmFileTmpl,NULL,CR_PROJECT);
   LINEHTM(""                                                                  );
   HtmlAllMembers(htmFileTmpl,CR_NOTE  );
-  HtmlAllMembers(htmFileTmpl,CR_ERROR );
   HtmlAllMembers(htmFileTmpl,CR_FIELD );
   HtmlAllMembers(htmFileTmpl,CR_OPTION);
   HtmlAllMembers(htmFileTmpl,CR_METHOD);
   HtmlAllMembers(htmFileTmpl,CR_CFUNC );
+  HtmlAllMembers(htmFileTmpl,CR_ERROR );
   LINEHTM(""                                                                  );
   LINEHTM("<div class=\"footer\">End of page</div>"                           );
   LINEHTM("</body>"                                                           );
@@ -319,9 +319,12 @@ void CGEN_PROTECTED CCgen::HtmlMemberOverview(CList<SCGStr>& htmFileTmpl, INT16 
     {
       if (m_bClib) break;
       nCtr = 0;
-      
-      LINEHTM("    <tr><td class=\"rowgroup\" colspan=\"2\"><a name=\"err\">"
-        "Errors</a></td></tr>");
+      LINEHTM("    <tr>"                                                     );
+      LINEHTM("      <td class=\"rowgroup\"><a name=\"err\">Errors</a></td>" );
+      LINEHTM("      <td class=\"rowgroup\" style=\"text-align:right\">"     );
+      HtmlNaviBar(htmFileTmpl);
+      LINEHTM("      </td>"                                                  );
+      LINEHTM("    </tr>"                                                    );
       if (!m_errors.IsListEmpty())
       {
         sprintf(lpLine,"  %s#err Errors - [",lpManfn);
@@ -393,8 +396,12 @@ void CGEN_PROTECTED CCgen::HtmlMemberOverview(CList<SCGStr>& htmFileTmpl, INT16 
       nCtr = 0;
 
       // Write table
-      LINEHTM("    <tr><td class=\"rowgroup\" colspan=\"2\"><a name=\"fld\">"
-        "Fields</a></td></tr>");
+      LINEHTM("    <tr>"                                                     );
+      LINEHTM("      <td class=\"rowgroup\"><a name=\"fld\">Fields</a></td>" );
+      LINEHTM("      <td class=\"rowgroup\" style=\"text-align:right\">"     );
+      HtmlNaviBar(htmFileTmpl);
+      LINEHTM("      </td>"                                                  );
+      LINEHTM("    </tr>"                                                    );
       if (bHasFields)
       {
         sprintf(lpLine,"  %s#fld Fields - [",lpManfn);
@@ -457,8 +464,12 @@ void CGEN_PROTECTED CCgen::HtmlMemberOverview(CList<SCGStr>& htmFileTmpl, INT16 
       if (m_bClib) break;
       nCtr = 0;
 
-      LINEHTM("    <tr><td class=\"rowgroup\" colspan=\"2\"><a name=\"opt\">"
-        "Options</a></td></tr>");
+      LINEHTM("    <tr>"                                                     );
+      LINEHTM("      <td class=\"rowgroup\"><a name=\"opt\">Options</a></td>");
+      LINEHTM("      <td class=\"rowgroup\" style=\"text-align:right\">"     );
+      HtmlNaviBar(htmFileTmpl);
+      LINEHTM("      </td>"                                                  );
+      LINEHTM("    </tr>"                                                    );
       if (!m_opts.IsListEmpty())
       {
         sprintf(lpLine,"  %s#opt Options - [",lpManfn);
@@ -516,8 +527,12 @@ void CGEN_PROTECTED CCgen::HtmlMemberOverview(CList<SCGStr>& htmFileTmpl, INT16 
       if (m_bClib) break;
       nCtr = 0;
 
-      LINEHTM("    <tr><td class=\"rowgroup\" colspan=\"2\"><a name=\"mth\">"
-        "Methods</a></td></tr>");
+      LINEHTM("    <tr>"                                                     );
+      LINEHTM("      <td class=\"rowgroup\"><a name=\"mth\">Methods</a></td>");
+      LINEHTM("      <td class=\"rowgroup\" style=\"text-align:right\">"     );
+      HtmlNaviBar(htmFileTmpl);
+      LINEHTM("      </td>"                                                  );
+      LINEHTM("    </tr>"                                                    );
       if (!m_mths.IsListEmpty())
       {
         sprintf(lpLine,"  %s#mth Methods - [",lpManfn);
@@ -577,8 +592,12 @@ void CGEN_PROTECTED CCgen::HtmlMemberOverview(CList<SCGStr>& htmFileTmpl, INT16 
     }
     case CR_CFUNC:
     {
-      LINEHTM("    <tr><td class=\"rowgroup\" colspan=\"2\"><a name=\"cfn\">"
-        "C/C++ API</a></td></tr>");
+      LINEHTM("    <tr>"                                                     );
+      LINEHTM("      <td class=\"rowgroup\"><a name=\"cfn\">C/C++ API</a></td>");
+      LINEHTM("      <td class=\"rowgroup\" style=\"text-align:right\">"     );
+      HtmlNaviBar(htmFileTmpl);
+      LINEHTM("      </td>"                                                  );
+      LINEHTM("    </tr>"                                                    );
       if (!m_mths.IsListEmpty() || dlp_strlen(m_lpsDlcParent))
       {
         LINEHTM("<tr><td class=\"rowgroup\" colspan=\"2\" style="
@@ -763,16 +782,18 @@ void CGEN_PROTECTED CCgen::HtmlMember(CList<SCGStr>& htmFileTmpl, void* lpSCGMem
           "border=\"0\">"                                                     );
   LINEHTM("    <tr>"                                                          );
   LINEHTM("      <td nowrap width=\"25%\" class=\"navbar\"><a "               );
-  LINEHTM("        name=\"${HTML_DivId}\">${HTML_MemberType} <span "          );
-  LINEHTM("        class=\"mid\">${HTML_MemberId}</span></a></td>"            );
+  LINEHTM("        name=\"${HTML_DivId}\"></a>${HTML_MemberType} <span "      );
+  LINEHTM("        class=\"mid\">${HTML_MemberId}</span></td>"                );
   LINEHTM("      <td nowrap width=\"75%\" class=\"navbar\" style=\"text-align:"
           "right;\">"                                                         );
   LINEHTM("        <a class=\"navbar\" href=\"javascript:__PrintSection("
           "\'${HTML_DivId}\',\'${HTML_ModuleType} ${HTML_ModuleId}\');\"><img "
           "src=\"../resources/print.gif\" width=\"16\" height=\"16\" border="
           "\"0\" style=\"vertical-align:middle\" alt=\"Print\"></a>"          );
-  LINEHTM("        <a class=\"navbar\" href=\"../home.html\">dLabPro</a>"     );
-  LINEHTM("        <a class=\"navbar\" href=\"#cls\">${PType}</a>"            );
+  HtmlNaviBar(htmFileTmpl);
+  /*
+  LINEHTM("        <a class=\"navbar\" href=\"../home.html\">Home</a>"        );
+  LINEHTM("        <a class=\"navbar\" href=\"#cls\">Top</a>"                 );
   if (!m_bClib)
   {
     LINEHTM("        <a class=\"navbar\" href=\"#err\">Errors</a>"            );
@@ -781,6 +802,7 @@ void CGEN_PROTECTED CCgen::HtmlMember(CList<SCGStr>& htmFileTmpl, void* lpSCGMem
     LINEHTM("        <a class=\"navbar\" href=\"#mth\">Methods</a>"           );
   }
   LINEHTM("        <a class=\"navbar\" href=\"#cfn\">C/C++</a>"               );
+*/
   LINEHTM("      </td>"                                                       );
   LINEHTM("    </tr>"                                                         );
   LINEHTM("  </table>"                                                        );
@@ -1240,6 +1262,23 @@ void CGEN_PROTECTED CCgen::HtmlMember(CList<SCGStr>& htmFileTmpl, void* lpSCGMem
     ReplaceKey(lpFLine->lpName,"${HTML_SrcFileAndLine}",lpsSrcFileAndLine                          ,0);
   }
 
+}
+
+void CGEN_PROTECTED CCgen::HtmlNaviBar(CList<SCGStr>& htmFileTmpl)
+{
+  LINEHTM("        <a class=\"navbar\" href=\"../home.html\">Home</a>"        );
+  LINEHTM("        <a class=\"navbar\" href=\"#cls\">Top</a>"                 );
+  if (!m_bClib)
+  {
+    LINEHTM("        <a class=\"navbar\" href=\"#fld\">Fields</a>"            );
+    LINEHTM("        <a class=\"navbar\" href=\"#opt\">Options</a>"           );
+    LINEHTM("        <a class=\"navbar\" href=\"#mth\">Methods</a>"           );
+  }
+  LINEHTM("        <a class=\"navbar\" href=\"#cfn\">C/C++</a>"               );
+  if (!m_bClib)
+  {
+    LINEHTM("        <a class=\"navbar\" href=\"#err\">Errors</a>"            );
+  }
 }
 
 char* CGEN_PROTECTED CCgen::HtmlStrCnvt(char* lpDest, char* lpSrc)

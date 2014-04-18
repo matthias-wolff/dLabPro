@@ -600,46 +600,47 @@ dLabPro.z&gt;_</pre>
     </div>
   </div>
 
-    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-    <a name="numbers"></a>
-    <div id="clp_numbers">
-      <table width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td nowrap width="25%" class="navbar">
-            Numbers and Constants
-          </td>
-          <td nowrap width="75%" class="navbar" style="text-align:right;">
-            <a class="navbar" href="javascript:__PrintSection('clp_numbers','Numbers','..');"
-            ><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle;" alt="Print"></a> 
-            <a class="navbar" href="../home.html">Home</a>
-            <a class="navbar" href="index.html">Tutorials</a>
-            <a class="navbar" href="#top">Top</a>
-          </td>
-        </tr>
-      </table>
-      <div class="mframe2">
-        <p>
-          dLabPro supports complex numbers. The format of complex number literals 
-          is <code>&lt;re&gt;+&lt;im&gt;i</code> or <code>&lt;im&gt;i+&lt;re&gt;</code>
-          where the real part <code>&lt;re&gt;</code> and the imaginary part
-          <code>&lt;im&gt;</code> are real numbers including constants like
-          <code>inf</code>, <code>+inf</code>,<code>-inf</code>, and
-          <code>nan</code>.
-        </p>
-        <p>Examples:</p>
-        <pre class="code">dLabPro&gt; 1.1 -echo;                <span class="c-cmt"># 1.1000000000000000888178</span>
+  <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+  <a name="numbers"></a>
+  <div id="clp_numbers">
+    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+      <tr>
+        <td nowrap width="25%" class="navbar">
+          Numbers and Constants
+        </td>
+        <td nowrap width="75%" class="navbar" style="text-align:right;">
+          <a class="navbar" href="javascript:__PrintSection('clp_numbers','Numbers','..');"
+          ><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle;" alt="Print"></a> 
+          <a class="navbar" href="../home.html">Home</a>
+          <a class="navbar" href="index.html">Tutorials</a>
+          <a class="navbar" href="#top">Top</a>
+        </td>
+      </tr>
+    </table>
+    <div class="mframe2">
+      <p>
+        dLabPro supports complex numbers. The format of complex number literals
+        is <code>&lt;re&gt;+&lt;im&gt;i</code> where the real part <code
+        >&lt;re&gt;</code> and the imaginary part <code>&lt;im&gt;</code> are
+        real number literals including the symbols <code>inf</code> and <code
+        >nan</code>.
+      </p>
+      <p>Examples:</p>
+      <pre class="code">dLabPro&gt; 1.1 -echo;                <span class="c-cmt"># 1.1</span>
 dLabPro&gt; -inf -echo;               <span class="c-cmt"># -1.7976931348623157081453e+308</span>
 dLabPro&gt; i -echo;                  <span class="c-cmt"># i</span>
-dLabPro&gt; -2.2i -echo;              <span class="c-cmt"># -2.2000000000000001776357i</span>
+dLabPro&gt; -2.2i -echo;              <span class="c-cmt"># -2.2i</span>
 dLabPro&gt; infi -echo;               <span class="c-cmt"># 1.7976931348623157081453e+308i</span>
 dLabPro&gt; 42+0i -echo;              <span class="c-cmt"># 42</span>
-dLabPro&gt; 1.1+2.2i -echo;           <span class="c-cmt"># 1.1000000000000000888178+2.2000000000000001776357i</span>
-dLabPro&gt; 1.1i+2.2 -echo;           <span class="c-cmt"># 2.2000000000000001776357+1.1000000000000000888178i</span>
+dLabPro&gt; 1.1+2.2i -echo;           <span class="c-cmt"># 1.1+2.2i</span>
 dLabPro&gt; -inf+nani -echo;          <span class="c-cmt"># -1.7976931348623157081453e+308+nani</span>
 dLabPro&gt; -nan -echo;               <span class="c-cmt"># nan</span></pre>
-      </div>
+      <p>
+        Note: On some platforms <code>inf</code> will be represented by the
+        greatest floating point number. 
+      </p>
     </div>
-
+  </div>
 
   <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
   <a name="classes"></a>
