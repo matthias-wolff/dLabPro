@@ -663,7 +663,6 @@ COMMENT: Rotates the stack upwards one element.
   @see -swap
 END_MAN
 
-
 METHOD:  if
 SYNTAX:  (boolean bCondition)
 COMMENT: Conditional jump (positive control path).

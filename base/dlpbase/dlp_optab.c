@@ -133,6 +133,7 @@ static const opcode_table __otab[] =
   { OP_LEQ     ,1,2,"d:dod", "Less or equal"             ,"<="       },
   { OP_GEQ     ,1,2,"d:dod", "Greater or equal"          ,"geq"      },
   { OP_GEQ     ,1,2,"d:dod", "Greater or equal"          ,">="       },
+  { OP_ISNAN   ,1,1,"d:od" , "Is NaN"                    ,"isnan"    },
   { OP_MAX     ,1,2,"d:odd", "Maximum"                   ,"max"      },
   { OP_AMAX    ,1,2,"d:odd", "Absolute maximum"          ,"amax"     },
   { OP_SMAX    ,1,2,"d:odd", "Signed absolute maximum"   ,"smax"     },

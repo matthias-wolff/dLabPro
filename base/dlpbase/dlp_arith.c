@@ -1156,6 +1156,7 @@ COMPLEX64 CGEN_IGNORE dlp_scalopC(COMPLEX64 nParam1, COMPLEX64 nParam2, INT16 nO
     case OP_GREATER  : { return CMPLX(CMPLX_GREATER(nParam1,nParam2)?1.:0.); }
     case OP_LEQ      : { return CMPLX(CMPLX_LEQ(nParam1,nParam2)?1.:0.); }
     case OP_GEQ      : { return CMPLX(CMPLX_GEQ(nParam1,nParam2)?1.:0.); }
+    case OP_ISNAN    : { return CMPLX(CMPLX_ISNAN(nParam1)?1.:0.); }
     case OP_MAX      : { return CMPLX_MAX(nParam1,nParam2); }
     case OP_AMAX     : { return CMPLX((CMPLX_ABS(nParam1)>CMPLX_ABS(nParam2))?CMPLX_ABS(nParam1):CMPLX_ABS(nParam2)); }
     case OP_SMAX     : { return (CMPLX_ABS(nParam1)>CMPLX_ABS(nParam2))?nParam1:nParam2; }

@@ -296,6 +296,7 @@ typedef struct { FLOAT64 x; FLOAT64 y; } COMPLEX64;
 #define CMPLX_LEQ(z1,z2)     ((z1).x<=(z2).x)
 #define CMPLX_GREATER(z1,z2) ((z1).x>(z2).x)
 #define CMPLX_GEQ(z1,z2)     ((z1).x>=(z2).x)
+#define CMPLX_ISNAN(z1)      (dlp_isnan((z1).x)||dlp_isnan((z1).y))
 #define CMPLX_MIN(z1,z2)     (CMPLX_LESS(z1,z2)?z1:z2)
 #define CMPLX_MAX(z1,z2)     (CMPLX_LESS(z1,z2)?z2:z1)
 #define CMPLX_PLUS(z1,z2)    ((COMPLEX64){(z1).x+(z2).x,(z1).y+(z2).y})
@@ -584,6 +585,7 @@ typedef struct { FLOAT64 x; FLOAT64 y; } COMPLEX64;
 #define OP_NULL             3                                                   /* Null-pointer                      */
 #define OP_PI               4                                                   /* Pi                                */
 #define OP_E                5                                                   /* Euler constant                    */
+
 /* - Logical operations */                                                      /* - - - - - - - - - - - - - - - - - */
 #define OP_OR            1001                                                   /* Logical or                        */
 #define OP_AND           1002                                                   /* Logical and                       */
@@ -594,6 +596,7 @@ typedef struct { FLOAT64 x; FLOAT64 y; } COMPLEX64;
 #define OP_GREATER       1007                                                   /* Greater than                      */
 #define OP_LEQ           1008                                                   /* Less or equal                     */
 #define OP_GEQ           1009                                                   /* Greater or equal                  */
+#define OP_ISNAN         1010                                                   /* Is NaN                            */
 
 /* - Monadic scalar math operations */                                          /* - - - - - - - - - - - - - - - - - */
 #define OP_NEG           1100                                                   /* Negation                          */
