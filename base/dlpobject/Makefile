@@ -64,9 +64,10 @@ else
     LEXT     = lib
     TOOLBOX  = MSVC6
   else
+    ANSI=$(if $(findstring mingw,$(shell gcc -dumpmachine)),,-ansi)
     ## - GCC
     CC       = gcc
-    CFLAGS   = -g -D_DEBUG -Wall -ansi -x c++ -D_DLP_CPP ${DLABPRO_GCC_CFLAGS_DEBUG}
+    CFLAGS   = -g -D_DEBUG -Wall $(ANSI) -x c++ -D_DLP_CPP ${DLABPRO_GCC_CFLAGS_DEBUG}
     CCoO     = -o
     AR       = ar
     ARFLAGS  = rvs
@@ -96,7 +97,7 @@ ifeq ($(MAKECMDGOALS),DEBUG_C)
       ## - MSVC 6.0 - 32-Bit C/C++-Compiler for x86
       CFLAGS = -nologo -Od -Gm -EHsc -RTC1 -ZI -TC -D_DEBUG -D_DLP_C -D_DLP_C ${DLABPRO_MSVC_FLAGS_DEBUG}
     else
-      CFLAGS = -g -D_DEBUG -Wall -ansi -x c -D_DLP_C ${DLABPRO_GCC_CFLAGS_DEBUG}
+      CFLAGS = -g -D_DEBUG -Wall $(ANSI) -x c -D_DLP_C ${DLABPRO_GCC_CFLAGS_DEBUG}
     endif
   endif
 endif
@@ -113,7 +114,7 @@ ifeq ($(MAKECMDGOALS),RELEASE_CPP)
       ## - MSVC 6.0 - 32-Bit C/C++-Compiler for x86
       CFLAGS  = -nologo -O2 -D_RELEASE -EHsc -W3 -TP -D_CRT_SECURE_NO_WARNINGS -D_DLP_CPP ${DLABPRO_MSVC_FLAGS_RELEASE}
     else
-      CFLAGS  = -O2 -D_RELEASE -Wall -ansi -x c++ -D_DLP_CPP ${DLABPRO_GCC_CFLAGS_RELEASE}
+      CFLAGS  = -O2 -D_RELEASE -Wall $(ANSI) -x c++ -D_DLP_CPP ${DLABPRO_GCC_CFLAGS_RELEASE}
     endif
   endif
 endif
@@ -130,7 +131,7 @@ ifeq ($(MAKECMDGOALS),RELEASE_C)
       ## - MSVC 6.0 - 32-Bit C/C++-Compiler for x86
       CFLAGS  = -nologo -O2 -D_RELEASE -EHsc -W3 -TC -D_CRT_SECURE_NO_WARNINGS -D_DLP_C ${DLABPRO_MSVC_FLAGS_RELEASE}
     else
-      CFLAGS  = -O2 -D_RELEASE -Wall -ansi -x c -D_DLP_C ${DLABPRO_GCC_CFLAGS_RELEASE}
+      CFLAGS  = -O2 -D_RELEASE -Wall $(ANSI) -x c -D_DLP_C ${DLABPRO_GCC_CFLAGS_RELEASE}
     endif
   endif
 endif

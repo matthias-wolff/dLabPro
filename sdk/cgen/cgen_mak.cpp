@@ -539,9 +539,10 @@ void CGEN_PROTECTED CCgen::CreateMakefileTemplate()
   LINEMAK("    LEXT     = lib"                                                 )
   LINEMAK("    TOOLBOX  = MSVC6"                                               )
   LINEMAK("  else"                                                             )
+  LINEMAK("    ANSI=$(if $(findstring mingw,$(shell gcc -dumpmachine)),,-ansi)")
   LINEMAK("    ## - GCC"                                                       )
   LINEMAK("    CC       = gcc"                                                 )
-  LINEMAK("    CFLAGS   = -g -D_DEBUG -Wall -ansi -x c++ -D_DLP_CPP ${GccFlags} "
+  LINEMAK("    CFLAGS   = -g -D_DEBUG -Wall $(ANSI) -x c++ -D_DLP_CPP ${GccFlags} "
                          "${DLABPRO_GCC_CFLAGS_DEBUG}"                         )
   LINEMAK("    CCoO     = -o"                                                  )
   LINEMAK("    AR       = ar"                                                  )
@@ -576,7 +577,7 @@ void CGEN_PROTECTED CCgen::CreateMakefileTemplate()
                          "-D_DLP_C -D_DLP_C ${MsvcFlags} "
                          "${DLABPRO_MSVC_FLAGS_DEBUG}"                         )
   LINEMAK("    else"                                                           )
-  LINEMAK("      CFLAGS = -g -D_DEBUG -Wall -ansi -x c -D_DLP_C ${GccFlags} "
+  LINEMAK("      CFLAGS = -g -D_DEBUG -Wall $(ANSI) -x c -D_DLP_C ${GccFlags} "
                          "${DLABPRO_GCC_CFLAGS_DEBUG}"                         )
   LINEMAK("    endif"                                                          )
   LINEMAK("  endif"                                                            )
@@ -598,7 +599,7 @@ void CGEN_PROTECTED CCgen::CreateMakefileTemplate()
                           "-D_CRT_SECURE_NO_WARNINGS -D_DLP_CPP ${MsvcFlags} "
                           "${DLABPRO_MSVC_FLAGS_RELEASE}"                      )
   LINEMAK("    else"                                                           )
-  LINEMAK("      CFLAGS  = -O2 -D_RELEASE -Wall -ansi -x c++ -D_DLP_CPP "
+  LINEMAK("      CFLAGS  = -O2 -D_RELEASE -Wall $(ANSI) -x c++ -D_DLP_CPP "
                           "${GccFlags} ${DLABPRO_GCC_CFLAGS_RELEASE}"          )
   LINEMAK("    endif"                                                          )
   LINEMAK("  endif"                                                            )
@@ -620,7 +621,7 @@ void CGEN_PROTECTED CCgen::CreateMakefileTemplate()
                           "-D_CRT_SECURE_NO_WARNINGS -D_DLP_C ${MsvcFlags} "
                           "${DLABPRO_MSVC_FLAGS_RELEASE}"                      )
   LINEMAK("    else"                                                           )
-  LINEMAK("      CFLAGS  = -O2 -D_RELEASE -Wall -ansi -x c -D_DLP_C ${GccFlags} "
+  LINEMAK("      CFLAGS  = -O2 -D_RELEASE -Wall $(ANSI) -x c -D_DLP_C ${GccFlags} "
                           "${DLABPRO_GCC_CFLAGS_RELEASE}"                      )
   LINEMAK("    endif"                                                          )
   LINEMAK("  endif"                                                            )

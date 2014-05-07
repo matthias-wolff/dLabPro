@@ -41,9 +41,10 @@ else
     LEXT     = lib
     TOOLBOX  = MSVC6
   else
+    ANSI=$(if $(findstring mingw,$(shell gcc -dumpmachine)),,-ansi)
     ## - GCC
     CC       = gcc
-    CFLAGS   = -ansi -g ${DLABPRO_GCC_CFLAGS_DEBUG}
+    CFLAGS   = $(ANSI) -g ${DLABPRO_GCC_CFLAGS_DEBUG}
     CCoO     = -o
     AR       = ar
     ARFLAGS  = rvs

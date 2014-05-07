@@ -64,9 +64,10 @@ else
     LEXT     = lib
     TOOLBOX  = MSVC6
   else
+    ANSI=$(if $(findstring mingw,$(shell gcc -dumpmachine)),,-ansi)
     ## - GCC
     CC       = gcc
-    #CFLAGS   = -g -D_DEBUG -Wall -ansi ${DLABPRO_GCC_CFLAGS_DEBUG}
+    #CFLAGS   = -g -D_DEBUG -Wall $(ANSI) ${DLABPRO_GCC_CFLAGS_DEBUG}
     CFLAGS   = -g -D_DEBUG ${DLABPRO_GCC_CFLAGS_DEBUG}
     CCoO     = -o
     AR       = ar
@@ -98,7 +99,7 @@ ifeq ($(MAKECMDGOALS),RELEASE)
       ## - MSVC 6.0 - 32-Bit C/C++-Compiler for x86
       CFLAGS  = -nologo -O2 -D_RELEASE -EHsc -W3 -D_CRT_SECURE_NO_WARNINGS ${DLABPRO_MSVC_FLAGS_RELEASE}
     else
-      #CFLAGS  = -O2 -D_RELEASE -Wall -ansi ${DLABPRO_GCC_CFLAGS_RELEASE}
+      #CFLAGS  = -O2 -D_RELEASE -Wall $(ANSI) ${DLABPRO_GCC_CFLAGS_RELEASE}
       CFLAGS  = -O2 -D_RELEASE ${DLABPRO_GCC_CFLAGS_RELEASE}
     endif
   endif
