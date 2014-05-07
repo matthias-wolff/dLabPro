@@ -191,6 +191,7 @@
 /*  #include <values.h>*/
   #include <wctype.h>
   #include <errno.h>
+  #define PTW32_STATIC_LIB
   #include <pthread.h>
   #define HAVE_PTHREAD
 #endif
