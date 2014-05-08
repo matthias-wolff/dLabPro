@@ -1,5 +1,5 @@
-/* dLabPro program dLabPro (dlabpro)
- * - Build configuration
+/* dLabPro program recognizer (dLabPro recognizer)
+ * - DLabPro config
  *
  * AUTHOR : Matthias Wolff
  * PACKAGE: dLabPro/programs
@@ -27,28 +27,44 @@
 #ifndef __DLP_CONFIG_H
 #define __DLP_CONFIG_H
 
-/*#define __NOITP                   / * Do not register methods with object 1)       */
-/*#define __NORTTI                  / * Switch runtime type info off 1)              */
-/*#define __NOXMLSTREAM             / * Do not use XML serialization (CXmlStream)    */
-/*#define __NODN3STREAM             / * Do not use DNorm3 serialization (CDn3Stream) */
-/*#define __NOZLIB                  / * Do not use file compression (zlib)           */
-/*#define __UNENTANGLE_FST          / * Stand alone class CFst                       */
-/*#define __NOREADLINE              / * Do not use readline library                  */
-/*#define __DEFAULT_FILEFORMAT_DN3  / * Set default file format to dn3               */
-#define __DEFAULT_FILEFORMAT_XML  /* Set default file format to xml                  */
-/*#define __NOLIBSNDFILE            / * Do not use Libsndfile library                */
-/*#define __MAX_TYPE_32BIT          / * Use maximum 32bit for numeric data types     */
-/*#define __DLP_DEPRECATED          / * Activate deprecated API (if any)             */
+/*#define __NOITP         / * Do not register methods in object's dictionary */
+/*#define __NORTTI        / * Do not register anything (Warning: some object functions will not work correctly) */
+/*#define __NOXALLOC      / * Disable memory managment with xalloc */
+/*#define __NOXMLSTREAM   / * Do not use XML serialization (CXmlStream)    */
+/*#define __NODN3STREAM   / * Do not use DNorm3 serialization (CDn3Stream) */
+/*#define __NOZLIB        / * Do not use file compression (zlib)           */
+#define __UNENTANGLE_FST  /* Stand alone class CFst            */
+#define __DEFAULT_FILEFORMAT_DN3 /* Set default file format for -save and -restore to dn3 */
+/*#define __DEFAULT_FILEFORMAT_XML / * Set default file format for -save and -restore to xml */
+/*#define __NOLIBSNDFILE            / * Do not use Libsndfile library */
+#define __MAX_TYPE_32BIT   /* Use maximum 32bit for numeric data types */
 
-/* REMARKS */
-/* 1) Some object functions will not work correctly */
+#ifndef __NOREADLINE
+#define __NOREADLINE    /* Do not use readline library*/
+#endif /* #ifndef __NOREADLINE */
 
-/* -- Optimizations -- */
 /*#define __OPTIMIZATIONS      / * Switch ALL optimizations OFF */
 #ifdef __OPTIMIZATIONS
-  #define __OPTIMIZE_TRIG      /* Approximation of trigonometric functions by table lookup */
   #define __OPTIMIZE_ALLOC      /* Do zero-init on zero-init allocates */
-  #define __OPTIMIZE_LSADD     /* Approximation of log semiring addition (OP_LSADD) */
+  #define __OPTIMIZE_LSADD     /* Approximation of log semiring addition (OP_LSADD) */  
+#endif
+
+#define __MEASURE_TIME
+
+
+#ifdef _TMS320C6X
+#  ifndef __NORTTI
+#    define __NORTTI
+#  endif
+#  ifndef __NOXMLSTREAM
+#    define __NOXMLSTREAM
+#  endif
+#  ifndef __NODN3STREAM
+#    define __NODN3STREAM
+#  endif
+#  ifndef __NOZLIB
+#    define __NOZLIB
+#  endif
 #endif
 
 #endif /* #ifndef __DLP_CONFIG_H */
