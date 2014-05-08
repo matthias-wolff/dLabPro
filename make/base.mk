@@ -3,7 +3,7 @@
 ##
 ## AUTHOR : Frank Duckhorn
 ## PACKAGE: dLabPro/make
-## 
+##
 ## Copyright 2013 dLabPro contributors and others (see COPYRIGHT file) 
 ## - Chair of System Theory and Speech Technology, TU Dresden
 ## - Chair of Communications Engineering, BTU Cottbus
@@ -31,7 +31,7 @@ else
 endif
 
 vpath %.h ../../include ../../include/automatic
-INCL = -I ../../include -I ../../include/automatic
+INCL += -I ../../include -I ../../include/automatic
 
 ifneq (${MACHINE},)
   MEXT=.${MACHINE}
@@ -39,11 +39,11 @@ else
   MEXT=
 endif
 
-## Compiler specific settings 
+## Compiler specific settings
 ifeq (${DLABPRO_USE_MSVC},1)
   ## - MSVC
   CC       = CL
-  CFLAGS   = -nologo -Od -Gm -EHsc -RTC1 -Wp64 -ZI -D_DEBUG ${DLABPRO_MSVC_FLAGS_DEBUG}
+  CFLAGS  += -nologo -Od -Gm -EHsc -RTC1 -Wp64 -ZI -D_DEBUG ${DLABPRO_MSVC_FLAGS_DEBUG}
   CCoO     = -Fo
   AR       = LIB
   ARFLAGS  = -nologo
@@ -55,7 +55,7 @@ else
   ifeq (${DLABPRO_USE_MSVC},2)
     ## - MSVC 6.0 - 32-Bit C/C++-Compiler for x86
     CC       = CL
-    CFLAGS   = -nologo -Od -Gm -EHsc -RTC1 -ZI -D_DEBUG ${DLABPRO_MSVC_FLAGS_DEBUG}
+    CFLAGS  += -nologo -Od -Gm -EHsc -RTC1 -ZI -D_DEBUG ${DLABPRO_MSVC_FLAGS_DEBUG}
     CCoO     = -Fo
     AR       = LIB
     ARFLAGS  = -nologo
@@ -67,7 +67,7 @@ else
     ANSI=$(if $(findstring mingw,$(shell gcc -dumpmachine)),,-ansi)
     ## - GCC
     CC       = gcc
-    CFLAGS   = -g -D_DEBUG -Wall $(ANSI) ${DLABPRO_GCC_CFLAGS_DEBUG}
+    CFLAGS  += -g -D_DEBUG -Wall $(ANSI) ${DLABPRO_GCC_CFLAGS_DEBUG}
     CCoO     = -o
     AR       = ar
     ARFLAGS  = rvs
@@ -91,14 +91,14 @@ ifeq ($(MAKECMDGOALS),RELEASE)
   LIB_PATH = ../../lib.release${MEXT}
   OBJ_PATH = ../../obj.release${MEXT}
   ifeq (${DLABPRO_USE_MSVC},1)
-    CFLAGS  = -nologo -O2 -GL -D_RELEASE -EHsc -W3 -Wp64 -D_CRT_SECURE_NO_WARNINGS ${DLABPRO_MSVC_FLAGS_RELEASE}
+    CFLAGS += -nologo -O2 -GL -D_RELEASE -EHsc -W3 -Wp64 -D_CRT_SECURE_NO_WARNINGS ${DLABPRO_MSVC_FLAGS_RELEASE}
     ARFLAGS = -nologo -LTCG
   else
     ifeq (${DLABPRO_USE_MSVC},2)
       ## - MSVC 6.0 - 32-Bit C/C++-Compiler for x86
-      CFLAGS  = -nologo -O2 -D_RELEASE -EHsc -W3 -D_CRT_SECURE_NO_WARNINGS ${DLABPRO_MSVC_FLAGS_RELEASE}
+      CFLAGS += -nologo -O2 -D_RELEASE -EHsc -W3 -D_CRT_SECURE_NO_WARNINGS ${DLABPRO_MSVC_FLAGS_RELEASE}
     else
-      CFLAGS  = -O2 -D_RELEASE -Wall $(ANSI) ${DLABPRO_GCC_CFLAGS_RELEASE}
+      CFLAGS += -O2 -D_RELEASE -Wall $(ANSI) ${DLABPRO_GCC_CFLAGS_RELEASE}
     endif
   endif
 endif

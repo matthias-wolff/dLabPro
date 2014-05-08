@@ -31,7 +31,7 @@ else
 endif
 
 vpath %.h ../../include ../../include/automatic
-INCL = -I ../../include -I ../../include/automatic 
+INCL += -I ../../include -I ../../include/automatic
 
 ifneq (${MACHINE},)
   MEXT=.${MACHINE}
@@ -43,7 +43,7 @@ endif
 ifeq (${DLABPRO_USE_MSVC},1)
   ## - MSVC
   CC       = CL
-  CFLAGS   = -nologo -Od -Gm -EHsc -RTC1 -Wp64 -ZI -TP -D_DEBUG -D_DLP_CPP $(CFLAGS_MSV) ${DLABPRO_MSVC_FLAGS_DEBUG}
+  CFLAGS  += -nologo -Od -Gm -EHsc -RTC1 -Wp64 -ZI -TP -D_DEBUG -D_DLP_CPP $(CFLAGS_MSV) ${DLABPRO_MSVC_FLAGS_DEBUG}
   CCoO     = -Fo
   AR       = LIB
   ARFLAGS  = -nologo
@@ -55,7 +55,7 @@ else
   ifeq (${DLABPRO_USE_MSVC},2)
     ## - MSVC 6.0 - 32-Bit C/C++-Compiler for x86
     CC       = CL
-    CFLAGS   = -nologo -Od -Gm -EHsc -RTC1 -ZI -TP -D_DEBUG -D_DLP_CPP $(CFLAGS_MSV) ${DLABPRO_MSVC_FLAGS_DEBUG}
+    CFLAGS  += -nologo -Od -Gm -EHsc -RTC1 -ZI -TP -D_DEBUG -D_DLP_CPP $(CFLAGS_MSV) ${DLABPRO_MSVC_FLAGS_DEBUG}
     CCoO     = -Fo
     AR       = LIB
     ARFLAGS  = -nologo
@@ -67,7 +67,7 @@ else
     ANSI=$(if $(findstring mingw,$(shell gcc -dumpmachine)),,-ansi)
     ## - GCC
     CC       = gcc
-    CFLAGS   = -g -D_DEBUG -Wall $(ANSI) -x c++ -D_DLP_CPP $(CFLAGS_GCC) ${DLABPRO_GCC_CFLAGS_DEBUG}
+    CFLAGS  += -g -D_DEBUG -Wall $(ANSI) -x c++ -D_DLP_CPP $(CFLAGS_GCC) ${DLABPRO_GCC_CFLAGS_DEBUG}
     CCoO     = -o
     AR       = ar
     ARFLAGS  = rvs
@@ -79,8 +79,8 @@ else
 endif
 
 ## Configuration - DEBUG_CPP (default)
-OBJ_PATH = ../../obj.debug${MEXT}
 LIB_PATH = ../../lib.debug${MEXT}
+OBJ_PATH = ../../obj.debug${MEXT}
 
 ifeq ($(MAKECMDGOALS),)
   MAKECMDGOALS = DEBUG_CPP
@@ -91,55 +91,55 @@ ifeq ($(MAKECMDGOALS),DEBUG_C)
   OBJ_PATH = ../../obj.debug${MEXT}
   LIB_PATH = ../../lib.debug${MEXT}
   ifeq (${DLABPRO_USE_MSVC},1)
-    CFLAGS = -nologo -Od -Gm -EHsc -RTC1 -Wp64 -ZI -TC -D_DEBUG -D_DLP_C -D_DLP_C $(CFLAGS_MSV) ${DLABPRO_MSVC_FLAGS_DEBUG}
+    CFLAGS+= -nologo -Od -Gm -EHsc -RTC1 -Wp64 -ZI -TC -D_DEBUG -D_DLP_C -D_DLP_C $(CFLAGS_MSV) ${DLABPRO_MSVC_FLAGS_DEBUG}
   else
     ifeq (${DLABPRO_USE_MSVC},2)
       ## - MSVC 6.0 - 32-Bit C/C++-Compiler for x86
-      CFLAGS = -nologo -Od -Gm -EHsc -RTC1 -ZI -TC -D_DEBUG -D_DLP_C -D_DLP_C $(CFLAGS_MSV)  ${DLABPRO_MSVC_FLAGS_DEBUG}
+      CFLAGS+= -nologo -Od -Gm -EHsc -RTC1 -ZI -TC -D_DEBUG -D_DLP_C -D_DLP_C $(CFLAGS_MSV)  ${DLABPRO_MSVC_FLAGS_DEBUG}
     else
-      CFLAGS = -g -D_DEBUG -Wall $(ANSI) -x c -D_DLP_C $(CFLAGS_GCC) ${DLABPRO_GCC_CFLAGS_DEBUG}
+      CFLAGS+= -g -D_DEBUG -Wall $(ANSI) -x c -D_DLP_C $(CFLAGS_GCC) ${DLABPRO_GCC_CFLAGS_DEBUG}
     endif
   endif
 endif
 
 ## Configuration - RELEASE_CPP
 ifeq ($(MAKECMDGOALS),RELEASE_CPP)
-  OBJ_PATH = ../../obj.release${MEXT}
   LIB_PATH = ../../lib.release${MEXT}
+  OBJ_PATH = ../../obj.release${MEXT}
   ifeq (${DLABPRO_USE_MSVC},1)
-    CFLAGS  = -nologo -O2 -GL -D_RELEASE -EHsc -W3 -Wp64 -TP -D_CRT_SECURE_NO_WARNINGS -D_DLP_CPP $(CFLAGS_MSV) ${DLABPRO_MSVC_FLAGS_RELEASE}
+    CFLAGS += -nologo -O2 -GL -D_RELEASE -EHsc -W3 -Wp64 -TP -D_CRT_SECURE_NO_WARNINGS -D_DLP_CPP $(CFLAGS_MSV) ${DLABPRO_MSVC_FLAGS_RELEASE}
     ARFLAGS = -nologo -LTCG
   else
     ifeq (${DLABPRO_USE_MSVC},2)
       ## - MSVC 6.0 - 32-Bit C/C++-Compiler for x86
-      CFLAGS  = -nologo -O2 -D_RELEASE -EHsc -W3 -TP -D_CRT_SECURE_NO_WARNINGS -D_DLP_CPP $(CFLAGS_MSV) ${DLABPRO_MSVC_FLAGS_RELEASE}
+      CFLAGS += -nologo -O2 -D_RELEASE -EHsc -W3 -TP -D_CRT_SECURE_NO_WARNINGS -D_DLP_CPP $(CFLAGS_MSV) ${DLABPRO_MSVC_FLAGS_RELEASE}
     else
-      CFLAGS  = -O2 -D_RELEASE -Wall $(ANSI) -x c++ -D_DLP_CPP $(CFLAGS_GCC) ${DLABPRO_GCC_CFLAGS_RELEASE}
+      CFLAGS += -O2 -D_RELEASE -Wall $(ANSI) -x c++ -D_DLP_CPP $(CFLAGS_GCC) ${DLABPRO_GCC_CFLAGS_RELEASE}
     endif
   endif
 endif
 
 ## Configuration - RELEASE_C
 ifeq ($(MAKECMDGOALS),RELEASE_C)
-  OBJ_PATH = ../../obj.release${MEXT}
   LIB_PATH = ../../lib.release${MEXT}
+  OBJ_PATH = ../../obj.release${MEXT}
   ifeq (${DLABPRO_USE_MSVC},1)
-    CFLAGS  = -nologo -O2 -GL -D_RELEASE -EHsc -W3 -Wp64 -TC -D_CRT_SECURE_NO_WARNINGS -D_DLP_C  ${DLABPRO_MSVC_FLAGS_RELEASE}
+    CFLAGS += -nologo -O2 -GL -D_RELEASE -EHsc -W3 -Wp64 -TC -D_CRT_SECURE_NO_WARNINGS -D_DLP_C  ${DLABPRO_MSVC_FLAGS_RELEASE}
     ARFLAGS = -nologo -LTCG
   else
     ifeq (${DLABPRO_USE_MSVC},2)
       ## - MSVC 6.0 - 32-Bit C/C++-Compiler for x86
-      CFLAGS  = -nologo -O2 -D_RELEASE -EHsc -W3 -TC -D_CRT_SECURE_NO_WARNINGS -D_DLP_C  ${DLABPRO_MSVC_FLAGS_RELEASE}
+      CFLAGS += -nologo -O2 -D_RELEASE -EHsc -W3 -TC -D_CRT_SECURE_NO_WARNINGS -D_DLP_C  ${DLABPRO_MSVC_FLAGS_RELEASE}
     else
-      CFLAGS  = -O2 -D_RELEASE -Wall $(ANSI) -x c -D_DLP_C -Wno-trigraphs -finline-functions ${DLABPRO_GCC_CFLAGS_RELEASE}
+      CFLAGS += -O2 -D_RELEASE -Wall $(ANSI) -x c -D_DLP_C -Wno-trigraphs -finline-functions ${DLABPRO_GCC_CFLAGS_RELEASE}
     endif
   endif
 endif
 
 ## Configuration - clean_release
 ifeq ($(MAKECMDGOALS),clean_release)
-  OBJ_PATH = ../../obj.release${MEXT}
   LIB_PATH = ../../lib.release${MEXT}
+  OBJ_PATH = ../../obj.release${MEXT}
 endif
 
 ## Target settings
