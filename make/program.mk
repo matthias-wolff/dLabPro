@@ -1,8 +1,8 @@
 ## dLabPro makefiles
-## - Program make file
+## - Program make include file
 ##
 ## AUTHOR : Frank Duckhorn
-## PACKAGE: dLabPro/programs
+## PACKAGE: dLabPro/make
 ## 
 ## Copyright 2013 dLabPro contributors and others (see COPYRIGHT file) 
 ## - Chair of System Theory and Speech Technology, TU Dresden
