@@ -32,15 +32,16 @@ endif
 PROJNAME   = profile
 CXXNAME    = CProfile
 SLNAME     = profile
+SEXT           = c
+
 CFLAGS_GCC = 
 CFLAGS_MSV = 
 
+LIBFILE    = profile
+DEFFILE    = profile.def
+
 ## Target settings
-LIBRARY        = $(LIB_PATH)/profile.$(LEXT)
-SHARED_LIBRARY = libprofile.so
-OBJECTS        = $(OBJ_PATH)/profile.$(OEXT)
-DEFFILE        = profile.def
-SEXT           = c
+SOURCES    = profile
 
 include $(DLABPRO_HOME)/make/class.mk
 

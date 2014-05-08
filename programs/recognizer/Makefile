@@ -27,16 +27,12 @@ ifeq (${DLABPRO_HOME},)
   DLABPRO_HOME = ../..
 endif
 
-PROJNAME  = recognizer
-CLANG = c
+PROJNAME = recognizer
+SEXT     = c
 
-INCL = -I.
+INCL     = -I.
 
-SOURCES   = $(SPTH)/$(PROJNAME).$(SEXT) \
-            $(SPTH)/cfg.$(SEXT) \
-            $(SPTH)/cfgdef.$(SEXT) \
-            $(SPTH)/hlp.$(SEXT) \
-            $(SPTH)/cmd.$(SEXT)
+SOURCES   = $(PROJNAME) cfg cfgdef hlp cmd
 
 LIBS      = \
 	$(CLS_LPTH)/fstsearch$(LET) $(LPOST)  \

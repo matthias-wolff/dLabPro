@@ -32,22 +32,23 @@ endif
 PROJNAME   = file
 CXXNAME    = CDlpFile
 SLNAME     = file
+SEXT           = c
+
 CFLAGS_GCC = -Wno-trigraphs
 CFLAGS_MSV = 
 
+LIBFILE    = file
+DEFFILE    = file.def
+
 ## Target settings
-LIBRARY        = $(LIB_PATH)/file.$(LEXT)
-SHARED_LIBRARY = libfile.so
-OBJECTS        = $(OBJ_PATH)/file.$(OEXT) \
-                  $(OBJ_PATH)/file_aux.$(OEXT) \
-                  $(OBJ_PATH)/file_data.$(OEXT) \
-                  $(OBJ_PATH)/file_gph.$(OEXT) \
-                  $(OBJ_PATH)/file_hmm.$(OEXT) \
-                  $(OBJ_PATH)/file_imex.$(OEXT) \
-                  $(OBJ_PATH)/file_vm2n.$(OEXT) \
-                  $(OBJ_PATH)/file_midi.$(OEXT)
-DEFFILE        = file.def
-SEXT           = c
+SOURCES    = file \
+                  file_aux \
+                  file_data \
+                  file_gph \
+                  file_hmm \
+                  file_imex \
+                  file_vm2n \
+                  file_midi
 
 include $(DLABPRO_HOME)/make/class.mk
 

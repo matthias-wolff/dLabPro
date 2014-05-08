@@ -143,10 +143,14 @@ ifeq ($(MAKECMDGOALS),clean_release)
 endif
 
 ## Target settings
+LIBRARY = $(LIB_PATH)/$(LIBFILE).$(LEXT)
+SHARED_LIBRARY = lib$(LIBFILE).so
 CDEPS   =
 DEPS    = $(DEFFILE)
 HFILE   = dlp_$(PROJNAME).h
 CPPFILE = $(PROJNAME).$(SEXT)
+SRCFILES= $(addsuffix .$(SEXT),$(SOURCES))
+OBJECTS = $(addprefix $(OBJ_PATH)/,$(addsuffix .$(OEXT),$(SOURCES)))
 
 ## Rules 
 DEBUG_CPP  : ECHOCNF MKDIR $(LIBRARY)
@@ -193,13 +197,13 @@ clean:  clean_debug
 
 clean_debug:
 	@echo '// ----- Make ($(TOOLBOX)): dLabPro class $(CXXNAME) ($(SLNAME)) -- cleaning DEBUG -----'
-	-rm -f $(OBJECTS) $(LIBRARY)
+	-rm -f $(OBJECTS) $(LIBRARY) $(SHARED_LIBRARY)
 	-rm -f vc80.?db
 	-touch -c -r $(DEFFILE) -d yesterday $(CPPFILE)
 
 clean_release:
 	@echo '// ----- Make ($(TOOLBOX)): dLabPro class $(CXXNAME) ($(SLNAME)) -- cleaning RELEASE -----'
-	-rm -f $(OBJECTS) $(LIBRARY)
+	-rm -f $(OBJECTS) $(LIBRARY) $(SHARED_LIBRARY)
 	-rm -f vc80.?db
 	-touch -c -r $(DEFFILE) -d yesterday $(CPPFILE)
 

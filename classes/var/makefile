@@ -32,16 +32,17 @@ endif
 PROJNAME   = var
 CXXNAME    = CVar
 SLNAME     = var
+SEXT           = c
+
 CFLAGS_GCC = -Wno-trigraphs
 CFLAGS_MSV = 
 
+LIBFILE    = var
+DEFFILE    = var.def
+
 ## Target settings
-LIBRARY        = $(LIB_PATH)/var.$(LEXT)
-SHARED_LIBRARY = libvar.so
-OBJECTS        = $(OBJ_PATH)/var.$(OEXT) \
-                  $(OBJ_PATH)/var_impl.$(OEXT)
-DEFFILE        = var.def
-SEXT           = c
+SOURCES    = var \
+                  var_impl
 
 include $(DLABPRO_HOME)/make/class.mk
 

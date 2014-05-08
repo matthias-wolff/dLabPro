@@ -27,10 +27,10 @@ ifeq (${DLABPRO_HOME},)
   DLABPRO_HOME = ../..
 endif
 
-PROJNAME  = dcg
-CLANG = cpp
+PROJNAME = dcg
+SEXT     = cpp
 
-SOURCES   = $(SPTH)/$(PROJNAME).$(SEXT)
+SOURCES  = $(PROJNAME)
 
 LIBS      = \
 	${CLS_LPTH}/function$(LET) $(LPOST)  \

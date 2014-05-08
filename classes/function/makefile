@@ -32,25 +32,26 @@ endif
 PROJNAME   = function
 CXXNAME    = CFunction
 SLNAME     = function
+SEXT           = cpp
+
 CFLAGS_GCC = -Wno-trigraphs
 CFLAGS_MSV = 
 
+LIBFILE    = function
+DEFFILE    = function.def
+
 ## Target settings
-LIBRARY        = $(LIB_PATH)/function.$(LEXT)
-SHARED_LIBRARY = libfunction.so
-OBJECTS        = $(OBJ_PATH)/function.$(OEXT) \
-                  $(OBJ_PATH)/fnc_arg.$(OEXT) \
-                  $(OBJ_PATH)/fnc_aux.$(OEXT) \
-                  $(OBJ_PATH)/fnc_ctl.$(OEXT) \
-                  $(OBJ_PATH)/fnc_def.$(OEXT) \
-                  $(OBJ_PATH)/fnc_fml.$(OEXT) \
-                  $(OBJ_PATH)/fnc_iam.$(OEXT) \
-                  $(OBJ_PATH)/fnc_itp.$(OEXT) \
-                  $(OBJ_PATH)/fnc_pre.$(OEXT) \
-                  $(OBJ_PATH)/fnc_stk.$(OEXT) \
-                  $(OBJ_PATH)/fnc_teq.$(OEXT)
-DEFFILE        = function.def
-SEXT           = cpp
+SOURCES    = function \
+                  fnc_arg \
+                  fnc_aux \
+                  fnc_ctl \
+                  fnc_def \
+                  fnc_fml \
+                  fnc_iam \
+                  fnc_itp \
+                  fnc_pre \
+                  fnc_stk \
+                  fnc_teq
 
 include $(DLABPRO_HOME)/make/class.mk
 

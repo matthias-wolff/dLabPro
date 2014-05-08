@@ -32,34 +32,35 @@ endif
 PROJNAME   = fst
 CXXNAME    = CFst
 SLNAME     = fst
+SEXT           = c
+
 CFLAGS_GCC = -Wno-trigraphs -finline-functions
 CFLAGS_MSV = 
 
+LIBFILE    = fst
+DEFFILE    = fst.def
+
 ## Target settings
-LIBRARY        = $(LIB_PATH)/fst.$(LEXT)
-SHARED_LIBRARY = libfst.so
-OBJECTS        = $(OBJ_PATH)/fst.$(OEXT) \
-                  $(OBJ_PATH)/fst_aux.$(OEXT) \
-                  $(OBJ_PATH)/fst_cps.$(OEXT) \
-                  $(OBJ_PATH)/fst_edt.$(OEXT) \
-                  $(OBJ_PATH)/fst_erm.$(OEXT) \
-                  $(OBJ_PATH)/fst_det.$(OEXT) \
-                  $(OBJ_PATH)/fst_hmm.$(OEXT) \
-                  $(OBJ_PATH)/fst_ite.$(OEXT) \
-                  $(OBJ_PATH)/fst_ixp.$(OEXT) \
-                  $(OBJ_PATH)/fst_nmg.$(OEXT) \
-                  $(OBJ_PATH)/fst_ord.$(OEXT) \
-                  $(OBJ_PATH)/fst_pth.$(OEXT) \
-                  $(OBJ_PATH)/fst_sdp.$(OEXT) \
-                  $(OBJ_PATH)/fst_stp.$(OEXT) \
-                  $(OBJ_PATH)/fst_str.$(OEXT) \
-                  $(OBJ_PATH)/fst_wir.$(OEXT) \
-                  $(OBJ_PATH)/fst_xsr.$(OEXT) \
-                  $(OBJ_PATH)/fst_regex.$(OEXT) \
-                  $(OBJ_PATH)/fst_bsn.$(OEXT) \
-                  $(OBJ_PATH)/fst_xxx.$(OEXT)
-DEFFILE        = fst.def
-SEXT           = c
+SOURCES    = fst \
+                  fst_aux \
+                  fst_cps \
+                  fst_edt \
+                  fst_erm \
+                  fst_det \
+                  fst_hmm \
+                  fst_ite \
+                  fst_ixp \
+                  fst_nmg \
+                  fst_ord \
+                  fst_pth \
+                  fst_sdp \
+                  fst_stp \
+                  fst_str \
+                  fst_wir \
+                  fst_xsr \
+                  fst_regex \
+                  fst_bsn \
+                  fst_xxx
 
 include $(DLABPRO_HOME)/make/class.mk
 

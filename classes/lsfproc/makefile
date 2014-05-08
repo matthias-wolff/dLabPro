@@ -32,18 +32,19 @@ endif
 PROJNAME   = lsfproc
 CXXNAME    = CLSFproc
 SLNAME     = LSFproc
+SEXT           = cpp
+
 CFLAGS_GCC = 
 CFLAGS_MSV = 
 
+LIBFILE    = lsfproc
+DEFFILE    = lsfproc.def
+
 ## Target settings
-LIBRARY        = $(LIB_PATH)/lsfproc.$(LEXT)
-SHARED_LIBRARY = liblsfproc.so
-OBJECTS        = $(OBJ_PATH)/lsfproc.$(OEXT) \
-                  $(OBJ_PATH)/lsf_work.$(OEXT) \
-                  $(OBJ_PATH)/lsf_synt.$(OEXT) \
-                  $(OBJ_PATH)/lsf_stat.$(OEXT)
-DEFFILE        = lsfproc.def
-SEXT           = cpp
+SOURCES    = lsfproc \
+                  lsf_work \
+                  lsf_synt \
+                  lsf_stat
 
 include $(DLABPRO_HOME)/make/class.mk
 

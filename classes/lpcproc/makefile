@@ -32,18 +32,19 @@ endif
 PROJNAME   = lpcproc
 CXXNAME    = CLPCproc
 SLNAME     = LPCproc
+SEXT           = cpp
+
 CFLAGS_GCC = 
 CFLAGS_MSV = 
 
+LIBFILE    = lpcproc
+DEFFILE    = lpcproc.def
+
 ## Target settings
-LIBRARY        = $(LIB_PATH)/lpcproc.$(LEXT)
-SHARED_LIBRARY = liblpcproc.so
-OBJECTS        = $(OBJ_PATH)/lpcproc.$(OEXT) \
-                  $(OBJ_PATH)/lpc_work.$(OEXT) \
-                  $(OBJ_PATH)/lpc_synt.$(OEXT) \
-                  $(OBJ_PATH)/lpc_stat.$(OEXT)
-DEFFILE        = lpcproc.def
-SEXT           = cpp
+SOURCES    = lpcproc \
+                  lpc_work \
+                  lpc_synt \
+                  lpc_stat
 
 include $(DLABPRO_HOME)/make/class.mk
 

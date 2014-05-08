@@ -32,18 +32,19 @@ endif
 PROJNAME   = signal
 CXXNAME    = CSignal
 SLNAME     = signal
+SEXT           = c
+
 CFLAGS_GCC = 
 CFLAGS_MSV = 
 
+LIBFILE    = signal
+DEFFILE    = signal.def
+
 ## Target settings
-LIBRARY        = $(LIB_PATH)/signal.$(LEXT)
-SHARED_LIBRARY = libsignal.so
-OBJECTS        = $(OBJ_PATH)/signal.$(OEXT) \
-                  $(OBJ_PATH)/sig_op.$(OEXT) \
-                  $(OBJ_PATH)/sig_iam.$(OEXT) \
-                  $(OBJ_PATH)/sig_work.$(OEXT)
-DEFFILE        = signal.def
-SEXT           = c
+SOURCES    = signal \
+                  sig_op \
+                  sig_iam \
+                  sig_work
 
 include $(DLABPRO_HOME)/make/class.mk
 

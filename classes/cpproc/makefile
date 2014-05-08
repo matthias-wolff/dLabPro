@@ -32,18 +32,19 @@ endif
 PROJNAME   = cpproc
 CXXNAME    = CCPproc
 SLNAME     = CPproc
+SEXT           = cpp
+
 CFLAGS_GCC = 
 CFLAGS_MSV = 
 
+LIBFILE    = cpproc
+DEFFILE    = cpproc.def
+
 ## Target settings
-LIBRARY        = $(LIB_PATH)/cpproc.$(LEXT)
-SHARED_LIBRARY = libcpproc.so
-OBJECTS        = $(OBJ_PATH)/cpproc.$(OEXT) \
-                  $(OBJ_PATH)/cp_work.$(OEXT) \
-                  $(OBJ_PATH)/cp_synt.$(OEXT) \
-                  $(OBJ_PATH)/cp_stat.$(OEXT)
-DEFFILE        = cpproc.def
-SEXT           = cpp
+SOURCES    = cpproc \
+                  cp_work \
+                  cp_synt \
+                  cp_stat
 
 include $(DLABPRO_HOME)/make/class.mk
 

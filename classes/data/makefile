@@ -32,21 +32,22 @@ endif
 PROJNAME   = data
 CXXNAME    = CData
 SLNAME     = data
+SEXT           = c
+
 CFLAGS_GCC = -Wno-trigraphs
 CFLAGS_MSV = 
 
+LIBFILE    = data
+DEFFILE    = data.def
+
 ## Target settings
-LIBRARY        = $(LIB_PATH)/data.$(LEXT)
-SHARED_LIBRARY = libdata.so
-OBJECTS        = $(OBJ_PATH)/data.$(OEXT) \
-                  $(OBJ_PATH)/data_aci.$(OEXT) \
-                  $(OBJ_PATH)/data_iam.$(OEXT) \
-                  $(OBJ_PATH)/data_ini.$(OEXT) \
-                  $(OBJ_PATH)/data_int.$(OEXT) \
-                  $(OBJ_PATH)/data_prt.$(OEXT) \
-                  $(OBJ_PATH)/data_wrk.$(OEXT)
-DEFFILE        = data.def
-SEXT           = c
+SOURCES    = data \
+                  data_aci \
+                  data_iam \
+                  data_ini \
+                  data_int \
+                  data_prt \
+                  data_wrk
 
 include $(DLABPRO_HOME)/make/class.mk
 

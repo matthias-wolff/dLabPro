@@ -32,33 +32,34 @@ endif
 PROJNAME   = fstsearch
 CXXNAME    = CFstsearch
 SLNAME     = fstsearch
+SEXT           = c
+
 CFLAGS_GCC = 
 CFLAGS_MSV = 
 
+LIBFILE    = fstsearch
+DEFFILE    = fstsearch.def
+
 ## Target settings
-LIBRARY        = $(LIB_PATH)/fstsearch.$(LEXT)
-SHARED_LIBRARY = libfstsearch.so
-OBJECTS        = $(OBJ_PATH)/fstsearch.$(OEXT) \
-                  $(OBJ_PATH)/fsts_glob.$(OEXT) \
-                  $(OBJ_PATH)/fsts_cfg.$(OEXT) \
-                  $(OBJ_PATH)/fsts_fst.$(OEXT) \
-                  $(OBJ_PATH)/fsts_mem.$(OEXT) \
-                  $(OBJ_PATH)/fsts_w.$(OEXT) \
-                  $(OBJ_PATH)/fsts_bt.$(OEXT) \
-                  $(OBJ_PATH)/fsts_lat.$(OEXT) \
-                  $(OBJ_PATH)/fsts_h.$(OEXT) \
-                  $(OBJ_PATH)/fsts_as.$(OEXT) \
-                  $(OBJ_PATH)/fsts_as_ls.$(OEXT) \
-                  $(OBJ_PATH)/fsts_as_q.$(OEXT) \
-                  $(OBJ_PATH)/fsts_as_s.$(OEXT) \
-                  $(OBJ_PATH)/fsts_sdp.$(OEXT) \
-                  $(OBJ_PATH)/fsts_sdp_imp.$(OEXT) \
-                  $(OBJ_PATH)/fsts_tp.$(OEXT) \
-                  $(OBJ_PATH)/fsts_tp_s.$(OEXT) \
-                  $(OBJ_PATH)/fsts_tp_hist.$(OEXT) \
-                  $(OBJ_PATH)/fsts_tp_ls.$(OEXT)
-DEFFILE        = fstsearch.def
-SEXT           = c
+SOURCES    = fstsearch \
+                  fsts_glob \
+                  fsts_cfg \
+                  fsts_fst \
+                  fsts_mem \
+                  fsts_w \
+                  fsts_bt \
+                  fsts_lat \
+                  fsts_h \
+                  fsts_as \
+                  fsts_as_ls \
+                  fsts_as_q \
+                  fsts_as_s \
+                  fsts_sdp \
+                  fsts_sdp_imp \
+                  fsts_tp \
+                  fsts_tp_s \
+                  fsts_tp_hist \
+                  fsts_tp_ls
 
 include $(DLABPRO_HOME)/make/class.mk
 

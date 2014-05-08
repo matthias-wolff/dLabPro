@@ -125,12 +125,12 @@ clean:  clean_debug
 
 clean_debug:
 	@echo '// ----- Make ($(TOOLBOX)): External library $(PROJNAME) -- cleaning DEBUG -----'
-	-rm -f $(OBJECTS) $(LIBRARY)
+	-rm -f $(OBJECTS) $(LIBRARY) $(SHARED_LIBRARY)
 	-rm -f vc80.?db
 
 clean_release:
 	@echo '// ----- Make ($(TOOLBOX)): External library $(PROJNAME) -- cleaning RELEASE -----'
-	-rm -f $(OBJECTS) $(LIBRARY)
+	-rm -f $(OBJECTS) $(LIBRARY) $(SHARED_LIBRARY)
 	-rm -f vc80.?db
 
 ## EOF

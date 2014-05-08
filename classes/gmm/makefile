@@ -32,19 +32,20 @@ endif
 PROJNAME   = gmm
 CXXNAME    = CGmm
 SLNAME     = gmm
+SEXT           = c
+
 CFLAGS_GCC = -Wno-trigraphs
 CFLAGS_MSV = 
 
+LIBFILE    = gmm
+DEFFILE    = gmm.def
+
 ## Target settings
-LIBRARY        = $(LIB_PATH)/gmm.$(LEXT)
-SHARED_LIBRARY = libgmm.so
-OBJECTS        = $(OBJ_PATH)/gmm.$(OEXT) \
-                  $(OBJ_PATH)/gmm_aux.$(OEXT) \
-                  $(OBJ_PATH)/gmm_clst.$(OEXT) \
-                  $(OBJ_PATH)/gmm_iam.$(OEXT) \
-                  $(OBJ_PATH)/gmm_work.$(OEXT)
-DEFFILE        = gmm.def
-SEXT           = c
+SOURCES    = gmm \
+                  gmm_aux \
+                  gmm_clst \
+                  gmm_iam \
+                  gmm_work
 
 include $(DLABPRO_HOME)/make/class.mk
 

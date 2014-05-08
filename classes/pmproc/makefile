@@ -32,20 +32,21 @@ endif
 PROJNAME   = pmproc
 CXXNAME    = CPMproc
 SLNAME     = PMproc
+SEXT           = cpp
+
 CFLAGS_GCC = 
 CFLAGS_MSV = 
 
+LIBFILE    = pmproc
+DEFFILE    = pmproc.def
+
 ## Target settings
-LIBRARY        = $(LIB_PATH)/pmproc.$(LEXT)
-SHARED_LIBRARY = libpmproc.so
-OBJECTS        = $(OBJ_PATH)/pmproc.$(OEXT) \
-                  $(OBJ_PATH)/pm_work.$(OEXT) \
-                  $(OBJ_PATH)/pm_epochdetect.$(OEXT) \
-                  $(OBJ_PATH)/pm_chfa.$(OEXT) \
-                  $(OBJ_PATH)/pm_gcida.$(OEXT) \
-                  $(OBJ_PATH)/pm_hybrid.$(OEXT)
-DEFFILE        = pmproc.def
-SEXT           = cpp
+SOURCES    = pmproc \
+                  pm_work \
+                  pm_epochdetect \
+                  pm_chfa \
+                  pm_gcida \
+                  pm_hybrid
 
 include $(DLABPRO_HOME)/make/class.mk
 

@@ -32,18 +32,19 @@ endif
 PROJNAME   = lcqproc
 CXXNAME    = CLCQproc
 SLNAME     = LCQproc
+SEXT           = cpp
+
 CFLAGS_GCC = 
 CFLAGS_MSV = 
 
+LIBFILE    = lcqproc
+DEFFILE    = lcqproc.def
+
 ## Target settings
-LIBRARY        = $(LIB_PATH)/lcqproc.$(LEXT)
-SHARED_LIBRARY = liblcqproc.so
-OBJECTS        = $(OBJ_PATH)/lcqproc.$(OEXT) \
-                  $(OBJ_PATH)/lcq_work.$(OEXT) \
-                  $(OBJ_PATH)/lcq_synt.$(OEXT) \
-                  $(OBJ_PATH)/lcq_stat.$(OEXT)
-DEFFILE        = lcqproc.def
-SEXT           = cpp
+SOURCES    = lcqproc \
+                  lcq_work \
+                  lcq_synt \
+                  lcq_stat
 
 include $(DLABPRO_HOME)/make/class.mk
 

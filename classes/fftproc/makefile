@@ -32,16 +32,17 @@ endif
 PROJNAME   = fftproc
 CXXNAME    = CFFTproc
 SLNAME     = FFTproc
+SEXT           = cpp
+
 CFLAGS_GCC = 
 CFLAGS_MSV = 
 
+LIBFILE    = fftproc
+DEFFILE    = fftproc.def
+
 ## Target settings
-LIBRARY        = $(LIB_PATH)/fftproc.$(LEXT)
-SHARED_LIBRARY = libfftproc.so
-OBJECTS        = $(OBJ_PATH)/fftproc.$(OEXT) \
-                  $(OBJ_PATH)/fft_work.$(OEXT)
-DEFFILE        = fftproc.def
-SEXT           = cpp
+SOURCES    = fftproc \
+                  fft_work
 
 include $(DLABPRO_HOME)/make/class.mk
 

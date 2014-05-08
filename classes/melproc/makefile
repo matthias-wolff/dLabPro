@@ -32,18 +32,19 @@ endif
 PROJNAME   = melproc
 CXXNAME    = CMELproc
 SLNAME     = MELproc
+SEXT           = cpp
+
 CFLAGS_GCC = -Wno-trigraphs
 CFLAGS_MSV = 
 
+LIBFILE    = melproc
+DEFFILE    = melproc.def
+
 ## Target settings
-LIBRARY        = $(LIB_PATH)/melproc.$(LEXT)
-SHARED_LIBRARY = libmelproc.so
-OBJECTS        = $(OBJ_PATH)/melproc.$(OEXT) \
-                  $(OBJ_PATH)/mel_synt.$(OEXT) \
-                  $(OBJ_PATH)/mel_work.$(OEXT) \
-                  $(OBJ_PATH)/mel_stat.$(OEXT)
-DEFFILE        = melproc.def
-SEXT           = cpp
+SOURCES    = melproc \
+                  mel_synt \
+                  mel_work \
+                  mel_stat
 
 include $(DLABPRO_HOME)/make/class.mk
 

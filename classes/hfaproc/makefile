@@ -32,17 +32,18 @@ endif
 PROJNAME   = hfaproc
 CXXNAME    = CHFAproc
 SLNAME     = HFAproc
+SEXT           = cpp
+
 CFLAGS_GCC = -Wno-trigraphs
 CFLAGS_MSV = 
 
+LIBFILE    = hfaproc
+DEFFILE    = hfaproc.def
+
 ## Target settings
-LIBRARY        = $(LIB_PATH)/hfaproc.$(LEXT)
-SHARED_LIBRARY = libhfaproc.so
-OBJECTS        = $(OBJ_PATH)/hfaproc.$(OEXT) \
-                  $(OBJ_PATH)/hfa_work.$(OEXT) \
-                  $(OBJ_PATH)/hfa_alg.$(OEXT)
-DEFFILE        = hfaproc.def
-SEXT           = cpp
+SOURCES    = hfaproc \
+                  hfa_work \
+                  hfa_alg
 
 include $(DLABPRO_HOME)/make/class.mk
 

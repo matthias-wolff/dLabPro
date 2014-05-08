@@ -27,10 +27,10 @@ ifeq (${DLABPRO_HOME},)
   DLABPRO_HOME = ../..
 endif
 
-PROJNAME  = dlabpro
-CLANG = cpp
+PROJNAME = dlabpro
+SEXT     = cpp
 
-SOURCES   = $(SPTH)/$(PROJNAME).$(SEXT)
+SOURCES  = $(PROJNAME)
 
 LIBS      = \
   ${CLS_LPTH}/fstsearch$(LET) $(LPOST)  \

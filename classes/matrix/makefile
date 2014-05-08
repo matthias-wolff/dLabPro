@@ -32,17 +32,18 @@ endif
 PROJNAME   = matrix
 CXXNAME    = CMatrix
 SLNAME     = matrix
+SEXT           = c
+
 CFLAGS_GCC = -Wno-trigraphs
 CFLAGS_MSV = 
 
+LIBFILE    = matrix
+DEFFILE    = matrix.def
+
 ## Target settings
-LIBRARY        = $(LIB_PATH)/matrix.$(LEXT)
-SHARED_LIBRARY = libmatrix.so
-OBJECTS        = $(OBJ_PATH)/matrix.$(OEXT) \
-                  $(OBJ_PATH)/mat_iam.$(OEXT) \
-                  $(OBJ_PATH)/mat_work.$(OEXT)
-DEFFILE        = matrix.def
-SEXT           = c
+SOURCES    = matrix \
+                  mat_iam \
+                  mat_work
 
 include $(DLABPRO_HOME)/make/class.mk
 

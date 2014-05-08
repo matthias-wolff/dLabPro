@@ -32,19 +32,20 @@ endif
 PROJNAME   = prosody
 CXXNAME    = CProsody
 SLNAME     = Prosody
+SEXT           = cpp
+
 CFLAGS_GCC = -Wno-trigraphs
 CFLAGS_MSV = 
 
+LIBFILE    = prosody
+DEFFILE    = prosody.def
+
 ## Target settings
-LIBRARY        = $(LIB_PATH)/prosody.$(LEXT)
-SHARED_LIBRARY = libprosody.so
-OBJECTS        = $(OBJ_PATH)/prosody.$(OEXT) \
-                  $(OBJ_PATH)/pause.$(OEXT) \
-                  $(OBJ_PATH)/pm2f0.$(OEXT) \
-                  $(OBJ_PATH)/energy.$(OEXT) \
-                  $(OBJ_PATH)/add_rms.$(OEXT)
-DEFFILE        = prosody.def
-SEXT           = cpp
+SOURCES    = prosody \
+                  pause \
+                  pm2f0 \
+                  energy \
+                  add_rms
 
 include $(DLABPRO_HOME)/make/class.mk
 

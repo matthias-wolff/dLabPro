@@ -32,22 +32,23 @@ endif
 PROJNAME   = histogram
 CXXNAME    = CHistogram
 SLNAME     = histogram
+SEXT           = cpp
+
 CFLAGS_GCC = -Wno-trigraphs
 CFLAGS_MSV = 
 
+LIBFILE    = histogram
+DEFFILE    = histogram.def
+
 ## Target settings
-LIBRARY        = $(LIB_PATH)/histogram.$(LEXT)
-SHARED_LIBRARY = libhistogram.so
-OBJECTS        = $(OBJ_PATH)/histogram.$(OEXT) \
-                  $(OBJ_PATH)/his_aux.$(OEXT) \
-                  $(OBJ_PATH)/his_chi.$(OEXT) \
-                  $(OBJ_PATH)/his_mod.$(OEXT) \
-                  $(OBJ_PATH)/his_show.$(OEXT) \
-                  $(OBJ_PATH)/his_stat.$(OEXT) \
-                  $(OBJ_PATH)/his_upd.$(OEXT) \
-                  $(OBJ_PATH)/his_err.$(OEXT)
-DEFFILE        = histogram.def
-SEXT           = cpp
+SOURCES    = histogram \
+                  his_aux \
+                  his_chi \
+                  his_mod \
+                  his_show \
+                  his_stat \
+                  his_upd \
+                  his_err
 
 include $(DLABPRO_HOME)/make/class.mk
 

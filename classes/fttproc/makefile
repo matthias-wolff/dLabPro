@@ -32,17 +32,18 @@ endif
 PROJNAME   = fttproc
 CXXNAME    = CFTTproc
 SLNAME     = FTTproc
+SEXT           = cpp
+
 CFLAGS_GCC = -Wno-trigraphs
 CFLAGS_MSV = 
 
+LIBFILE    = fttproc
+DEFFILE    = fttproc.def
+
 ## Target settings
-LIBRARY        = $(LIB_PATH)/fttproc.$(LEXT)
-SHARED_LIBRARY = libfttproc.so
-OBJECTS        = $(OBJ_PATH)/fttproc.$(OEXT) \
-                  $(OBJ_PATH)/ftt_work.$(OEXT) \
-                  $(OBJ_PATH)/ftt_stat.$(OEXT)
-DEFFILE        = fttproc.def
-SEXT           = cpp
+SOURCES    = fttproc \
+                  ftt_work \
+                  ftt_stat
 
 include $(DLABPRO_HOME)/make/class.mk
 

@@ -32,22 +32,23 @@ endif
 PROJNAME   = cgen
 CXXNAME    = CCgen
 SLNAME     = cgen
+SEXT           = cpp
+
 CFLAGS_GCC = 
 CFLAGS_MSV = 
 
+LIBFILE    = cgen
+DEFFILE    = cgen.def
+
 ## Target settings
-LIBRARY        = $(LIB_PATH)/cgen.$(LEXT)
-SHARED_LIBRARY = libcgen.so
-OBJECTS        = $(OBJ_PATH)/cgen.$(OEXT) \
-                  $(OBJ_PATH)/cgen_ctl.$(OEXT) \
-                  $(OBJ_PATH)/cgen_cmd.$(OEXT) \
-                  $(OBJ_PATH)/cgen_cpp.$(OEXT) \
-                  $(OBJ_PATH)/cgen_jvd.$(OEXT) \
-                  $(OBJ_PATH)/cgen_htm.$(OEXT) \
-                  $(OBJ_PATH)/cgen_mak.$(OEXT) \
-                  $(OBJ_PATH)/cgen_tpl.$(OEXT)
-DEFFILE        = cgen.def
-SEXT           = cpp
+SOURCES    = cgen \
+                  cgen_ctl \
+                  cgen_cmd \
+                  cgen_cpp \
+                  cgen_jvd \
+                  cgen_htm \
+                  cgen_mak \
+                  cgen_tpl
 
 include $(DLABPRO_HOME)/make/class.mk
 

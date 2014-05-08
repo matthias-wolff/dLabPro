@@ -32,24 +32,25 @@ endif
 PROJNAME   = dgen
 CXXNAME    = CDgen
 SLNAME     = DGen
+SEXT           = cpp
+
 CFLAGS_GCC = -Wno-trigraphs
 CFLAGS_MSV = 
 
+LIBFILE    = dgen
+DEFFILE    = dgen.def
+
 ## Target settings
-LIBRARY        = $(LIB_PATH)/dgen.$(LEXT)
-SHARED_LIBRARY = libdgen.so
-OBJECTS        = $(OBJ_PATH)/dgen.$(OEXT) \
-                  $(OBJ_PATH)/dg_iam.$(OEXT) \
-                  $(OBJ_PATH)/dg_cpp.$(OEXT) \
-                  $(OBJ_PATH)/dg_dlp.$(OEXT) \
-                  $(OBJ_PATH)/dg_gen.$(OEXT) \
-                  $(OBJ_PATH)/dg_scan.$(OEXT) \
-                  $(OBJ_PATH)/dg_tok.$(OEXT) \
-                  $(OBJ_PATH)/dg_uasr.$(OEXT) \
-                  $(OBJ_PATH)/dg_fml.$(OEXT) \
-                  $(OBJ_PATH)/dg_perl.$(OEXT)
-DEFFILE        = dgen.def
-SEXT           = cpp
+SOURCES    = dgen \
+                  dg_iam \
+                  dg_cpp \
+                  dg_dlp \
+                  dg_gen \
+                  dg_scan \
+                  dg_tok \
+                  dg_uasr \
+                  dg_fml \
+                  dg_perl
 
 include $(DLABPRO_HOME)/make/class.mk
 

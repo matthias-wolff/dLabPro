@@ -32,17 +32,18 @@ endif
 PROJNAME   = fwtproc
 CXXNAME    = CFWTproc
 SLNAME     = FWTproc
+SEXT           = cpp
+
 CFLAGS_GCC = 
 CFLAGS_MSV = 
 
+LIBFILE    = fwtproc
+DEFFILE    = fwtproc.def
+
 ## Target settings
-LIBRARY        = $(LIB_PATH)/fwtproc.$(LEXT)
-SHARED_LIBRARY = libfwtproc.so
-OBJECTS        = $(OBJ_PATH)/fwtproc.$(OEXT) \
-                  $(OBJ_PATH)/fwt_work.$(OEXT) \
-                  $(OBJ_PATH)/fwt_synth.$(OEXT)
-DEFFILE        = fwtproc.def
-SEXT           = cpp
+SOURCES    = fwtproc \
+                  fwt_work \
+                  fwt_synth
 
 include $(DLABPRO_HOME)/make/class.mk
 

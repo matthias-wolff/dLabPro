@@ -32,19 +32,20 @@ endif
 PROJNAME   = fsttools
 CXXNAME    = CFsttools
 SLNAME     = fsttools
+SEXT           = c
+
 CFLAGS_GCC = 
 CFLAGS_MSV = 
 
+LIBFILE    = fsttools
+DEFFILE    = fsttools.def
+
 ## Target settings
-LIBRARY        = $(LIB_PATH)/fsttools.$(LEXT)
-SHARED_LIBRARY = libfsttools.so
-OBJECTS        = $(OBJ_PATH)/fsttools.$(OEXT) \
-                  $(OBJ_PATH)/fstt_topo.$(OEXT) \
-                  $(OBJ_PATH)/fstt_misc.$(OEXT) \
-                  $(OBJ_PATH)/fstt_smooth.$(OEXT) \
-                  $(OBJ_PATH)/fstt_nmg.$(OEXT)
-DEFFILE        = fsttools.def
-SEXT           = c
+SOURCES    = fsttools \
+                  fstt_topo \
+                  fstt_misc \
+                  fstt_smooth \
+                  fstt_nmg
 
 include $(DLABPRO_HOME)/make/class.mk
 

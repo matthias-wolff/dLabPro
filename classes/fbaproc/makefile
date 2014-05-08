@@ -32,19 +32,20 @@ endif
 PROJNAME   = fbaproc
 CXXNAME    = CFBAproc
 SLNAME     = FBAproc
+SEXT           = cpp
+
 CFLAGS_GCC = 
 CFLAGS_MSV = 
 
+LIBFILE    = fbaproc
+DEFFILE    = fbaproc.def
+
 ## Target settings
-LIBRARY        = $(LIB_PATH)/fbaproc.$(LEXT)
-SHARED_LIBRARY = libfbaproc.so
-OBJECTS        = $(OBJ_PATH)/fbaproc.$(OEXT) \
-                  $(OBJ_PATH)/fba_work.$(OEXT) \
-                  $(OBJ_PATH)/fba_fft.$(OEXT) \
-                  $(OBJ_PATH)/fba_synt.$(OEXT) \
-                  $(OBJ_PATH)/fba_stat.$(OEXT)
-DEFFILE        = fbaproc.def
-SEXT           = cpp
+SOURCES    = fbaproc \
+                  fba_work \
+                  fba_fft \
+                  fba_synt \
+                  fba_stat
 
 include $(DLABPRO_HOME)/make/class.mk
 

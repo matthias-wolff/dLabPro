@@ -32,17 +32,18 @@ endif
 PROJNAME   = svm
 CXXNAME    = CSvm
 SLNAME     = svm
+SEXT           = c
+
 CFLAGS_GCC = 
 CFLAGS_MSV = 
 
+LIBFILE    = svm
+DEFFILE    = svm.def
+
 ## Target settings
-LIBRARY        = $(LIB_PATH)/svm.$(LEXT)
-SHARED_LIBRARY = libsvm.so
-OBJECTS        = $(OBJ_PATH)/svm.$(OEXT) \
-                  $(OBJ_PATH)/svm_data.$(OEXT) \
-                  $(OBJ_PATH)/svm_meth.$(OEXT)
-DEFFILE        = svm.def
-SEXT           = c
+SOURCES    = svm \
+                  svm_data \
+                  svm_meth
 
 include $(DLABPRO_HOME)/make/class.mk
 

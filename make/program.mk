@@ -70,7 +70,10 @@ ifeq ($(SVNREV),)
 endif
 
 ## Target settings
-PROJECT   = $(BIN_PATH)/$(PROJNAME)$(EEXT)
+PROJECT  = $(BIN_PATH)/$(PROJNAME)$(EEXT)
+SRCFILES = $(addsuffix .$(SEXT),$(SOURCES))
+OBJECTS  = $(addprefix $(OBJ_PATH)/,$(addsuffix .$(OEXT),$(SOURCES)))
+DEPENTS  = $(addprefix $(DEP_PATH)/,$(addsuffix .$(DEXT),$(SOURCES)))
 
 ## Default make target
 ifeq ($(MAKECMDGOALS),)
@@ -111,7 +114,7 @@ else
     DEXT    = d
     EEXT    = 
     TOOLBOX = GCC
-    ifeq ($(CLANG),c)
+    ifeq ($(SEXT),c)
       LL   = gcc
     endif
   endif
@@ -203,14 +206,6 @@ LPOST     = $(CLEAN) ;
 LIBRARIES_CLEANALL := $(LIBS)
 
 ## Finalize sources list
-SPTH      = $(OBJ_PATH)
-SEXT      = $(OEXT)
-OBJECTS  := $(SOURCES)
-SPTH      = $(DEP_PATH)
-SEXT      = $(DEXT)
-DEPENTS  := $(SOURCES)
-SPTH      = .
-SEXT      = $(CLANG)
 SEXTB     = $(call uc,$(SEXT))
 
 ## Include deprecated classes
@@ -233,7 +228,7 @@ ifeq ($(OS),MinGW)
       CC_VERS := $(shell echo -e "int main(){ return 0; }" | $(CC) -E -dM - | grep __GNUC__ | cut -d" " -f3)
       ifeq ($(shell test ${CC_VERS} -lt 4 && echo yes || echo no ),yes)
         LFLAGS += -lwinmm
-			else
+      else
         ifneq ($(findstring readline,$(LIBS_SYS)),)
           RL_AVAILABLE := $(shell echo -e "\#include <readline/readline.h>\nint main(){ return 0; }" | $(CC) $(INCL) $(CFLAGS) -E - >/dev/null 2>&1 && echo yes || echo no)
           ifeq ($(RL_AVAILABLE),yes)

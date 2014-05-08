@@ -32,16 +32,17 @@ endif
 PROJNAME   = vadproc
 CXXNAME    = CVADproc
 SLNAME     = VADproc
+SEXT           = cpp
+
 CFLAGS_GCC = -Wno-trigraphs
 CFLAGS_MSV = 
 
+LIBFILE    = vadproc
+DEFFILE    = vadproc.def
+
 ## Target settings
-LIBRARY        = $(LIB_PATH)/vadproc.$(LEXT)
-SHARED_LIBRARY = libvadproc.so
-OBJECTS        = $(OBJ_PATH)/vadproc.$(OEXT) \
-                  $(OBJ_PATH)/vad_work.$(OEXT)
-DEFFILE        = vadproc.def
-SEXT           = cpp
+SOURCES    = vadproc \
+                  vad_work
 
 include $(DLABPRO_HOME)/make/class.mk
 

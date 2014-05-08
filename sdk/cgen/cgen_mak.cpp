@@ -105,10 +105,10 @@ INT16 CGEN_PROTECTED CCgen::RealizeObjectList(CList<SCGStr> &tmpl, CList<SCGFile
   ptmpl = tmpl.m_items;
   while (ptmpl)
   {
-    if ((m_nPlatform == PF_GNUCXX && strstr(ptmpl->lpName,"OBJECTS        =") !=NULL) ||
-        (m_nPlatform == PF_MSDEV4 && strstr(ptmpl->lpName,"LIB32_OBJS="     ) !=NULL) ||
-        (m_nPlatform == PF_MSDEV5 && strstr(ptmpl->lpName,"LIB32_OBJS="     ) !=NULL) ||
-        (m_nPlatform == PF_MSDEV6 && strstr(ptmpl->lpName,"LIB32_OBJS="     ) !=NULL)  )
+    if ((m_nPlatform == PF_GNUCXX && strstr(ptmpl->lpName,"SOURCES    =") !=NULL) ||
+        (m_nPlatform == PF_MSDEV4 && strstr(ptmpl->lpName,"LIB32_OBJS=" ) !=NULL) ||
+        (m_nPlatform == PF_MSDEV5 && strstr(ptmpl->lpName,"LIB32_OBJS=" ) !=NULL) ||
+        (m_nPlatform == PF_MSDEV6 && strstr(ptmpl->lpName,"LIB32_OBJS=" ) !=NULL)  )
     {
       pfile = files.m_items; cppctr = 0; 
       while (pfile) 
@@ -126,8 +126,8 @@ INT16 CGEN_PROTECTED CCgen::RealizeObjectList(CList<SCGStr> &tmpl, CList<SCGFile
           cp = &fn[strlen(fn)-1]; while (cp != fn && *cp != '.') cp--; *cp = '\0';
           if (m_nPlatform == PF_GNUCXX)
           {
-            if (cppctr == 1) sprintf(buf,"                  $(OBJ_PATH)/%s.$(OEXT)"   ,fn);
-            else             sprintf(buf,"                  $(OBJ_PATH)/%s.$(OEXT) \\",fn);
+            if (cppctr == 1) sprintf(buf,"                  %s"   ,fn);
+            else             sprintf(buf,"                  %s \\",fn);
           }
           if (m_nPlatform == PF_MSDEV4 || m_nPlatform == PF_MSDEV5 || m_nPlatform == PF_MSDEV6)
           {
@@ -503,15 +503,16 @@ void CGEN_PROTECTED CCgen::CreateMakefileTemplate()
   LINEMAK("PROJNAME   = ${ProjL}"                                              )
   LINEMAK("CXXNAME    = ${CxxClass}"                                           )
   LINEMAK("SLNAME     = ${SLName}"                                             )
+  LINEMAK("SEXT           = ${SExt}"                                           )
+  LINEMAK(""                                                                   )
   LINEMAK("CFLAGS_GCC = ${GccFlags}"                                           )
   LINEMAK("CFLAGS_MSV = ${MsvcFlags}"                                          )
   LINEMAK(""                                                                   )
+  LINEMAK("LIBFILE    = ${Libfile}"                                            )
+  LINEMAK("DEFFILE    = ${DefFile}"                                            )
+  LINEMAK(""                                                                   )
   LINEMAK("## Target settings"                                                 )
-  LINEMAK("LIBRARY        = $(LIB_PATH)/${Libfile}.$(LEXT)"                    )
-  LINEMAK("SHARED_LIBRARY = lib${Libfile}.so"                                  )
-  LINEMAK("OBJECTS        = $(OBJ_PATH)/${ProjL}.$(OEXT)"                      )
-  LINEMAK("DEFFILE        = ${DefFile}"                                        )
-  LINEMAK("SEXT           = ${SExt}"                                           )
+  LINEMAK("SOURCES    = ${ProjL}"                                              )
   LINEMAK(""                                                                   )
   LINEMAK("include $(DLABPRO_HOME)/make/class.mk"                              )
   LINEMAK(""                                                                   )

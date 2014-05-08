@@ -32,16 +32,17 @@ endif
 PROJNAME   = process
 CXXNAME    = CProcess
 SLNAME     = process
+SEXT           = cpp
+
 CFLAGS_GCC = -Wno-trigraphs
 CFLAGS_MSV = 
 
+LIBFILE    = process
+DEFFILE    = process.def
+
 ## Target settings
-LIBRARY        = $(LIB_PATH)/process.$(LEXT)
-SHARED_LIBRARY = libprocess.so
-OBJECTS        = $(OBJ_PATH)/process.$(OEXT) \
-                  $(OBJ_PATH)/prc_impl.$(OEXT)
-DEFFILE        = process.def
-SEXT           = cpp
+SOURCES    = process \
+                  prc_impl
 
 include $(DLABPRO_HOME)/make/class.mk
 

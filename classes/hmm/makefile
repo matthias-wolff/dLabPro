@@ -32,17 +32,18 @@ endif
 PROJNAME   = hmm
 CXXNAME    = CHmm
 SLNAME     = hmm
+SEXT           = cpp
+
 CFLAGS_GCC = -Wno-trigraphs
 CFLAGS_MSV = 
 
+LIBFILE    = hmm
+DEFFILE    = hmm.def
+
 ## Target settings
-LIBRARY        = $(LIB_PATH)/hmm.$(LEXT)
-SHARED_LIBRARY = libhmm.so
-OBJECTS        = $(OBJ_PATH)/hmm.$(OEXT) \
-                  $(OBJ_PATH)/hmm_aux.$(OEXT) \
-                  $(OBJ_PATH)/hmm_iam.$(OEXT)
-DEFFILE        = hmm.def
-SEXT           = cpp
+SOURCES    = hmm \
+                  hmm_aux \
+                  hmm_iam
 
 include $(DLABPRO_HOME)/make/class.mk
 

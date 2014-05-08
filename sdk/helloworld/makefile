@@ -32,16 +32,17 @@ endif
 PROJNAME   = helloworld
 CXXNAME    = CHelloworld
 SLNAME     = Helloworld
+SEXT           = c
+
 CFLAGS_GCC = -Wno-trigraphs
 CFLAGS_MSV = 
 
+LIBFILE    = helloworld
+DEFFILE    = helloworld.def
+
 ## Target settings
-LIBRARY        = $(LIB_PATH)/helloworld.$(LEXT)
-SHARED_LIBRARY = libhelloworld.so
-OBJECTS        = $(OBJ_PATH)/helloworld.$(OEXT) \
-                  $(OBJ_PATH)/helloworld_dm.$(OEXT)
-DEFFILE        = helloworld.def
-SEXT           = c
+SOURCES    = helloworld \
+                  helloworld_dm
 
 include $(DLABPRO_HOME)/make/class.mk
 

@@ -32,20 +32,21 @@ endif
 PROJNAME   = statistics
 CXXNAME    = CStatistics
 SLNAME     = statistics
+SEXT           = c
+
 CFLAGS_GCC = -Wno-trigraphs
 CFLAGS_MSV = 
 
+LIBFILE    = statistics
+DEFFILE    = statistics.def
+
 ## Target settings
-LIBRARY        = $(LIB_PATH)/statistics.$(LEXT)
-SHARED_LIBRARY = libstatistics.so
-OBJECTS        = $(OBJ_PATH)/statistics.$(OEXT) \
-                  $(OBJ_PATH)/sta_aux.$(OEXT) \
-                  $(OBJ_PATH)/sta_cor.$(OEXT) \
-                  $(OBJ_PATH)/sta_mom.$(OEXT) \
-                  $(OBJ_PATH)/sta_reo.$(OEXT) \
-                  $(OBJ_PATH)/sta_upd.$(OEXT)
-DEFFILE        = statistics.def
-SEXT           = c
+SOURCES    = statistics \
+                  sta_aux \
+                  sta_cor \
+                  sta_mom \
+                  sta_reo \
+                  sta_upd
 
 include $(DLABPRO_HOME)/make/class.mk
 

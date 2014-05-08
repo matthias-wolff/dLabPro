@@ -32,16 +32,17 @@ endif
 PROJNAME   = vmap
 CXXNAME    = CVmap
 SLNAME     = vmap
+SEXT           = c
+
 CFLAGS_GCC = -Wno-trigraphs
 CFLAGS_MSV = 
 
+LIBFILE    = vmap
+DEFFILE    = vmap.def
+
 ## Target settings
-LIBRARY        = $(LIB_PATH)/vmap.$(LEXT)
-SHARED_LIBRARY = libvmap.so
-OBJECTS        = $(OBJ_PATH)/vmap.$(OEXT) \
-                  $(OBJ_PATH)/vmap_impl.$(OEXT)
-DEFFILE        = vmap.def
-SEXT           = c
+SOURCES    = vmap \
+                  vmap_impl
 
 include $(DLABPRO_HOME)/make/class.mk
 
