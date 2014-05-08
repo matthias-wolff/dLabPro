@@ -12,8 +12,8 @@ endif
 
 PROJNAME=clapack
 
-CFLAGS = -include dlp_defines_extern.h
-CFLAGS_FILTEROUT=-Wall -ansi
+CFLAGS += -include dlp_defines_extern.h
+CFLAGS_FILTEROUT += -Wall -ansi
 
 ## Target settings
 SEXT    = c

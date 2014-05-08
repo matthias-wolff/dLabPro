@@ -6,7 +6,7 @@
 
 ## Common settings
 vpath %.h ../../include ../../include/automatic
-INCL = -I ../../include -I ../../include/automatic
+INCL += -I ../../include -I ../../include/automatic
 
 ifneq (${MACHINE},)
   MEXT=.${MACHINE}
@@ -108,7 +108,7 @@ $(SHARED_LIBRARY): $(OBJECTS)
 	-cd $(LIB_PATH) && ln -sf $(SHARED_LIBRARY).0.0 $(SHARED_LIBRARY).0 \
           && ln -sf $(SHARED_LIBRARY).0 $(SHARED_LIBRARY) 
 
-$(OBJ_PATH)/%.$(OEXT): %.c $(DEPS)
+$(OBJ_PATH)/%.$(OEXT): %.$(SEXT) $(DEPS)
 	$(CC) -c $(CFLAGS) $(INCL) $(CCoO)$@ $<
 
 .PHONY: ECHOCNF MKDIR clean clean_debug clean_release

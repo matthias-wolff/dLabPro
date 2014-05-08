@@ -12,7 +12,7 @@ endif
 
 PROJNAME=ipkclib
 
-CFLAGS_MSV = -D_DEBUG
+CFLAGS_MSV += -D_DEBUG
 
 ## Target settings
 SEXT    = c
