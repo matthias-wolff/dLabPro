@@ -25,127 +25,17 @@
 ## You should have received a copy of the GNU Lesser General Public License
 ## along with dLabPro. If not, see <http://www.gnu.org/licenses/>.
 
-## Common settings
-ifdef (${CGENPATH})
-  CGEN = ${CGENPATH}/dcg
-else
-  CGEN = dcg
+ifeq (${DLABPRO_HOME},)
+  DLABPRO_HOME = ../..
 endif
 
-vpath %.h ../../include ../../include/automatic
-INCL = -I ../../include -I ../../include/automatic 
-
-ifneq (${MACHINE},)
-  MEXT=.${MACHINE}
-else
-  MEXT=
-endif
-
-## Compiler specific settings
-ifeq (${DLABPRO_USE_MSVC},1)
-  ## - MSVC
-  CC       = CL
-  CFLAGS   = -nologo -Od -Gm -EHsc -RTC1 -Wp64 -ZI -TP -D_DEBUG -D_DLP_CPP  ${DLABPRO_MSVC_FLAGS_DEBUG}
-  CCoO     = -Fo
-  AR       = LIB
-  ARFLAGS  = -nologo
-  ARoO     = -OUT:
-  OEXT     = obj
-  LEXT     = lib
-  TOOLBOX  = MSVC
-else
-  ifeq (${DLABPRO_USE_MSVC},2)
-    ## - MSVC 6.0 - 32-Bit C/C++-Compiler for x86
-    CC       = CL
-    CFLAGS   = -nologo -Od -Gm -EHsc -RTC1 -ZI -TP -D_DEBUG -D_DLP_CPP  ${DLABPRO_MSVC_FLAGS_DEBUG}
-    CCoO     = -Fo
-    AR       = LIB
-    ARFLAGS  = -nologo
-    ARoO     = -OUT:
-    OEXT     = obj
-    LEXT     = lib
-    TOOLBOX  = MSVC6
-  else
-    ANSI=$(if $(findstring mingw,$(shell gcc -dumpmachine)),,-ansi)
-    ## - GCC
-    CC       = gcc
-    CFLAGS   = -g -D_DEBUG -Wall $(ANSI) -x c++ -D_DLP_CPP -Wno-trigraphs -finline-functions ${DLABPRO_GCC_CFLAGS_DEBUG}
-    CCoO     = -o
-    AR       = ar
-    ARFLAGS  = rvs
-    ARoO     =
-    OEXT     = o
-    LEXT     = a
-    TOOLBOX  = GCC
-  endif
-endif
-
-## Configuration - DEBUG_CPP (default)
-OBJ_PATH = ../../obj.debug${MEXT}
-LIB_PATH = ../../lib.debug${MEXT}
-
-ifeq ($(MAKECMDGOALS),)
-  MAKECMDGOALS = DEBUG_CPP
-endif
-
-## Configuration - DEBUG_C
-ifeq ($(MAKECMDGOALS),DEBUG_C)
-  OBJ_PATH = ../../obj.debug${MEXT}
-  LIB_PATH = ../../lib.debug${MEXT}
-  ifeq (${DLABPRO_USE_MSVC},1)
-    CFLAGS = -nologo -Od -Gm -EHsc -RTC1 -Wp64 -ZI -TC -D_DEBUG -D_DLP_C -D_DLP_C  ${DLABPRO_MSVC_FLAGS_DEBUG}
-  else
-    ifeq (${DLABPRO_USE_MSVC},2)
-      ## - MSVC 6.0 - 32-Bit C/C++-Compiler for x86
-      CFLAGS = -nologo -Od -Gm -EHsc -RTC1 -ZI -TC -D_DEBUG -D_DLP_C -D_DLP_C  ${DLABPRO_MSVC_FLAGS_DEBUG}
-    else
-      CFLAGS = -g -D_DEBUG -Wall $(ANSI) -x c -D_DLP_C -Wno-trigraphs -finline-functions ${DLABPRO_GCC_CFLAGS_DEBUG}
-    endif
-  endif
-endif
-
-## Configuration - RELEASE_CPP
-ifeq ($(MAKECMDGOALS),RELEASE_CPP)
-  OBJ_PATH = ../../obj.release${MEXT}
-  LIB_PATH = ../../lib.release${MEXT}
-  ifeq (${DLABPRO_USE_MSVC},1)
-    CFLAGS  = -nologo -O2 -GL -D_RELEASE -EHsc -W3 -Wp64 -TP -D_CRT_SECURE_NO_WARNINGS -D_DLP_CPP  ${DLABPRO_MSVC_FLAGS_RELEASE}
-    ARFLAGS = -nologo -LTCG
-  else
-    ifeq (${DLABPRO_USE_MSVC},2)
-      ## - MSVC 6.0 - 32-Bit C/C++-Compiler for x86
-      CFLAGS  = -nologo -O2 -D_RELEASE -EHsc -W3 -TP -D_CRT_SECURE_NO_WARNINGS -D_DLP_CPP  ${DLABPRO_MSVC_FLAGS_RELEASE}
-    else
-      CFLAGS  = -O2 -D_RELEASE -Wall $(ANSI) -x c++ -D_DLP_CPP -Wno-trigraphs -finline-functions ${DLABPRO_GCC_CFLAGS_RELEASE}
-    endif
-  endif
-endif
-
-## Configuration - RELEASE_C
-ifeq ($(MAKECMDGOALS),RELEASE_C)
-  OBJ_PATH = ../../obj.release${MEXT}
-  LIB_PATH = ../../lib.release${MEXT}
-  ifeq (${DLABPRO_USE_MSVC},1)
-    CFLAGS  = -nologo -O2 -GL -D_RELEASE -EHsc -W3 -Wp64 -TC -D_CRT_SECURE_NO_WARNINGS -D_DLP_C  ${DLABPRO_MSVC_FLAGS_RELEASE}
-    ARFLAGS = -nologo -LTCG
-  else
-    ifeq (${DLABPRO_USE_MSVC},2)
-      ## - MSVC 6.0 - 32-Bit C/C++-Compiler for x86
-      CFLAGS  = -nologo -O2 -D_RELEASE -EHsc -W3 -TC -D_CRT_SECURE_NO_WARNINGS -D_DLP_C  ${DLABPRO_MSVC_FLAGS_RELEASE}
-    else
-      CFLAGS  = -O2 -D_RELEASE -Wall $(ANSI) -x c -D_DLP_C -Wno-trigraphs -finline-functions ${DLABPRO_GCC_CFLAGS_RELEASE}
-    endif
-  endif
-endif
-
-## Configuration - clean_release
-ifeq ($(MAKECMDGOALS),clean_release)
-  OBJ_PATH = ../../obj.release${MEXT}
-  LIB_PATH = ../../lib.release${MEXT}
-endif
+PROJNAME   = fst
+CXXNAME    = CFst
+SLNAME     = fst
+CFLAGS_GCC = -Wno-trigraphs -finline-functions
+CFLAGS_MSV = 
 
 ## Target settings
-MANFILE        = ../../manual/automatic/fst.html
 LIBRARY        = $(LIB_PATH)/fst.$(LEXT)
 SHARED_LIBRARY = libfst.so
 OBJECTS        = $(OBJ_PATH)/fst.$(OEXT) \
@@ -168,122 +58,9 @@ OBJECTS        = $(OBJ_PATH)/fst.$(OEXT) \
                   $(OBJ_PATH)/fst_regex.$(OEXT) \
                   $(OBJ_PATH)/fst_bsn.$(OEXT) \
                   $(OBJ_PATH)/fst_xxx.$(OEXT)
-CDEPS          = 
-DEPS           = fst.def
+DEFFILE        = fst.def
+SEXT           = c
 
-## Rules 
-DEBUG_CPP  : ECHOCNF MKDIR $(LIBRARY)
-DEBUG_C    : ECHOCNF MKDIR $(LIBRARY)
-RELEASE_CPP: ECHOCNF MKDIR $(LIBRARY)
-RELEASE_C  : ECHOCNF MKDIR $(LIBRARY)
-SHARED     : ECHOCNF MKDIR $(SHARED_LIBRARY) LDCONF
-
-$(LIBRARY): $(OBJECTS)
-	$(AR) $(ARFLAGS) $(ARoO)$(LIBRARY) $(OBJECTS)
-
-$(SHARED_LIBRARY): $(OBJECTS)
-	$(CC) -shared -Wl,-soname,$(SHARED_LIBRARY).0 $(OBJECTS) \
-          -o $(LIB_PATH)/$(SHARED_LIBRARY).0.0
-
-$(OBJ_PATH)/fst.$(OEXT): fst.c dlp_fst.h dlp_object.h
-	$(CC) -c $(CFLAGS) $(INCL) $(CCoO)$(OBJ_PATH)/fst.$(OEXT) fst.c
-
-dlp_fst.h: $(DEPS) $(CDEPS)
-	@-$(CGEN) fst.def
-
-fst.c: $(DEPS) $(CDEPS)
-	@-$(CGEN) fst.def
-
-##{{CGEN_COMPILE
-$(OBJ_PATH)/fst_aux.$(OEXT): fst_aux.c dlp_fst.h
-	$(CC) -c $(CFLAGS) $(INCL) $(CCoO)$(OBJ_PATH)/fst_aux.$(OEXT) fst_aux.c
-
-$(OBJ_PATH)/fst_cps.$(OEXT): fst_cps.c dlp_fst.h
-	$(CC) -c $(CFLAGS) $(INCL) $(CCoO)$(OBJ_PATH)/fst_cps.$(OEXT) fst_cps.c
-
-$(OBJ_PATH)/fst_edt.$(OEXT): fst_edt.c dlp_fst.h
-	$(CC) -c $(CFLAGS) $(INCL) $(CCoO)$(OBJ_PATH)/fst_edt.$(OEXT) fst_edt.c
-
-$(OBJ_PATH)/fst_erm.$(OEXT): fst_erm.c dlp_fst.h
-	$(CC) -c $(CFLAGS) $(INCL) $(CCoO)$(OBJ_PATH)/fst_erm.$(OEXT) fst_erm.c
-
-$(OBJ_PATH)/fst_det.$(OEXT): fst_det.c dlp_fst.h
-	$(CC) -c $(CFLAGS) $(INCL) $(CCoO)$(OBJ_PATH)/fst_det.$(OEXT) fst_det.c
-
-$(OBJ_PATH)/fst_hmm.$(OEXT): fst_hmm.c dlp_fst.h
-	$(CC) -c $(CFLAGS) $(INCL) $(CCoO)$(OBJ_PATH)/fst_hmm.$(OEXT) fst_hmm.c
-
-$(OBJ_PATH)/fst_ite.$(OEXT): fst_ite.c dlp_fst.h
-	$(CC) -c $(CFLAGS) $(INCL) $(CCoO)$(OBJ_PATH)/fst_ite.$(OEXT) fst_ite.c
-
-$(OBJ_PATH)/fst_ixp.$(OEXT): fst_ixp.c dlp_fst.h
-	$(CC) -c $(CFLAGS) $(INCL) $(CCoO)$(OBJ_PATH)/fst_ixp.$(OEXT) fst_ixp.c
-
-$(OBJ_PATH)/fst_nmg.$(OEXT): fst_nmg.c dlp_fst.h
-	$(CC) -c $(CFLAGS) $(INCL) $(CCoO)$(OBJ_PATH)/fst_nmg.$(OEXT) fst_nmg.c
-
-$(OBJ_PATH)/fst_ord.$(OEXT): fst_ord.c dlp_fst.h
-	$(CC) -c $(CFLAGS) $(INCL) $(CCoO)$(OBJ_PATH)/fst_ord.$(OEXT) fst_ord.c
-
-$(OBJ_PATH)/fst_pth.$(OEXT): fst_pth.c dlp_fst.h
-	$(CC) -c $(CFLAGS) $(INCL) $(CCoO)$(OBJ_PATH)/fst_pth.$(OEXT) fst_pth.c
-
-$(OBJ_PATH)/fst_sdp.$(OEXT): fst_sdp.c dlp_fst.h
-	$(CC) -c $(CFLAGS) $(INCL) $(CCoO)$(OBJ_PATH)/fst_sdp.$(OEXT) fst_sdp.c
-
-$(OBJ_PATH)/fst_stp.$(OEXT): fst_stp.c dlp_fst.h
-	$(CC) -c $(CFLAGS) $(INCL) $(CCoO)$(OBJ_PATH)/fst_stp.$(OEXT) fst_stp.c
-
-$(OBJ_PATH)/fst_str.$(OEXT): fst_str.c dlp_fst.h
-	$(CC) -c $(CFLAGS) $(INCL) $(CCoO)$(OBJ_PATH)/fst_str.$(OEXT) fst_str.c
-
-$(OBJ_PATH)/fst_wir.$(OEXT): fst_wir.c dlp_fst.h
-	$(CC) -c $(CFLAGS) $(INCL) $(CCoO)$(OBJ_PATH)/fst_wir.$(OEXT) fst_wir.c
-
-$(OBJ_PATH)/fst_xsr.$(OEXT): fst_xsr.c dlp_fst.h
-	$(CC) -c $(CFLAGS) $(INCL) $(CCoO)$(OBJ_PATH)/fst_xsr.$(OEXT) fst_xsr.c
-
-$(OBJ_PATH)/fst_regex.$(OEXT): fst_regex.c dlp_fst.h
-	$(CC) -c $(CFLAGS) $(INCL) $(CCoO)$(OBJ_PATH)/fst_regex.$(OEXT) fst_regex.c
-
-$(OBJ_PATH)/fst_bsn.$(OEXT): fst_bsn.c dlp_fst.h
-	$(CC) -c $(CFLAGS) $(INCL) $(CCoO)$(OBJ_PATH)/fst_bsn.$(OEXT) fst_bsn.c
-
-$(OBJ_PATH)/fst_xxx.$(OEXT): fst_xxx.c dlp_fst.h
-	$(CC) -c $(CFLAGS) $(INCL) $(CCoO)$(OBJ_PATH)/fst_xxx.$(OEXT) fst_xxx.c
-
-##}}CGEN_COMPILE
-
-## Additional rules
-.PHONY: ECHOCNF MKDIR LDCONF clean clean_debug clean_release
-
-# Echo current configuration
-ECHOCNF:
-	@echo
-	@echo '// ----- Make ($(TOOLBOX)): dLabPro class CFst (fst) -- $(MAKECMDGOALS) -----'
-
-# Create target directory
-MKDIR:
-	@-test -w $(OBJ_PATH) || mkdir $(OBJ_PATH)
-	@-test -w $(LIB_PATH) || mkdir $(LIB_PATH)
-
-# Create links to shared lib
-LDCONF:
-	@-cd $(LIB_PATH) && ln -sf $(SHARED_LIBRARY).0.0 $(SHARED_LIBRARY).0 \
-          && ln -sf $(SHARED_LIBRARY).0 $(SHARED_LIBRARY)
-
-clean:  clean_debug
-
-clean_debug:
-	@echo '// ----- Make ($(TOOLBOX)): dLabPro class CFst (fst) -- cleaning DEBUG -----'
-	-rm -f $(OBJECTS) $(LIBRARY)
-	-rm -f vc80.?db
-	-touch -c -r fst.def -d yesterday fst.c
-
-clean_release:
-	@echo '// ----- Make ($(TOOLBOX)): dLabPro class CFst (fst) -- cleaning RELEASE -----'
-	-rm -f $(OBJECTS) $(LIBRARY)
-	-rm -f vc80.?db
-	-touch -c -r fst.def -d yesterday fst.c
+include $(DLABPRO_HOME)/make/class.mk
 
 ## EOF 

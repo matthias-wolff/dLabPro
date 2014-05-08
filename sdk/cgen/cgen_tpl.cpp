@@ -547,6 +547,8 @@ INT16 CGEN_PROTECTED CCgen::ReplaceAllKeys(CList<SCGStr> &tmpl)
     if (m_bCProject) ReplaceKey(page->lpName,"${CPPFile}",m_lpsProject,CN_CFILE  );
     else             ReplaceKey(page->lpName,"${CPPFile}",m_lpsProject,CN_CPPFILE);
 
+    if (m_bCProject) ReplaceKey(page->lpName,"${SExt}","c",  0);
+    else             ReplaceKey(page->lpName,"${SExt}","cpp",0);
 
     // Some special
     if      (m_nPlatform == PF_MSDEV5) ReplaceKey(page->lpName,"${callvcvars}","call vcvars32",0);

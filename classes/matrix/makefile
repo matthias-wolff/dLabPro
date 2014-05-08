@@ -25,197 +25,25 @@
 ## You should have received a copy of the GNU Lesser General Public License
 ## along with dLabPro. If not, see <http://www.gnu.org/licenses/>.
 
-## Common settings
-ifdef (${CGENPATH})
-  CGEN = ${CGENPATH}/dcg
-else
-  CGEN = dcg
+ifeq (${DLABPRO_HOME},)
+  DLABPRO_HOME = ../..
 endif
 
-vpath %.h ../../include ../../include/automatic
-INCL = -I ../../include -I ../../include/automatic 
-
-ifneq (${MACHINE},)
-  MEXT=.${MACHINE}
-else
-  MEXT=
-endif
-
-## Compiler specific settings
-ifeq (${DLABPRO_USE_MSVC},1)
-  ## - MSVC
-  CC       = CL
-  CFLAGS   = -nologo -Od -Gm -EHsc -RTC1 -Wp64 -ZI -TP -D_DEBUG -D_DLP_CPP  ${DLABPRO_MSVC_FLAGS_DEBUG}
-  CCoO     = -Fo
-  AR       = LIB
-  ARFLAGS  = -nologo
-  ARoO     = -OUT:
-  OEXT     = obj
-  LEXT     = lib
-  TOOLBOX  = MSVC
-else
-  ifeq (${DLABPRO_USE_MSVC},2)
-    ## - MSVC 6.0 - 32-Bit C/C++-Compiler for x86
-    CC       = CL
-    CFLAGS   = -nologo -Od -Gm -EHsc -RTC1 -ZI -TP -D_DEBUG -D_DLP_CPP  ${DLABPRO_MSVC_FLAGS_DEBUG}
-    CCoO     = -Fo
-    AR       = LIB
-    ARFLAGS  = -nologo
-    ARoO     = -OUT:
-    OEXT     = obj
-    LEXT     = lib
-    TOOLBOX  = MSVC6
-  else
-    ANSI=$(if $(findstring mingw,$(shell gcc -dumpmachine)),,-ansi)
-    ## - GCC
-    CC       = gcc
-    CFLAGS   = -g -D_DEBUG -Wall $(ANSI) -x c++ -D_DLP_CPP -Wno-trigraphs ${DLABPRO_GCC_CFLAGS_DEBUG}
-    CCoO     = -o
-    AR       = ar
-    ARFLAGS  = rvs
-    ARoO     =
-    OEXT     = o
-    LEXT     = a
-    TOOLBOX  = GCC
-  endif
-endif
-
-## Configuration - DEBUG_CPP (default)
-OBJ_PATH = ../../obj.debug${MEXT}
-LIB_PATH = ../../lib.debug${MEXT}
-
-ifeq ($(MAKECMDGOALS),)
-  MAKECMDGOALS = DEBUG_CPP
-endif
-
-## Configuration - DEBUG_C
-ifeq ($(MAKECMDGOALS),DEBUG_C)
-  OBJ_PATH = ../../obj.debug${MEXT}
-  LIB_PATH = ../../lib.debug${MEXT}
-  ifeq (${DLABPRO_USE_MSVC},1)
-    CFLAGS = -nologo -Od -Gm -EHsc -RTC1 -Wp64 -ZI -TC -D_DEBUG -D_DLP_C -D_DLP_C  ${DLABPRO_MSVC_FLAGS_DEBUG}
-  else
-    ifeq (${DLABPRO_USE_MSVC},2)
-      ## - MSVC 6.0 - 32-Bit C/C++-Compiler for x86
-      CFLAGS = -nologo -Od -Gm -EHsc -RTC1 -ZI -TC -D_DEBUG -D_DLP_C -D_DLP_C  ${DLABPRO_MSVC_FLAGS_DEBUG}
-    else
-      CFLAGS = -g -D_DEBUG -Wall $(ANSI) -x c -D_DLP_C -Wno-trigraphs ${DLABPRO_GCC_CFLAGS_DEBUG}
-    endif
-  endif
-endif
-
-## Configuration - RELEASE_CPP
-ifeq ($(MAKECMDGOALS),RELEASE_CPP)
-  OBJ_PATH = ../../obj.release${MEXT}
-  LIB_PATH = ../../lib.release${MEXT}
-  ifeq (${DLABPRO_USE_MSVC},1)
-    CFLAGS  = -nologo -O2 -GL -D_RELEASE -EHsc -W3 -Wp64 -TP -D_CRT_SECURE_NO_WARNINGS -D_DLP_CPP  ${DLABPRO_MSVC_FLAGS_RELEASE}
-    ARFLAGS = -nologo -LTCG
-  else
-    ifeq (${DLABPRO_USE_MSVC},2)
-      ## - MSVC 6.0 - 32-Bit C/C++-Compiler for x86
-      CFLAGS  = -nologo -O2 -D_RELEASE -EHsc -W3 -TP -D_CRT_SECURE_NO_WARNINGS -D_DLP_CPP  ${DLABPRO_MSVC_FLAGS_RELEASE}
-    else
-      CFLAGS  = -O2 -D_RELEASE -Wall $(ANSI) -x c++ -D_DLP_CPP -Wno-trigraphs ${DLABPRO_GCC_CFLAGS_RELEASE}
-    endif
-  endif
-endif
-
-## Configuration - RELEASE_C
-ifeq ($(MAKECMDGOALS),RELEASE_C)
-  OBJ_PATH = ../../obj.release${MEXT}
-  LIB_PATH = ../../lib.release${MEXT}
-  ifeq (${DLABPRO_USE_MSVC},1)
-    CFLAGS  = -nologo -O2 -GL -D_RELEASE -EHsc -W3 -Wp64 -TC -D_CRT_SECURE_NO_WARNINGS -D_DLP_C  ${DLABPRO_MSVC_FLAGS_RELEASE}
-    ARFLAGS = -nologo -LTCG
-  else
-    ifeq (${DLABPRO_USE_MSVC},2)
-      ## - MSVC 6.0 - 32-Bit C/C++-Compiler for x86
-      CFLAGS  = -nologo -O2 -D_RELEASE -EHsc -W3 -TC -D_CRT_SECURE_NO_WARNINGS -D_DLP_C  ${DLABPRO_MSVC_FLAGS_RELEASE}
-    else
-      CFLAGS  = -O2 -D_RELEASE -Wall $(ANSI) -x c -D_DLP_C -Wno-trigraphs ${DLABPRO_GCC_CFLAGS_RELEASE}
-    endif
-  endif
-endif
-
-## Configuration - clean_release
-ifeq ($(MAKECMDGOALS),clean_release)
-  OBJ_PATH = ../../obj.release${MEXT}
-  LIB_PATH = ../../lib.release${MEXT}
-endif
+PROJNAME   = matrix
+CXXNAME    = CMatrix
+SLNAME     = matrix
+CFLAGS_GCC = -Wno-trigraphs
+CFLAGS_MSV = 
 
 ## Target settings
-MANFILE        = ../../manual/automatic/matrix.html
 LIBRARY        = $(LIB_PATH)/matrix.$(LEXT)
 SHARED_LIBRARY = libmatrix.so
 OBJECTS        = $(OBJ_PATH)/matrix.$(OEXT) \
                   $(OBJ_PATH)/mat_iam.$(OEXT) \
                   $(OBJ_PATH)/mat_work.$(OEXT)
-CDEPS          = 
-DEPS           = matrix.def
+DEFFILE        = matrix.def
+SEXT           = c
 
-## Rules 
-DEBUG_CPP  : ECHOCNF MKDIR $(LIBRARY)
-DEBUG_C    : ECHOCNF MKDIR $(LIBRARY)
-RELEASE_CPP: ECHOCNF MKDIR $(LIBRARY)
-RELEASE_C  : ECHOCNF MKDIR $(LIBRARY)
-SHARED     : ECHOCNF MKDIR $(SHARED_LIBRARY) LDCONF
-
-$(LIBRARY): $(OBJECTS)
-	$(AR) $(ARFLAGS) $(ARoO)$(LIBRARY) $(OBJECTS)
-
-$(SHARED_LIBRARY): $(OBJECTS)
-	$(CC) -shared -Wl,-soname,$(SHARED_LIBRARY).0 $(OBJECTS) \
-          -o $(LIB_PATH)/$(SHARED_LIBRARY).0.0
-
-$(OBJ_PATH)/matrix.$(OEXT): matrix.c dlp_matrix.h dlp_object.h
-	$(CC) -c $(CFLAGS) $(INCL) $(CCoO)$(OBJ_PATH)/matrix.$(OEXT) matrix.c
-
-dlp_matrix.h: $(DEPS) $(CDEPS)
-	@-$(CGEN) matrix.def
-
-matrix.c: $(DEPS) $(CDEPS)
-	@-$(CGEN) matrix.def
-
-##{{CGEN_COMPILE
-$(OBJ_PATH)/mat_iam.$(OEXT): mat_iam.c dlp_matrix.h
-	$(CC) -c $(CFLAGS) $(INCL) $(CCoO)$(OBJ_PATH)/mat_iam.$(OEXT) mat_iam.c
-
-$(OBJ_PATH)/mat_work.$(OEXT): mat_work.c dlp_matrix.h
-	$(CC) -c $(CFLAGS) $(INCL) $(CCoO)$(OBJ_PATH)/mat_work.$(OEXT) mat_work.c
-
-##}}CGEN_COMPILE
-
-## Additional rules
-.PHONY: ECHOCNF MKDIR LDCONF clean clean_debug clean_release
-
-# Echo current configuration
-ECHOCNF:
-	@echo
-	@echo '// ----- Make ($(TOOLBOX)): dLabPro class CMatrix (matrix) -- $(MAKECMDGOALS) -----'
-
-# Create target directory
-MKDIR:
-	@-test -w $(OBJ_PATH) || mkdir $(OBJ_PATH)
-	@-test -w $(LIB_PATH) || mkdir $(LIB_PATH)
-
-# Create links to shared lib
-LDCONF:
-	@-cd $(LIB_PATH) && ln -sf $(SHARED_LIBRARY).0.0 $(SHARED_LIBRARY).0 \
-          && ln -sf $(SHARED_LIBRARY).0 $(SHARED_LIBRARY)
-
-clean:  clean_debug
-
-clean_debug:
-	@echo '// ----- Make ($(TOOLBOX)): dLabPro class CMatrix (matrix) -- cleaning DEBUG -----'
-	-rm -f $(OBJECTS) $(LIBRARY)
-	-rm -f vc80.?db
-	-touch -c -r matrix.def -d yesterday matrix.c
-
-clean_release:
-	@echo '// ----- Make ($(TOOLBOX)): dLabPro class CMatrix (matrix) -- cleaning RELEASE -----'
-	-rm -f $(OBJECTS) $(LIBRARY)
-	-rm -f vc80.?db
-	-touch -c -r matrix.def -d yesterday matrix.c
+include $(DLABPRO_HOME)/make/class.mk
 
 ## EOF 

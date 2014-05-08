@@ -344,7 +344,7 @@ public:
 	protected: INT16 hfa_done(tHFA* pstrHFA);
 	protected: void hfa_init(tHFA* pstrHFA);
 
-// Taken from 'hfa_alg.c'
+// Taken from 'hfa_alg.cpp'
 	private: void _hfa_structHFAinit(tHFA* pstrHFA);
 	private: void _hfa_structHFAdeinit(tHFA* pstrHFA);
 	private: INT16 hfa_analyze_matrix(CData* idFrames, tHFA* pstrHFA, CData* idReal, FLOAT64 nMinLog, FLOAT64 nLimit);
@@ -408,7 +408,7 @@ public:
 
 // Taken from 'hfa_work.cpp'
 
-// Taken from 'hfa_alg.c'
+// Taken from 'hfa_alg.cpp'
 //}}CGEN_CEXPORT
 
 #endif //#ifndef __HFAPROC_H

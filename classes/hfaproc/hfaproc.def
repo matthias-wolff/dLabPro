@@ -47,7 +47,7 @@ INCLUDE: "dlp_data.h"
 INCLUDE: "dlp_math.h"
 
 FILE: hfa_work.cpp
-FILE: hfa_alg.c
+FILE: hfa_alg.cpp
 
 HEADERCODE:
 /* ----- Limits ----- */
