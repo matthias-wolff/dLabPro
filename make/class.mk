@@ -163,7 +163,7 @@ $(SHARED_LIBRARY): $(OBJECTS)
           -o $(LIB_PATH)/$(SHARED_LIBRARY).0.0
 
 $(OBJ_PATH)/%.$(OEXT): %.$(SEXT) $(HFILE)
-	$(CC) -c $(CFLAGS) $(INCL) $(CCoO)$(OBJ_PATH)/$*.$(OEXT) $*.$(SEXT)
+	$(CC) -c $(CFLAGS) $(INCL) $(CCoO)$@ $<
 
 $(HFILE): $(DEPS) $(CDEPS)
 	@-$(CGEN) $(DEFFILE)

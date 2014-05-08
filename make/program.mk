@@ -350,7 +350,7 @@ $(LIB_PATH)/%.$(LEXT): $(EXT_PATH)/% FORCE
 	$(MAKE) -C $(EXT_PATH)/$*   $(TARGET)
 
 $(DEP_PATH)/%.$(DEXT): %.$(SEXT)
-	$(CC) -MM -MP -MT $(OBJ_PATH)/$*.$(OEXT) -MT $@ $(CFLAGS) $(INCL) -MF $@ $*.$(SEXT)
+	$(CC) -MM -MP -MT $(OBJ_PATH)/$*.$(OEXT) -MT $@ $(CFLAGS) $(INCL) -MF $@ $<
 
 ## Include dependency makefiles
 ifeq ($(DEPINC),yes)
@@ -362,7 +362,7 @@ endif
 $(OBJ_PATH)/%.$(OEXT): %.$(SEXT)
 	@echo
 	@echo '// ----- Make ($(TOOLBOX)): Program $(PROJNAME) -- $(MAKECMDGOALS) -----'
-	$(CC) -c $(CFLAGS) $(INCL) $(CCoO)$@ $*.$(SEXT)
+	$(CC) -c $(CFLAGS) $(INCL) $(CCoO)$@ $<
 
 FORCE:
 

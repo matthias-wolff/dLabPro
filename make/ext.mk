@@ -1,35 +1,10 @@
 ## dLabPro makefiles
-## - Base make include file
+## - Ext make include file
 ##
 ## AUTHOR : Frank Duckhorn
 ## PACKAGE: dLabPro/make
-## 
-## Copyright 2013 dLabPro contributors and others (see COPYRIGHT file) 
-## - Chair of System Theory and Speech Technology, TU Dresden
-## - Chair of Communications Engineering, BTU Cottbus
-## 
-## This file is part of dLabPro.
-## 
-## dLabPro is free software: you can redistribute it and/or modify it under the
-## terms of the GNU Lesser General Public License as published by the Free
-## Software Foundation, either version 3 of the License, or (at your option)
-## any later version.
-## 
-## dLabPro is distributed in the hope that it will be useful, but WITHOUT ANY
-## WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-## FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
-## details.
-## 
-## You should have received a copy of the GNU Lesser General Public License
-## along with dLabPro. If not, see <http://www.gnu.org/licenses/>.
 
 ## Common settings
-ifdef (${CGENPATH})
-  CGEN = ${CGENPATH}/dcg
-else
-  CGEN = dcg
-endif
-
 vpath %.h ../../include ../../include/automatic
 INCL = -I ../../include -I ../../include/automatic
 
@@ -43,7 +18,7 @@ endif
 ifeq (${DLABPRO_USE_MSVC},1)
   ## - MSVC
   CC       = CL
-  CFLAGS   = -nologo -Od -Gm -EHsc -RTC1 -Wp64 -ZI -D_DEBUG ${DLABPRO_MSVC_FLAGS_DEBUG}
+  CFLAGS  += -nologo -Od -Gm -EHsc -RTC1 -Wp64 -ZI $(CFLAGS_MSV) ${DLABPRO_MSVC_FLAGS_DEBUG}
   CCoO     = -Fo
   AR       = LIB
   ARFLAGS  = -nologo
@@ -55,7 +30,7 @@ else
   ifeq (${DLABPRO_USE_MSVC},2)
     ## - MSVC 6.0 - 32-Bit C/C++-Compiler for x86
     CC       = CL
-    CFLAGS   = -nologo -Od -Gm -EHsc -RTC1 -ZI -D_DEBUG ${DLABPRO_MSVC_FLAGS_DEBUG}
+    CFLAGS  += -nologo -Od -Gm -EHsc -RTC1  -ZI $(CFLAGS_MSV) ${DLABPRO_MSVC_FLAGS_DEBUG}
     CCoO     = -Fo
     AR       = LIB
     ARFLAGS  = -nologo
@@ -67,7 +42,7 @@ else
     ANSI=$(if $(findstring mingw,$(shell gcc -dumpmachine)),,-ansi)
     ## - GCC
     CC       = gcc
-    CFLAGS   = -g -D_DEBUG -Wall $(ANSI) ${DLABPRO_GCC_CFLAGS_DEBUG}
+    CFLAGS  += -g -D_DEBUG -Wall $(ANSI) ${DLABPRO_GCC_CFLAGS_DEBUG}
     CCoO     = -o
     AR       = ar
     ARFLAGS  = rvs
@@ -78,7 +53,7 @@ else
   endif
 endif
 
-## Configuration - DEBUG (Default)
+## Configuration - DEBUG (default)
 LIB_PATH = ../../lib.debug${MEXT}
 OBJ_PATH = ../../obj.debug${MEXT}
 
@@ -90,15 +65,16 @@ endif
 ifeq ($(MAKECMDGOALS),RELEASE)
   LIB_PATH = ../../lib.release${MEXT}
   OBJ_PATH = ../../obj.release${MEXT}
+  CFLAGS += $(CFLAGS_RELEASE)
   ifeq (${DLABPRO_USE_MSVC},1)
-    CFLAGS  = -nologo -O2 -GL -D_RELEASE -EHsc -W3 -Wp64 -D_CRT_SECURE_NO_WARNINGS ${DLABPRO_MSVC_FLAGS_RELEASE}
+    CFLAGS += -nologo -O2 -GL -D_RELEASE -EHsc -W3 -Wp64 -D_CRT_SECURE_NO_WARNINGS ${DLABPRO_MSVC_FLAGS_RELEASE}
     ARFLAGS = -nologo -LTCG
   else
     ifeq (${DLABPRO_USE_MSVC},2)
       ## - MSVC 6.0 - 32-Bit C/C++-Compiler for x86
-      CFLAGS  = -nologo -O2 -D_RELEASE -EHsc -W3 -D_CRT_SECURE_NO_WARNINGS ${DLABPRO_MSVC_FLAGS_RELEASE}
+      CFLAGS += -nologo -O2 -D_RELEASE -EHsc -W3 -D_CRT_SECURE_NO_WARNINGS ${DLABPRO_MSVC_FLAGS_RELEASE}
     else
-      CFLAGS  = -O2 -D_RELEASE -Wall $(ANSI) ${DLABPRO_GCC_CFLAGS_RELEASE}
+      CFLAGS += -O2 -D_RELEASE -Wall $(ANSI) ${DLABPRO_GCC_CFLAGS_RELEASE}
     endif
   endif
 endif
@@ -113,48 +89,48 @@ ifeq ($(MAKECMDGOALS),clean_release)
 endif
 
 ## Target settings
-MANFILE = ../../manual/automatic/$(PROJNAME).html
 LIBRARY = $(LIB_PATH)/$(PROJNAME).$(LEXT)
-DEFFILE = $(PROJNAME).def
+SHARED_LIBRARY = $(LIB_PATH)/$(PROJNAME).so
 SRCFILES= $(addsuffix .$(SEXT),$(SOURCES))
 OBJECTS = $(addprefix $(OBJ_PATH)/,$(addsuffix .$(OEXT),$(SOURCES)))
 
 ## Build rules
-DEBUG   : ECHOCNF MKDIR $(MANFILE) $(LIBRARY)
-RELEASE : ECHOCNF MKDIR $(MANFILE) $(LIBRARY)
-
-$(MANFILE): $(DEFFILE) $(SRCFILES)
-	@-$(CGEN) $(DEFFILE)
+DEBUG   : ECHOCNF MKDIR $(LIBRARY)
+RELEASE : ECHOCNF MKDIR $(LIBRARY)
+SHARED  : ECHOCNF MKDIR $(SHARED_LIBRARY)
 
 $(LIBRARY): $(OBJECTS)
 	$(AR) $(ARFLAGS) $(ARoO)$(LIBRARY) $(OBJECTS)
 
-$(OBJ_PATH)/%.$(OEXT) : %.c $(DEPS)
+$(SHARED_LIBRARY): $(OBJECTS)
+	$(CC) -shared -Wl,-soname,$(SHARED_LIBRARY).0 $(OBJECTS) \
+          $(CCoO)$(LIB_PATH)/$(SHARED_LIBRARY).0.0
+	-cd $(LIB_PATH) && ln -sf $(SHARED_LIBRARY).0.0 $(SHARED_LIBRARY).0 \
+          && ln -sf $(SHARED_LIBRARY).0 $(SHARED_LIBRARY) 
+
+$(OBJ_PATH)/%.$(OEXT): %.c $(DEPS)
 	$(CC) -c $(CFLAGS) $(INCL) $(CCoO)$@ $<
 
-## Additional rules
 .PHONY: ECHOCNF MKDIR clean clean_debug clean_release
 
 ECHOCNF:
 	@echo
-	@echo '// ----- Make ($(TOOLBOX)): dLabPro library $(PROJNAME) -- $(MAKECMDGOALS) -----'
+	@echo '// ----- Make ($(TOOLBOX)): External library $(PROJNAME) -- $(MAKECMDGOALS) -----'
 
 MKDIR:
 	@-test -w $(OBJ_PATH) || mkdir $(OBJ_PATH)
 	@-test -w $(LIB_PATH) || mkdir $(LIB_PATH)
 
-clean: clean_debug
+clean:  clean_debug
 
 clean_debug:
-	@echo '// ----- Make ($(TOOLBOX)): dLabPro library $(PROJNAME) -- cleaning DEBUG -----'
+	@echo '// ----- Make ($(TOOLBOX)): External library $(PROJNAME) -- cleaning DEBUG -----'
 	-rm -f $(OBJECTS) $(LIBRARY)
 	-rm -f vc80.?db
-	-touch $(DEFFILE)
 
 clean_release:
-	@echo '// ----- Make ($(TOOLBOX)): dLabPro library $(PROJNAME) -- cleaning RELEASE -----'
+	@echo '// ----- Make ($(TOOLBOX)): External library $(PROJNAME) -- cleaning RELEASE -----'
 	-rm -f $(OBJECTS) $(LIBRARY)
 	-rm -f vc80.?db
-	-touch $(DEFFILE)
 
 ## EOF

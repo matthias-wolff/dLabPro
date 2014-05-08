@@ -162,7 +162,7 @@ $(LIBRARY): $(OBJECTS)
 	$(AR) $(ARFLAGS) $(ARoO)$(LIBRARY) $(OBJECTS)
 
 $(OBJ_PATH)/%.$(OEXT) : %.c $(DEPS)
-	$(CC) -c $(CFLAGS) $(INCL) $(CCoO)$(OBJ_PATH)/$*.$(OEXT) $*.c
+	$(CC) -c $(CFLAGS) $(INCL) $(CCoO)$@ $<
 
 ## Additional rules
 .PHONY: ECHOCNF MKDIR clean clean_debug clean_release
