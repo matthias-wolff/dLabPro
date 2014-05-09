@@ -1,5 +1,5 @@
 ## dLabPro makefiles
-## - Compiler C make include file
+## - C compiler settings
 ##
 ## AUTHOR : Frank Duckhorn
 ## PACKAGE: dLabPro/make
@@ -22,6 +22,8 @@
 ## 
 ## You should have received a copy of the GNU Lesser General Public License
 ## along with dLabPro. If not, see <http://www.gnu.org/licenses/>.
+
+TARGET_DEF = DEBUG
 
 ## Compiler specific settings
 ifeq (${DLABPRO_USE_MSVC},1)
@@ -62,18 +64,8 @@ else
   endif
 endif
 
-## Configuration - DEBUG (Default)
-LIB_PATH = ../../lib.debug${MEXT}
-OBJ_PATH = ../../obj.debug${MEXT}
-
-ifeq ($(MAKECMDGOALS),)
-  MAKECMDGOALS = DEBUG
-endif
-
 ## Configuration - RELEASE
 ifeq ($(MAKECMDGOALS),RELEASE)
-  LIB_PATH = ../../lib.release${MEXT}
-  OBJ_PATH = ../../obj.release${MEXT}
   CFLAGS += $(CFLAGS_RELEASE)
   ifeq (${DLABPRO_USE_MSVC},1)
     CFLAGS += -nologo -O2 -GL -D_RELEASE -EHsc -W3 -Wp64 -D_CRT_SECURE_NO_WARNINGS ${DLABPRO_MSVC_FLAGS_RELEASE}
@@ -91,9 +83,4 @@ endif
 ## Filter-out Variables
 CFLAGS := $(filter-out $(CFLAGS_FILTEROUT),$(CFLAGS))
 
-## Configuration - clean_release
-ifeq ($(MAKECMDGOALS),clean_release)
-  LIB_PATH = ../../lib.release${MEXT}
-  OBJ_PATH = ../../obj.release${MEXT}
-endif
-
+## EOF

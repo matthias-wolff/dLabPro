@@ -1,0 +1,63 @@
+## dLabPro makefiles
+## - Build path configuration
+##
+## AUTHOR : Frank Duckhorn
+## PACKAGE: dLabPro/make
+##
+## Copyright 2013 dLabPro contributors and others (see COPYRIGHT file) 
+## - Chair of System Theory and Speech Technology, TU Dresden
+## - Chair of Communications Engineering, BTU Cottbus
+## 
+## This file is part of dLabPro.
+## 
+## dLabPro is free software: you can redistribute it and/or modify it under the
+## terms of the GNU Lesser General Public License as published by the Free
+## Software Foundation, either version 3 of the License, or (at your option)
+## any later version.
+## 
+## dLabPro is distributed in the hope that it will be useful, but WITHOUT ANY
+## WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+## FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+## details.
+## 
+## You should have received a copy of the GNU Lesser General Public License
+## along with dLabPro. If not, see <http://www.gnu.org/licenses/>.
+
+BIN_PATH = $(DLABPRO_HOME)/bin.${TRG_DIR}${MEXT}
+LIB_PATH = $(DLABPRO_HOME)/lib.${TRG_DIR}${MEXT}
+OBJ_PATH = $(DLABPRO_HOME)/obj.${TRG_DIR}${MEXT}
+DEP_PATH = $(DLABPRO_HOME)/dep.${TRG_DIR}${MEXT}
+BAS_PATH = $(DLABPRO_HOME)/base
+CLS_PATH = $(DLABPRO_HOME)/classes
+EXT_PATH = $(DLABPRO_HOME)/ext
+SDK_PATH = $(DLABPRO_HOME)/sdk
+INC_PATH = $(DLABPRO_HOME)/include
+MAN_PATH = $(DLABPRO_HOME)/manual
+CONFIG_DST = ${INC_PATH}/dlp_config.h
+CONFIG_SRC = dlp_config.h
+DLPSVNREV  = ${INC_PATH}/automatic/dlp_svnrev.h
+
+## Create directories
+X:=$(shell mkdir -p $(OBJ_PATH))
+X:=$(shell mkdir -p $(BIN_PATH))
+X:=$(shell mkdir -p $(LIB_PATH))
+ifeq (${OS},Linux)
+  X:=$(shell mkdir -p $(DEP_PATH))
+endif
+
+## Target settings
+ifeq ($(LIBFILE),)
+  LIBFILE=$(PROJNAME)
+endif
+
+PROJECT  = $(BIN_PATH)/$(PROJNAME)$(EEXT)
+LIBRARY  = $(LIB_PATH)/$(LIBFILE).$(LEXT)
+SHARED_LIBRARY = $(LIB_PATH)/lib$(LIBFILE).so
+DEFFILE  = $(wildcard $(PROJNAME).def)
+MANFILE  = $(MAN_PATH)/automatic/$(PROJNAME).html
+SRCFILES = $(addsuffix .$(SEXT),$(SOURCES))
+OBJECTS  = $(addprefix $(OBJ_PATH)/,$(addsuffix .$(OEXT),$(SOURCES)))
+DEPENTS  = $(addprefix $(DEP_PATH)/,$(addsuffix .$(DEXT),$(SOURCES)))
+DEPS     = $(HFILE)
+
+## EOF

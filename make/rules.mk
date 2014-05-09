@@ -1,5 +1,5 @@
 ## dLabPro makefiles
-## - Rules make include file
+## - Rules for makefiles
 ##
 ## AUTHOR : Frank Duckhorn
 ## PACKAGE: dLabPro/make
@@ -38,14 +38,18 @@ LDCONF:
 $(OBJ_PATH)/%.$(OEXT): %.$(SEXT) $(DEPS)
 	$(CC) -c $(CFLAGS) $(INCL) $(CCoO)$@ $<
 
+ifneq ($(DEFFILE),)
+
 $(MANFILE): $(DEFFILE) $(SRCFILES)
 	@-$(DCG) $(DEFFILE)
 
-$(HFILE): $(DEFFILE) $(CDEPS)
+$(HFILE): $(DEFFILE)
 	@-$(DCG) $(DEFFILE)
 
-$(CPPFILE): $(DEFFILE) $(CDEPS)
+$(CPPFILE): $(DEFFILE)
 	@-$(DCG) $(DEFFILE)
+
+endif
 
 ## Additional rules
 .PHONY: ECHOCNF MKDIR LDCONF clean clean_debug clean_release
@@ -62,7 +66,7 @@ MKDIR:
 
 clean:  clean_debug
 
-ifneq ($(DEFFILE),)
+ifneq ($(and $(DEFFILE),$(CPPFILE)),)
   TOUCH=touch
 endif
 
@@ -79,3 +83,4 @@ clean_release: $(TOUCH)
 touch:
 	-touch -c -r $(DEFFILE) -d yesterday $(CPPFILE)
 
+## EOF

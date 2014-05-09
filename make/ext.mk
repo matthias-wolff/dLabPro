@@ -1,5 +1,5 @@
 ## dLabPro makefiles
-## - Ext make include file
+## - Make include file for libraries in ext package
 ##
 ## AUTHOR : Frank Duckhorn
 ## PACKAGE: dLabPro/make
@@ -25,14 +25,11 @@
 
 DISPLAY_NAME = External library $(PROJNAME)
 
+include $(DLABPRO_HOME)/make/func.mk
 include $(DLABPRO_HOME)/make/sys.mk
+include $(DLABPRO_HOME)/make/target.mk
 include $(DLABPRO_HOME)/make/compiler_c.mk
-
-## Target settings
-LIBRARY = $(LIB_PATH)/$(PROJNAME).$(LEXT)
-SHARED_LIBRARY = $(LIB_PATH)/$(PROJNAME).so
-SRCFILES= $(addsuffix .$(SEXT),$(SOURCES))
-OBJECTS = $(addprefix $(OBJ_PATH)/,$(addsuffix .$(OEXT),$(SOURCES)))
+include $(DLABPRO_HOME)/make/paths.mk
 
 ## Build rules
 DEBUG   : ECHOCNF MKDIR $(LIBRARY)

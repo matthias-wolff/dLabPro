@@ -1,5 +1,5 @@
 ## dLabPro makefiles
-## - Base make include file
+## - Make include file for C libraries in base package
 ##
 ## AUTHOR : Frank Duckhorn
 ## PACKAGE: dLabPro/make
@@ -27,15 +27,11 @@ DISPLAY_NAME = dLabPro library $(PROJNAME)
 
 CFLAGS_MSV += -D_DEBUG
 
+include $(DLABPRO_HOME)/make/func.mk
 include $(DLABPRO_HOME)/make/sys.mk
+include $(DLABPRO_HOME)/make/target.mk
 include $(DLABPRO_HOME)/make/compiler_c.mk
-
-## Target settings
-MANFILE = ../../manual/automatic/$(PROJNAME).html
-LIBRARY = $(LIB_PATH)/$(PROJNAME).$(LEXT)
-DEFFILE = $(PROJNAME).def
-SRCFILES= $(addsuffix .$(SEXT),$(SOURCES))
-OBJECTS = $(addprefix $(OBJ_PATH)/,$(addsuffix .$(OEXT),$(SOURCES)))
+include $(DLABPRO_HOME)/make/paths.mk
 
 ## Build rules
 DEBUG   : ECHOCNF MKDIR $(MANFILE) $(LIBRARY)

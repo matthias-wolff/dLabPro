@@ -1,9 +1,9 @@
-## dLabPro
-## - Main make file
+## dLabPro makefiles
+## - Target configuration
 ##
 ## AUTHOR : Frank Duckhorn
-## PACKAGE: dLabPro
-## 
+## PACKAGE: dLabPro/make
+##
 ## Copyright 2013 dLabPro contributors and others (see COPYRIGHT file) 
 ## - Chair of System Theory and Speech Technology, TU Dresden
 ## - Chair of Communications Engineering, BTU Cottbus
@@ -23,27 +23,26 @@
 ## You should have received a copy of the GNU Lesser General Public License
 ## along with dLabPro. If not, see <http://www.gnu.org/licenses/>.
 
-all: RELEASE
+## Default make target
+ifeq ($(MAKECMDGOALS),)
+  MAKECMDGOALS = $(TARGET_DEF)
+endif
 
-RELEASE:
-	$(MAKE) -C programs/dcg CLEANALL
-	$(MAKE) -C programs/dcg RELEASE
-	$(MAKE) -C programs/dlabpro CLEANALL
-	$(MAKE) -C programs/dlabpro RELEASE
-	$(MAKE) -C programs/recognizer CLEANALL
-	$(MAKE) -C programs/recognizer RELEASE
+ifeq ($(findstring RELEASE,$(call uc,$(MAKECMDGOALS))),)
+  TRG_LIB = DEBUG
+else
+  TRG_LIB = RELEASE
+endif
 
-DEBUG:
-	$(MAKE) -C programs/dcg CLEANALL
-	$(MAKE) -C programs/dcg RELEASE
-	$(MAKE) -C programs/dcg DEBUG
-	$(MAKE) -C programs/dlabpro CLEANALL
-	$(MAKE) -C programs/dlabpro DEBUG
-	$(MAKE) -C programs/recognizer CLEANALL
-	$(MAKE) -C programs/recognizer DEBUG
+ifeq ($(findstring CLEAN,$(call uc,$(MAKECMDGOALS))),)
+  DEPINC = yes
+else
+  DEPINC = no
+endif
 
-CLEANALL:
-	$(MAKE) -C programs/dcg CLEANALL
-	$(MAKE) -C programs/dlabpro CLEANALL
-	$(MAKE) -C programs/recognizer CLEANALL
+TRG_DIR = $(call lc,$(TRG_LIB))
 
+CLEAN    = clean_$(TRG_DIR)
+CLEANALL = cleanall_$(TRG_DIR)
+
+## EOF

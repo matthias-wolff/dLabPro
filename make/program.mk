@@ -1,5 +1,5 @@
 ## dLabPro makefiles
-## - Program make include file
+## - Make include file for programs
 ##
 ## AUTHOR : Frank Duckhorn
 ## PACKAGE: dLabPro/make
@@ -25,20 +25,9 @@
 
 include $(DLABPRO_HOME)/make/func.mk
 include $(DLABPRO_HOME)/make/sys.mk
-
-## Paths
-BIN_PATH = $(DLABPRO_HOME)/bin.${TRGS}${MEXT}
-LIB_PATH = $(DLABPRO_HOME)/lib.${TRGS}${MEXT}
-OBJ_PATH = $(DLABPRO_HOME)/obj.${TRGS}${MEXT}
-DEP_PATH = $(DLABPRO_HOME)/dep.${TRGS}${MEXT}
-BAS_PATH = $(DLABPRO_HOME)/base
-CLS_PATH = $(DLABPRO_HOME)/classes
-EXT_PATH = $(DLABPRO_HOME)/ext
-SDK_PATH = $(DLABPRO_HOME)/sdk
-INC_PATH = $(DLABPRO_HOME)/include
-CONFIG_DST = ${INC_PATH}/dlp_config.h
-CONFIG_SRC = dlp_config.h
-DLPSVNREV  = ${INC_PATH}/automatic/dlp_svnrev.h
+include $(DLABPRO_HOME)/make/target.mk
+include $(DLABPRO_HOME)/make/compiler_prg.mk
+include $(DLABPRO_HOME)/make/paths.mk
 
 ## Update dlp_svnrec.h if necessary
 ifeq ($(OS),Linux)
@@ -47,126 +36,6 @@ endif
 ifeq ($(SVNREV),)
   X := $(shell echo "// ----- Make: Updating dlp_svnrev.h ($(BUILD)) -----" >&2)
   X := $(shell echo '\#define __DLP_BUILD "$(BUILD)"' >$(DLPSVNREV))
-endif
-
-## Target settings
-PROJECT  = $(BIN_PATH)/$(PROJNAME)$(EEXT)
-SRCFILES = $(addsuffix .$(SEXT),$(SOURCES))
-OBJECTS  = $(addprefix $(OBJ_PATH)/,$(addsuffix .$(OEXT),$(SOURCES)))
-DEPENTS  = $(addprefix $(DEP_PATH)/,$(addsuffix .$(DEXT),$(SOURCES)))
-
-## Default make target
-ifeq ($(MAKECMDGOALS),)
-  MAKECMDGOALS = DEBUG
-endif
-
-## Common settings
-ifeq (${DLABPRO_USE_MSVC},1)
-  CC      = CL
-  CCoO    = -Fo
-  AR      = LIB
-  LL      = LINK
-  LLoO    = -OUT:
-  OEXT    = obj
-  LEXT    = lib
-  EEXT    = .exe
-  TOOLBOX = MSVC
-else 
-  ifeq (${DLABPRO_USE_MSVC},2)
-    ## - MSVC 6.0 - 32-Bit C/C++-Compiler for x86
-    CC      = CL
-    CCoO    = -Fo
-    AR      = LIB
-    LL      = LINK
-    LLoO    = -OUT:
-    OEXT    = obj
-    LEXT    = lib
-    EEXT    = .exe
-    TOOLBOX = MSVC6
-  else
-    CC      = gcc
-    CCoO    = -o
-    AR      = ar
-    LL      = g++
-    LLoO    = -o 
-    OEXT    = o
-    LEXT    = a
-    DEXT    = d
-    EEXT    = 
-    TOOLBOX = GCC
-    ifeq ($(SEXT),c)
-      LL   = gcc
-    endif
-  endif
-endif
-ifeq ($(OS),MinGW)
-  EEXT = .exe
-endif
-
-## Special settings
-ifeq (${DLABPRO_USE_MSVC},1)
-  CFLAGS_DBG = -nologo -Od -Gm -EHsc -RTC1 -Wp64 -ZI -D_DEBUG -D_DLP_CPP ${DLABPRO_MSVC_FLAGS_DEBUG}
-  CFLAGS_REL = -nologo -O2 -GL -D_RELEASE -D_DLP_CPP -EHsc -W3 -Wp64 -D_CRT_SECURE_NO_WARNINGS ${DLABPRO_MSVC_FLAGS_RELEASE}
-  LFLAGS_DBG = -NOLOGO -INCREMENTAL -DEBUG -NODEFAULTLIB:libcmt libcmtd.lib
-  LFLAGS_REL = -NOLOGO -LTCG
-else
-ifeq (${DLABPRO_USE_MSVC},2)
-  CFLAGS_DBG = -nologo -Od -Gm -EHsc -RTC1 -ZI -D_DEBUG -D_DLP_CPP ${DLABPRO_MSVC_FLAGS_DEBUG}
-  CFLAGS_REL = -nologo -O2 -D_RELEASE -D_DLP_CPP -EHsc -W3 -D_CRT_SECURE_NO_WARNINGS ${DLABPRO_MSVC_FLAGS_RELEASE}
-  LFLAGS_DBG = -NOLOGO -INCREMENTAL -DEBUG -NODEFAULTLIB:libcmt libcmtd.lib
-  LFLAGS_REL = -NOLOGO -LTCG
-else
-  ANSI=$(if $(findstring mingw,$(shell gcc -dumpmachine)),,-ansi)
-  STATIC=$(if $(ANSI),,-static)
-  CFLAGS_DBG = -g -D_DEBUG -D_DLP_CPP $(ANSI) ${DLABPRO_GCC_CFLAGS_DEBUG}
-  CFLAGS_REL = -O2 -D_RELEASE -D_DLP_CPP -Wall $(ANSI) ${DLABPRO_GCC_CFLAGS_RELEASE}
-  LFLAGS_DBG = $(STATIC) -lm ${DLABPRO_GCC_LFLAGS_DEBUG}
-  LFLAGS_REL = $(STATIC) -lm ${DLABPRO_GCC_LFLAGS_RELEASE}
-endif
-endif
-
-## Finalize Target settings
-LFLAGS   = $(LFLAGS_$(TRG))
-CFLAGS   = $(CFLAGS_$(TRG))
-CLEAN    = clean_$(TRGS)
-CLEANALL = cleanall$(TRGCLN)
-
-TARGET = DEBUG
-TRG    = DBG
-TRGS   = debug
-TRGCLN = _debug
-DEPINC = yes
-ifeq ($(MAKECMDGOALS),RELEASE)
-  TARGET = RELEASE
-endif
-ifeq ($(MAKECMDGOALS),clean_release)
-  TARGET = RELEASE
-  DEPINC = no
-endif
-ifeq ($(MAKECMDGOALS),cleanall_release)
-  TARGET = RELEASE
-  DEPINC = no
-endif
-ifeq ($(MAKECMDGOALS),clean)
-  DEPINC = no
-endif
-ifeq ($(MAKECMDGOALS),clean_debug)
-  DEPINC = no
-endif
-ifeq ($(MAKECMDGOALS),cleanall_debug)
-  DEPINC = no
-endif
-ifeq ($(MAKECMDGOALS),CLEANALL)
-  DEPINC = no
-endif
-ifeq ($(MAKECMDGOALS),distclean)
-  DEPINC = no
-endif
-
-ifeq ($(TARGET),RELEASE)
-  TRG    = REL
-  TRGS   = release
-  TRGCLN = _release
 endif
 
 ## Finalize library list
@@ -198,101 +67,7 @@ endif
 X := $(shell cp -p $(CONFIG_SRC) $(CONFIG_DST))
 
 
-## Use additional libraries depending on machine type
-
-## Platform specific - GNU on Windows
-ifeq ($(OS),MinGW)
-  ifneq (${DLABPRO_USE_MSVC},1)
-    ifneq (${DLABPRO_USE_MSVC},2)
-      PT_AVAILABLE := $(shell echo -e "\#include <pthread.h>\nint main(){ return 0; }" | $(CC) $(INCL) $(CFLAGS) -E - >/dev/null 2>&1 && echo yes || echo no)
-      CC_VERS := $(shell echo -e "int main(){ return 0; }" | $(CC) -E -dM - | grep __GNUC__ | cut -d" " -f3)
-      ifeq ($(shell test ${CC_VERS} -lt 4 && echo yes || echo no ),yes)
-        LFLAGS += -lwinmm
-      else
-        ifneq ($(findstring readline,$(LIBS_SYS)),)
-          RL_AVAILABLE := $(shell echo -e "\#include <readline/readline.h>\nint main(){ return 0; }" | $(CC) $(INCL) $(CFLAGS) -E - >/dev/null 2>&1 && echo yes || echo no)
-          ifeq ($(RL_AVAILABLE),yes)
-            LFLAGS  += -l:libreadline.a
-          else
-            CFLAGS += -D__NOREADLINE
-          endif
-        endif
-      endif
-    endif
-  endif
-endif
-
-ifeq ($(OS),Linux)
-## Test for lib readline
-  ifneq ($(findstring readline,$(LIBS_SYS)),)
-    ifneq (${DLABPRO_USE_MSVC},1)
-      ifneq (${DLABPRO_USE_MSVC},2)
-        RL_AVAILABLE := $(shell echo -e "\#include <readline/readline.h>\nint main(){ return 0; }" | $(CC) $(INCL) $(CFLAGS) -E - >/dev/null 2>&1 && echo yes || echo no)
-        LD_VERS := $(shell ld -v | sed -e 's/([[:alnum:][:blank:][:punct:]]*)//g;s/^[[:alpha:][:blank:]]*//;s/\.//;s/\..*//')
-        LD_V_OK := $(shell test "$(LD_VERS)" -ge 218 && echo yes || echo no)
-        ifeq ($(LD_V_OK),yes)
-          RL_STAT := $(shell g++ -l:libreadline.a 2>&1 | grep -q "cannot find libreadline.a" && echo no || echo yes)
-        else
-          RL_STAT := no
-        endif
-      endif
-    endif
-
-  # Add readline libary or disable readline libary 
-    ifeq ($(RL_AVAILABLE),yes)
-      ifeq ($(RL_STAT),yes)
-        LFLAGS  += -l:libreadline.a -lncurses
-      else
-        LFLAGS  += -lreadline
-      endif
-    else
-      DLABPRO_GCC_CFLAGS_DEBUG += -D__NOREADLINE
-      DLABPRO_GCC_CFLAGS_RELEASE += -D__NOREADLINE
-      ifeq ($(OS),Linux)
-        $(shell echo "-- Warning: readline libary support disabled (please install readline-devel with <readline/readline.h>) --" >&2)
-      endif
-    endif
-  endif
-endif
-
-ifneq ($(findstring portaudio,$(LIBS_SYS)),)
-  PA_DIR = $(DLABPRO_HOME)/ext/portaudio/$(MACHINE)
-  ## Test for portaudio
-  ifeq ($(OS),Linux)
-    PA_AVAILABLE := $(shell test -f $(PA_DIR)/libportaudio.a -a -f $(PA_DIR)/portaudio.h && echo yes || echo no)
-  else
-    PA_AVAILABLE := $(shell test -f $(PA_DIR)/PortAudio.dll -a -f $(PA_DIR)/portaudio.h && echo yes || echo no)
-  endif
-
-  ## Add portaudio library
-  ifeq ($(PA_AVAILABLE),yes)
-    CFLAGS += -D__USE_PORTAUDIO -I$(PA_DIR)
-    ifeq ($(shell test -f $(PA_DIR)/LFLAGS && echo yes || echo no),yes)
-      LFLAGS += $(PA_DIR)/$(shell cat $(PA_DIR)/LFLAGS)
-    endif
-    ifeq ($(shell test -f $(PA_DIR)/LFLAGS.sh && echo yes || echo no),yes)
-      LFLAGS += $(shell sh $(PA_DIR)/LFLAGS.sh $(PA_DIR))
-   endif
-  endif
-endif
-# Add pthread libary
-ifeq ($(OS),Linux)
-  LFLAGS  += -lpthread -lrt
-else
-  ifeq ($(PT_AVAILABLE),yes)
-    LFLAGS  += -lpthread
-  endif
-endif
-
-
-## Create directories
-X:=$(shell mkdir -p $(OBJ_PATH))
-X:=$(shell mkdir -p $(BIN_PATH))
-X:=$(shell mkdir -p $(LIB_PATH))
-ifeq (${OS},Linux)
-  X:=$(shell mkdir -p $(DEP_PATH))
-endif
-
+include $(DLABPRO_HOME)/make/libsys.mk
 
 ## Build targets
 .PHONY: DEBUG RELEASE clean clean_debug clean_release CLEANALL cleanall_debug cleanall_release distclean
@@ -313,16 +88,16 @@ ${PROJECT}: ${OBJECTS} ${LIBRARIES}
 	$(LL) $(OBJECTS) $(LIBRARIES) $(LFLAGS) $(LLoO)$(PROJECT)
 
 $(LIB_PATH)/%.$(LEXT): $(BAS_PATH)/% FORCE
-	$(MAKE) -C $(BAS_PATH)/$*   $(TARGET)`[ $* = dlpobject ] && echo _$(SEXTB)`
+	$(MAKE) -C $(BAS_PATH)/$*   $(TRG_LIB)`[ $* = dlpobject ] && echo _$(SEXTB)`
 
 $(LIB_PATH)/%.$(LEXT): $(CLS_PATH)/% FORCE
-	$(MAKE) -C $(CLS_PATH)/$*   $(TARGET)_$(SEXTB)
+	$(MAKE) -C $(CLS_PATH)/$*   $(TRG_LIB)_$(SEXTB)
 
 $(LIB_PATH)/%.$(LEXT): $(SDK_PATH)/% FORCE
-	$(MAKE) -C $(SDK_PATH)/$*   $(TARGET)_$(SEXTB)
+	$(MAKE) -C $(SDK_PATH)/$*   $(TRG_LIB)_$(SEXTB)
 
 $(LIB_PATH)/%.$(LEXT): $(EXT_PATH)/% FORCE
-	$(MAKE) -C $(EXT_PATH)/$*   $(TARGET)
+	$(MAKE) -C $(EXT_PATH)/$*   $(TRG_LIB)
 
 $(DEP_PATH)/%.$(DEXT): %.$(SEXT)
 	$(CC) -MM -MP -MT $(OBJ_PATH)/$*.$(OEXT) -MT $@ $(CFLAGS) $(INCL) -MF $@ $<
@@ -350,13 +125,13 @@ CLEANALL:
 	$(MAKE) cleanall_release
 
 $(CLEAN):
-	@echo '// ----- Make: Program $(PROJNAME) -- cleaning $(TARGET) -----'
+	@echo '// ----- Make: Program $(PROJNAME) -- cleaning $(TRG_LIB) -----'
 	-rm -f $(OBJECTS) $(DEPENTS)
 	-touch -c -t 199001010000 $(PROJECT)
 
 $(CLEANALL): $(CLEAN)
 	$(LIBRARIES_CLEANALL)
-	@echo '// ----- Make: Program $(PROJNAME) -- cleaning all $(TARGET) -----'
+	@echo '// ----- Make: Program $(PROJNAME) -- cleaning all $(TRG_LIB) -----'
 	-rm -f $(LIBRARIES)
 	-touch -c dlp_config.h
 	-find $(DLABPRO_HOME)/ \( -name "*.def" \) -exec touch {} \;

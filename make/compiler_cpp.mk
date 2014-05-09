@@ -1,5 +1,5 @@
 ## dLabPro makefiles
-## - Compiler CPP make include file
+## - CPP compiler settings
 ##
 ## AUTHOR : Frank Duckhorn
 ## PACKAGE: dLabPro/make
@@ -22,6 +22,8 @@
 ## 
 ## You should have received a copy of the GNU Lesser General Public License
 ## along with dLabPro. If not, see <http://www.gnu.org/licenses/>.
+
+TARGET_DEF = DEBUG_CPP
 
 ## Compiler specific settings
 ifeq (${DLABPRO_USE_MSVC},1)
@@ -62,18 +64,8 @@ else
   endif
 endif
 
-## Configuration - DEBUG_CPP (Default)
-LIB_PATH = ../../lib.debug${MEXT}
-OBJ_PATH = ../../obj.debug${MEXT}
-
-ifeq ($(MAKECMDGOALS),)
-  MAKECMDGOALS = DEBUG_CPP
-endif
-
 ## Configuration - DEBUG_C
 ifeq ($(MAKECMDGOALS),DEBUG_C)
-  LIB_PATH = ../../lib.debug${MEXT}
-  OBJ_PATH = ../../obj.debug${MEXT}
   ifeq (${DLABPRO_USE_MSVC},1)
     CFLAGS+= -nologo -Od -Gm -EHsc -RTC1 -Wp64 -ZI -TC -D_DEBUG -D_DLP_C -D_DLP_C $(CFLAGS_MSV) ${DLABPRO_MSVC_FLAGS_DEBUG}
   else
@@ -88,8 +80,6 @@ endif
 
 ## Configuration - RELEASE_CPP
 ifeq ($(MAKECMDGOALS),RELEASE_CPP)
-  LIB_PATH = ../../lib.release${MEXT}
-  OBJ_PATH = ../../obj.release${MEXT}
   ifeq (${DLABPRO_USE_MSVC},1)
     CFLAGS += -nologo -O2 -GL -D_RELEASE -EHsc -W3 -Wp64 -TP -D_CRT_SECURE_NO_WARNINGS -D_DLP_CPP $(CFLAGS_MSV) ${DLABPRO_MSVC_FLAGS_RELEASE}
     ARFLAGS = -nologo -LTCG
@@ -105,8 +95,6 @@ endif
 
 ## Configuration - RELEASE_C
 ifeq ($(MAKECMDGOALS),RELEASE_C)
-  LIB_PATH = ../../lib.release${MEXT}
-  OBJ_PATH = ../../obj.release${MEXT}
   ifeq (${DLABPRO_USE_MSVC},1)
     CFLAGS += -nologo -O2 -GL -D_RELEASE -EHsc -W3 -Wp64 -TC -D_CRT_SECURE_NO_WARNINGS -D_DLP_C $(CFLAGS_MSV) ${DLABPRO_MSVC_FLAGS_RELEASE}
     ARFLAGS = -nologo -LTCG
@@ -120,9 +108,4 @@ ifeq ($(MAKECMDGOALS),RELEASE_C)
   endif
 endif
 
-## Configuration - clean_release
-ifeq ($(MAKECMDGOALS),clean_release)
-  LIB_PATH = ../../lib.release${MEXT}
-  OBJ_PATH = ../../obj.release${MEXT}
-endif
-
+## EOF

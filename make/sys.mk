@@ -1,5 +1,5 @@
 ## dLabPro makefiles
-## - Head make include file
+## - System configuration
 ##
 ## AUTHOR : Frank Duckhorn
 ## PACKAGE: dLabPro/make
@@ -44,3 +44,4 @@ else
   MEXT=
 endif
 
+## EOF

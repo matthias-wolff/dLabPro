@@ -1,5 +1,5 @@
 ## dLabPro makefiles
-## - Classes make include file
+## - Make include file for libraries in classes package
 ##
 ## AUTHOR : Frank Duckhorn
 ## PACKAGE: dLabPro/make
@@ -27,18 +27,14 @@ DISPLAY_NAME = dLabPro class $(CXXNAME) ($(SLNAME))
 
 CFLAGS_GCC_REL += -Wno-trigraphs -finline-functions 
 
+include $(DLABPRO_HOME)/make/func.mk
 include $(DLABPRO_HOME)/make/sys.mk
+include $(DLABPRO_HOME)/make/target.mk
 include $(DLABPRO_HOME)/make/compiler_cpp.mk
+include $(DLABPRO_HOME)/make/paths.mk
 
-## Target settings
-LIBRARY = $(LIB_PATH)/$(LIBFILE).$(LEXT)
-SHARED_LIBRARY = lib$(LIBFILE).so
-CDEPS   =
-HFILE   = dlp_$(PROJNAME).h
-DEPS    = $(HFILE)
-CPPFILE = $(PROJNAME).$(SEXT)
-SRCFILES= $(addsuffix .$(SEXT),$(SOURCES))
-OBJECTS = $(addprefix $(OBJ_PATH)/,$(addsuffix .$(OEXT),$(SOURCES)))
+HFILE    = dlp_$(PROJNAME).h
+CPPFILE  = $(PROJNAME).$(SEXT)
 
 ## Rules 
 DEBUG_CPP  : ECHOCNF MKDIR $(LIBRARY)
