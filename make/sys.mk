@@ -1,5 +1,5 @@
 ## dLabPro makefiles
-## - Ext make include file
+## - Head make include file
 ##
 ## AUTHOR : Frank Duckhorn
 ## PACKAGE: dLabPro/make
@@ -23,22 +23,24 @@
 ## You should have received a copy of the GNU Lesser General Public License
 ## along with dLabPro. If not, see <http://www.gnu.org/licenses/>.
 
-DISPLAY_NAME = External library $(PROJNAME)
+## Common settings
+ifdef (${CGENPATH})
+  DCG = ${CGENPATH}/dcg
+else
+  DCG = dcg
+endif
 
-include $(DLABPRO_HOME)/make/sys.mk
-include $(DLABPRO_HOME)/make/compiler_c.mk
+OS   := $(shell uname)
+INCL += -I $(DLABPRO_HOME)/include -I $(DLABPRO_HOME)/include/automatic
+vpath %.h $(DLABPRO_HOME)/include $(DLABPRO_HOME)/include/automatic
 
-## Target settings
-LIBRARY = $(LIB_PATH)/$(PROJNAME).$(LEXT)
-SHARED_LIBRARY = $(LIB_PATH)/$(PROJNAME).so
-SRCFILES= $(addsuffix .$(SEXT),$(SOURCES))
-OBJECTS = $(addprefix $(OBJ_PATH)/,$(addsuffix .$(OEXT),$(SOURCES)))
+ifneq ($(findstring MINGW,$(OS)),)
+  OS := MinGW
+endif
 
-## Build rules
-DEBUG   : ECHOCNF MKDIR $(LIBRARY)
-RELEASE : ECHOCNF MKDIR $(LIBRARY)
-SHARED  : ECHOCNF MKDIR $(SHARED_LIBRARY)
+ifneq (${MACHINE},)
+  MEXT=.${MACHINE}
+else
+  MEXT=
+endif
 
-include $(DLABPRO_HOME)/make/rules.mk
-
-## EOF

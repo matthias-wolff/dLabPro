@@ -24,27 +24,7 @@
 ## along with dLabPro. If not, see <http://www.gnu.org/licenses/>.
 
 include $(DLABPRO_HOME)/make/func.mk
-
-## Common settings
-ifdef (${CGENPATH})
-  DCG = ${CGENPATH}/dcg
-else
-  DCG = dcg
-endif
-
-OS   := $(shell uname)
-INCL  += -I $(DLABPRO_HOME)/include -I $(DLABPRO_HOME)/include/automatic 
-vpath %.h $(DLABPRO_HOME)/include $(DLABPRO_HOME)/include/automatic
-
-ifneq ($(findstring MINGW,$(OS)),)
-  OS := MinGW
-endif
-
-ifneq (${MACHINE},)
-  MEXT=.${MACHINE}
-else
-  MEXT=
-endif
+include $(DLABPRO_HOME)/make/sys.mk
 
 ## Paths
 BIN_PATH = $(DLABPRO_HOME)/bin.${TRGS}${MEXT}
