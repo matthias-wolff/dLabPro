@@ -25,6 +25,9 @@
 
 TARGET_DEF = DEBUG
 
+ANSI  =$(if $(findstring mingw,$(OS)),,-ansi)
+STATIC=$(if $(findstring mingw,$(OS)),-static,)
+
 ## Common settings
 ifeq (${DLABPRO_USE_MSVC},1)
   CC      = CL
@@ -64,7 +67,7 @@ else
     endif
   endif
 endif
-ifeq ($(OS),MinGW)
+ifneq ($(or $(findstring mingw,$(OS)),$(findstring msv,$(OS))),)
   EEXT = .exe
 endif
 
@@ -81,8 +84,6 @@ ifeq (${DLABPRO_USE_MSVC},2)
   LFLAGS_DEBUG   = -NOLOGO -INCREMENTAL -DEBUG -NODEFAULTLIB:libcmt libcmtd.lib
   LFLAGS_RELEASE = -NOLOGO -LTCG
 else
-  ANSI=$(if $(findstring mingw,$(shell gcc -dumpmachine)),,-ansi)
-  STATIC=$(if $(ANSI),,-static)
   CFLAGS_DEBUG   = -g -D_DEBUG -D_DLP_CPP $(ANSI) ${DLABPRO_GCC_CFLAGS_DEBUG}
   CFLAGS_RELEASE = -O2 -D_RELEASE -D_DLP_CPP -Wall $(ANSI) ${DLABPRO_GCC_CFLAGS_RELEASE}
   LFLAGS_DEBUG   = $(STATIC) -lm ${DLABPRO_GCC_LFLAGS_DEBUG}

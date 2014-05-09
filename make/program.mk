@@ -30,7 +30,7 @@ include $(DLABPRO_HOME)/make/compiler_prg.mk
 include $(DLABPRO_HOME)/make/paths.mk
 
 ## Update dlp_svnrec.h if necessary
-ifeq ($(OS),Linux)
+ifneq ($(findstring lin,$(OS)),)
   SVNREV := $(shell grep '\#define __DLP_BUILD "$(BUILD)"' $(DLPSVNREV))
 endif
 ifeq ($(SVNREV),)
@@ -104,7 +104,7 @@ $(DEP_PATH)/%.$(DEXT): %.$(SEXT)
 
 ## Include dependency makefiles
 ifeq ($(DEPINC),yes)
-  ifeq (${OS},Linux)
+  ifneq ($(or $(findstring lin,$(OS)),$(findstring mingw,$(OS))),)
     -include $(DEPENTS)
   endif
 endif

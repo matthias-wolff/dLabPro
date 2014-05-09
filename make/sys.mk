@@ -30,18 +30,49 @@ else
   DCG = dcg
 endif
 
-OS   := $(shell uname)
 INCL += -I $(DLABPRO_HOME)/include -I $(DLABPRO_HOME)/include/automatic
 vpath %.h $(DLABPRO_HOME)/include $(DLABPRO_HOME)/include/automatic
-
-ifneq ($(findstring MINGW,$(OS)),)
-  OS := MinGW
-endif
 
 ifneq (${MACHINE},)
   MEXT=.${MACHINE}
 else
   MEXT=
+endif
+
+## Detect compile OS
+## Implemented values: lin32, lin64, mingw32, mingw64, msv1, msv2
+
+# Test #1 for MSVC
+ifneq (${DLABPRO_USE_MSVC},)
+  ifeq (${DLABPRO_USE_MSVC},1)
+    OS = msv1
+  else ifeq (${DLABPRO_USE_MSVC},2)
+    OS = msv2
+  else
+    $(error Unimplemented MSVC Version: "$(DLABPRO_USE_MSVC)")
+  endif
+else 
+  # Test #2 for machine of gcc
+  OS := $(call lc,$(shell gcc -dumpmachine))
+  ifneq ($(OS),)
+    ifeq ($(OS),x86_64-linux-gnu)
+      OS = lin64
+    else ifeq ($(OS),x86-linux-gnu)
+      OS = lin32
+    else ifeq ($(OS),i686-w64-mingw32)
+      OS = mingw32
+    else
+      $(error Unimplemented machine of gcc: "$(OS)")
+    endif
+  else
+    # Test #3 for machine uname
+    OS := $(call lc,$(shell uname))
+    ifeq ($(OS),Linux)
+      OS = lin64
+    else
+      $(error Unimplemented operating system: "$(OS)")
+    endif
+  endif
 endif
 
 ## EOF

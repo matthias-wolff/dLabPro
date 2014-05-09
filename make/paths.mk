@@ -41,7 +41,7 @@ DLPSVNREV  = ${INC_PATH}/automatic/dlp_svnrev.h
 X:=$(shell mkdir -p $(OBJ_PATH))
 X:=$(shell mkdir -p $(BIN_PATH))
 X:=$(shell mkdir -p $(LIB_PATH))
-ifeq (${OS},Linux)
+ifneq ($(or $(findstring lin,$(OS)),$(findstring mingw,$(OS))),)
   X:=$(shell mkdir -p $(DEP_PATH))
 endif
 

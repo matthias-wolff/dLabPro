@@ -25,6 +25,8 @@
 
 TARGET_DEF = DEBUG_CPP
 
+ANSI=$(if $(findstring mingw,$(OS)),,-ansi)
+
 ## Compiler specific settings
 ifeq (${DLABPRO_USE_MSVC},1)
   ## - MSVC
@@ -50,7 +52,6 @@ else
     LEXT     = lib
     TOOLBOX  = MSVC6
   else
-    ANSI=$(if $(findstring mingw,$(shell gcc -dumpmachine)),,-ansi)
     ## - GCC
     CC       = gcc
     CFLAGS  += -g -D_DEBUG -Wall $(ANSI) -x c++ -D_DLP_CPP $(CFLAGS_GCC) ${DLABPRO_GCC_CFLAGS_DEBUG}
