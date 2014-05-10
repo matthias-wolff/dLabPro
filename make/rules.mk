@@ -89,7 +89,7 @@ ifneq ($(and $(DEFFILE),$(CPPFILE)),)
 endif
 
 $(CLEAN): $(TOUCH)
-	@echo '// ----- Make ($(TOOLBOX)): $(DISPLAY_NAME) -- cleaning RELEASE -----'
+	@echo '// ----- Make ($(TOOLBOX)): $(DISPLAY_NAME) -- cleaning $(TRG_LIB) -----'
 	-rm -f $(OBJECTS) $(DEPENTS) $(LIBRARY) $(SHARED_LIBRARY)
 	-rm -f vc80.?db
 

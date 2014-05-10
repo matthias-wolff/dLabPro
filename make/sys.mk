@@ -87,6 +87,8 @@ ifneq ($(GITREV),)
   GITREVO := $(shell cat $(DLPREV))
   GITREVO := $(subst ",,$(filter-out \#define __DLP_BUILD,$(GITREVO)))
   ifneq ($(GITREVO),$(GITREV))
+    $(shell echo "" >&2)
+    $(shell echo "// Update dlp_rev.h with new revision $(GITREV)" >&2)
     $(file > $(DLPREV),#define __DLP_BUILD "$(GITREV)")
   endif
 endif
