@@ -34,6 +34,11 @@ else
   TRG_LIB = RELEASE
 endif
 
+ifeq ($(TRG_TYPE),)
+  TRG_TYPE  = $(subst $(TRG_LIB),,$(MAKECMDGOALS))
+  TRG_TYPE := $(subst _,,$(TRG_TYPE))
+endif
+
 ifeq ($(findstring CLEAN,$(call uc,$(MAKECMDGOALS))),)
   DEPINC = yes
 else

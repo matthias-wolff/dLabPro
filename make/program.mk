@@ -23,10 +23,14 @@
 ## You should have received a copy of the GNU Lesser General Public License
 ## along with dLabPro. If not, see <http://www.gnu.org/licenses/>.
 
+TRG_TYPE = $(call uc,$(SEXT))
+
+TARGET_DEF = DEBUG
+
 include $(DLABPRO_HOME)/make/func.mk
 include $(DLABPRO_HOME)/make/sys.mk
 include $(DLABPRO_HOME)/make/target.mk
-include $(DLABPRO_HOME)/make/compiler_prg.mk
+include $(DLABPRO_HOME)/make/compiler.mk
 include $(DLABPRO_HOME)/make/paths.mk
 
 ## Update dlp_svnrec.h if necessary

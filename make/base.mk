@@ -25,12 +25,13 @@
 
 DISPLAY_NAME = dLabPro library $(PROJNAME)
 
+TARGET_DEF = DEBUG
 CFLAGS_MSV += -D_DEBUG
 
 include $(DLABPRO_HOME)/make/func.mk
 include $(DLABPRO_HOME)/make/sys.mk
 include $(DLABPRO_HOME)/make/target.mk
-include $(DLABPRO_HOME)/make/compiler_c.mk
+include $(DLABPRO_HOME)/make/compiler.mk
 include $(DLABPRO_HOME)/make/paths.mk
 
 ## Build rules

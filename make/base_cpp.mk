@@ -25,10 +25,12 @@
 
 DISPLAY_NAME = dLabPro library $(PROJNAME)
 
+TARGET_DEF = DEBUG_CPP
+
 include $(DLABPRO_HOME)/make/func.mk
 include $(DLABPRO_HOME)/make/sys.mk
 include $(DLABPRO_HOME)/make/target.mk
-include $(DLABPRO_HOME)/make/compiler_cpp.mk
+include $(DLABPRO_HOME)/make/compiler.mk
 include $(DLABPRO_HOME)/make/paths.mk
 
 ## Build rules

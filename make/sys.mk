@@ -45,8 +45,10 @@ endif
 # Test #1 for MSVC
 ifneq (${DLABPRO_USE_MSVC},)
   ifeq (${DLABPRO_USE_MSVC},1)
+    ## - MSVC
     OS = msv1
   else ifeq (${DLABPRO_USE_MSVC},2)
+    ## - MSVC 6.0 - 32-Bit C/C++-Compiler for x86
     OS = msv2
   else
     $(error Unimplemented MSVC Version: "$(DLABPRO_USE_MSVC)")
