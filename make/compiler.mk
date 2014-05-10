@@ -23,9 +23,6 @@
 ## You should have received a copy of the GNU Lesser General Public License
 ## along with dLabPro. If not, see <http://www.gnu.org/licenses/>.
 
-ANSI=$(if $(findstring mingw,$(OS)),,-ansi)
-STATIC=$(if $(findstring mingw,$(OS)),-static,)
-
 ifeq ($(OS),msv1)
   TOOLBOX  = MSVC
 endif
@@ -33,6 +30,7 @@ ifeq ($(OS),msv2)
   TOOLBOX  = MSVC6
 endif
 
+## Compiler config for MSV
 ifneq ($(findstring msv,$(OS)),)
   CC       = CL
   CCoO     = -Fo
@@ -44,6 +42,7 @@ ifneq ($(findstring msv,$(OS)),)
   LEXT     = lib
 endif
 
+## Compiler config for GCC
 ifneq ($(or $(findstring mingw,$(OS)),$(findstring lin,$(OS))),)
   TOOLBOX  = GCC
   CC       = gcc
@@ -64,6 +63,7 @@ ifneq ($(or $(findstring mingw,$(OS)),$(findstring msv,$(OS))),)
   EEXT = .exe
 endif
 
+## Compiler flags for MSV
 ifneq ($(findstring msv,$(OS)),)
   CFLAGS  += -nologo -EHsc $(CFLAGS_MSV)
   ARFLAGS  = -nologo
@@ -92,19 +92,25 @@ ifeq ($(OS),msv1)
   endif
 endif
 
+## Compiler flags for GCC
 ifneq ($(or $(findstring mingw,$(OS)),$(findstring lin,$(OS))),)
-  CFLAGS  += -Wall $(ANSI) $(CFLAGS_GCC)
+  CFLAGS  += -Wall $(CFLAGS_GCC)
   ARFLAGS  = rvs
-  LFLAGS  += $(STATIC) -lm ${DLABPRO_GCC_LFLAGS_DEBUG}
+  LFLAGS  += -lm ${DLABPRO_GCC_LFLAGS_DEBUG}
   ifeq ($(TRG_LIB),RELEASE)
     CFLAGS += -O2 -D_RELEASE $(CFLAGS_GCC_REL) ${DLABPRO_GCC_CFLAGS_RELEASE}
   else
-    CFLAGS  += -g -D_DEBUG ${DLABPRO_GCC_CFLAGS_DEBUG}
+    CFLAGS += -g -D_DEBUG ${DLABPRO_GCC_CFLAGS_DEBUG}
   endif
   ifeq ($(TRG_TYPE),C)
     CFLAGS += -x c -D_DLP_C
   else ifeq ($(TRG_TYPE),CPP)
     CFLAGS += -x c++ -D_DLP_CPP
+  endif
+  ifeq ($(findstring mingw,$(OS)),)
+    CFLAGS += -ansi
+  else
+    LFLAGS += -static
   endif
 endif
 
