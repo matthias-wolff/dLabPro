@@ -83,7 +83,12 @@ ifneq ($(filter ref:,$(GITREV)),)
   GITREV := $(shell cat $(DLABPRO_HOME)/.git/$(filter-out ref:,$(GITREV)))
 endif
 ifneq ($(GITREV),)
-  CFLAGS += '-D__DLP_BUILD="$(GITREV)"'
+  DLPREV   = $(DLABPRO_HOME)/include/automatic/dlp_rev.h
+  GITREVO := $(shell cat $(DLPREV))
+  GITREVO := $(subst ",,$(filter-out \#define __DLP_BUILD,$(GITREVO)))
+  ifneq ($(GITREVO),$(GITREV))
+    $(file > $(DLPREV),#define __DLP_BUILD "$(GITREV)")
+  endif
 endif
 
 ## EOF
