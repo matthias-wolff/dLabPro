@@ -69,7 +69,7 @@ ifneq ($(findstring lin,$(OS)),)
 endif
 
 ifneq ($(findstring portaudio,$(LIBS_SYS)),)
-  PA_DIR = $(DLABPRO_HOME)/ext/portaudio/$(MACHINE)
+  PA_DIR = $(DLABPRO_HOME)/ext/portaudio/$(OS)
   ## Test for portaudio
   ifneq ($(findstring lin,$(OS)),)
     PA_AVAILABLE := $(shell test -f $(PA_DIR)/libportaudio.a -a -f $(PA_DIR)/portaudio.h && echo yes || echo no)
