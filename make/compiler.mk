@@ -54,7 +54,7 @@ ifneq ($(or $(findstring mingw,$(OS)),$(findstring lin,$(OS))),)
   OEXT     = o
   LEXT     = a
   DEXT     = d
-  ifeq ($(SEXT),c)
+  ifeq ($(TRG_TYPE),C)
     LL    = gcc
   endif
 endif
@@ -69,24 +69,23 @@ ifneq ($(findstring msv,$(OS)),)
   ARFLAGS  = -nologo
   LFLAGS  += -NOLOGO
   ifeq ($(TRG_LIB),RELEASE)
-    CFLAGS += -O2 -D_RELEASE -W3 -D_CRT_SECURE_NO_WARNINGS ${DLABPRO_MSVC_FLAGS_RELEASE}
-    CFLAGS += -D_DLP_CPP
+    CFLAGS  += -O2 -W3 -D_CRT_SECURE_NO_WARNINGS ${DLABPRO_MSVC_FLAGS_RELEASE}
+    CFLAGS  += -D_DLP_CPP
     ARFLAGS += -LTCG
-    LFLAGS += -LTCG
-  else
-    CFLAGS += -Od -Gm -RTC1 -ZI ${DLABPRO_MSVC_FLAGS_DEBUG}
-    CFLAGS += -D_DEBUG
-    LFLAGS += -INCREMENTAL -DEBUG -NODEFAULTLIB:libcmt libcmtd.lib
+    LFLAGS  += -LTCG
+  else ## DEBUG
+    CFLAGS  += -Od -Gm -RTC1 -ZI ${DLABPRO_MSVC_FLAGS_DEBUG}
+    LFLAGS  += -INCREMENTAL -DEBUG -NODEFAULTLIB:libcmt libcmtd.lib
   endif
   ifeq ($(TRG_TYPE),C)
-    CFLAGS += -TC -D_DLP_C
+    CFLAGS  += -TC
   else ifeq ($(TRG_TYPE),CPP)
-    CFLAGS  += -TP -D_DLP_CPP
+    CFLAGS  += -TP
   endif
 endif
 
 ifeq ($(OS),msv1)
-  CFLAGS  += -Wp64
+  CFLAGS += -Wp64
   ifeq ($(TRG_LIB),RELEASE)
     CFLAGS += -GL
   endif
@@ -96,22 +95,36 @@ endif
 ifneq ($(or $(findstring mingw,$(OS)),$(findstring lin,$(OS))),)
   CFLAGS  += -Wall $(CFLAGS_GCC)
   ARFLAGS  = rvs
-  LFLAGS  += -lm ${DLABPRO_GCC_LFLAGS_DEBUG}
+  LFLAGS  += -lm
   ifeq ($(TRG_LIB),RELEASE)
-    CFLAGS += -O2 -D_RELEASE $(CFLAGS_GCC_REL) ${DLABPRO_GCC_CFLAGS_RELEASE}
-  else
-    CFLAGS += -g -D_DEBUG ${DLABPRO_GCC_CFLAGS_DEBUG}
+    CFLAGS  += -O2 $(CFLAGS_GCC_REL) ${DLABPRO_GCC_CFLAGS_RELEASE}
+    LFLAGS  += ${DLABPRO_GCC_LFLAGS_RELEASE}
+  else ## DEBUG
+    CFLAGS  += -g ${DLABPRO_GCC_CFLAGS_DEBUG}
+    LFLAGS  += ${DLABPRO_GCC_LFLAGS_DEBUG}
   endif
   ifeq ($(TRG_TYPE),C)
-    CFLAGS += -x c -D_DLP_C
+    CFLAGS  += -x c
   else ifeq ($(TRG_TYPE),CPP)
-    CFLAGS += -x c++ -D_DLP_CPP
+    CFLAGS  += -x c++
   endif
   ifeq ($(findstring mingw,$(OS)),)
-    CFLAGS += -ansi
-  else
-    LFLAGS += -static
+    CFLAGS  += -ansi
+  else ## lin
+    LFLAGS  += -static
   endif
+endif
+
+## Compiler independend flags
+ifeq ($(TRG_TYPE),C)
+  CFLAGS += -D_DLP_C
+else ifeq ($(TRG_TYPE),CPP)
+  CFLAGS += -D_DLP_CPP
+endif
+ifeq ($(TRG_LIB),RELEASE)
+  CFLAGS += -D_RELEASE
+else ## DEBUG
+  CFLAGS += -D_DEBUG
 endif
 
 ## Filter-out Variables
