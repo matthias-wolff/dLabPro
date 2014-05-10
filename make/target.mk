@@ -28,23 +28,28 @@ ifeq ($(MAKECMDGOALS),)
   MAKECMDGOALS = $(TARGET_DEF)
 endif
 
+
+## Get target for libraries (DEBUG or RELEASE)
 ifeq ($(findstring RELEASE,$(call uc,$(MAKECMDGOALS))),)
   TRG_LIB = DEBUG
 else
   TRG_LIB = RELEASE
 endif
 
+## Get target type (C,CPP or empty)
 ifeq ($(TRG_TYPE),)
   TRG_TYPE  = $(subst $(TRG_LIB),,$(MAKECMDGOALS))
   TRG_TYPE := $(subst _,,$(TRG_TYPE))
 endif
 
+## Create dependency files
 ifeq ($(findstring CLEAN,$(call uc,$(MAKECMDGOALS))),)
   DEPINC = yes
 else
   DEPINC = no
 endif
 
+## Target directory (debug or release)
 TRG_DIR = $(call lc,$(TRG_LIB))
 
 CLEAN    = clean_$(TRG_DIR)

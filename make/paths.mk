@@ -23,18 +23,24 @@
 ## You should have received a copy of the GNU Lesser General Public License
 ## along with dLabPro. If not, see <http://www.gnu.org/licenses/>.
 
+## Set default program
+ifeq ($(PROGRAM),)
+  PROGRAM = dlabpro
+endif
+
+## Set all paths
 BIN_PATH = $(DLABPRO_HOME)/bin.${TRG_DIR}${MEXT}
-LIB_PATH = $(DLABPRO_HOME)/lib.${TRG_DIR}${MEXT}
-OBJ_PATH = $(DLABPRO_HOME)/obj.${TRG_DIR}${MEXT}
-DEP_PATH = $(DLABPRO_HOME)/dep.${TRG_DIR}${MEXT}
+BLD_PATH = $(DLABPRO_HOME)/build/$(PROGRAM)
+LIB_PATH = $(BLD_PATH)/lib.${TRG_DIR}${MEXT}
+OBJ_PATH = $(BLD_PATH)/obj.${TRG_DIR}${MEXT}
+DEP_PATH = $(BLD_PATH)/dep.${TRG_DIR}${MEXT}
 BAS_PATH = $(DLABPRO_HOME)/base
 CLS_PATH = $(DLABPRO_HOME)/classes
 EXT_PATH = $(DLABPRO_HOME)/ext
 SDK_PATH = $(DLABPRO_HOME)/sdk
 INC_PATH = $(DLABPRO_HOME)/include
 MAN_PATH = $(DLABPRO_HOME)/manual
-CONFIG_DST = ${INC_PATH}/dlp_config.h
-CONFIG_SRC = dlp_config.h
+PRG_PATH = $(DLABPRO_HOME)/programs/$(PROGRAM)
 
 ## Create directories
 X:=$(shell mkdir -p $(OBJ_PATH))

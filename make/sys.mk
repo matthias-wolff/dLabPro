@@ -30,8 +30,8 @@ else
   DCG = dcg
 endif
 
-INCL += -I $(DLABPRO_HOME)/include -I $(DLABPRO_HOME)/include/automatic
-vpath %.h $(DLABPRO_HOME)/include $(DLABPRO_HOME)/include/automatic
+INCL += -I$(DLABPRO_HOME)/include -I$(DLABPRO_HOME)/include/automatic -I$(PRG_PATH)
+vpath %.h $(DLABPRO_HOME)/include $(DLABPRO_HOME)/include/automatic $(PRG_PATH)
 
 ifneq (${MACHINE},)
   MEXT=.${MACHINE}

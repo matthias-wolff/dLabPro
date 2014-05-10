@@ -24,7 +24,8 @@
 ## along with dLabPro. If not, see <http://www.gnu.org/licenses/>.
 
 TARGET_DEF = DEBUG
-TRG_TYPE = $(call uc,$(SEXT))
+TRG_TYPE   = $(call uc,$(SEXT))
+export PROGRAM := $(PROJNAME)
 
 include $(DLABPRO_HOME)/make/func.mk
 include $(DLABPRO_HOME)/make/sys.mk
@@ -54,12 +55,7 @@ SEXTB     = $(call uc,$(SEXT))
 ## Include deprecated classes
 ifeq ($(DLABPRO_DEPRECATED),1)
   LIBS      += ${LIBS_DEPR}
-  CONFIG_SRC = dlp_config_deprecated.h
 endif
-
-## Copy config
-X := $(shell cp -p $(CONFIG_SRC) $(CONFIG_DST))
-
 
 include $(DLABPRO_HOME)/make/libsys.mk
 

@@ -26,7 +26,7 @@
 DISPLAY_NAME = dLabPro class $(CXXNAME) ($(SLNAME))
 
 TARGET_DEF = DEBUG_CPP
-CFLAGS_GCC_REL += -Wno-trigraphs -finline-functions 
+CFLAGS_GCC_REL += -Wno-trigraphs -finline-functions
 
 include $(DLABPRO_HOME)/make/func.mk
 include $(DLABPRO_HOME)/make/sys.mk
