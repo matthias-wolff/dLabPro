@@ -23,7 +23,6 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with dLabPro. If not, see <http://www.gnu.org/licenses/>.
 
-#include "dlp_svnrev.h"
 #include "dlp_base.h"
 #include "dlp_fftproc.h"
 #include "dlp_cpproc.h"

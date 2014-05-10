@@ -77,4 +77,13 @@ else
   endif
 endif
 
+## Detect git head revision
+GITREV := $(shell cat $(DLABPRO_HOME)/.git/HEAD)
+ifneq ($(filter ref:,$(GITREV)),)
+  GITREV := $(shell cat $(DLABPRO_HOME)/.git/$(filter-out ref:,$(GITREV)))
+endif
+ifneq ($(GITREV),)
+  CFLAGS += '-D__DLP_BUILD="$(GITREV)"'
+endif
+
 ## EOF

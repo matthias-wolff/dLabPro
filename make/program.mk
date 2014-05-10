@@ -23,24 +23,14 @@
 ## You should have received a copy of the GNU Lesser General Public License
 ## along with dLabPro. If not, see <http://www.gnu.org/licenses/>.
 
-TRG_TYPE = $(call uc,$(SEXT))
-
 TARGET_DEF = DEBUG
+TRG_TYPE = $(call uc,$(SEXT))
 
 include $(DLABPRO_HOME)/make/func.mk
 include $(DLABPRO_HOME)/make/sys.mk
 include $(DLABPRO_HOME)/make/target.mk
 include $(DLABPRO_HOME)/make/compiler.mk
 include $(DLABPRO_HOME)/make/paths.mk
-
-## Update dlp_svnrec.h if necessary
-ifneq ($(findstring lin,$(OS)),)
-  SVNREV := $(shell grep '\#define __DLP_BUILD "$(BUILD)"' $(DLPSVNREV))
-endif
-ifeq ($(SVNREV),)
-  X := $(shell echo "// ----- Make: Updating dlp_svnrev.h ($(BUILD)) -----" >&2)
-  X := $(shell echo '\#define __DLP_BUILD "$(BUILD)"' >$(DLPSVNREV))
-endif
 
 ## Finalize library list
 CLS_LPTH  = $(LIB_PATH)

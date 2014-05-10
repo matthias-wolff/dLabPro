@@ -35,7 +35,6 @@ INC_PATH = $(DLABPRO_HOME)/include
 MAN_PATH = $(DLABPRO_HOME)/manual
 CONFIG_DST = ${INC_PATH}/dlp_config.h
 CONFIG_SRC = dlp_config.h
-DLPSVNREV  = ${INC_PATH}/automatic/dlp_svnrev.h
 
 ## Create directories
 X:=$(shell mkdir -p $(OBJ_PATH))

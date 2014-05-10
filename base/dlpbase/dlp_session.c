@@ -26,7 +26,6 @@
 
 #include "dlp_kernel.h"
 #include "dlp_base.h"
-#include "dlp_svnrev.h"
 #ifdef __MSVC
   #pragma warning( disable : 4115 )                                             /* Named type def's in braces        */
 #endif
