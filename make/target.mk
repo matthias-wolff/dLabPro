@@ -43,10 +43,10 @@ ifeq ($(TRG_TYPE),)
 endif
 
 ## Create dependency files
-ifeq ($(findstring CLEAN,$(call uc,$(MAKECMDGOALS))),)
-  DEPINC = yes
-else
-  DEPINC = no
+ifneq ($(or $(findstring lin,$(OS)),$(findstring mingw,$(OS))),)
+  ifeq ($(findstring CLEAN,$(call uc,$(MAKECMDGOALS))),)
+    DEPINC = yes
+  endif
 endif
 
 ## Target directory (debug or release)

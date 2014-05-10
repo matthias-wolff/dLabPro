@@ -63,6 +63,7 @@ MANFILE  = $(MAN_PATH)/automatic/$(PROJNAME).html
 SRCFILES = $(addsuffix .$(SEXT),$(SOURCES))
 OBJECTS  = $(addprefix $(OBJ_PATH)/,$(addsuffix .$(OEXT),$(SOURCES)))
 DEPENTS  = $(addprefix $(DEP_PATH)/,$(addsuffix .$(DEXT),$(SOURCES)))
-DEPS     = $(HFILE)
+SRCFILES_NOAUTO = $(filter-out $(CPPFILE),$(SRCFILES))
+DCGDEP   = $(DLABPRO_HOME)/bin.release$(MEXT)/dcg
 
 ## EOF

@@ -59,9 +59,6 @@ endif
 
 include $(DLABPRO_HOME)/make/libsys.mk
 
-## Build targets
-.PHONY: DEBUG RELEASE clean clean_debug clean_release CLEANALL cleanall_debug cleanall_release distclean
-
 DEBUG RELEASE: $(PROJECT)
 	@echo
 	@echo  '// ----- Make ($(TOOLBOX)): Build complete -----'
@@ -72,72 +69,6 @@ DEBUG RELEASE: $(PROJECT)
 	@which $(LL)
 	@echo
 
-${PROJECT}: ${OBJECTS} ${LIBRARIES}
-	@echo
-	@echo '// ----- Make ($(TOOLBOX)): $(PROJNAME) linking -- $(MAKECMDGOALS) -----'
-	$(LL) $(OBJECTS) $(LIBRARIES) $(LFLAGS) $(LLoO)$(PROJECT)
-
-$(LIB_PATH)/%.$(LEXT): $(BAS_PATH)/% FORCE
-	$(MAKE) -C $(BAS_PATH)/$*   $(TRG_LIB)`[ $* = dlpobject ] && echo _$(SEXTB)`
-
-$(LIB_PATH)/%.$(LEXT): $(CLS_PATH)/% FORCE
-	$(MAKE) -C $(CLS_PATH)/$*   $(TRG_LIB)_$(SEXTB)
-
-$(LIB_PATH)/%.$(LEXT): $(SDK_PATH)/% FORCE
-	$(MAKE) -C $(SDK_PATH)/$*   $(TRG_LIB)_$(SEXTB)
-
-$(LIB_PATH)/%.$(LEXT): $(EXT_PATH)/% FORCE
-	$(MAKE) -C $(EXT_PATH)/$*   $(TRG_LIB)
-
-$(DEP_PATH)/%.$(DEXT): %.$(SEXT)
-	$(CC) -MM -MP -MT $(OBJ_PATH)/$*.$(OEXT) -MT $@ $(CFLAGS) $(INCL) -MF $@ $<
-
-## Include dependency makefiles
-ifeq ($(DEPINC),yes)
-  ifneq ($(or $(findstring lin,$(OS)),$(findstring mingw,$(OS))),)
-    -include $(DEPENTS)
-  endif
-endif
-
-$(OBJ_PATH)/%.$(OEXT): %.$(SEXT)
-	@echo
-	@echo '// ----- Make ($(TOOLBOX)): Program $(PROJNAME) -- $(MAKECMDGOALS) -----'
-	$(CC) -c $(CFLAGS) $(INCL) $(CCoO)$@ $<
-
-FORCE:
-
-clean:
-	$(MAKE) clean_debug
-	$(MAKE) clean_release
-
-CLEANALL:
-	$(MAKE) cleanall_debug
-	$(MAKE) cleanall_release
-
-$(CLEAN):
-	@echo '// ----- Make: Program $(PROJNAME) -- cleaning $(TRG_LIB) -----'
-	-rm -f $(OBJECTS) $(DEPENTS)
-	-touch -c -t 199001010000 $(PROJECT)
-
-$(CLEANALL): $(CLEAN)
-	$(LIBRARIES_CLEANALL)
-	@echo '// ----- Make: Program $(PROJNAME) -- cleaning all $(TRG_LIB) -----'
-	-rm -f $(LIBRARIES)
-	-touch -c dlp_config.h
-	-find $(DLABPRO_HOME)/ \( -name "*.def" \) -exec touch {} \;
-
-
-distclean:
-	-rm -rf $(DLABPRO_HOME)/bin.*
-	-rm -rf $(DLABPRO_HOME)/lib.*
-	-rm -rf $(DLABPRO_HOME)/obj.*
-	-rm -rf $(DLABPRO_HOME)/dep.*
-	-find $(DLABPRO_HOME)/ \( -name "core" -o -name "*~" -o -name "*.RUN" -o -name "*.plg" -o -name "*.ncb" -o -name "\#*\#" \) -exec rm -f {} \;
-
-backup: cleanall distclean
-	cd $(DLABPRO_HOME)/ && tar czf ../dlpabpro.tgz .
-
-dos2unix:
-	find $(DLABPRO_HOME)/ \( -name "*.c" -o -name "*.cpp" -o -name "*.h" -o -name "*.hpp" -o -name "*.def" -o -name "Makefile" -o -name "makefile" \) -exec recode pc {} \;
+include $(DLABPRO_HOME)/make/rules_prg.mk
 
 ## EOF
