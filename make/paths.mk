@@ -63,8 +63,8 @@ DCGDEP   = $(wildcard $(DLABPRO_HOME)/bin.release$(MEXT)/dcg$(EEXT))
 $(shell rm -rf $(DLABPRO_HOME)/lib.* $(DLABPRO_HOME)/obj.* $(DLABPRO_HOME)/dep.*)
 
 ## Remove old dcg
-ifneq ($(and $(DCGDEP),$(filter-out build,$(filter build,$(shell $(DCGDEP) --logo 2>&1)))),)
-	$(shell rm -rf $(DCGDEP))
+ifneq ($(and $(DCGDEP),$(if $(filter build,$(shell $(DCGDEP) --logo 2>&1)),,rm)),)
+  $(shell rm -rf $(DCGDEP))
 endif
 
 ## EOF
