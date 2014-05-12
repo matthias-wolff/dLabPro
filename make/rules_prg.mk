@@ -28,7 +28,7 @@
 
 ## Rules for program link
 
-${PROJECT}: ${OBJECTS} ${LIBRARIES}
+${PROJECT}: ${OBJECTS} ${LIBRARIES} | $(BIN_PATH)
 	@echo
 	@echo '// ----- Make ($(TOOLBOX)): $(PROJNAME) linking -- $(MAKECMDGOALS) -----'
 	$(LL) $(OBJECTS) $(LIBRARIES) $(LFLAGS) $(LLoO)$(PROJECT)
@@ -51,14 +51,14 @@ $(LIB_PATH)/%.$(LEXT): $(EXT_PATH)/% FORCE
 
 ## Rules for dependencies + source compile
 
-$(DEP_PATH)/%.$(DEXT): %.$(SEXT)
+$(DEP_PATH)/%.$(DEXT): %.$(SEXT) | $(DEP_PATH)
 	@$(CC) -MM -MP -MT $(OBJ_PATH)/$*.$(OEXT) -MT $@ $(CFLAGS) $(INCL) -MF $@ $<
 
 ifeq ($(DEPINC),yes)
   -include $(DEPENTS)
 endif
 
-$(OBJ_PATH)/%.$(OEXT): %.$(SEXT)
+$(OBJ_PATH)/%.$(OEXT): %.$(SEXT) | $(OBJ_PATH)
 	$(CC) -c $(CFLAGS) $(INCL) $(CCoO)$@ $<
 
 ## Echo current configuration
@@ -66,6 +66,11 @@ $(OBJ_PATH)/%.$(OEXT): %.$(SEXT)
 ECHOCNF:
 	@echo
 	@echo '// ----- Make ($(TOOLBOX)): Program $(PROJNAME) -- $(MAKECMDGOALS) -----'
+
+## Create target directory
+
+$(BIN_PATH) $(LIB_PATH) $(DEP_PATH) $(OBJ_PATH):
+	mkdir -p $@
 
 ## Rules for clean targets
 

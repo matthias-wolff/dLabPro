@@ -28,10 +28,10 @@
 
 ## Rules for library link
 
-$(LIBRARY): $(OBJECTS)
+$(LIBRARY): $(OBJECTS) | $(LIB_PATH)
 	$(AR) $(ARFLAGS) $(ARoO)$(LIBRARY) $(OBJECTS)
 
-$(SHARED_LIBRARY): $(OBJECTS)
+$(SHARED_LIBRARY): $(OBJECTS) | $(LIB_PATH)
 	$(CC) -shared -Wl,-soname,$(SHARED_LIBRARY).0 $(OBJECTS) \
           $(CCoO)$(LIB_PATH)/$(SHARED_LIBRARY).0.0
 
@@ -41,14 +41,14 @@ LDCONF:
 
 ## Rules for dependencies + source compile
 
-$(DEP_PATH)/%.$(DEXT): %.$(SEXT)
+$(DEP_PATH)/%.$(DEXT): %.$(SEXT) | $(DEP_PATH)
 	@$(CC) -MM -MP -MT $(OBJ_PATH)/$*.$(OEXT) -MT $@ $(CFLAGS) $(INCL) -MF $@ $<
 
 ifeq ($(DEPINC),yes)
   -include $(DEPENTS)
 endif
 
-$(OBJ_PATH)/%.$(OEXT): %.$(SEXT)
+$(OBJ_PATH)/%.$(OEXT): %.$(SEXT) | $(OBJ_PATH)
 	$(CC) -c $(CFLAGS) $(INCL) $(CCoO)$@ $<
 
 ## Rules for code generator
@@ -73,9 +73,8 @@ ECHOCNF:
 
 ## Create target directory
 
-MKDIR:
-	@-test -w $(OBJ_PATH) || mkdir $(OBJ_PATH)
-	@-test -w $(LIB_PATH) || mkdir $(LIB_PATH)
+$(BIN_PATH) $(LIB_PATH) $(DEP_PATH) $(OBJ_PATH):
+	mkdir -p $@
 
 ## Rules for clean targets
 

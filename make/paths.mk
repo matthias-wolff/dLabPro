@@ -42,14 +42,6 @@ INC_PATH = $(DLABPRO_HOME)/include
 MAN_PATH = $(DLABPRO_HOME)/manual
 PRG_PATH = $(DLABPRO_HOME)/programs/$(PROGRAM)
 
-## Create directories
-X:=$(shell mkdir -p $(OBJ_PATH))
-X:=$(shell mkdir -p $(BIN_PATH))
-X:=$(shell mkdir -p $(LIB_PATH))
-ifneq ($(or $(findstring lin,$(OS)),$(findstring mingw,$(OS))),)
-  X:=$(shell mkdir -p $(DEP_PATH))
-endif
-
 ## Target settings
 ifeq ($(LIBFILE),)
   LIBFILE=$(PROJNAME)
