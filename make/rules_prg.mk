@@ -38,7 +38,7 @@ ${PROJECT}: ${OBJECTS} ${LIBRARIES}
 FORCE:
 
 $(LIB_PATH)/%.$(LEXT): $(BAS_PATH)/% FORCE
-	$(MAKE) -C $(BAS_PATH)/$*   $(TRG_LIB)`[ $* = dlpobject ] && echo _$(SEXTB)`
+	$(MAKE) -C $(BAS_PATH)/$*   $(TRG_LIB)$(if $(filter dlpobject,$*),_$(SEXTB),)
 
 $(LIB_PATH)/%.$(LEXT): $(CLS_PATH)/% FORCE
 	$(MAKE) -C $(CLS_PATH)/$*   $(TRG_LIB)_$(SEXTB)
