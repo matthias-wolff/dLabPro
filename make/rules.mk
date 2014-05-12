@@ -55,14 +55,13 @@ $(OBJ_PATH)/%.$(OEXT): %.$(SEXT)
 
 ifneq ($(DEFFILE),)
 
-$(MANFILE): $(DEFFILE) $(DCGDEP) #$(SRCFILES_NOAUTO)
-	@-$(DCG) $(DEFFILE)
+ifneq ($(HFILE),)
+  TOUCH_H=@touch -c -r $(DEFFILE) $(HFILE)
+endif
 
-$(HFILE):   $(DEFFILE) $(DCGDEP) #$(SRCFILES_NOAUTO) 
+$(CPPFILE) $(HFILE) $(MANFILE): $(DEFFILE) $(DCGDEP) #$(SRCFILES_NOAUTO)
 	@-$(DCG) $(DEFFILE)
-
-$(CPPFILE): $(DEFFILE) $(DCGDEP) #$(SRCFILES_NOAUTO) 
-	@-$(DCG) $(DEFFILE)
+	$(TOUCH_H)
 
 endif
 
@@ -85,15 +84,14 @@ clean:
 	$(MAKE) clean_release
 
 ifneq ($(and $(DEFFILE),$(CPPFILE)),)
-  TOUCH=touch
+  TOUCH_DEF=-touch -c -r $(DEFFILE) -d yesterday $(CPPFILE)
 endif
 
-$(CLEAN): $(TOUCH)
+$(CLEAN):
 	@echo '// ----- Make ($(TOOLBOX)): $(DISPLAY_NAME) -- cleaning $(TRG_LIB) -----'
 	-rm -f $(OBJECTS) $(DEPENTS) $(LIBRARY) $(SHARED_LIBRARY)
 	-rm -f vc80.?db
+	$(TOUCH_DEF)
 
-touch:
-	-touch -c -r $(DEFFILE) -d yesterday $(CPPFILE)
 
 ## EOF

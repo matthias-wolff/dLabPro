@@ -28,7 +28,7 @@
 
 ## Rules for program link
 
-${PROJECT}: ECHOCNF ${OBJECTS} ${LIBRARIES}
+${PROJECT}: ${OBJECTS} ${LIBRARIES}
 	@echo
 	@echo '// ----- Make ($(TOOLBOX)): $(PROJNAME) linking -- $(MAKECMDGOALS) -----'
 	$(LL) $(OBJECTS) $(LIBRARIES) $(LFLAGS) $(LLoO)$(PROJECT)

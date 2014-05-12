@@ -35,8 +35,7 @@ include $(DLABPRO_HOME)/make/compiler.mk
 include $(DLABPRO_HOME)/make/paths.mk
 
 ## Build rules
-DEBUG   : ECHOCNF MKDIR $(MANFILE) $(LIBRARY)
-RELEASE : ECHOCNF MKDIR $(MANFILE) $(LIBRARY)
+DEBUG RELEASE: ECHOCNF MKDIR $(MANFILE) $(LIBRARY)
 
 include $(DLABPRO_HOME)/make/rules.mk
 

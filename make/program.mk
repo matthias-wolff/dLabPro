@@ -59,7 +59,7 @@ endif
 
 include $(DLABPRO_HOME)/make/libsys.mk
 
-DEBUG RELEASE: $(PROJECT)
+DEBUG RELEASE: ECHOCNF $(PROJECT)
 	@echo
 	@echo  '// ----- Make ($(TOOLBOX)): Build complete -----'
 	@echo  '$(PROJECT) build $(BUILD)'
