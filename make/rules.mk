@@ -53,13 +53,15 @@ $(OBJ_PATH)/%.$(OEXT): %.$(SEXT) | $(OBJ_PATH)
 
 ## Rules for code generator
 
-ifneq ($(DEFFILE),)
+ifneq ($(and $(DEFFILE),$(DCGDEP)),)
 
 ifneq ($(HFILE),)
   TOUCH_H=@touch -c -r $(DEFFILE) $(HFILE)
 endif
 
-$(CPPFILE) $(HFILE) $(MANFILE): $(DEFFILE) $(DCGDEP) #$(SRCFILES_NOAUTO)
+#TODO: Fix depend on DCG (will cause many calls to dcg)
+#TODO: Fix depend on source files (will cause rebuild of whole package at every change)
+$(CPPFILE) $(HFILE) $(MANFILE): $(DEFFILE) #$(DCGDEP) $(SRCFILES_NOAUTO)
 	@-$(DCG) $(DEFFILE)
 	$(TOUCH_H)
 
