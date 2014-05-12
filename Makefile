@@ -25,25 +25,21 @@
 
 all: RELEASE
 
-RELEASE:
-	$(MAKE) -C programs/dcg CLEANALL
-	$(MAKE) -C programs/dcg RELEASE
-	$(MAKE) -C programs/dlabpro CLEANALL
-	$(MAKE) -C programs/dlabpro RELEASE
-	$(MAKE) -C programs/recognizer CLEANALL
+.PHONY: RELEASE DEBUG CLEANALL
+
+RELEASE: CLEANALL
+	$(MAKE) -C programs/dcg        RELEASE
+	$(MAKE) -C programs/dlabpro    RELEASE
 	$(MAKE) -C programs/recognizer RELEASE
 
-DEBUG:
-	$(MAKE) -C programs/dcg CLEANALL
-	$(MAKE) -C programs/dcg RELEASE
-	$(MAKE) -C programs/dcg DEBUG
-	$(MAKE) -C programs/dlabpro CLEANALL
-	$(MAKE) -C programs/dlabpro DEBUG
-	$(MAKE) -C programs/recognizer CLEANALL
+DEBUG: CLEANALL
+	$(MAKE) -C programs/dcg        RELEASE
+	$(MAKE) -C programs/dcg        DEBUG
+	$(MAKE) -C programs/dlabpro    DEBUG
 	$(MAKE) -C programs/recognizer DEBUG
 
 CLEANALL:
-	$(MAKE) -C programs/dcg CLEANALL
-	$(MAKE) -C programs/dlabpro CLEANALL
+	$(MAKE) -C programs/dcg        CLEANALL
+	$(MAKE) -C programs/dlabpro    CLEANALL
 	$(MAKE) -C programs/recognizer CLEANALL
 
