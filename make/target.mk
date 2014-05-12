@@ -31,15 +31,15 @@ endif
 
 ## Get target for libraries (DEBUG or RELEASE)
 ifeq ($(findstring RELEASE,$(call uc,$(MAKECMDGOALS))),)
-  TRG_LIB = DEBUG
+  TRG_BASE = DEBUG
 else
-  TRG_LIB = RELEASE
+  TRG_BASE = RELEASE
 endif
 
 ## Get target type (C,CPP or empty)
-ifeq ($(TRG_TYPE),)
-  TRG_TYPE  = $(subst $(TRG_LIB),,$(MAKECMDGOALS))
-  TRG_TYPE := $(subst _,,$(TRG_TYPE))
+ifeq ($(TRG_EXT),)
+  TRG_EXT  = $(subst $(TRG_BASE),,$(MAKECMDGOALS))
+  TRG_EXT := $(subst _,,$(TRG_EXT))
 endif
 
 ## Create dependency files
@@ -50,7 +50,7 @@ ifneq ($(or $(findstring lin,$(OS)),$(findstring mingw,$(OS))),)
 endif
 
 ## Target directory (debug or release)
-TRG_DIR = $(call lc,$(TRG_LIB))
+TRG_DIR = $(call lc,$(TRG_BASE))
 
 CLEAN    = clean_$(TRG_DIR)
 CLEANALL = cleanall_$(TRG_DIR)

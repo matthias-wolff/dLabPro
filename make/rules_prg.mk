@@ -38,16 +38,16 @@ ${PROJECT}: ${OBJECTS} ${LIBRARIES} | $(BIN_PATH)
 FORCE:
 
 $(LIB_PATH)/%.$(LEXT): $(BAS_PATH)/% FORCE
-	$(MAKE) -C $(BAS_PATH)/$*   $(TRG_LIB)$(if $(filter dlpobject,$*),_$(SEXTB),)
+	$(MAKE) -C $(BAS_PATH)/$*   $(TRG_BASE)$(if $(filter dlpobject,$*),_$(SEXTB),)
 
 $(LIB_PATH)/%.$(LEXT): $(CLS_PATH)/% FORCE
-	$(MAKE) -C $(CLS_PATH)/$*   $(TRG_LIB)_$(SEXTB)
+	$(MAKE) -C $(CLS_PATH)/$*   $(TRG_BASE)_$(SEXTB)
 
 $(LIB_PATH)/%.$(LEXT): $(SDK_PATH)/% FORCE
-	$(MAKE) -C $(SDK_PATH)/$*   $(TRG_LIB)_$(SEXTB)
+	$(MAKE) -C $(SDK_PATH)/$*   $(TRG_BASE)_$(SEXTB)
 
 $(LIB_PATH)/%.$(LEXT): $(EXT_PATH)/% FORCE
-	$(MAKE) -C $(EXT_PATH)/$*   $(TRG_LIB)
+	$(MAKE) -C $(EXT_PATH)/$*   $(TRG_BASE)
 
 ## Rules for dependencies + source compile
 
@@ -83,13 +83,13 @@ CLEANALL:
 	$(MAKE) cleanall_release
 
 $(CLEAN):
-	@echo '// ----- Make: Program $(PROJNAME) -- cleaning $(TRG_LIB) -----'
+	@echo '// ----- Make: Program $(PROJNAME) -- cleaning $(TRG_BASE) -----'
 	-rm -f $(OBJECTS) $(DEPENTS)
 	-touch -c -t 199001010000 $(PROJECT)
 
 $(CLEANALL): $(CLEAN)
 	+$(LIBRARIES_CLEANALL)
-	@echo '// ----- Make: Program $(PROJNAME) -- cleaning all $(TRG_LIB) -----'
+	@echo '// ----- Make: Program $(PROJNAME) -- cleaning all $(TRG_BASE) -----'
 	-rm -f $(LIBRARIES)
 	-touch -c dlp_config.h
 	-find $(DLABPRO_HOME)/ \( -name "*.def" \) -exec touch {} \;

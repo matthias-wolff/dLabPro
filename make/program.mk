@@ -24,7 +24,7 @@
 ## along with dLabPro. If not, see <http://www.gnu.org/licenses/>.
 
 TARGET_DEF = DEBUG
-TRG_TYPE   = $(call uc,$(SEXT))
+TRG_EXT    = $(call uc,$(SEXT))
 export PROGRAM := $(PROJNAME)
 
 include $(DLABPRO_HOME)/make/func.mk
