@@ -83,7 +83,7 @@ $(CLEAN):
 	-touch -c -t 199001010000 $(PROJECT)
 
 $(CLEANALL): $(CLEAN)
-	$(LIBRARIES_CLEANALL)
+	+$(LIBRARIES_CLEANALL)
 	@echo '// ----- Make: Program $(PROJNAME) -- cleaning all $(TRG_LIB) -----'
 	-rm -f $(LIBRARIES)
 	-touch -c dlp_config.h
