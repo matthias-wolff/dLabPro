@@ -61,7 +61,7 @@ else
       OS = lin64
     else ifeq ($(OS),x86-linux-gnu)
       OS = lin32
-    else ifeq ($(OS),i686-w64-mingw32)
+    else ifneq ($(findstring mingw32,$(OS)),)
       OS = mingw32
     else
       $(error Unimplemented machine of gcc: "$(OS)")
@@ -71,6 +71,8 @@ else
     OS := $(call lc,$(shell uname))
     ifeq ($(OS),Linux)
       OS = lin64
+    else ifneq ($(findstring mingw32,$(OS)),)
+      OS = mingw32
     else
       $(error Unimplemented operating system: "$(OS)")
     endif
