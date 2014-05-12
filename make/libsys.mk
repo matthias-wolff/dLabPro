@@ -85,9 +85,18 @@ ifneq ($(findstring portaudio,$(LIBS_SYS)),)
     endif
     ifeq ($(shell test -f $(PA_DIR)/LFLAGS.sh && echo yes || echo no),yes)
       LFLAGS += $(shell sh $(PA_DIR)/LFLAGS.sh $(PA_DIR))
-   endif
+    endif
+    ifneq ($(findstring mingw,$(OS)),)
+
+$(PROJECT): $(BIN_PATH)/portaudio_x86.dll
+
+$(BIN_PATH)/portaudio_x86.dll: $(PA_DIR)/Portaudio.dll
+	cp $< $@
+
+    endif
   endif
 endif
+
 # Add pthread libary
 ifneq ($(findstring lin,$(OS)),)
   LFLAGS  += -lpthread -lrt

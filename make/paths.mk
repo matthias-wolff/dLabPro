@@ -47,6 +47,7 @@ ifeq ($(LIBFILE),)
   LIBFILE=$(PROJNAME)
 endif
 
+## Project and package files
 PROJECT  = $(BIN_PATH)/$(PROJNAME)$(EEXT)
 LIBRARY  = $(LIB_PATH)/$(LIBFILE).$(LEXT)
 SHARED_LIBRARY = $(LIB_PATH)/lib$(LIBFILE).so
@@ -57,5 +58,13 @@ OBJECTS  = $(addprefix $(OBJ_PATH)/,$(addsuffix .$(OEXT),$(SOURCES)))
 DEPENTS  = $(addprefix $(DEP_PATH)/,$(addsuffix .$(DEXT),$(SOURCES)))
 SRCFILES_NOAUTO = $(filter-out $(CPPFILE),$(SRCFILES))
 DCGDEP   = $(wildcard $(DLABPRO_HOME)/bin.release$(MEXT)/dcg$(EEXT))
+
+## Remove old build directories
+$(shell rm -rf $(DLABPRO_HOME)/lib.* $(DLABPRO_HOME)/obj.* $(DLABPRO_HOME)/dep.*)
+
+## Remove old dcg
+ifneq ($(and $(DCGDEP),$(filter-out build,$(filter build,$(shell $(DCGDEP) --logo 2>&1)))),)
+	$(shell rm -rf $(DCGDEP))
+endif
 
 ## EOF
