@@ -83,12 +83,16 @@ endif
 
 ## Detect git head revision
 DLPREV  = $(DLABPRO_HOME)/include/automatic/dlp_rev.h
-GITREV := $(shell cat $(DLABPRO_HOME)/.git/HEAD)
-ifneq ($(filter ref:,$(GITREV)),)
-  GITREV := $(shell cat $(DLABPRO_HOME)/.git/$(filter-out ref:,$(GITREV)))
+GITREV  = unkown
+GITHEAD = $(DLABPRO_HOME)/.git/HEAD
+ifneq ($(wildcard $(GITHEAD)),)
+  GITREV := $(shell cat $(GITHEAD))
+  ifneq ($(filter ref:,$(GITREV)),)
+    GITREV := $(shell cat $(DLABPRO_HOME)/.git/$(filter-out ref:,$(GITREV)))
+  endif
 endif
 ifneq ($(wildcard $(DLPREV)),)
-  GITREVO := $(subst ",,$(filter-out \#define __DLP_BUILD,$(shell cat $(DLPREV))))
+ GITREVO := $(subst ",,$(filter-out \#define __DLP_BUILD,$(shell cat $(DLPREV))))
 else
   GITREVO = CREATE
 endif
