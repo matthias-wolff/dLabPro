@@ -90,7 +90,7 @@ ifneq ($(findstring portaudio,$(LIBS_SYS)),)
 
 $(PROJECT): $(BIN_PATH)/portaudio_x86.dll
 
-$(BIN_PATH)/portaudio_x86.dll: $(PA_DIR)/Portaudio.dll
+$(BIN_PATH)/portaudio_x86.dll: $(PA_DIR)/PortAudio.dll
 	cp $< $@
 
     endif
