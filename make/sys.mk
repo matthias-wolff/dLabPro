@@ -59,7 +59,7 @@ else
   ifneq ($(OS),)
     ifeq ($(OS),x86_64-linux-gnu)
       OS = lin64
-    ifeq ($(OS),x86_64-redhat-linux)
+    else ifeq ($(OS),x86_64-redhat-linux)
       OS = lin64
     else ifeq ($(OS),x86-linux-gnu)
       OS = lin32
