@@ -57,11 +57,9 @@ else
   # Test #2 for machine of gcc
   OS := $(call lc,$(shell gcc -dumpmachine))
   ifneq ($(OS),)
-    ifeq ($(OS),x86_64-linux-gnu)
+    ifneq ($(and $(findstring -linux,$(OS)),$(findstring x86_64-,$(OS))),)
       OS = lin64
-    else ifeq ($(OS),x86_64-redhat-linux)
-      OS = lin64
-    else ifeq ($(OS),x86-linux-gnu)
+    else ifneq ($(and $(findstring -linux,$(OS)),$(findstring x86-,$(OS))),)
       OS = lin32
     else ifneq ($(findstring mingw32,$(OS)),)
       OS = mingw32
