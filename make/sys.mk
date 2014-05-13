@@ -80,19 +80,20 @@ else
 endif
 
 ## Detect git head revision
+DLPREV  = $(DLABPRO_HOME)/include/automatic/dlp_rev.h
 GITREV := $(shell cat $(DLABPRO_HOME)/.git/HEAD)
 ifneq ($(filter ref:,$(GITREV)),)
   GITREV := $(shell cat $(DLABPRO_HOME)/.git/$(filter-out ref:,$(GITREV)))
 endif
-ifneq ($(GITREV),)
-  DLPREV   = $(DLABPRO_HOME)/include/automatic/dlp_rev.h
-  GITREVO := $(shell cat $(DLPREV))
-  GITREVO := $(subst ",,$(filter-out \#define __DLP_BUILD,$(GITREVO)))
-  ifneq ($(GITREVO),$(GITREV))
-    $(shell echo "" >&2)
-    $(shell echo "// Update dlp_rev.h with new revision $(GITREV)" >&2)
-    $(file > $(DLPREV),#define __DLP_BUILD "$(GITREV)")
-  endif
+ifneq ($(wildcard $(DLPREV)),)
+  GITREVO := $(subst ",,$(filter-out \#define __DLP_BUILD,$(shell cat $(DLPREV))))
+else
+  GITREVO = CREATE
+endif
+ifneq ($(GITREVO),$(GITREV))
+  $(shell echo "" >&2)
+  $(shell echo "// Update dlp_rev.h with new revision $(GITREV)" >&2)
+  $(shell echo '#define __DLP_BUILD "$(GITREV)"' >$(DLPREV))
 endif
 
 ## EOF
