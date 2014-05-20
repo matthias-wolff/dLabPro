@@ -57,9 +57,9 @@ else
   # Test #2 for machine of gcc
   OS := $(call lc,$(shell gcc -dumpmachine))
   ifneq ($(OS),)
-    ifeq ($(OS),x86_64-linux-gnu)
+    ifneq ($(and $(findstring -linux,$(OS)),$(findstring x86_64-,$(OS))),)
       OS = lin64
-    else ifeq ($(OS),x86-linux-gnu)
+    else ifneq ($(and $(findstring -linux,$(OS)),$(findstring x86-,$(OS))),)
       OS = lin32
     else ifneq ($(findstring mingw32,$(OS)),)
       OS = mingw32
@@ -81,12 +81,16 @@ endif
 
 ## Detect git head revision
 DLPREV  = $(DLABPRO_HOME)/include/automatic/dlp_rev.h
-GITREV := $(shell cat $(DLABPRO_HOME)/.git/HEAD)
-ifneq ($(filter ref:,$(GITREV)),)
-  GITREV := $(shell cat $(DLABPRO_HOME)/.git/$(filter-out ref:,$(GITREV)))
+GITREV  = unkown
+GITHEAD = $(DLABPRO_HOME)/.git/HEAD
+ifneq ($(wildcard $(GITHEAD)),)
+  GITREV := $(shell cat $(GITHEAD))
+  ifneq ($(filter ref:,$(GITREV)),)
+    GITREV := $(shell cat $(DLABPRO_HOME)/.git/$(filter-out ref:,$(GITREV)))
+  endif
 endif
 ifneq ($(wildcard $(DLPREV)),)
-  GITREVO := $(subst ",,$(filter-out \#define __DLP_BUILD,$(shell cat $(DLPREV))))
+ GITREVO := $(subst ",,$(filter-out \#define __DLP_BUILD,$(shell cat $(DLPREV))))
 else
   GITREVO = CREATE
 endif
