@@ -210,7 +210,7 @@ const char* dlp_get_version_info()
   char        lpsMachine[255];
   char        lpsDr[32];
   char        lpsPid[32];
-  const char* lpsBuild = "";
+  char        lpsBuild[64] = "";
 
   strcpy(lpsOS     ,"");
   strcpy(lpsMachine,"");
@@ -218,7 +218,8 @@ const char* dlp_get_version_info()
   sprintf(lpsPid," PID:%ld",(long)dlp_getpid());
 
 #ifdef __DLP_BUILD
-  lpsBuild = __DLP_BUILD;
+  dlp_strupr(dlp_strcpy(lpsBuild,__DLP_BUILD));
+  lpsBuild[10]='\0';
 #endif
 
   /* OS */
