@@ -43,7 +43,7 @@
  * @param length
  *          Target length of corresponding excitation signal, equals to sum of
  *          period length of the new pitch markers.
- * @return <code>O_K</code> if successfull, a (negative) error code otherwise
+ * @return <code>O_K</code> if successful, a (negative) error code otherwise
  */
 INT16 dlm_pm_expand(INT16* pm_old, INT32 n_pm_old, INT16** pm_new, INT32* n_pm_new, INT32 length) {
   return dlm_pm_expand_impl(pm_old, n_pm_old, pm_new, n_pm_new, 2 * sizeof(INT16), length);
@@ -70,7 +70,7 @@ INT16 dlm_pm_expand(INT16* pm_old, INT32 n_pm_old, INT16** pm_new, INT32* n_pm_n
  * @param length
  *          Target length of corresponding excitation signal, equals to sum of
  *          period length of the new pitch markers.
- * @return <code>O_K</code> if successfull, a (negative) error code otherwise
+ * @return <code>O_K</code> if successful, a (negative) error code otherwise
  */
 INT16 dlm_pm_expand_impl(INT16* pm_old, INT32 n_pm_old, INT16** pm_new, INT32* n_pm_new, INT16 size, INT32 length) {
   INT32 i_pm;
@@ -180,7 +180,7 @@ INT16 dlm_pm_compress(INT16* pm_old, INT32 n_pm_old, INT16* pm_new, INT32 n_pm_n
  *          Number of f0 sampling points, equals to length of array <code>f0</code>.
  * @param sampling_rate
  *          sampling rate.
- * @return <code>O_K</code> if successfull, a (negative) error code otherwise
+ * @return <code>O_K</code> if successful, a (negative) error code otherwise
  */
 INT16 dlm_pm2f0(INT16* pm, INT32 n_pm, FLOAT64* f0, INT32 n_f0, INT32 sampling_rate) {
   INT32 i_pm = 0;
@@ -234,7 +234,7 @@ INT16 CGEN_PUBLIC dlm_getExcPeriod(INT16 nLen, BOOL bVoiced, INT8 type, FLOAT64 
       sf = (COMPLEX64*) dlp_calloc(nLen, sizeof(COMPLEX64));
       for (i_samples = 1; i_samples < nLen / 2; i_samples++) {
         FLOAT64 phase = -15.0 * nSRate * ((FLOAT64) (2 * i_samples) / (FLOAT64) nLen - 8000.0 / (FLOAT64) nSRate) / 8000.0;
-        phase = rand() / (FLOAT64) RAND_MAX / (1 + exp(phase)) * 2.0 * F_PI;
+        phase = dlp_rand() / (FLOAT64) RAND_MAX / (1 + exp(phase)) * 2.0 * F_PI;
         sf[i_samples] = CMPLXY(cos(phase) / nScale, sin(phase) / nScale);
         sf[nLen - i_samples] = CMPLXY(sf[i_samples].x, -sf[i_samples].y);
       }
@@ -247,7 +247,7 @@ INT16 CGEN_PUBLIC dlm_getExcPeriod(INT16 nLen, BOOL bVoiced, INT8 type, FLOAT64 
       break;
     case DLM_PITCH_UNVOICED:
       for (i_samples = 0; i_samples < nLen; i_samples++) {
-        exc[i_samples] = (((FLOAT64) rand() / (FLOAT64) RAND_MAX) - 0.5f) / sqrt(12.0) / nScale;
+        exc[i_samples] = (((FLOAT64) dlp_rand() / (FLOAT64) RAND_MAX) - 0.5f) / sqrt(12.0) / nScale;
       }
       break;
     default:
@@ -259,7 +259,7 @@ INT16 CGEN_PUBLIC dlm_getExcPeriod(INT16 nLen, BOOL bVoiced, INT8 type, FLOAT64 
       dlp_memset(exc + 1, 0, (nLen - 1) * sizeof(FLOAT64));
     } else {
       for (i_samples = 0; i_samples < nLen; i_samples++) {
-        exc[i_samples] = (((FLOAT64) rand() / (FLOAT64) RAND_MAX) - 0.5f) / sqrt(12.0) / nScale;
+        exc[i_samples] = (((FLOAT64) dlp_rand() / (FLOAT64) RAND_MAX) - 0.5f) / sqrt(12.0) / nScale;
       }
     }
   }
@@ -291,7 +291,7 @@ INT16 CGEN_PUBLIC dlm_getExcPeriod(INT16 nLen, BOOL bVoiced, INT8 type, FLOAT64 
  *          Type of excitation. <code>type</code> must be one of
  *          DLM_PITCH_PULSE: Pulse train for voiced, white noise for voiceless,
  *          DLM_PITCH_GLOTT: Glottis function for voiced, white noise for voiceless.
- * @return <code>O_K</code> if successfull, a (negative) error code otherwise
+ * @return <code>O_K</code> if successful, a (negative) error code otherwise
  */
 INT16 dlm_pm2exc(INT16* pm, INT32 n_pm, FLOAT64** exc, INT32* n_exc, INT32 nSrate, BOOL sync, INT8 type) {
   INT32 i_pm;
@@ -847,7 +847,7 @@ GCIDA_NRS CGEN_PRIVATE dlm_gcida_NDG_RMS(FLOAT64 *x, INT32 Lw) {
 /**
  * <p>Glottal Closure Instance Detection Algorithm (GCIDA).</p>
  *
- * Reference: Engel, T., “Robuste Markierung von Grundfrequenzperioden”. Dresden University, Diploma thesis, 2003 (in German).
+ * Reference: Engel, T., Robuste Markierung von Grundfrequenzperioden. Dresden University, Diploma thesis, 2003 (in German).
  *
  * @param X Input signal
  * @param n_len Input signal length
@@ -2174,7 +2174,7 @@ INT16 dlm_gcida(FLOAT64* samples, INT32 nSamples, PERIOD** periods, INT32* nPeri
         for (; l1 < l;) {
           PM[l1] = -1;
           if (Para.uvm == 0) { /* Zufaellig */
-            ZD = (INT32) floor((0.8f + 0.4f * ((FLOAT64) rand() / (FLOAT64) RAND_MAX)) * T0);
+            ZD = (INT32) floor((0.8f + 0.4f * ((FLOAT64) dlp_rand() / (FLOAT64) RAND_MAX)) * T0);
           }
           l1 += ZD;
         }

@@ -321,6 +321,7 @@ INT32 dlp_get_retval()
  *
  * @return The random number
  */
+/*
 INT64 dlp_rand()
 {
   static BOOL bRandInit = FALSE;
@@ -329,6 +330,51 @@ INT64 dlp_rand()
     bRandInit=TRUE;
   }
   return rand();
+}*/
+
+static BOOL dlp_rand_init = FALSE;
+
+static UINT64 dlp_rand_seed[16];
+
+static INT32 dlp_rand_p;
+
+/**
+ * Generates an equally distributed 64 bit random unsigned integer using the
+ * XORshift1024* algorithm [1].
+ *
+ * <p>
+ *   [1] http://en.wikipedia.org/wiki/Xorshift
+ * </p>
+ */
+UINT64 dlp_rand()
+{
+  if (!dlp_rand_init)
+  {
+    /* TODO: better seed? */
+    int i;
+    srand((int)time(NULL)^(int)dlp_getpid());
+    for (i=0; i<16; i++)
+      dlp_rand_seed[i]
+        = ((UINT64)rand())<<48 | ((UINT64)rand())<<32 | ((UINT64)rand())<<16
+        | ((UINT64)rand());
+    dlp_rand_init = TRUE;
+  }
+
+  UINT64 s0 = dlp_rand_seed[dlp_rand_p];
+  UINT64 s1 = dlp_rand_seed[dlp_rand_p=(dlp_rand_p+1)&15];
+  s1 ^= s1<<31;
+  s1 ^= s1>>11;
+  s0 ^= s0>>30;
+  return (dlp_rand_seed[dlp_rand_p]=s0^s1)*1181783497276652981LL;
+}
+
+/**
+ * Generates a random float numbers equally distributed between [0..1] using
+ * the XOR-shift algorithm.
+ */
+FLOAT64 dlp_frand()
+{
+  return (FLOAT64)dlp_rand()/(FLOAT64)RAND_MAX;
 }
 
 /**

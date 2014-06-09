@@ -264,7 +264,7 @@ END_MAN
 FIELD:   mindet
 COMMENT: Minimal acceptable determinant of covariance matrices.
 TYPE:    double
-INIT:    1E-34
+INIT:    1E-60
 /html MAN:
   Gaussians with a covariance matrix whose determinant is smaller than <code>mindet</code> or
   greater than 1/<code>mindet</code> will be treated as invalid.

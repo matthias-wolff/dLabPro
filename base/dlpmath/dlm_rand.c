@@ -42,8 +42,8 @@ FLOAT64 dlm_rand_gauss_polar() {
   if(toggle == TRUE) {
     toggle = FALSE;
     do {
-      x1 = 2.0*((FLOAT64)rand()/(FLOAT64)RAND_MAX) - 1.0;
-      x2 = 2.0*((FLOAT64)rand()/(FLOAT64)RAND_MAX) - 1.0;
+      x1 = 2.0*((FLOAT64)dlp_rand()/(FLOAT64)RAND_MAX) - 1.0;
+      x2 = 2.0*((FLOAT64)dlp_rand()/(FLOAT64)RAND_MAX) - 1.0;
       x = x1*x1 + x2*x2;
     } while((x >= 1.0) || (x == 0.0));
     return x1 * sqrt(-2.0 * log(x) / x);
@@ -67,8 +67,8 @@ FLOAT64 dlm_rand_gauss_bm() {
   FLOAT64        r[2];
 
   if (i == 1) {
-    r[0] = sqrt(-2*log((FLOAT64)(rand()+1)/((FLOAT64)RAND_MAX+1.)));
-    r[1] = 2*F_PI*(FLOAT64)(rand()+1)/((FLOAT64)RAND_MAX+1.);
+    r[0] = sqrt(-2*log((FLOAT64)(dlp_rand()+1)/((FLOAT64)RAND_MAX+1.)));
+    r[1] = 2*F_PI*(FLOAT64)(dlp_rand()+1)/((FLOAT64)RAND_MAX+1.);
     u[0] = r[0]*sin(r[1]);
     u[1] = r[0]*cos(r[1]);
     i = 0;

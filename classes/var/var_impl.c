@@ -258,17 +258,17 @@ void CGEN_PROTECTED CVar_Exec(CVar *_this)
       CDlpObject_MicPutI(BASEINST(_this),BASEINST(_this)->m_iAliasInst);
       break;
     case T_RDOUBLE: {
-      _this->m_nInd  = (INT32)(rand()/_this->m_nNorm);
+      _this->m_nInd  = (INT32)(dlp_rand()/_this->m_nNorm);
       _this->m_nNVal = CMPLX(_this->m_nLow+_this->m_nInd*_this->m_nDelta);
       CDlpObject_MicPutN(BASEINST(_this),_this->m_nNVal);
       break; }
     case T_RDDATA:
-      _this->m_nInd  = (INT32)(rand()/_this->m_nNorm);
+      _this->m_nInd  = (INT32)(dlp_rand()/_this->m_nNorm);
       _this->m_nNVal = CData_Cfetch(AS(CData,_this->m_idRndSet),_this->m_nInd, _this->m_nIcomp);
       CDlpObject_MicPutN(BASEINST(_this),_this->m_nNVal);
       break;
     case T_RSDATA:
-      _this->m_nInd = (INT32)(rand()/_this->m_nNorm);
+      _this->m_nInd = (INT32)(dlp_rand()/_this->m_nNorm);
       CVar_Sset(_this,(char*)CData_XAddr(AS(CData,_this->m_idRndSet),_this->m_nInd,_this->m_nIcomp));
       _this->m_nType = T_RSDATA;
       CDlpObject_MicPutS(BASEINST(_this),_this->m_lpsSVal);

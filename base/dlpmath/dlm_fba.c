@@ -179,7 +179,7 @@ INT32 CGEN_IGNORE dlm_fba_grabframe(FLOAT64 *lpSignal, INT32 nXSamples, INT32 nO
 
   /* adding white noise below */
   for (i = 0; i < nFrameLength; i++)
-    lpFrame[i] = lpSignal[nOffset + i] + (rand() / (FLOAT64) RAND_MAX - 0.5) * nMinLogExp;
+    lpFrame[i] = lpSignal[nOffset + i] + (dlp_rand() / (FLOAT64) RAND_MAX - 0.5) * nMinLogExp;
 
   /* apply time domain warping (before windowing!) */
   if ((nLambda != 0.0) && (bTimeDomainWarping == TRUE)) {
@@ -196,7 +196,7 @@ INT32 CGEN_IGNORE dlm_fba_grabframe(FLOAT64 *lpSignal, INT32 nXSamples, INT32 nO
 
   /* fill zeros */
   for (; i < nLen; i++)
-    lpFrame[i] = (rand() / (FLOAT64) RAND_MAX - 0.5) * nMinLogExp;
+    lpFrame[i] = (dlp_rand() / (FLOAT64) RAND_MAX - 0.5) * nMinLogExp;
 
   return nFrameLength;
 }

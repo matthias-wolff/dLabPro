@@ -104,6 +104,7 @@ static const opcode_table __mtab[] =
   { OP_BITAND      ,1,2,"D:DoD","Elementwise bitwise and"            ,"&"         },
   { OP_ZEROS       ,1,2,"D:onn","0-matrix (dim. x by y)"             ,"zeros"     },
   { OP_ONES        ,1,2,"D:onn","1-matrix (dim. x by y)"             ,"ones"      },
+  { OP_NOISE       ,1,2,"D:onn","White noise matrix (dim. x by y)"   ,"noise"     },
   { OP_UNITMAT     ,1,1,"D:on" ,"Unit matrix (dim. x)"               ,"unit"      },
   { OP_HILBMAT     ,1,1,"D:on" ,"Hilbert matrix (dim. x)"            ,"hilb"      },
   { OP_IHLBMAT     ,1,1,"D:on" ,"Inv. Hilbert mat. (dim. x)"         ,"ihlb"      },
@@ -283,6 +284,9 @@ INT16 CGEN_IGNORE dlm_constant(FLOAT64* Z, INT32 nXRz, INT32 nXCz, INT16 nOpcode
         case OP_ONES:                                                           /*       1-matrix                    */
           *z = 1.;                                                              /*          Fill with ones           */
           break;                                                                /*       ==                          */
+        case OP_NOISE:                                                          /*       White noise matrix          */
+          *z = dlp_frand();                                                     /*          Fill with random numbers */
+          break;                                                                /*       ==                          */
         case OP_ZEROS:                                                          /*       0-matrix                    */
         default:                                                                /*       Default case                */
           *z = 0.;                                                              /*          Fill with zeros          */
@@ -321,6 +325,7 @@ INT16 CGEN_IGNORE dlm_constantC(COMPLEX64* Z, INT32 nXRz, INT32 nXCz, INT16 nOpc
               * dlp_scalop(dlp_scalop(nR+nC,nR,OP_NOVERK),2.,OP_POW));          /*         |                         */
           break; }
         case OP_ONES : { *z = CMPLX(1.); break; }                               /*       1-matrix                    */
+        case OP_NOISE: { *z = CMPLX(dlp_frand()); break; }                      /*       White noise matrix          */
         case OP_ZEROS:                                                          /*       0-matrix                    */
         default      : { *z = CMPLX(0.); break; }                               /*       Default case                */
       }                                                                         /*     <<                            */
@@ -1531,6 +1536,7 @@ INT16 dlm_matrop
   /* Matrix constants */                                                        /* --------------------------------- */
   case OP_ZEROS:                                                                /* 0-matrix                          */
   case OP_ONES:                                                                 /* 1-matrix                          */
+  case OP_NOISE:                                                                /* White noise matrix                */
     if (A && B && Z) nErr = dlm_constant(Z,A[0],B[0],nOpcode);                  /*   Get matrix constant             */
     if (A && lpnXRz) *lpnXRz = A[0];                                            /*   Store no. of rows of result     */
     if (B && lpnXCz) *lpnXCz = B[0];                                            /*   Store no. of columns of result  */
@@ -1834,6 +1840,7 @@ INT16 dlm_matropC
   /* Matrix constants */                                                        /* --------------------------------- */
   case OP_ZEROS:                                                                /* 0-matrix                          */
   case OP_ONES:                                                                 /* 1-matrix                          */
+  case OP_NOISE:                                                                /* White noise matrix                */
     if (A && B && Z) nErr = dlm_constantC(Z,A->x,B->x,nOpcode);                 /*   Get matrix constant             */
     if (A && lpnXRz) *lpnXRz = A->x;                                            /*   Store no. of rows of result     */
     if (B && lpnXCz) *lpnXCz = B->x;                                            /*   Store no. of columns of result  */

@@ -387,6 +387,12 @@ typedef struct { FLOAT64 x; FLOAT64 y; } COMPLEX64;
   #define NEWLINE        "\n"
 #endif
 
+/* Defines - pseudo-random generator */
+#ifdef RAND_MAX
+#undef RAND_MAX
+#endif
+#define RAND_MAX 0xFFFFFFFFFFFFFFFF
+
 /* Defines - Constants */
 #undef  TRUE
 #undef  FALSE
@@ -691,9 +697,10 @@ typedef struct { FLOAT64 x; FLOAT64 y; } COMPLEX64;
 /* Defines - Matrix constants operation codes */                                /* --------------------------------- */
 #define OP_ZEROS         1400                                                   /* 0-matrix                          */
 #define OP_ONES          1401                                                   /* 1-matrix                          */
-#define OP_UNITMAT       1402                                                   /* Unit matrix                       */
-#define OP_HILBMAT       1403                                                   /* Hilbert matrix                    */
-#define OP_IHLBMAT       1404                                                   /* Inverse Hilbert matrix            */
+#define OP_NOISE         1402                                                   /* Noise matrix                      */
+#define OP_UNITMAT       1403                                                   /* Unit matrix                       */
+#define OP_HILBMAT       1404                                                   /* Hilbert matrix                    */
+#define OP_IHLBMAT       1405                                                   /* Inverse Hilbert matrix            */
 
 /* - Aggregation operations */                                                  /* - - - - - - - - - - - - - - - - - */
 #define OP_SUM           2000                                                   /* Sum                               */
@@ -1281,7 +1288,8 @@ INT32         dlp_system(char* lpsCommand);
 const char*   dlp_get_version_info();
 void          dlp_set_retval(INT32 nVal);
 INT32         dlp_get_retval();
-INT64         dlp_rand();
+UINT64        dlp_rand();
+FLOAT64       dlp_frand();
 void          dlp_sleep(INT32 nMilliSec);
 void          dlp_register_signals();
 void          dlp_interrupt(int nSig);
