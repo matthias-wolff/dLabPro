@@ -216,7 +216,7 @@ COMMENT: Wrong %s dimensionality (should be %ld).
 END_MAN
 
 ERROR:   GMM_RANK
-COMMENT: Covariance matrix no. %ld has no full rank.
+COMMENT: Cov. matrix %ld bad (det=%8.2g).
 LEVEL:   EL_WARNING
 /html MAN:
   <p>This warning may be caused by the {@link -setup} and {@link -setup_ex} methods.
@@ -264,7 +264,7 @@ END_MAN
 FIELD:   mindet
 COMMENT: Minimal acceptable determinant of covariance matrices.
 TYPE:    double
-INIT:    1E-60
+INIT:    1E-34
 /html MAN:
   Gaussians with a covariance matrix whose determinant is smaller than <code>mindet</code> or
   greater than 1/<code>mindet</code> will be treated as invalid.

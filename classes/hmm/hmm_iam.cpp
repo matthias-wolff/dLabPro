@@ -136,11 +136,11 @@ INT16 CGEN_PRIVATE CHmm::GrcNormalize()
 /*
  * Manual page at hmm.def
  */
-INT16 CGEN_PUBLIC CHmm::SetupGmm()
+INT16 CGEN_PUBLIC CHmm::SetupGmm(FLOAT64 nMindet)
 {
   BOOL         bFullCov = TRUE;                                                 // Full covariances flag
-  INT32         C        = 0;                                                    // Number of indep. covariance matrices
-  INT32         K        = 0;                                                    // Number of Gaussians/stats. classes
+  INT32        C        = 0;                                                    // Number of indep. covariance matrices
+  INT32        K        = 0;                                                    // Number of Gaussians/stats. classes
   CData*       idMean   = NULL;                                                 // Mean vector set
   CData*       idCov    = NULL;                                                 // Covariance matrix set
   CVmap*       iMmap    = NULL;                                                 // Gaussian mixture map
@@ -256,6 +256,7 @@ INT16 CGEN_PUBLIC CHmm::SetupGmm()
   IFCHECK printf("\n   - Setting up GMMs\n\n>> Calling CGmm_SetupEx");          // Protocol (verbose level 1)
   IFIELD_RESET(CGmm,"gm");                                                      // Create/reset GMM's
   m_iGm->m_nCheck=m_nCheck;                                                     // Propagate verbose level
+  if (nMindet>0) m_iGm->m_nMindet = nMindet;                                                   // Set min. cov. matrix determinant
   CGmm_SetupEx(m_iGm,idMean,idCov,iMmap,idCmap,idVar);                          // Setup Gaussians
   m_iGm->m_nCheck=0;                                                            // Reset verbose level
   IFCHECK printf("\n<<\n");                                                     // Protocol (verbose level 1)

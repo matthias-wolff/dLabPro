@@ -263,7 +263,7 @@ END_MAN
 
 METHOD:  -setup_gmm
 COMMENT: (Re-)initializes the GMMs from the most significant feature statistics.
-SYNTAX:  ()
+SYNTAX:  (double mindet)
 /html MAN:
   <p>Extracts mean vectors and covariance matrices (or variance vectors, resp.)
   from the most significant feature statistics stored in field {@link pfsm},
@@ -352,6 +352,11 @@ SYNTAX:  ()
       href="function.html#mth_-reset">-reset</a>.</li>
   </ul>
 
+  @param mindet The minimal permissible value of the determinants of covariance
+         matrices (see field <a class="code" href="gmm.html#fld_mindet">mindet</a>
+         in class <a class="code" href="gmm.html">gmm</a>), -1 for the default
+         value of <a class="code" href="gmm.html">gmm</a><code>.</code><a
+         class="code" href="gmm.html#fld_mindet">mindet</a>.
   @cgen:option /var Use variance vectors instead of full covariance matrices
   @see -setup
   @see gm

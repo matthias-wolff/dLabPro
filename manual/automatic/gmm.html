@@ -177,7 +177,7 @@ gmm.html gmm CGmm [
         nErr = top.TC1.InsertItem("Errors","",8,9,0,"automatic/gmm.html#err","CONT",nCls);
         top.TC1.InsertItem("gmm1001","GMM_NOTSETUP Model not properly set up%s.",30,30,0,"automatic/gmm.html#err_GMM_NOTSETUP","CONT",nErr);
         top.TC1.InsertItem("gmm1002","GMM_DIM Wrong %s dimensionality (should be %ld).",30,30,0,"automatic/gmm.html#err_GMM_DIM","CONT",nErr);
-        top.TC1.InsertItem("gmm1003","GMM_RANK Covariance matrix no. %ld has no full rank.",31,31,0,"automatic/gmm.html#err_GMM_RANK","CONT",nErr);
+        top.TC1.InsertItem("gmm1003","GMM_RANK Cov. matrix %ld bad (det=%8.2g).",31,31,0,"automatic/gmm.html#err_GMM_RANK","CONT",nErr);
         top.TC1.InsertItem("gmm1004","GMM_IGNORE Extra %s ignored.",31,31,0,"automatic/gmm.html#err_GMM_IGNORE","CONT",nErr);
         top.TC1.InsertItem("gmm1005","GMM_INVALD Invalid distance or density computed from Gaussian (mixture) %ld.",30,30,0,"automatic/gmm.html#err_GMM_INVALD","CONT",nErr);
 //}} END_TOC
@@ -548,7 +548,7 @@ Mahalanobis distance of invalid Gaussians !?
     </tr>
     <tr><td><a href="#err_GMM_NOTSETUP"><code class="link">gmm1001</code></a></td><td> Model not properly set up%s.</td></tr>
     <tr><td><a href="#err_GMM_DIM"><code class="link">gmm1002</code></a></td><td> Wrong %s dimensionality (should be %ld).</td></tr>
-    <tr><td><a href="#err_GMM_RANK"><code class="link">gmm1003</code></a></td><td> Covariance matrix no. %ld has no full rank.</td></tr>
+    <tr><td><a href="#err_GMM_RANK"><code class="link">gmm1003</code></a></td><td> Cov. matrix %ld bad (det=%8.2g).</td></tr>
     <tr><td><a href="#err_GMM_IGNORE"><code class="link">gmm1004</code></a></td><td> Extra %s ignored.</td></tr>
     <tr><td><a href="#err_GMM_INVALD"><code class="link">gmm1005</code></a></td><td> Invalid distance or density computed from Gaussian (mixture) %ld.</td></tr>
     <tr><td colspan="2" class="rowempty">&nbsp;</td></tr>
@@ -1544,7 +1544,7 @@ double
       <td class="hidden">Default</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">
-1E-60
+1E-34
 </td>
     </tr>
     <tr>
@@ -5308,7 +5308,7 @@ Expected dimensionality
   <div class="mframe2">
   <h3>Synopsis</h3>
   <p>
-Covariance matrix no. %ld has no full rank.
+Cov. matrix %ld bad (det=%8.2g).
   </p>
   <h3>Description</h3>
   <p>This warning may be caused by the <a href="#mth_-setup"><code class="link">-setup</code></a> and <a href="#mth_-setup_ex"><code class="link">-setup_ex</code></a> methods.

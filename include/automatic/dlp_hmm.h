@@ -121,6 +121,7 @@ public:
 	INT16 OnProduct();
 	INT16 OnSetup();
 	INT16 OnSetupEx();
+	INT16 OnSetupGmm();
 	INT16 OnSplit();
 	INT16 OnTree();
 	INT16 OnUnion();
@@ -170,7 +171,7 @@ public:
 // Taken from 'hmm_iam.cpp'
 	public: INT16 SetupEx(INT32 nMsf, CData* idHmms, INT32 nLsf, INT32 nPlf, INT32 nPsf, INT32 nPmf);
 	private: INT16 GrcNormalize();
-	public: INT16 SetupGmm();
+	public: INT16 SetupGmm(FLOAT64 nMindet);
 	private: char GmmMix_CompareGauss(struct ssTperG* lpTperG1, struct ssTperG* lpTperG2);
 	private: void GmmMix_CreateMixture(INT32* lpGinMix, INT32 nNG, INT32 nG, struct ssTperG* lpTperG, INT32 nIcW, INT16 nWsrt, CData* idTmx, INT32 nNGnew, char* lpTDel);
 	public: INT16 GmmMix();

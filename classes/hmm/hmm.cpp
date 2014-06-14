@@ -89,7 +89,7 @@ INT16 CHmm::AutoRegisterWords()
 	REGISTER_METHOD("-reset_stats","",LPMF(CHmm,ResetStats),"Resets the internal statistics of an HMM instance.",0,"<hmm this>","")
 	REGISTER_METHOD("-setup","",LPMF(CHmm,OnSetup),"Initilizes multiple HMMs.",0,"<int nMsf> <data idHmms> <hmm this>","")
 	REGISTER_METHOD("-setup_ex","",LPMF(CHmm,OnSetupEx),"Initilizes multiple HMMs.",0,"<int nMsf> <data idHmms> <int nLsf> <int nPlf> <int nPsf> <int nPmf> <hmm this>","")
-	REGISTER_METHOD("-setup_gmm","",LPMF(CHmm,SetupGmm),"(Re-)initializes the GMMs from the most significant feature statistics.",0,"<hmm this>","")
+	REGISTER_METHOD("-setup_gmm","",LPMF(CHmm,OnSetupGmm),"(Re-)initializes the GMMs from the most significant feature statistics.",0,"<double mindet> <hmm this>","")
 	REGISTER_METHOD("-split","",LPMF(CHmm,OnSplit),"Splits Gaussians and adjusts the HMM topology.",0,"<double nMinRc> <int nMaxCnt> <data idMap> <hmm this>","")
 	REGISTER_METHOD("-tree","",LPMF(CHmm,OnTree),"Expands automaton graphs into trees",0,"<hmm itSrc> <int nUnit> <hmm this>","")
 	REGISTER_METHOD("-union","",LPMF(CHmm,OnUnion),"Union",0,"<hmm itSrc> <hmm this>","")
@@ -616,6 +616,20 @@ INT16 CHmm::OnSetupEx()
 	INT32 nMsf = (INT32)MIC_GET_N(6,4);
 	if (CDlpObject_GetErrorCount()>__nErrCnt) return NOT_EXEC;
 	__nErr = SetupEx(nMsf, idHmms, nLsf, nPlf, nPsf, nPmf);
+	return __nErr;
+}
+
+INT16 CHmm::OnSetupGmm()
+/* DO NOT CALL THIS FUNCTION FROM C++ SCOPE.     */
+/* IT MAY INTERFERE WITH THE INTERPRETER SESSION */
+{
+	INT16 __nErr    = O_K;
+	INT32  __nErrCnt = 0;
+	MIC_CHECK;
+	__nErrCnt = CDlpObject_GetErrorCount();
+	FLOAT64 mindet = MIC_GET_N(1,0);
+	if (CDlpObject_GetErrorCount()>__nErrCnt) return NOT_EXEC;
+	__nErr = SetupGmm(mindet);
 	return __nErr;
 }
 

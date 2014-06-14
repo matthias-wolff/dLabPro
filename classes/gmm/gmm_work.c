@@ -120,8 +120,8 @@ INT32 CGEN_PROTECTED CGmm_Icov(CGmm* _this, CData* idCov, BOOL bIcov)
       CData_Dfetch(AS(CData,_this->m_idCdet),c,0) > 1./_this->m_nMindet         /*   | (Det. is unreasonably large)  */
     )                                                                           /*   |                               */
     {                                                                           /*   >>                              */
+      IERROR(_this,GMM_RANK,c,CData_Dfetch(AS(CData,_this->m_idCdet),c,0),0);   /*     Warning message               */
       CData_Dstore(AS(CData,_this->m_idCdet),0.,c,0);                           /*     Set determinant exactly to 0  */
-      IERROR(_this,GMM_RANK,c,0,0);                                             /*     Warning message               */
     }                                                                           /*   <<                              */
     else                                                                        /*   Cov.matrix successfully inverted*/
       nValid++;                                                                 /*     Count valid Gaussians         */
