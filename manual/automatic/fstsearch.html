@@ -218,7 +218,31 @@ typedef struct <b>CFstsearch</b><br>class <b>CFstsearch</b> : public CDlpObject
   <div class="mframe2">
   <h3>Synopsis</h3>
   <p>
-Search algorithms for FSTs
+Search processor for wFSTs.
+  </p>
+  <h3>Description</h3>
+  <p>
+  This is a search processor for decoding in wFSTs (see <a href="fst.html">class <code class="link">fst</code></a>).
+  The processor integrates different search algorithms in one interface.
+  So you can use the algorithm you like for decoding.
+  There are timevariant and timeinvaraiant algorithms available.
+  The interface provides interative decoding for a subset of algorithms.
+  </p>
+
+  <p>
+  The search algorithm is set by the field <a href="#fld_algo"><code class="link">algo</code></a>.
+  Fields named with the algorithm name are algorithm specific options.
+  All other fields are general options.
+  </p>
+
+  <p>
+  For decoding there is an all-in-one method name <a href="#mth_-search"><code class="link">-search</code></a>.
+  If you want to do mulitple decodings with one automaton or iterative decoding,
+    you can load the automaton with <a href="#mth_-load"><code class="link">-load</code></a> followed by <a href="#mth_-isearch"><code class="link">-isearch</code></a> and <a href="#mth_-backtrack"><code class="link">-backtrack</code></a>.
+  </p>
+
+  <p>
+  Additionally there is a <a href="../tutorials/t006.html">tutorial</a> for the search processor available.
   </p>
   <!--{{ CUSTOM_DOC -->
   <!--}} CUSTOM_DOC -->

@@ -1,0 +1,397 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+<!-- UASR: Unified Approach to Speech Synthesis and Recognition
+<    - Documentation home page
+<   
+<    AUTHOR : Matthias Wolff
+<    PACKAGE: n/a
+<   
+<    Copyright 2013-2014 UASR contributors (see COPYRIGHT file)
+<    - Chair of System Theory and Speech Technology, TU Dresden
+<    - Chair of Communications Engineering, BTU Cottbus
+<   
+<    This file is part of UASR.
+<   
+<    UASR is free software: you can redistribute it and/or modify it under the
+<    terms of the GNU Lesser General Public License as published by the Free
+<    Software Foundation, either version 3 of the License, or (at your option)
+<    any later version.
+<   
+<    UASR is distributed in the hope that it will be useful, but WITHOUT ANY
+<    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<    FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for 
+<    more details.
+<   
+<    You should have received a copy of the GNU Lesser General Public License
+<    along with UASR. If not, see [http://www.gnu.org/licenses/].
+  -->
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title>Tutorial 6 - Search processor</title>
+  <link rel=stylesheet type="text/css" href="../default.css">
+</head>
+<script type="text/javascript">
+if (top==self)
+{
+  var sLocation = "../index.html?tutorials/t006.html";
+  if (location.hash.length>0)
+    sLocation += ";"+location.hash.substr(1);
+  top.location = sLocation;
+}
+</script>
+<script type="text/javascript" src="../default.js"></script>
+<body>
+  <a name="top"></a>
+  <div id="clp_top">
+    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+      <tr>
+        <td nowrap width="25%" class="navbar">
+          Tutorial 6 - Search processor
+        </td>
+        <td nowrap width="75%" class="navbar" style="text-align:right;">
+          <a class="navbar" href="javascript:__PrintSection('clp_top','Tutorial 5 - Mathematics','..');"
+          ><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle;" 
+          alt="Print"></a>
+          <a class="navbar" href="../home.html">Home</a>
+          <a class="navbar" href="index.html">Tutorials</a>
+        </td>
+      </tr>
+    </table>
+    <div class="mframe">
+      <table width="100%" cellSpacing="0" cellPadding="6" border="0">
+        <tr>
+          <td width="50%">
+            <h3 style="margin-top:2pt; margin-bottom:2pt">Contents</h3>
+            <ul class="linklist">
+              <li class="linklist"><a class="Linklist" href="#fst">Introduction into wFSTs</a></li>
+              <li class="linklist"><a class="Linklist" href="#if">Search processor interface</a></li>
+              <li class="linklist"><a class="Linklist" href="#as">A* algorithm</a></li>
+              <li class="linklist"><a class="Linklist" href="#as">Token passing algorithm</a></li>
+              <li class="linklist"><a class="Linklist" href="#further">Further Reading</a></li>
+            </ul>
+          </td>
+          <td width="50%">
+            <h3 style="margin-top:2pt; margin-bottom:2pt">Related Topics</h3>
+            <ul class="linklist">
+              <li class="linklist"><a class="Linklist" href="t001.html">Tutorial 1 - dLabPro Basics</a></li>
+              <li class="linklist"><a class="Linklist" href="t002.html">Tutorial 2 - Variables and Data Containers</a></li>
+              <li class="linklist"><a class="Linklist" href="t003.html">Tutorial 3 - Writing Scripts</a></li>
+            </ul>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="mframe2">
+      <h3>Synopsis</h3>
+      <p>Explains how to use the search processor for decoding wFSTs.</p>
+      
+      <span class="warning">This is an incomplete,
+          preliminary document and subject to changes.</span>
+    </div>
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <a name="fst"></a>
+    <div id="clp_fst">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td nowrap width="25%" class="navbar">
+            Introduction into wFSTs
+          </td>
+          <td nowrap width="75%" class="navbar" style="text-align:right;">
+            <a class="navbar" href="javascript:__PrintSection('clp_fst','Basic Matrix Operations','..');"
+            ><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle;" alt="Print"></a> 
+            <a class="navbar" href="../home.html">Home</a>
+            <a class="navbar" href="index.html">Tutorials</a>
+            <a class="navbar" href="#top">Top</a>
+          </td>
+        </tr>
+      </table>
+      <div class="mframe2">
+        <p>dLabPro supports basic arithmetics. But remember: it is still designed to be a signal processing and
+          classification toolkit rather than a maths program. So matrix computations are a bit of a compromise. Let's
+          create a test matrix:</p>
+        Bla Bla
+        <pre class="code"><span class="c-cmt">Example rn.txt</span>
+0 1  0  0 5
+0 2  1  1 5
+1 1  0 -1 2
+2 2  1 -1 1
+1 2  1  1 5
+1 3 -1  2 0
+2 3 -1  2 0
+3</pre>
+        Bla Bla
+        <pre class="code">
+dLabPro&gt; <a href="../automatic/fst.html"><code class="link">fst</code></a> rn;
+dLabPro&gt; "rn.txt" "fsm-t" rn <a href="../automatic/file.html"><code class="link">stdfile</code></a> <a href="../automatic/file.html#mth_-import"><code class="link">-import</code></a>;
+dLabPro&gt; rn <a href="../automatic/fst.html#mth_-print"><code class="link">-print</code></a>;
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+   Data content of instance
+   fst rn
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+   Units      : 1    (unit table      : 'ud')
+   States     : 4    (state table     : 'sd')
+   Transitions: 7    (transition table: 'td')
+   In-Symbols : 0    (input symbol t. : 'is')
+   Out-Symbols: 0    (output symbol t.: 'os')
+
+   Acceptor   : yes
+   Transducer : yes
+   Weights    : tropical semiring
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+ - - - - - - - - - -
+ Unit 0
+   Name              : 'fsm'
+   States            : 4    (offset: 0)
+   Transitions       : 7    (offset: 0)
+
+   Loops             : yes
+   Forward connected : yes
+   Backward connected: yes
+   Forward tree      : no
+   Backward tree     : no
+
+   States
+     [no custom descriptors]
+
+   Transitions
+         :  initial -&gt; terminal   type        ~TIS      ~TOS      ~TSR
+        0: (     0) -&gt;       1    next              0            0         5
+        1: (     0) -&gt;       2    2next             1            1         5
+        2:       1  -&gt;       1    loop              0           -1         2
+        3:       2  -&gt;       2    loop              1           -1         1
+        4:       1  -&gt;       2    next              1            1         5
+        5:       1  -&gt; (     3)   end              -1            2         0
+        6:       2  -&gt; (     3)   end              -1            2         0
+ No more data - Stop.
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</pre>
+        Bla Bla <a href="javascript:__goUasr('automatic/util/fst.itp.html','clp_-FST_render')">-FST_render</a>
+        <img src="../resources/tutorials/fstsearch_bsp.gif" border="0" width="335" height="99" alt="Example for recognition network">
+      </div>
+    </div>
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <a name="if"></a>
+    <div id="clp_if">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td nowrap width="25%" class="navbar">
+            Search processor interface
+          </td>
+          <td nowrap width="75%" class="navbar" style="text-align:right;">
+            <a class="navbar" href="javascript:__PrintSection('clp_if','Matrix-Vector Operations','..');"
+            ><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle;" alt="Print"></a> 
+            <a class="navbar" href="../home.html">Home</a>
+            <a class="navbar" href="index.html">Tutorials</a>
+            <a class="navbar" href="#top">Top</a>
+          </td>
+        </tr>
+      </table>
+      <div class="mframe2">
+        <span class="TODO">[<b>TODO:</b> ...]</span>
+
+        <h3>Timevariant decoding</h3>
+
+        Bla Bla
+        <pre class="code">
+dLabPro&gt; <a href="../automatic/data.html"><code class="link">data</code></a> nld;
+dLabPro&gt; {
+           { 2 0 }
+           { 0 9 }
+           { 0 3 }
+           { 6 0 }
+         } nld =;</pre>
+        Bla Bla
+        <pre class="code">
+dLabPro&gt; <a href="../automatic/fstsearch.html"><code class="link">fstsearch</code></a> s;
+dLabPro&gt; <a href="../automatic/fst.html"><code class="link">fst</code></a> res;
+dLabPro&gt; rn 0 s <a href="../automatic/fstsearch.html#mth_-load"><code class="link">-load</code></a>;
+dLabPro&gt; nld s <a href="../automatic/fst.html#opt__final"><code class="link">/final</code></a> <a href="../automatic/fst.html#mth_-isearch"><code class="link">-isearch</code></a>;
+dLabPro&gt; res s <a href="../automatic/fstsearch.html#mth_-load"><code class="link">-backtrack</code></a>;
+dLabPro&gt; res <a href="../automatic/fst.html#mth_-print"><code class="link">-print</code></a>;
+<span class="c-cmt">  . . .</span>
+   Transitions
+         :  initial -&gt; terminal   type        ~TIS      ~TOS      ~LSR
+        0:       0  -&gt;       1    next             -1            0        11
+        1:       1  -&gt;       2    next             -1            1         5
+        2:       2  -&gt; (     3)   end              -1            2         0
+<span class="c-cmt">  . . .</span>
+<img src="../resources/tutorials/fstsearch_res_tv_tp_os.gif" border="0" alt="Decoding result"></pre>
+        <p>Bla Bla</p>
+        <pre class="code">
+dLabPro&gt; "t" s -set <a href="../automatic/fstsearch.html#fld_bt"><code class="link">bt</code></a>;
+dLabPro&gt; nld s <a href="../automatic/fst.html#opt__final"><code class="link">/final</code></a> <a href="../automatic/fst.html#mth_-isearch"><code class="link">-isearch</code></a>;
+dLabPro&gt; res s <a href="../automatic/fstsearch.html#mth_-load"><code class="link">-backtrack</code></a>;
+dLabPro&gt; res <a href="../automatic/fst.html#mth_-print"><code class="link">-print</code></a>;
+<span class="c-cmt">  . . .</span>
+   Transitions
+         :  initial -&gt; terminal   type        ~TIS      ~TOS      ~TSR
+        0:       0  -&gt;       1    next              0            0         7
+        1:       1  -&gt;       2    next              0           -1         2
+        2:       2  -&gt;       3    next              0           -1         2
+        3:       3  -&gt;       4    next              1            1         5
+        4:       4  -&gt; (     5)   end              -1            2         0
+<span class="c-cmt">  . . .</span>
+<img src="../resources/tutorials/fstsearch_res_tv_tp_t.gif" border="0" alt="Decoding result"></pre>
+        <p>Bla Bla</p>
+        <pre class="code">
+dLabPro&gt; rn 0 nld res s <a href="../automatic/fst.html#mth_-search"><code class="link">-search</code></a>;</pre>
+        Bla Bla
+
+        <h3>Iterative timevariant decoding</h3>
+
+        Bla Bla
+        <pre class="code">
+dLabPro&gt; rn 0 s <a href="../automatic/fstsearch.html#mth_-load"><code class="link">-load</code></a>;
+<span class="c-cmt">---- Decode frame 1 ----</span>
+dLabPro&gt; 0 1 nld <a href="../automatic/data.html#opt__rec"><code class="link">/rec</code></a> <a href="../automatic/data.html#mth_-xfetch"><code class="link">-xfetch</code></a> s <a href="../automatic/fst.html#mth_-isearch"><code class="link">-isearch</code></a>;
+dLabPro&gt; res s <a href="../automatic/fstsearch.html#mth_-load"><code class="link">-backtrack</code></a>;
+dLabPro&gt; res <a href="../automatic/fst.html#mth_-print"><code class="link">-print</code></a>;
+<span class="c-cmt">  . . .</span>
+   Transitions
+         :  initial -&gt; terminal   type        ~TIS      ~TOS      ~TSR
+        0:       0  -&gt; (     1)   end               1            1         5
+<span class="c-cmt">  . . .</span>
+<img src="../resources/tutorials/fstsearch_res_tv_tp_t_1.gif" border="0" alt="Decoding result">
+<span class="c-cmt">---- Decode frame 2 ----</span>
+dLabPro&gt; 1 1 nld <a href="../automatic/data.html#opt__rec"><code class="link">/rec</code></a> <a href="../automatic/data.html#mth_-xfetch"><code class="link">-xfetch</code></a> s <a href="../automatic/fst.html#mth_-isearch"><code class="link">-isearch</code></a>;
+dLabPro&gt; res s <a href="../automatic/fstsearch.html#mth_-load"><code class="link">-backtrack</code></a>;
+dLabPro&gt; res <a href="../automatic/fst.html#mth_-print"><code class="link">-print</code></a>;
+<span class="c-cmt">  . . .</span>
+   Transitions
+         :  initial -&gt; terminal   type        ~TIS      ~TOS      ~TSR
+        0:       0  -&gt;       1    next              0            0         7
+        1:       1  -&gt; (     2)   end               0           -1         2
+<span class="c-cmt">  . . .</span>
+<img src="../resources/tutorials/fstsearch_res_tv_tp_t_2.gif" border="0" alt="Decoding result">
+<span class="c-cmt">---- Decode frame 3 and 4 ----</span>
+dLabPro&gt; 2 2 nld <a href="../automatic/data.html#opt__rec"><code class="link">/rec</code></a> <a href="../automatic/data.html#mth_-xfetch"><code class="link">-xfetch</code></a> s <a href="../automatic/fst.html#mth_-isearch"><code class="link">-isearch</code></a>;
+dLabPro&gt; res s <a href="../automatic/fstsearch.html#mth_-load"><code class="link">-backtrack</code></a>;
+dLabPro&gt; res <a href="../automatic/fst.html#mth_-print"><code class="link">-print</code></a>;
+<span class="c-cmt">  . . .</span>
+   Transitions
+         :  initial -&gt; terminal   type        ~TIS      ~TOS      ~TSR
+        0:       0  -&gt;       1    next              0            0         7
+        1:       1  -&gt;       2    next              0           -1         2
+        2:       2  -&gt;       3    next              0           -1         2
+        3:       3  -&gt; (     4)   next              1            1         5
+<span class="c-cmt">  . . .</span>
+<img src="../resources/tutorials/fstsearch_res_tv_tp_t_3.gif" border="0" alt="Decoding result">
+<span class="c-cmt">---- Finalize decoding ----</span>
+dLabPro&gt; NULL s <a href="../automatic/fst.html#opt__final"><code class="link">/final</code></a> <a href="../automatic/fst.html#mth_-isearch"><code class="link">-isearch</code></a>;
+dLabPro&gt; res s <a href="../automatic/fstsearch.html#mth_-load"><code class="link">-backtrack</code></a>;
+dLabPro&gt; res <a href="../automatic/fst.html#mth_-print"><code class="link">-print</code></a>;
+<span class="c-cmt">  . . .</span>
+   Transitions
+         :  initial -&gt; terminal   type        ~TIS      ~TOS      ~TSR
+        0:       0  -&gt;       1    next              0            0         7
+        1:       1  -&gt;       2    next              0           -1         2
+        2:       2  -&gt;       3    next              0           -1         2
+        3:       3  -&gt;       4    next              1            1         5
+        4:       4  -&gt; (     5)   end              -1            2         0
+<span class="c-cmt">  . . .</span>
+<img src="../resources/tutorials/fstsearch_res_tv_tp_t_4.gif" border="0" alt="Decoding result">
+</pre>
+        Bla Bla
+
+        <h3>Timeinvariant decoding</h3>
+
+        <pre class="code">
+dLabPro&gt; NULL s <a href="../automatic/fst.html#opt__final"><code class="link">/final</code></a> <a href="../automatic/fst.html#mth_-isearch"><code class="link">-isearch</code></a>;
+dLabPro&gt; res s <a href="../automatic/fstsearch.html#mth_-load"><code class="link">-backtrack</code></a>;
+dLabPro&gt; res <a href="../automatic/fst.html#mth_-print"><code class="link">-print</code></a>;
+<span class="c-cmt">  . . .</span>
+   Transitions
+         :  initial -&gt; terminal   type        ~TIS      ~TOS      ~LSR
+        0:       0  -&gt; (     1)   end              -1           -1         0
+<span class="c-cmt">  . . .</span>
+<img src="../resources/tutorials/fstsearch_res_iv_tp_t.gif" border="0" alt="Decoding result"></pre>
+        Bla Bla
+       </div>
+    </div>
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <a name="as"></a>
+    <div id="clp_as">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td nowrap width="25%" class="navbar">
+            A* algorithm
+          </td>
+          <td nowrap width="75%" class="navbar" style="text-align:right;">
+            <a class="navbar" href="javascript:__PrintSection('clp_as','Other Matrix Operations','..');"
+            ><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle;" alt="Print"></a> 
+            <a class="navbar" href="../home.html">Home</a>
+            <a class="navbar" href="index.html">Tutorials</a>
+            <a class="navbar" href="#top">Top</a>
+          </td>
+        </tr>
+      </table>
+      <div class="mframe2">
+        <span class="TODO">[<b>TODO:</b> ...]</span>
+        <img src="../resources/tutorials/fstsearch_as.gif" border="0" width="533" height="466" alt="A* algorithm process">
+        <img src="../resources/tutorials/fstsearch_as_queue.gif" border="0" width="309" height="309" alt="A* algorithm queue process">
+      </div>
+    </div>
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <a name="tp"></a>
+    <div id="clp_tp">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td nowrap width="25%" class="navbar">
+            Token passing algorithm
+          </td>
+          <td nowrap width="75%" class="navbar" style="text-align:right;">
+            <a class="navbar" href="javascript:__PrintSection('clp_tp','Other Matrix Operations','..');"
+            ><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle;" alt="Print"></a> 
+            <a class="navbar" href="../home.html">Home</a>
+            <a class="navbar" href="index.html">Tutorials</a>
+            <a class="navbar" href="#top">Top</a>
+          </td>
+        </tr>
+      </table>
+      <div class="mframe2">
+        <span class="TODO">[<b>TODO:</b> ...]</span>
+        <img src="../resources/tutorials/fstsearch_tp.gif" border="0" width="584" height="499" alt="Token passing algorithm process">
+      </div>
+    </div>
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <a name="further"></a>
+    <div id="clp_tp">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td nowrap width="25%" class="navbar">
+            Further Reading
+          </td>
+          <td nowrap width="75%" class="navbar" style="text-align:right;">
+            <a class="navbar" href="javascript:__PrintSection('clp_further','Further Reading','..');"
+            ><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle;" alt="Print"></a> 
+            <a class="navbar" href="../home.html">Home</a>
+            <a class="navbar" href="index.html">Tutorials</a>
+            <a class="navbar" href="#top">Top</a>
+          </td>
+        </tr>
+      </table>
+      <div class="mframe2">
+        <ul class="linklist">
+          <li class="linklist"><a href="../automatic/fstsearch.html"><img
+          src="../resources/class_obj.gif" width="16" height="16" border="0"
+          style="vertical-align:middle" alt="icon">&nbsp;Class fstsearch</a></li>
+          <li class="linklist"><a href="../automatic/fst.html"><img
+          src="../resources/class_obj.gif" width="16" height="16" border="0"
+          style="vertical-align:middle" alt="icon">&nbsp;Class fst</a></li>
+        </ul>
+      </div>
+    </div>
+  
+  </div>
+  <div class="footer">End of page</div>
+
+</body>
+</html>

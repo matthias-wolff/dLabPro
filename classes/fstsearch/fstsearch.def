@@ -28,7 +28,32 @@ COMPILER: gcc
 AR:       ar
 
 PROJECT:  fstsearch
-COMMENT:  Search algorithms for FSTs
+COMMENT:  Search processor for wFSTs.
+/html MAN:
+  <p>
+  This is a search processor for decoding in wFSTs (see <a href="fst.html">class <code class="link">fst</code></a>).
+  The processor integrates different search algorithms in one interface.
+  So you can use the algorithm you like for decoding.
+  There are timevariant and timeinvaraiant algorithms available.
+  The interface provides interative decoding for a subset of algorithms.
+  </p>
+
+  <p>
+  The search algorithm is set by the field {@link algo}.
+  Fields named with the algorithm name are algorithm specific options.
+  All other fields are general options.
+  </p>
+
+  <p>
+  For decoding there is an all-in-one method name {@link -search}.
+  If you want to do mulitple decodings with one automaton or iterative decoding,
+    you can load the automaton with {@link -load} followed by {@link -isearch} and {@link -backtrack}.
+  </p>
+
+  <p>
+  Additionally there is a <a href="../tutorials/t006.html">tutorial</a> for the search processor available.
+  </p>
+END_MAN
 AUTHOR:   frank.duckhorn
 VERSION:  2.00 DLC22
 

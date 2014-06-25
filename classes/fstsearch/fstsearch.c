@@ -1,5 +1,5 @@
 /* dLabPro class CFstsearch (fstsearch)
- * - Search algorithms for FSTs
+ * - Search processor for wFSTs.
  *
  * AUTHOR : frank.duckhorn
  * PACKAGE: dLabPro/classes
@@ -311,7 +311,7 @@ INT16 CFstsearch_GetClassInfo(SWord* lpClassWord)
 
 	lpClassWord->ex.fct.lpProject   = "fstsearch";
 	lpClassWord->ex.fct.lpBaseClass = "-";
-	lpClassWord->lpComment          = "Search algorithms for FSTs";
+	lpClassWord->lpComment          = "Search processor for wFSTs.";
 	lpClassWord->ex.fct.lpAutoname  = "";
 	lpClassWord->ex.fct.lpCname     = "CFstsearch";
 	lpClassWord->ex.fct.lpAuthor    = "frank.duckhorn";
