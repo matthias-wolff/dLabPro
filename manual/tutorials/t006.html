@@ -228,7 +228,7 @@ dLabPro&gt; rn <a href="../automatic/fst.html#mth_-print"><code class="link">-pr
         Final states are marked with double circles and the transitions are labeled with:
         &quot;Input symbol : Output symbol | Weight&quot;.</p>
 
-        <img src="../resources/tutorials/fstsearch_bsp.gif" border="0" width="335" height="99" alt="Example for recognition network">
+        <img src="../resources/tutorials/fstsearch_rn_img.gif" border="0" width="335" height="99" alt="Example for recognition network">
 
         <p>For more details on wFSTs and supported operations in dLabPro see manual of class <a href="../automatic/fst.html"><code class="link">fst</code></a>.</p>
 
@@ -285,8 +285,8 @@ dLabPro&gt; {
         <p>The following code initializes a search processor <code>s</code> and the result automaton <code>res</code>.
         Then the recognition network <code>rn</code> is loaded by <a href="../automatic/fstsearch.html#mth_-load"><code class="link">-load</code></a>.
         The second argument <code>0</code> indicates that the first unit within the fst object should be used.
-        In the next step the search is performed with <a href="../automatic/fst.html#mth_-isearch"><code class="link">-isearch</code></a> by using the timevariant weight matrix <code>w</code>.
-        The option <a href="../automatic/fst.html#opt__final"><code class="link">/final</code></a> forces the search to run until a final state is reached.
+        In the next step the search is performed with <a href="../automatic/fstsearch.html#mth_-isearch"><code class="link">-isearch</code></a> by using the timevariant weight matrix <code>w</code>.
+        The option <a href="../automatic/fstsearch.html#opt__final"><code class="link">/final</code></a> forces the search to run until a final state is reached.
         Through backtracking with <a href="../automatic/fstsearch.html#mth_-backtrack"><code class="link">-backtrack</code></a> we get the best decoded path in form of another wFST.
         The loaded recognition network can be freed by <a href="../automatic/fstsearch.html#mth_-reset"><code class="link">-reset</code></a>.</p>
 
@@ -294,7 +294,7 @@ dLabPro&gt; {
 dLabPro&gt; <a href="../automatic/fstsearch.html"><code class="link">fstsearch</code></a> s;
 dLabPro&gt; <a href="../automatic/fst.html"><code class="link">fst</code></a> res;
 dLabPro&gt; rn 0 s <a href="../automatic/fstsearch.html#mth_-load"><code class="link">-load</code></a>;
-dLabPro&gt; w s <a href="../automatic/fst.html#opt__final"><code class="link">/final</code></a> <a href="../automatic/fst.html#mth_-isearch"><code class="link">-isearch</code></a>;
+dLabPro&gt; w s <a href="../automatic/fstsearch.html#opt__final"><code class="link">/final</code></a> <a href="../automatic/fstsearch.html#mth_-isearch"><code class="link">-isearch</code></a>;
 dLabPro&gt; res s <a href="../automatic/fstsearch.html#mth_-backtrack"><code class="link">-backtrack</code></a>;
 dLabPro&gt; res <a href="../automatic/fst.html#mth_-print"><code class="link">-print</code></a>;
 <span class="c-cmt">  . . .</span>
@@ -313,7 +313,7 @@ dLabPro&gt; res <a href="../automatic/fst.html#mth_-print"><code class="link">-p
 
         <pre class="code">
 dLabPro&gt; &quot;t&quot; s -set <a href="../automatic/fstsearch.html#fld_bt"><code class="link">bt</code></a>;
-dLabPro&gt; w s <a href="../automatic/fst.html#opt__final"><code class="link">/final</code></a> <a href="../automatic/fst.html#mth_-isearch"><code class="link">-isearch</code></a>;
+dLabPro&gt; w s <a href="../automatic/fstsearch.html#opt__final"><code class="link">/final</code></a> <a href="../automatic/fstsearch.html#mth_-isearch"><code class="link">-isearch</code></a>;
 dLabPro&gt; res s <a href="../automatic/fstsearch.html#mth_-backtrack"><code class="link">-backtrack</code></a>;
 dLabPro&gt; res <a href="../automatic/fst.html#mth_-print"><code class="link">-print</code></a>;
 <span class="c-cmt">  . . .</span>
@@ -348,8 +348,8 @@ dLabPro&gt; rn 0 w res s <a href="../automatic/fst.html#mth_-search"><code class
         So the computing capacity is used more regular and it is possible to present interim results.
         This is also possible with the search processor in dLabPro.</p>
 
-        <p>You simply need to omit the <a href="../automatic/fst.html#opt__final"><code class="link">/final</code></a> option at the call to <a href="../automatic/fst.html#mth_-isearch"><code class="link">-isearch</code></a>.
-        Only the last call should be made with the <a href="../automatic/fst.html#opt__final"><code class="link">/final</code></a> option.
+        <p>You simply need to omit the <a href="../automatic/fstsearch.html#opt__final"><code class="link">/final</code></a> option at the call to <a href="../automatic/fstsearch.html#mth_-isearch"><code class="link">-isearch</code></a>.
+        Only the last call should be made with the <a href="../automatic/fstsearch.html#opt__final"><code class="link">/final</code></a> option.
         <a href="../automatic/fstsearch.html#mth_-backtrack"><code class="link">-backtrack</code></a> is possible at every time step and gives an interim recognition result.</p>
 
         <p>The following code shows an iterative decoding for the used example.
@@ -363,7 +363,7 @@ dLabPro&gt; rn 0 w res s <a href="../automatic/fst.html#mth_-search"><code class
         <pre class="code">
 dLabPro&gt; rn 0 s <a href="../automatic/fstsearch.html#mth_-load"><code class="link">-load</code></a>;
 <span class="c-cmt">---- Decode frame 1 ----</span>
-dLabPro&gt; 0 1 w <a href="../automatic/data.html#opt__rec"><code class="link">/rec</code></a> <a href="../automatic/data.html#mth_-xfetch"><code class="link">-xfetch</code></a> s <a href="../automatic/fst.html#mth_-isearch"><code class="link">-isearch</code></a>;
+dLabPro&gt; 0 1 w <a href="../automatic/data.html#opt__rec"><code class="link">/rec</code></a> <a href="../automatic/data.html#mth_-xfetch"><code class="link">-xfetch</code></a> s <a href="../automatic/fstsearch.html#mth_-isearch"><code class="link">-isearch</code></a>;
 dLabPro&gt; res s <a href="../automatic/fstsearch.html#mth_-backtrack"><code class="link">-backtrack</code></a>;
 dLabPro&gt; res <a href="../automatic/fst.html#mth_-print"><code class="link">-print</code></a>;
 <span class="c-cmt">  . . .</span>
@@ -373,7 +373,7 @@ dLabPro&gt; res <a href="../automatic/fst.html#mth_-print"><code class="link">-p
 <span class="c-cmt">  . . .</span>
 <img src="../resources/tutorials/fstsearch_res_tv_tp_t_1.gif" border="0" alt="Decoding result">
 <span class="c-cmt">---- Decode frame 2 ----</span>
-dLabPro&gt; 1 1 w <a href="../automatic/data.html#opt__rec"><code class="link">/rec</code></a> <a href="../automatic/data.html#mth_-xfetch"><code class="link">-xfetch</code></a> s <a href="../automatic/fst.html#mth_-isearch"><code class="link">-isearch</code></a>;
+dLabPro&gt; 1 1 w <a href="../automatic/data.html#opt__rec"><code class="link">/rec</code></a> <a href="../automatic/data.html#mth_-xfetch"><code class="link">-xfetch</code></a> s <a href="../automatic/fstsearch.html#mth_-isearch"><code class="link">-isearch</code></a>;
 dLabPro&gt; res s <a href="../automatic/fstsearch.html#mth_-backtrack"><code class="link">-backtrack</code></a>;
 dLabPro&gt; res <a href="../automatic/fst.html#mth_-print"><code class="link">-print</code></a>;
 <span class="c-cmt">  . . .</span>
@@ -384,7 +384,7 @@ dLabPro&gt; res <a href="../automatic/fst.html#mth_-print"><code class="link">-p
 <span class="c-cmt">  . . .</span>
 <img src="../resources/tutorials/fstsearch_res_tv_tp_t_2.gif" border="0" alt="Decoding result">
 <span class="c-cmt">---- Decode frame 3 and 4 ----</span>
-dLabPro&gt; 2 2 w <a href="../automatic/data.html#opt__rec"><code class="link">/rec</code></a> <a href="../automatic/data.html#mth_-xfetch"><code class="link">-xfetch</code></a> s <a href="../automatic/fst.html#mth_-isearch"><code class="link">-isearch</code></a>;
+dLabPro&gt; 2 2 w <a href="../automatic/data.html#opt__rec"><code class="link">/rec</code></a> <a href="../automatic/data.html#mth_-xfetch"><code class="link">-xfetch</code></a> s <a href="../automatic/fstsearch.html#mth_-isearch"><code class="link">-isearch</code></a>;
 dLabPro&gt; res s <a href="../automatic/fstsearch.html#mth_-backtrack"><code class="link">-backtrack</code></a>;
 dLabPro&gt; res <a href="../automatic/fst.html#mth_-print"><code class="link">-print</code></a>;
 <span class="c-cmt">  . . .</span>
@@ -397,7 +397,7 @@ dLabPro&gt; res <a href="../automatic/fst.html#mth_-print"><code class="link">-p
 <span class="c-cmt">  . . .</span>
 <img src="../resources/tutorials/fstsearch_res_tv_tp_t_3.gif" border="0" alt="Decoding result">
 <span class="c-cmt">---- Finalize decoding ----</span>
-dLabPro&gt; NULL s <a href="../automatic/fst.html#opt__final"><code class="link">/final</code></a> <a href="../automatic/fst.html#mth_-isearch"><code class="link">-isearch</code></a>;
+dLabPro&gt; NULL s <a href="../automatic/fstsearch.html#opt__final"><code class="link">/final</code></a> <a href="../automatic/fstsearch.html#mth_-isearch"><code class="link">-isearch</code></a>;
 dLabPro&gt; res s <a href="../automatic/fstsearch.html#mth_-backtrack"><code class="link">-backtrack</code></a>;
 dLabPro&gt; res <a href="../automatic/fst.html#mth_-print"><code class="link">-print</code></a>;
 <span class="c-cmt">  . . .</span>
@@ -414,10 +414,12 @@ dLabPro&gt; res <a href="../automatic/fst.html#mth_-print"><code class="link">-p
 
         <h3>Timeinvariant decoding</h3>
 
-Bla Bla
+        <p>The search processor is also enabled for timeinvariant decoding.
+        <span class="TODO">[<b>TODO:</b> fix decoding]</span></p>
+        
+
         <pre class="code">
-dLabPro&gt; NULL s <a href="../automatic/fst.html#opt__final"><code class="link">/final</code></a> <a href="../automatic/fst.html#mth_-isearch"><code class="link">-isearch</code></a>;
-dLabPro&gt; res s <a href="../automatic/fstsearch.html#mth_-backtrack"><code class="link">-backtrack</code></a>;
+dLabPro&gt; rn 0 NULL res s <a href="../automatic/fstsearch.html#opt__final"><code class="link">/final</code></a> <a href="../automatic/fst.html#mth_-search"><code class="link">-search</code></a>;
 dLabPro&gt; res <a href="../automatic/fst.html#mth_-print"><code class="link">-print</code></a>;
 <span class="c-cmt">  . . .</span>
    Transitions
@@ -426,9 +428,142 @@ dLabPro&gt; res <a href="../automatic/fst.html#mth_-print"><code class="link">-p
 <span class="c-cmt">  . . .</span>
 <img src="../resources/tutorials/fstsearch_res_iv_tp_t.gif" border="0" alt="Decoding result"></pre>
 
-<h3>Changing the search algorithm</h3>
+        <h3>Very simple on-the-fly composition</h3>
 
-Bla Bla
+        <p>The search processor integrates a very simple method for on-the-fly composition.
+        It is not a real composition,
+          but a way to jump between different wFST units by input symbols.</p>
+
+        <p>To use it you have to load multiple units.
+        The units are divided into lowest layer units (<code>&ne;0</code>) and higher layer units (<code>=0</code>) by the flag component <code>&quot;&tilde;SUB&quot;</code> in the unit description table (<code>rn.ud</code>).
+        In the higher layer units are interpreted as unit indices of units which are inserted for that transition.
+        The decoding algorithm jumps on traversing the transition e to the unit x(e) and continues decoding from transition e not until a final state in the sub unit is reached.
+        In the lowest layer units the input symbols are treated as usual.
+        Decoding starts in unit <code>0</code>.</p>
+
+        <p>To come to our small example we have to extend it a little bit.
+        A second automaton is created by the following text file.
+        It will be used as higher layer unit.
+        The previous recognition network will be used as lower layer unit.
+        The new wFST simply repeats the input symbol <code>1</code> any number of times.
+        So the previous recognition network may be repeated.
+        For each repetition there is a weight of <code>2</code>.</p>
+
+        <pre class="code"><span class="c-cmt">Example rn2.txt</span>
+0 0  1 -1 2
+0</pre>
+
+        <p>The following code loads the new wFST <code>rn2</code> and combines it with the previous one.
+        The component &quot;&tilde;SUB&quot; is created and the first unit is marked as higher layer unit.</p>
+
+        <pre class="code">
+dLabPro&gt; <a href="../automatic/fst.html"><code class="link">fst</code></a> rn2;
+dLabPro&gt; "rn2.txt" "fsm-t" rn2 <a href="../automatic/file.html"><code class="link">stdfile</code></a> <a href="../automatic/file.html#mth_-import"><code class="link">-import</code></a>;
+dLabPro&gt; rn rn2 <a href="../automatic/fst.html#mth_-cat"><code class="link">-cat</code></a>;
+dLabPro&gt; &quot;&tilde;SUB&quot; -type int rn2.ud <a href="../automatic/data.html#mth_-addcomp"><code class="link">-addcomp</code></a>;
+dLabPro&gt; :rn2.ud[0,&quot;&tilde;SUB&quot;]=1;</pre>
+
+        <p>Now the recognition network with it's two units looks like:</p>
+
+        <pre class="code">
+dLabPro&gt; rn2 <a href="../automatic/fst.html#mth_-print"><code class="link">-print</code></a>;
+<span class="c-cmt">  . . .</span>
+   Transitions
+         :  initial -&gt; terminal   type        ~TIS      ~TOS      ~TSR
+        0: (     0) -&gt; (     0)   end               1           -1         2
+<span class="c-cmt">  . . .</span>
+   Transitions
+         :  initial -&gt; terminal   type        ~TIS      ~TOS      ~TSR
+        0: (     0) -&gt;       1    next              0            0         5
+        1: (     0) -&gt;       2    2next             1            1         5
+        2:       1  -&gt;       1    loop              0           -1         2
+        3:       2  -&gt;       2    loop              1           -1         1
+        4:       1  -&gt;       2    next              1            1         5
+        5:       1  -&gt; (     3)   end              -1            2         0
+        6:       2  -&gt; (     3)   end              -1            2         0
+<span class="c-cmt">  . . .</span>
+U0: <img src="../resources/tutorials/fstsearch_rn2_img.gif" border="0" style="vertical-align:middle;" alt="Example for recognition network #2"> U1: <img src="../resources/tutorials/fstsearch_rn_img.gif" border="0" style="vertical-align:middle;" alt="Example for recognition network"></pre>
+        
+        <p>And the unit table holds the flag component &quot;&tilde;SUB&quot;:</p>
+
+        <pre class="code">
+dLabPro&gt; rn2.ud <a href="../automatic/data.html#mth_-print"><code class="link">-print</code></a>;
+ data ud
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+           0   1
+         ... ...
+ 0 &tilde;NAM: fsm fsm
+ 1  &tilde;XS:   1   4
+ 2  &tilde;XT:   1   7
+ 3  &tilde;FS:   0   1
+ 4  &tilde;FT:   0   1
+ 5 &tilde;SUB:   1   0
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</pre>
+
+        <p>In loading the recognition network the unit index <code>-1</code> signals that all units should be loaded.
+        For decoding we will use the timevariant weight matrix twice in sequence.
+        This can easily be realized by interative decoding with two calls to <a href="../automatic/fstsearch.html#mth_-isearch"><code class="link">-isearch</code></a>.</p>
+
+        <pre class="code">
+dLabPro&gt; rn2 -1 s <a href="../automatic/fstsearch.html#mth_-load"><code class="link">-load</code></a>;
+dLabPro&gt; w s <a href="../automatic/fstsearch.html#mth_-isearch"><code class="link">-isearch</code></a>;
+dLabPro&gt; w s <a href="../automatic/fstsearch.html#opt__final"><code class="link">/final</code></a> <a href="../automatic/fstsearch.html#mth_-isearch"><code class="link">-isearch</code></a>;
+dLabPro&gt; res s <a href="../automatic/fstsearch.html#mth_-backtrack"><code class="link">-backtrack</code></a>;
+dLabPro&gt; res <a href="../automatic/fst.html#mth_-print"><code class="link">-print</code></a>;
+<span class="c-cmt">  . . .</span>
+   Transitions
+         :  initial -&gt; terminal   type        ~TIS      ~TOS      ~TSR
+        0:       0  -&gt;       1    next             -1           -1         2
+        1:       1  -&gt;       2    next              0           -1         7
+        2:       2  -&gt;       3    next              0           -1         2
+        3:       3  -&gt;       4    next              0           -1         2
+        4:       4  -&gt;       5    next              1           -1         5
+        5:       5  -&gt;       6    next              1           -1         1
+        6:       6  -&gt;       7    next             -1           -1         0
+        7:       7  -&gt;       8    next             -1           -1         2
+        8:       8  -&gt;       9    next              0           -1         5
+        9:       9  -&gt;      10    next              0           -1         2
+       10:      10  -&gt;      11    next              1           -1         5
+       11:      11  -&gt; (    12)   end              -1           -1         0
+<span class="c-cmt">  . . .</span>
+<img src="../resources/tutorials/fstsearch_res_sub_tv_tp_t_img.gif" border="0" alt="Decoding result"></pre>
+
+        <p>The decoding results shows,
+          that the best path traverses the second unit twice.
+        For the first time the first five time steps are consumed with input symbols <code>0,0,0,1,1</code>.
+        In the second traverse the last three time steps are consumed with input symbols <code>0,0,1</code>.
+        So the total path weight is <code>33</code> which consists of <code>17</code> and <code>12</code> for the first and second traverse and <code>4</code> for two repetitions.
+        This is lower that two times the path weight in the single recognition network (<code>16</code>) and the repetition weight <code>4</code>.</p>
+
+        <h3>Changing the search algorithm</h3>
+
+        <p>The search algorithm used for decoding is configured by the field <a href="../automatic/fstsearch.html#fld_algo"><code class="link">algo</code></a>.
+        Available algorithm are listed in the <a href="../automatic/fstsearch.html#fld_algo">field documentation</a>.
+        In the following sections give a closer look on the token passing (<code>&quot;tp&quot;</code>) and the A* algorithm (<code>&quot;as&quot;</code>).
+        All previous examples are based on the token passing algorithm as this is the default algorihm.
+        The small example can be decoded using the A* algorthm with the following code:</p>
+
+        <pre class="code">
+dLabPro&gt; &quot;as&quot; s -set <a href="../automatic/fstsearch.html#fld_algo"><code class="link">algo</code></a>;
+dLabPro&gt; rn 0 w res s <a href="../automatic/fstsearch.html#opt__final"><code class="link">/final</code></a> <a href="../automatic/fst.html#mth_-search"><code class="link">-search</code></a>;
+dLabPro&gt; res <a href="../automatic/fst.html#mth_-print"><code class="link">-print</code></a>;
+<span class="c-cmt">  . . .</span>
+   Transitions
+         :  initial -&gt; terminal   type        ~TIS      ~TOS      ~TSR
+        0:       0  -&gt;       1    next              0            0         5
+        1:       1  -&gt;       2    next              0           -1        16
+        2:       2  -&gt;       3    next              0           -1        -2
+        3:       3  -&gt;       4    next              1            1         0
+        4:       4  -&gt; (     5)   end              -1            2        -3
+<span class="c-cmt">  . . .</span>
+<img src="../resources/tutorials/fstsearch_res_tv_as_t.gif" border="0" alt="Decoding result"></pre>
+
+        <p>In comparison to previous results you may see,
+          that the result of the A* algorithm only matches in input and output symbols.
+        The transitions weights differ.
+        Though the optimization based heuristics for remaining timevariant and timeinvariant weight inside the A* decoder
+          some of the weights are shifted towards the initial state.
+        The total path weight is identical to the token passing decoder and so is the path itself.</p>
 
        </div>
     </div>
