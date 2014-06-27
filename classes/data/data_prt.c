@@ -394,8 +394,8 @@ INT32 CGEN_PRIVATE CData_PrintVectors_Block
   nR_ = nBlock>=0 ? CData_GetNRecsPerBlock(_this)*nBlock : 0;                   /* Get first record to print         */
   nXR = nBlock>=0 ? nR_+CData_GetNRecsPerBlock(_this) : CData_GetNRecs(_this);  /* Get number of records             */
   nXC = CData_GetNComps(_this);                                                 /* Get number of components          */
-  bPur = dlp_strlen(_this->m_lpRunit) && _this->m_lpTable->m_fsr!=0.;           /* Displaying physical record units? */
-  bPuc = dlp_strlen(_this->m_lpCunit) && _this->m_nCinc!=0.;                    /* Displaying physical comp. units?  */
+  bPur = _this->m_lpTable->m_fsr!=1. && _this->m_lpTable->m_fsr!=0.;            /* Displaying physical record units? */
+  bPuc = _this->m_nCinc!=1. && _this->m_nCinc!=0.;                              /* Displaying physical comp. units?  */
   nPps = dlp_maxprintlines()/(nXC+4);                                           /* Compute no. of pages per sceeen   */
 
   /* Print vectors */                                                           /* --------------------------------- */
@@ -508,14 +508,14 @@ INT32 CGEN_PRIVATE CData_PrintVectors_Block
  */
 INT16 CGEN_PUBLIC CData_PrintVectors(CData* _this)
 {
-  INT32 i   = 0;                                                              /* Universal loop counter            */
-  INT32 nB  = 0;                                                              /* Current block index               */
-  INT32 nL  = 0;                                                              /* Number of recently printed lines  */
-  INT32 nXL = 0;                                                              /* Total number of printed lines     */
+  INT32 i   = 0;                                                                /* Universal loop counter            */
+  INT32 nB  = 0;                                                                /* Current block index               */
+  INT32 nL  = 0;                                                                /* Number of recently printed lines  */
+  INT32 nXL = 0;                                                                /* Total number of printed lines     */
   char sBuf[L_SSTR+1];                                                          /* String buffer                     */
 
   if (CData_GetNBlocks(_this)<=1)                                               /* No blocks                         */
-    return (INT16)CData_PrintVectors_Block(_this,-1);                         /*   Print all records at once       */
+    return (INT16)CData_PrintVectors_Block(_this,-1);                           /*   Print all records at once       */
   else for (nB=0; nB<CData_GetNBlocks(_this); )                                 /* Else loop over blocks             */
   {                                                                             /* >>                                */
     nL = CData_PrintVectors_Block(_this,nB);                                    /*   Print blocks separately         */

@@ -103,6 +103,7 @@ static const opcode_table __otab[] =
   { OP_FCTRL   ,1,1,"d:od",  "Factorial"                 ,"factorial"},
   { OP_FCTRL   ,1,1,"d:od",  "Factorial"                 ,"!"        },
   { OP_GAMMA   ,1,1,"d:od",  "Gamma function"            ,"gamma"    },
+  { OP_LGAMMA  ,1,1,"d:od",  "Log. Gamma function"       ,"lgamma"   },
   { OP_STUDT   ,1,2,"d:odn", "Student's t-dens. (k-dim.)","studt"    },
   { OP_LNL     ,1,2,"d:odd", "Natural logarithm, limited","lnl"      },
   { OP_POW     ,1,2,"d:odd", "Power"                     ,"pow"      },

@@ -29,7 +29,7 @@
 #include "dlp_math.h"
 
 /**
- * Returns the Student's t-density with k degrees of freedom of x
+ * Returns Student's t-density with k degrees of freedom of x
  *
  * @param x the x value
  * @param k the degrees of freedom
@@ -41,6 +41,34 @@ FLOAT64 dlm_studt(FLOAT64 x, FLOAT64 k)
   #else
   if (k>50) return 1./sqrt(2.*F_PI)*exp(-0.5*x*x);
   return tgamma((k+1.)/2.)/sqrt(k*F_PI)/tgamma(k/2.)*pow(1.+x*x/k,-1.*(k+1.)/2.);
+  #endif
+}
+
+/**
+ * Returns the Gamma function of x.
+ *
+ * @param x the x value
+ */
+FLOAT64 dlm_gamma(FLOAT64 x)
+{
+  #ifdef __TMS
+  return 0.;
+  #else
+  return tgamma(x);
+  #endif
+}
+
+/**
+ * Returns the natural logarithm of the Gamma function of x.
+ *
+ * @param x the x value, must be positive
+ */
+FLOAT64 dlm_lgamma(FLOAT64 x)
+{
+  #ifdef __TMS
+  return 0.;
+  #else
+  return lgamma(x);
   #endif
 }
 

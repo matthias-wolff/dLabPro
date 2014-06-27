@@ -1169,7 +1169,21 @@ COMPLEX64 CGEN_IGNORE dlp_scalopC(COMPLEX64 nParam1, COMPLEX64 nParam2, INT16 nO
       y = dlp_isnan(nParam1.y) ? nParam1.y : (INT64)round(nParam1.y);
       return CMPLXY(x,y);
     }
-    default          : { DLPASSERT(FMSG("Unknown scalar operation code")); return CMPLX(0.); }
+
+    /* TODO: The following real functions process the real part of the argument(s) only. */
+    case OP_NOVERK  : { return CMPLX(dlm_n_over_k((INT32)nParam1.x,(INT32)nParam2.x)); }
+    case OP_FCTRL   : {
+      FLOAT64 x;
+      INT32   i;
+      for (i=2,x=1.; i<=(INT32)nParam1.x; i++) x*=(FLOAT64)i;
+      return CMPLX(x);
+    }
+    case OP_GAMMA   : { return CMPLX(dlm_gamma(nParam1.x)); }
+    case OP_LGAMMA  : { return CMPLX(dlm_lgamma(nParam1.x)); }
+    case OP_STUDT   : { return CMPLX(dlm_studt(nParam1.x,nParam2.x)); }
+    case OP_ERF     : { return CMPLX(erf(nParam1.x)); }
+    case OP_ERFC    : { return CMPLX(erfc(nParam1.x)); }
+    default: { DLPASSERT(FMSG("Unknown scalar operation code")); return CMPLX(0.); }
   }
 }
 
