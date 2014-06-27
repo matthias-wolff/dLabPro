@@ -88,8 +88,7 @@ if (top==self)
             <ul class="linklist">
               <li class="linklist"><a class="Linklist" href="#fst">Introduction into wFSTs</a></li>
               <li class="linklist"><a class="Linklist" href="#if">Search processor interface</a></li>
-              <li class="linklist"><a class="Linklist" href="#as">A* algorithm</a></li>
-              <li class="linklist"><a class="Linklist" href="#as">Token passing algorithm</a></li>
+              <li class="linklist"><a class="Linklist" href="#algo">Algorithm's workflow</a></li>
               <li class="linklist"><a class="Linklist" href="#further">Further Reading</a></li>
             </ul>
           </td>
@@ -212,8 +211,8 @@ dLabPro&gt; rn <a href="../automatic/fst.html#mth_-print"><code class="link">-pr
 
    Transitions
          :  initial -&gt; terminal   type        ~TIS      ~TOS      ~TSR
-        0: (     0) -&gt;       1    next              0            0         5
-        1: (     0) -&gt;       2    2next             1            1         5
+        0:       0  -&gt;       1    next              0            0         5
+        1:       0  -&gt;       2    2next             1            1         5
         2:       1  -&gt;       1    loop              0           -1         2
         3:       2  -&gt;       2    loop              1           -1         1
         4:       1  -&gt;       2    next              1            1         5
@@ -228,7 +227,7 @@ dLabPro&gt; rn <a href="../automatic/fst.html#mth_-print"><code class="link">-pr
         Final states are marked with double circles and the transitions are labeled with:
         &quot;Input symbol : Output symbol | Weight&quot;.</p>
 
-        <img src="../resources/tutorials/fstsearch_rn_img.gif" border="0" width="335" height="99" alt="Example for recognition network">
+        <img src="../resources/tutorials/fstsearch_rn_img.gif" border="0" alt="Example for recognition network">
 
         <p>For more details on wFSTs and supported operations in dLabPro see manual of class <a href="../automatic/fst.html"><code class="link">fst</code></a>.</p>
 
@@ -260,11 +259,11 @@ dLabPro&gt; rn <a href="../automatic/fst.html#mth_-print"><code class="link">-pr
         <h3>Timevariant decoding</h3>
 
         <p>Timevariant decoding is the most common decoding method in acoustic pattern recognition.
-        In addition to the recognition network (see previous section) there is a vector weights which change in every timestep.
+        In addition to the recognition network (see previous section) there is a vector weights which change in every time step.
         Usually each vector is derived from feature vector of that time step by the Gaussian mixture model (see class <a href="../automatic/gmm.html"><code class="link">gmm</code></a> and <a href="../automatic/gmm.html"><code class="link">hmm</code></a>).
         But the origin of the timevariant weights does not influence the search algorithm.</p>
 
-        <p>The timevariant weight vectors can be combined to a timevaraint weight matrix.
+        <p>The timevariant weight vectors can be combined to a timevariant weight matrix.
         For demonstration we will generate a small matrix with a vector dimension of two and four time steps or vectors:</p>
 
         <pre class="code">
@@ -415,8 +414,9 @@ dLabPro&gt; res <a href="../automatic/fst.html#mth_-print"><code class="link">-p
         <h3>Timeinvariant decoding</h3>
 
         <p>The search processor is also enabled for timeinvariant decoding.
-        <span class="TODO">[<b>TODO:</b> fix decoding]</span></p>
-        
+        Timeinvariant decoding simply finds the best path only guided by the timeinvariant weights.
+        So for running the search you should replace the timevariant weight matrix with <code>NULL</code>.
+        In the result below you see that the best path through our small recognition network is the one from state <code>0</code> over state <code>2</code> to state <code>3</code> with a total path weight of <code>5</code>.</p>
 
         <pre class="code">
 dLabPro&gt; rn 0 NULL res s <a href="../automatic/fstsearch.html#opt__final"><code class="link">/final</code></a> <a href="../automatic/fst.html#mth_-search"><code class="link">-search</code></a>;
@@ -424,11 +424,12 @@ dLabPro&gt; res <a href="../automatic/fst.html#mth_-print"><code class="link">-p
 <span class="c-cmt">  . . .</span>
    Transitions
          :  initial -&gt; terminal   type        ~TIS      ~TOS      ~TSR
-        0:       0  -&gt; (     1)   end              -1           -1         0
+        0:       0  -&gt;       1    next              0            0         5
+        1:       1  -&gt; (     2)   end              -1            2         0
 <span class="c-cmt">  . . .</span>
 <img src="../resources/tutorials/fstsearch_res_iv_tp_t.gif" border="0" alt="Decoding result"></pre>
 
-        <h3>Very simple on-the-fly composition</h3>
+        <h3>Very simple method of on-the-fly composition</h3>
 
         <p>The search processor integrates a very simple method for on-the-fly composition.
         It is not a real composition,
@@ -474,8 +475,8 @@ dLabPro&gt; rn2 <a href="../automatic/fst.html#mth_-print"><code class="link">-p
 <span class="c-cmt">  . . .</span>
    Transitions
          :  initial -&gt; terminal   type        ~TIS      ~TOS      ~TSR
-        0: (     0) -&gt;       1    next              0            0         5
-        1: (     0) -&gt;       2    2next             1            1         5
+        0:       0  -&gt;       1    next              0            0         5
+        1:       0  -&gt;       2    2next             1            1         5
         2:       1  -&gt;       1    loop              0           -1         2
         3:       2  -&gt;       2    loop              1           -1         1
         4:       1  -&gt;       2    next              1            1         5
@@ -502,7 +503,7 @@ dLabPro&gt; rn2.ud <a href="../automatic/data.html#mth_-print"><code class="link
 
         <p>In loading the recognition network the unit index <code>-1</code> signals that all units should be loaded.
         For decoding we will use the timevariant weight matrix twice in sequence.
-        This can easily be realized by interative decoding with two calls to <a href="../automatic/fstsearch.html#mth_-isearch"><code class="link">-isearch</code></a>.</p>
+        This can easily be realized by iterative decoding with two calls to <a href="../automatic/fstsearch.html#mth_-isearch"><code class="link">-isearch</code></a>.</p>
 
         <pre class="code">
 dLabPro&gt; rn2 -1 s <a href="../automatic/fstsearch.html#mth_-load"><code class="link">-load</code></a>;
@@ -539,13 +540,15 @@ dLabPro&gt; res <a href="../automatic/fst.html#mth_-print"><code class="link">-p
 
         <p>The search algorithm used for decoding is configured by the field <a href="../automatic/fstsearch.html#fld_algo"><code class="link">algo</code></a>.
         Available algorithm are listed in the <a href="../automatic/fstsearch.html#fld_algo">field documentation</a>.
-        In the following sections give a closer look on the token passing (<code>&quot;tp&quot;</code>) and the A* algorithm (<code>&quot;as&quot;</code>).
-        All previous examples are based on the token passing algorithm as this is the default algorihm.
-        The small example can be decoded using the A* algorthm with the following code:</p>
+        In the following section is a closer look on the token passing (<code>&quot;tp&quot;</code>) and the A* algorithm (<code>&quot;as&quot;</code>).
+        All previous examples are based on the token passing algorithm as this is the default algorithm.
+        The small example can be decoded using the A* algorithm with the following code:</p>
 
         <pre class="code">
+dLabPro&gt; rn 0 s <a href="../automatic/fstsearch.html#mth_-load"><code class="link">-load</code></a>;
 dLabPro&gt; &quot;as&quot; s -set <a href="../automatic/fstsearch.html#fld_algo"><code class="link">algo</code></a>;
-dLabPro&gt; rn 0 w res s <a href="../automatic/fstsearch.html#opt__final"><code class="link">/final</code></a> <a href="../automatic/fst.html#mth_-search"><code class="link">-search</code></a>;
+dLabPro&gt; w s <a href="../automatic/fstsearch.html#opt__final"><code class="link">/final</code></a> <a href="../automatic/fstsearch.html#mth_-isearch"><code class="link">-isearch</code></a>;
+dLabPro&gt; res s <a href="../automatic/fstsearch.html#mth_-backtrack"><code class="link">-backtrack</code></a>;
 dLabPro&gt; res <a href="../automatic/fst.html#mth_-print"><code class="link">-print</code></a>;
 <span class="c-cmt">  . . .</span>
    Transitions
@@ -569,15 +572,15 @@ dLabPro&gt; res <a href="../automatic/fst.html#mth_-print"><code class="link">-p
     </div>
 
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-    <a name="tp"></a>
-    <div id="clp_tp">
+    <a name="algo"></a>
+    <div id="clp_algo">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
           <td nowrap width="25%" class="navbar">
-            Token passing algorithm
+            Algorithm's workflow
           </td>
           <td nowrap width="75%" class="navbar" style="text-align:right;">
-            <a class="navbar" href="javascript:__PrintSection('clp_tp','Other Matrix Operations','..');"
+            <a class="navbar" href="javascript:__PrintSection('clp_algo','Other Matrix Operations','..');"
             ><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle;" alt="Print"></a> 
             <a class="navbar" href="../home.html">Home</a>
             <a class="navbar" href="index.html">Tutorials</a>
@@ -586,32 +589,19 @@ dLabPro&gt; res <a href="../automatic/fst.html#mth_-print"><code class="link">-p
         </tr>
       </table>
       <div class="mframe2">
-        <span class="TODO">[<b>TODO:</b> ...]</span>
-        <img src="../resources/tutorials/fstsearch_tp.gif" border="0" width="584" height="499" alt="Token passing algorithm process">
-      </div>
-    </div>
 
-    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-    <a name="as"></a>
-    <div id="clp_as">
-      <table width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td nowrap width="25%" class="navbar">
-            A* algorithm
-          </td>
-          <td nowrap width="75%" class="navbar" style="text-align:right;">
-            <a class="navbar" href="javascript:__PrintSection('clp_as','Other Matrix Operations','..');"
-            ><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle;" alt="Print"></a> 
-            <a class="navbar" href="../home.html">Home</a>
-            <a class="navbar" href="index.html">Tutorials</a>
-            <a class="navbar" href="#top">Top</a>
-          </td>
-        </tr>
-      </table>
-      <div class="mframe2">
-        <span class="TODO">[<b>TODO:</b> ...]</span>
-        <img src="../resources/tutorials/fstsearch_as.gif" border="0" width="533" height="466" alt="A* algorithm process">
-        <img src="../resources/tutorials/fstsearch_as_queue.gif" border="0" width="309" height="309" alt="A* algorithm queue process">
+        <h3>Token passing algorithm</h3>
+
+        <p><span class="TODO">[<b>TODO:</b> ...]</span></p>
+
+        <img src="../resources/tutorials/fstsearch_tp.gif" border="0" alt="Token passing algorithm process">
+
+        <h3>A* algorithm</h3>
+
+        <p><span class="TODO">[<b>TODO:</b> ...]</span></p>
+
+        <img src="../resources/tutorials/fstsearch_as.gif" border="0" alt="A* algorithm process">
+        <img src="../resources/tutorials/fstsearch_as_queue.gif" border="0" alt="A* algorithm queue process">
       </div>
     </div>
 
