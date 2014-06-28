@@ -60,8 +60,19 @@ void usage(const char *lpsErr,...){
 }
 
 void addfile(char *lpsFN,const char *lpsLab){
+  dlp_strtrimright(lpsFN);
   char *lpsE=lpsFN+strlen(lpsFN);
-  if(strcmp(lpsE-4,".wav")) usage("File is not of type wav or flst: \"%s\"",lpsFN);
+  if(lpsE-4<lpsFN || strcmp(lpsE-4,".wav")) {
+    char lpsFN2[STR_LEN];
+    FILE *fd;
+    strcpy(lpsFN2,lpsFN); strcat(lpsFN2,".wav");
+    if(!(fd=fopen(lpsFN2,"r")))
+      usage("File is not of type wav or flst: \"%s\"",lpsFN);
+    else {
+      strcpy(lpsFN,lpsFN2);
+      fclose(fd);
+    }
+  }
   if(rCfg.rFlst.nNum==rCfg.rFlst.nSize)
     rCfg.rFlst.lpF=dlp_realloc(rCfg.rFlst.lpF,rCfg.rFlst.nSize+=128,sizeof(struct recofile));
   snprintf(rCfg.rFlst.lpF[rCfg.rFlst.nNum].lpsFName,STR_LEN,lpsFN);
