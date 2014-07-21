@@ -109,6 +109,8 @@ INT16 dlm_distribution (FLOAT64*,  FLOAT64*,  FLOAT64*,  INT32,INT32,INT32);    
 
 /* Functions - dlm_stat.c */                                                    /* --------------------------------- */
 FLOAT64       dlm_studt(FLOAT64 x, FLOAT64 k);                                  /* Student-t density                 */
+FLOAT64       dlm_gamma(FLOAT64 x);                                             /* Gamma function                    */
+FLOAT64       dlm_lgamma(FLOAT64 x);                                            /* Log. gamma function               */
 
 /* Functions - dlm_xft.c */                                                     /* --------------------------------- */
 INT16 dlm_fft_mag(FLOAT64*, FLOAT64*, INT32);                                   /* Magnitude spectrum                */

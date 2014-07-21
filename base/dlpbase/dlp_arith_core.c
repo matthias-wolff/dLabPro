@@ -36,6 +36,7 @@
   #error ARITH_FTYPE_CODE must be T_FLOAT or T_DOUBLE
 #endif
 
+/* TODO: Remove this function; it is only used by CVmap_MapVectorF()! */
 #if ARITH_FTYPE_CODE == T_FLOAT
 ARITH_FTYPE dlp_scalopF(ARITH_FTYPE nParam1, ARITH_FTYPE nParam2, INT16 nOpcode)
 #else
@@ -96,12 +97,9 @@ ARITH_FTYPE dlp_scalop(ARITH_FTYPE nParam1, ARITH_FTYPE nParam2, INT16 nOpcode)
 #endif /* ARITH_FTYPE_CODE */
   case OP_SET      : return nParam1;
   case OP_FCTRL    : for (i=2,x=1.; i<=(INT32)nParam1; i++) x*=(ARITH_FTYPE)i; return x;
-  #ifdef __TMS
-  case OP_GAMMA    : return 0.;
-  #else
-  case OP_GAMMA    : return tgamma(nParam1);
-  #endif
   case OP_STUDT    : return dlm_studt(nParam1,nParam2);
+  case OP_GAMMA    : return dlm_gamma(nParam1);
+  case OP_LGAMMA   : return dlm_lgamma(nParam1);
   case OP_ADD      : return nParam1+nParam2;
   case OP_LSADD    :
 #ifdef __OPTIMIZE_LSADD

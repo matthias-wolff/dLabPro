@@ -374,9 +374,7 @@ typedef struct { FLOAT64 x; FLOAT64 y; } COMPLEX64;
 #define L_MANUAL         2048                                                   /* Size of manual's entries          */
 #define L_NAMES            48                                                   /* Names' length, <=L_SSTR!          */
 #define L_PATH            260                                                   /* Maximal length of paths           */
-/* FIXME: Do not modify L_STACK until removing
-          CItp of dLabPro 2.4! */
-#define L_STACK            10                                                   /* Length of stacks                  */
+#define L_STACK           255                                                   /* Length of stacks                  */
 
 /* Defines - Platform dependent characters */
 #ifdef __MSOS
@@ -632,12 +630,13 @@ typedef struct { FLOAT64 x; FLOAT64 y; } COMPLEX64;
 #define OP_SET           1130                                                   /* Assignment                        */
 #define OP_FCTRL         1131                                                   /* Factorial                         */
 #define OP_GAMMA         1132                                                   /* Gamma function                    */
-#define OP_STUDT         1133                                                   /* Student's t-density (k samples)   */
-#define OP_ROUND         1134                                                   /* Round                             */
-#define OP_ERF           1135                                                   /* Error function                    */
-#define OP_ERFC          1136                                                   /* Complementary error function      */
-#define OP_SINC          1137                                                   /* Sinc function                     */
-#define OP_ANGLE         1138                                                   /* Angle of complex value            */
+#define OP_LGAMMA        1133                                                   /* Log. Gamma function               */
+#define OP_STUDT         1134                                                   /* Student's t-density (k samples)   */
+#define OP_ROUND         1135                                                   /* Round                             */
+#define OP_ERF           1136                                                   /* Error function                    */
+#define OP_ERFC          1137                                                   /* Complementary error function      */
+#define OP_SINC          1138                                                   /* Sinc function                     */
+#define OP_ANGLE         1139                                                   /* Angle of complex value            */
 /* - Dyadic scalar math operations */                                           /* - - - - - - - - - - - - - - - - - */
 #define OP_ADD           1200                                                   /* Addition                          */
 #define OP_LSADD         1201                                                   /* Log semiring addition             */
