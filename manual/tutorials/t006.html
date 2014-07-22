@@ -609,6 +609,7 @@ dLabPro&gt; res <a href="../automatic/fst.html#mth_-print"><code class="link">-p
 
         <p>If a token traverses the state it is duplicated for every outgoing transition,
           so there is a new token at every following state and the old one is discarded.
+        The new tokens are updated by the timevariant and timeinvariant transition weight.
         This is called state expansion.
         A queue is used to hold all active tokens ready for expansion.</p>
 
@@ -621,9 +622,10 @@ dLabPro&gt; res <a href="../automatic/fst.html#mth_-print"><code class="link">-p
           a new queue is initialized for the following time step.
         The search terminates if the queue of the last time step is empty.</p>
 
-        <p>The figure below shows the process of token passing decoding in the small example of the previous section.
+        <p>The figure below shows the workflow of token passing decoding in the small example of the previous section.
         The recognition network is arranged vertically and the timevariant weight matrix horizontal also displayed as automaton.
         Output symbols are skipped for clarity.
+        The numbers in states represent the best path weight from the initial state.
         The time step of the current queue is displayed in green and next time step in blue.
         Red states and transitions are currently expanding ones.</p>
 
@@ -631,9 +633,62 @@ dLabPro&gt; res <a href="../automatic/fst.html#mth_-print"><code class="link">-p
 
         <h3>A* algorithm</h3>
 
-        <p><span class="TODO">[<b>TODO:</b> ...]</span></p>
+        <p>The A* algorithm was introduced by Hart, Nilsson and Raphael [2].
+        Later it was adapted to language model decoding by D. B. Paul [3].
+        For decoding in speech and acoustic pattern recognition with weighted finite state transducers it was adjusted in [4].
+        The last one is the basis for the implementation in dLabPro's search processor as well as the short introduction in the next lines.</p>
+        
+        <p><small>[2] P. E. Hart, N. J. Nilsson, and B. Raphael:
+          &quot;A formal basis for the heuristic determination of minimum cost paths&quot;,
+          IEEE Transactions on Systems Science and Cybernetics, vol. 4, no. 2, pp. 100 107, Jul. 1968.<br>
+        [3] D. B. Paul: &quot;An efficient a* stack decoder algorithm for continuous speech recognition with a stochastic language model&quot;,
+          in Proceedings of IEEE International Conference on Acoustics, Speech, and Signal Processing 1992 (ICASSP 92), vol. 1, San Francisco, California, USA, Mar. 1992, pp. 2528.<br>
+        [4] F. Duckhorn: &quot;Suchraumoptimierung mit gewichteten endlichen Automaten in der akustischen Mustererkennung&quot;,
+          Technische Universität Dresden, Dissertation, Mär 2014, TUDpress, ISBN 9783944331645.</small></p>
+
+        <p>The implementation of the A* algorithm is also based on the token passing principle.
+        In contrast to the token passing algorithm it is not time synchronous.
+        Meaning states may be processed in asynchronous order.
+        The order of the processed states is guided by the estimated total path weight.
+        The best expected active state should be expanded at every time.</p>
+
+        <p>According to the classical A* algorithm
+        the estimated total path weight is calculated by the past weight form an initial to the current state as well as
+        an estimation of the remaining path weight to any final state.
+        For the estimation a heuristic is used.
+        In [4] is explained,
+          that the optimal timevariant heuristic can be precalculated by changing the timevariant weights,
+          just like the optimal timeinvariant heuristic in timeinvariant weights.
+        Therefore in the implementation it is only necessary to consider the past path weight.</p>
+
+        <p>The figure below shows the workflow of the A* decoding algorithm in the small example of the previous section.
+        Both heuristics (timevariant and timeinvariant) have be integrated in the weights while designing the example.
+        So no remaining weights are considered.
+        The algorithm holds a queue of active states (green).
+        At every step the state with the best past weight is expanded (red).
+        The algorithm terminates when a final states is to be expanded.</p>
 
         <img src="../resources/tutorials/fstsearch_as.gif" border="0" alt="A* algorithm process">
+
+        <p>For A* decoding the best active state in the queue should be detect quickly.
+        This requires a good queue design,
+          because it is one crucial point in the A* algorithm.
+          In dLabPro a binary heap was chosen for realization.
+          The worst time complexity for insert and remove is only O(log n).
+          The average time complexity for insert is even O(n).
+          The optimal active state is always on top of the tree.
+          Every child node has a worse weight than it's parent,
+            which is the heap condition.
+          Every node has two children at maximum.</p>
+
+        <p>The figure below shows the content of the queue tree while decoding the small example.
+        The nodes are marked with &quot;time/state/weight&quot;.
+        New active states are always inserted in the first free leave (green).
+        If the heap condition does not hold a rearranging by swapping nodes is necessary (blue).
+        On expanding the best active state the topmost node is removed (red).
+        It is replaced with the last leave node followed by a rearranging.
+        Through this concept the queue will never fragment.</p>
+
         <img src="../resources/tutorials/fstsearch_as_queue.gif" border="0" alt="A* algorithm queue process">
       </div>
     </div>
