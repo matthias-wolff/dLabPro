@@ -592,7 +592,40 @@ dLabPro&gt; res <a href="../automatic/fst.html#mth_-print"><code class="link">-p
 
         <h3>Token passing algorithm</h3>
 
-        <p><span class="TODO">[<b>TODO:</b> ...]</span></p>
+        <p>The token passing principle was introduced by Young, Russell and Thornton [1].
+        Currently the most used decoding algorithms in automatic speech recognition are token passing ones.
+        To be more precise the token passing principle is adapted to a time synchronous Viterbi beam search.
+        This section gives a short and informal introduction into the token passing decoder implementation in dLabPro's search processor.</p>
+
+        <p><small>[1] S. J. Young, N. H. Russell and J. H. S. Thornton:
+        &quot;Token Passing: a Simple Conceptual Model for Connected Speech Recognition Systems&quot;,
+        Cambridge University Engineering Department, Tech. Rep., Jul. 1989.</small></p>
+
+        <p>The idea of the token passing principle is to have tokens traversing the search space.
+        These tokens carry all information needed for decoding and backtracking.
+        Mainly the current state and time index,
+          the path weight from initial to current state and
+          generated output symbol sequence.</p>
+
+        <p>If a token traverses the state it is duplicated for every outgoing transition,
+          so there is a new token at every following state and the old one is discarded.
+        This is called state expansion.
+        A queue is used to hold all active tokens ready for expansion.</p>
+
+        <p>In time synchronous decoding the tokens are processed time synchronously.
+        Meaning all tokens of the current time step are expanded before the next time step.
+        Therefore two queues are used,
+          for the current time step and for the next one.
+        If the first queue is empty,
+          the second one becomes the first one and
+          a new queue is initialized for the following time step.
+        The search terminates if the queue of the last time step is empty.</p>
+
+        <p>The figure below shows the process of token passing decoding in the small example of the previous section.
+        The recognition network is arranged vertically and the timevariant weight matrix horizontal also displayed as automaton.
+        Output symbols are skipped for clarity.
+        The time step of the current queue is displayed in green and next time step in blue.
+        Red states and transitions are currently expanding ones.</p>
 
         <img src="../resources/tutorials/fstsearch_tp.gif" border="0" alt="Token passing algorithm process">
 
