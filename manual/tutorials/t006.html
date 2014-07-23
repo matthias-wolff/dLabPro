@@ -153,6 +153,12 @@ The path with the best weight from any of the initial states to the state z is d
 It represents the recognition result with the best matching to the observed feature vector sequence.
 The task of the search algorithm is to find the best path.</p>
 
+<p>The weight semiring may be chosen between different options.
+It influences the values range for weights as well as the operations for combining weights.
+For this tutorial we consider only the tropical semiring.
+The operation to combine weights along a path is the summation and
+  the best weight is the lowest one.</p>
+
 <p>To get a bit more familiar with wFSTs we will introduce a small example automaton.
 It will be used through the whole tutorial for demonstration of the search processor.
 Below you see the example in <a href="http://www.openfst.org/twiki/bin/view/FST/WebHome">openfst</a> text file representation.
@@ -259,7 +265,7 @@ dLabPro&gt; rn <a href="../automatic/fst.html#mth_-print"><code class="link">-pr
         <h3>Timevariant decoding</h3>
 
         <p>Timevariant decoding is the most common decoding method in acoustic pattern recognition.
-        In addition to the recognition network (see previous section) there is a vector weights which change in every time step.
+        In addition to the recognition network (see previous section) there is a vector of weights which change in every time step.
         Usually each vector is derived from feature vector of that time step by the Gaussian mixture model (see class <a href="../automatic/gmm.html"><code class="link">gmm</code></a> and <a href="../automatic/gmm.html"><code class="link">hmm</code></a>).
         But the origin of the timevariant weights does not influence the search algorithm.</p>
 
@@ -277,7 +283,7 @@ dLabPro&gt; {
 
         <p>The timevariant weights are connected to the recognition network by the input symbols of the network.
         In traversing a path for each transition the total transition weight consists of
-        the timeinvariant weight (w(e)) in the automaton and the timevariant weight of the current time step and the vector element
+        the timeinvariant weight (w(e)) in the automaton as well as the timevariant weight of the current time step and the vector element
         indexed by the input symbol of the transition (w(k,x(e)).
         Transitions with empty input symbol (x(e)=-1) have no timevariant weight.</p>
 
@@ -306,7 +312,7 @@ dLabPro&gt; res <a href="../automatic/fst.html#mth_-print"><code class="link">-p
 <img src="../resources/tutorials/fstsearch_res_tv_tp_os.gif" border="0" alt="Decoding result"></pre>
 
         <p>The result automaton is a chain of the output symbols of the best path.
-        The transition weights are combined total transition weights.
+        The transition weights are combined to total transition weights.
         To get the whole path (every transition used in the recognition network)
         we have to change the backtracking mode <a href="../automatic/fstsearch.html#fld_bt"><code class="link">bt</code></a> before decoding:</p>
 
@@ -345,7 +351,7 @@ dLabPro&gt; rn 0 w res s <a href="../automatic/fst.html#mth_-search"><code class
 
         <p>Sometimes it is useful to perform the search while the signal is collected.
         So the computing capacity is used more regular and it is possible to present interim results.
-        This is also possible with the search processor in dLabPro.</p>
+        This is also available in the search processor in dLabPro.</p>
 
         <p>You simply need to omit the <a href="../automatic/fstsearch.html#opt__final"><code class="link">/final</code></a> option at the call to <a href="../automatic/fstsearch.html#mth_-isearch"><code class="link">-isearch</code></a>.
         Only the last call should be made with the <a href="../automatic/fstsearch.html#opt__final"><code class="link">/final</code></a> option.
@@ -356,8 +362,8 @@ dLabPro&gt; rn 0 w res s <a href="../automatic/fst.html#mth_-search"><code class
         In the third step the third and fourth timevariant weight vector are passed together
           and in the last step the search is finished without timevariant weights (<code>NULL</code>).
         From the interim results you see,
-          that after the first decoding step another path is the best one
-          before there algorithm switches to the final best one in the second decoding step.</p>
+          that after the first decoding step a path is backtracked which mismatches the final best one.
+        In the second decoding step the algorithm switches to the final best one.</p>
 
         <pre class="code">
 dLabPro&gt; rn 0 s <a href="../automatic/fstsearch.html#mth_-load"><code class="link">-load</code></a>;
@@ -436,16 +442,16 @@ dLabPro&gt; res <a href="../automatic/fst.html#mth_-print"><code class="link">-p
           but a way to jump between different wFST units by input symbols.</p>
 
         <p>To use it you have to load multiple units.
-        The units are divided into lowest layer units (<code>&ne;0</code>) and higher layer units (<code>=0</code>) by the flag component <code>&quot;&tilde;SUB&quot;</code> in the unit description table (<code>rn.ud</code>).
-        In the higher layer units are interpreted as unit indices of units which are inserted for that transition.
+        The units are divided into lowest layer units (<code>=0</code>) and higher layer units (<code>&ne;0</code>) by the flag component <code>&quot;&tilde;SUB&quot;</code> in the unit description table (<code>rn.ud</code>).
+        In the higher layer units input symbols are interpreted as unit indices of units which are inserted for that transition.
         The decoding algorithm jumps on traversing the transition e to the unit x(e) and continues decoding from transition e not until a final state in the sub unit is reached.
-        In the lowest layer units the input symbols are treated as usual.
+        In the lowest layer units input symbols are treated as usual.
         Decoding starts in unit <code>0</code>.</p>
 
         <p>To come to our small example we have to extend it a little bit.
         A second automaton is created by the following text file.
-        It will be used as higher layer unit.
-        The previous recognition network will be used as lower layer unit.
+        It will be used as sole higher layer unit.
+        The previous recognition network will be used as sole lower layer unit.
         The new wFST simply repeats the input symbol <code>1</code> any number of times.
         So the previous recognition network may be repeated.
         For each repetition there is a weight of <code>2</code>.</p>
@@ -607,7 +613,7 @@ dLabPro&gt; res <a href="../automatic/fst.html#mth_-print"><code class="link">-p
           the path weight from initial to current state and
           generated output symbol sequence.</p>
 
-        <p>If a token traverses the state it is duplicated for every outgoing transition,
+        <p>If a token traverses a state it is duplicated for every outgoing transition,
           so there is a new token at every following state and the old one is discarded.
         The new tokens are updated by the timevariant and timeinvariant transition weight.
         This is called state expansion.
@@ -662,11 +668,11 @@ dLabPro&gt; res <a href="../automatic/fst.html#mth_-print"><code class="link">-p
         Therefore in the implementation it is only necessary to consider the past path weight.</p>
 
         <p>The figure below shows the workflow of the A* decoding algorithm in the small example of the previous section.
-        Both heuristics (timevariant and timeinvariant) have be integrated in the weights while designing the example.
+        Both heuristics (timevariant and timeinvariant) have been integrated in the weights while designing the example.
         So no remaining weights are considered.
         The algorithm holds a queue of active states (green).
         At every step the state with the best past weight is expanded (red).
-        The algorithm terminates when a final states is to be expanded.</p>
+        The algorithm terminates when a final state is to be expanded.</p>
 
         <img src="../resources/tutorials/fstsearch_as.gif" border="0" alt="A* algorithm process">
 
@@ -675,7 +681,7 @@ dLabPro&gt; res <a href="../automatic/fst.html#mth_-print"><code class="link">-p
           because it is one crucial point in the A* algorithm.
           In dLabPro a binary heap was chosen for realization.
           The worst time complexity for insert and remove is only O(log n).
-          The average time complexity for insert is even O(n).
+          The average time complexity for insert is even O(1).
           The optimal active state is always on top of the tree.
           Every child node has a worse weight than it's parent,
             which is the heap condition.
@@ -685,7 +691,7 @@ dLabPro&gt; res <a href="../automatic/fst.html#mth_-print"><code class="link">-p
         The nodes are marked with &quot;time/state/weight&quot;.
         New active states are always inserted in the first free leave (green).
         If the heap condition does not hold a rearranging by swapping nodes is necessary (blue).
-        On expanding the best active state the topmost node is removed (red).
+        On expanding the best active state (the topmost node) is removed (red).
         It is replaced with the last leave node followed by a rearranging.
         Through this concept the queue will never fragment.</p>
 
