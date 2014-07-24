@@ -219,7 +219,7 @@ INT16 CGEN_IGNORE dlm_fba_doframing(FLOAT64 *lpSignal, INT32 nXSamples, INT64 *l
   /* apply preemphasis */
   if (lpParam->nPreem != 0.0) dlm_fba_preemphasis(lpSignal, nXSamples, lpParam->nPreem);
 
-  srand(0);
+  dlp_rand_fix(TRUE);
 
   for (nFrame = 0; lpPitch ? bLastFrame == FALSE : nFrame < nXFrames; nFrame++) {
     /* Last frame? */
@@ -269,6 +269,8 @@ INT16 CGEN_IGNORE dlm_fba_doframing(FLOAT64 *lpSignal, INT32 nXSamples, INT64 *l
 
     nOffset += nCRate;
   }
+
+  dlp_rand_fix(FALSE);
 
   return O_K;
 }

@@ -578,7 +578,6 @@ INT16 CGmm_Noise(CGmm* _this, INT64 nDim, INT64 nRecs, data* idDest)
     INT32 i = 0;
     INT32 j = 0;
     CData_Array(idDest,T_DOUBLE,nDim,nRecs);
-    srand(time(NULL));
     for (i=0; i<nDim; i++)
       for (j=0; j<nRecs; j++)
         if(_this->m_bRandGaussPolar == TRUE)

@@ -1287,6 +1287,7 @@ INT32         dlp_system(char* lpsCommand);
 const char*   dlp_get_version_info();
 void          dlp_set_retval(INT32 nVal);
 INT32         dlp_get_retval();
+void          dlp_rand_fix(BOOL bFix);
 UINT64        dlp_rand();
 FLOAT64       dlp_frand();
 void          dlp_sleep(INT32 nMilliSec);

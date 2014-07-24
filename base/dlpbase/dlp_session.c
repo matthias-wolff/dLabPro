@@ -332,11 +332,31 @@ INT64 dlp_rand()
   return rand();
 }*/
 
-static BOOL dlp_rand_init = FALSE;
+/* dlp_rand_init
+ * 0: initialize with new random seed
+ * 1: initialize from last random seed
+ * 2: initialize with fixed seed
+ * 3: is initialized
+ */
+static INT8 dlp_rand_init = 0;
 
 static UINT64 dlp_rand_seed[16];
 
 static INT32 dlp_rand_p;
+
+/**
+ * If this function is called with bFix=TRUE,
+ * the dlp_rand() will be switched to reproducable
+ * values using a fixed seed.
+ *
+ * !!After usage you have to call this function
+ * with bFix=FALSE to enable real random for other
+ * users!!
+ */
+void dlp_rand_fix(BOOL bFix){
+  if(bFix) dlp_rand_init=2;
+  else     dlp_rand_init=1;
+}
 
 /**
  * Generates an equally distributed 64 bit random unsigned integer using the
@@ -348,16 +368,19 @@ static INT32 dlp_rand_p;
  */
 UINT64 dlp_rand()
 {
-  if (!dlp_rand_init)
+  if (dlp_rand_init<3)
   {
-    /* TODO: better seed? */
     int i;
-    srand((int)time(NULL)^(int)dlp_getpid());
+    switch(dlp_rand_init){
+    case 1: srand((int)dlp_rand_seed[0]); break;
+    case 2: srand(0); break;
+    default: srand((int)time(NULL)^(int)dlp_getpid()); break; /* TODO: better seed? */
+    }
     for (i=0; i<16; i++)
       dlp_rand_seed[i]
         = ((UINT64)rand())<<48 | ((UINT64)rand())<<32 | ((UINT64)rand())<<16
         | ((UINT64)rand());
-    dlp_rand_init = TRUE;
+    dlp_rand_init = 3;
   }
 
   UINT64 s0 = dlp_rand_seed[dlp_rand_p];

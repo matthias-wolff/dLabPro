@@ -172,7 +172,6 @@ INT16 CVar_Reset(CDlpObject* __this, BOOL bResetMembers)
 	{
 	/*{{CGEN_RESETCODE */
   RESET;
-  srand(time(NULL));
 	/*}}CGEN_RESETCODE */
 	}
 
