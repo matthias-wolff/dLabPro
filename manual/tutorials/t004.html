@@ -74,7 +74,9 @@ if (top==self)
           <td width="50%">
             <h3 style="margin-top:2pt; margin-bottom:2pt">Related Topics</h3>
             <ul class="linklist">
-              <li class="linklist"><span class="TODO">[<b>TODO:</b> Links to other pages]</span></li>
+              <li class="linklist"><a class="Linklist" href="t001.html">Tutorial 1 - dLabPro Basics</a></li>
+              <li class="linklist"><a class="Linklist" href="t002.html">Tutorial 2 - Variables and Data Containers</a></li>
+              <li class="linklist"><a class="Linklist" href="t003.html">Tutorial 3 - Writing Scripts</a></li>
             </ul>
           </td>
         </tr>
@@ -103,7 +105,66 @@ if (top==self)
         </tr>
       </table>
       <div class="mframe2">
-        <span class="TODO">[<b>TODO:</b> ...]</span>
+        <p>dLabPro provides a proprietary file format in/from which any instance
+        can be serialized (method <a
+				href="../automatic/function.html#mth_-save"><code
+				class="link">-save</code></a>) / deserialized (method <a
+				href="../automatic/function.html#mth_-restore"><code
+				class="link">-restore</code></a>). Alternatively, <a
+				href="../automatic/function.html#mth_-save"><code
+				class="link">-save</code></a> and <a
+				href="../automatic/function.html#mth_-restore"><code
+				class="link">-restore</code></a> may be preceeded by the <a
+				href="../automatic/function.html#opt__xml"><code
+				class="link">/xml</code></a>-option to write/read an XML file.
+			</p>
+			<p>Let's do a little example:</p>
+			<pre class="code">
+dLabPro&gt; <a href="../automatic/data.html"><code class="link">data</code></a> x;                      <span class="c-cmt"># Create a data instance</span>
+dLabPro&gt; <a href="../automatic/function.html#mth_-type"><code class="link">-type</code></a> short 5 x <a href="../automatic/data.html#mth_-addncomps"><code class="link">-addncomps;</code></a>  <span class="c-cmt"># Add 5 components ...</span>
+dLabPro&gt; 5 x <a href="../automatic/data.html#mth_-allocate"><code class="link">-allocate</code></a>;               <span class="c-cmt"># ... and 5 records</span>
+dLabPro&gt; 0 1 x <a href="../automatic/data.html#mth_-fill"><code class="link">-fill</code></a>;                 <span class="c-cmt"># Fill in some numbers</span>
+dLabPro&gt; x <a href="../automatic/function.html#mth_-print"><code class="link">-print</code></a>;                    <span class="c-cmt"># Print</span>
+
+ data x
+------------------------------------------------------------------------------------------------------------------------
+     0 1 2 3 4
+     . . . . .
+ 0 : 0 1 2 3 4
+ 1 : 0 1 2 3 4
+ 2 : 0 1 2 3 4
+ 3 : 0 1 2 3 4
+ 4 : 0 1 2 3 4
+------------------------------------------------------------------------------------------------------------------------
+dLabPro&gt;_
+</pre>
+			<p>Now we will save this instance as Dnorm3 and XML file:</p>
+			<pre class="code">
+dLabPro&gt; "test.dn3" x <a href="../automatic/function.html#mth_-save"><code class="link">-save</code></a>;
+dLabPro&gt; "test.xml" x <a href="../automatic/function.html#opt__xml"><code class="link">/xml</code></a> <a href="../automatic/function.html#mth_-save"><code class="link">-save</code></a>;
+</pre>
+			<p>The current directory can be displayed with the shell command
+        <code>ls</code> (linux/unix). You can call shell commands using the <a
+        href="../automatic/function.html#mth_-system"><code
+        class="link">-system</code></a> method.</p>
+			<pre class="code">
+dLabPro&gt; "ls" <a href="../automatic/function.html#mth_-system"><code class="link">-system</code></a></span>;
+test.dn3  test.xml
+dLabPro&gt;_
+</pre>
+			<p>Now we load these files into two new instances:</p>
+			<pre class="code">
+dLabPro&gt; <a href="../automatic/data.html"><code class="link">data</code></a> y;                      <span class="c-cmt"># Create another instance</span>
+dLabPro&gt; "test.dn3" y <a href="../automatic/function.html#mth_-restore"><code class="link">-restore</code></a>;       <span class="c-cmt"># y is now a copy of x</span>
+dLabPro&gt; <a href="../automatic/data.html"><code class="link">data</code></a> z;                      <span class="c-cmt"># Create yet another instance</span>
+dLabPro&gt; "test.xml" z <a href="../automatic/function.html#opt__xml"><code class="link">/xml</code></a> <a href="../automatic/function.html#mth_-restore"><code class="link">-restore</code></a>;  <span class="c-cmt"># z is now a copy of x, too</span>
+dLabPro&gt;_
+</pre>
+			<p>
+				Check the content of <code>y</code> and <code>z</code> with the <a
+				href="../automatic/data.html#mth_-print"><code
+				class="link">-print</code></a> method.
+			</p>
       </div>
     </div>
 
@@ -125,7 +186,103 @@ if (top==self)
         </tr>
       </table>
       <div class="mframe2">
-        <span class="TODO">[<b>TODO:</b> ...]</span>
+        <p>
+				There are also a number of other file formats supported. Here is how you
+				can get a list:
+			</p>
+			<pre class="code">
+dLabPro.x&gt; stdfile <a href="../automatic/file.html#mth_-list"><code class="link">-list</code></a>;
+--------------------------------------------------------------------------------
+ Name       Class       Mode    Description
+--------------------------------------------------------------------------------
+ ascii      data        Import  White space delimited ASCII
+ ascii      data        Export  White space delimited ASCII
+ csv        data        Import  Comma separated values file
+ csv_de     data        Import  Semicolon sep. values file
+ csv        data        Export  Comma separated values file
+ csv_de     data        Export  Semicolon sep. values file
+ wav        data        Import  Microsoft WAV audio
+ wav        data        Export  Microsoft WAV audio
+ aiff       data        Import  Audio Interchange File Format
+ aiff       data        Export  Audio Interchange File Format
+ au         data        Import  SUN AU audio
+ au         data        Export  SUN AU audio
+ phd        data        Import  PhonDat
+ vm2_nist   data        Import  Verbmobil2 signal (NIST)
+ esps_lab   data        Import  ESPS label
+ esps_lab   data        Export  ESPS label
+ pm         data        Import  Period marker
+ pm         data        Export  Period marker
+ pm.txt     data        Import  Period marker (wavesurfer)
+ pm.txt     data        Export  Period marker (wavesurfer)
+ raw        data        Import  RAW (binary)
+ raw        data        Export  RAW (binary)
+ IntRas     data        Import  Fraunhofer (IZFP) IntRas
+ FIRS04A    data        Import  Fraunhofer (IZFP) FIRS04A
+ into       data        Import  Into
+ into       data        Export  Into
+ mid        data        Import  Midi Notes
+ mid        data        Export  Midi Notes
+ dot        fst         Export  AT&T DOT for GraphViz (ASCII)
+ svg        fst         Export  Scalable vector graphic
+ png        fst         Export  Portable network graphic
+ ps         fst         Export  Postscript (EPSF)       
+ itp        fst         Export  dLabPro script
+ fsm-a      fst         Export  AT&T FSM Toolkit (ASCII)
+ fsm-a      fst         Import  AT&T FSM Toolkit (ASCII)
+ fsm-t      fst         Export  AT&T FSM Toolkit (ASCII)
+ fsm-t      fst         Import  AT&T FSM Toolkit (ASCII)
+ htk        structure   Import  HTK-Lattice (ASCII)
+ dot        structure   Export  AT&T DOT for GraphViz (ASCII)
+ svg        structure   Export  Scalable vector graphic
+ png        structure   Export  Portable network graphic
+ ps         structure   Export  Postscript (EPSF)       
+ itp        structure   Export  dLabPro script (as fst)
+ fsm-a      structure   Export  AT&T FSM Toolkit (ASCII)
+ fsm-a      structure   Import  AT&T FSM Toolkit (ASCII)
+ fsm-t      structure   Export  AT&T FSM Toolkit (ASCII)
+ fsm-t      structure   Import  AT&T FSM Toolkit (ASCII)
+ slc21      structure   Import  sigmaLab 2.1
+ pstricks   data        Export  PSTricks
+--------------------------------------------------------------------------------
+dLabPro&gt;_
+</pre>
+
+			<p>
+				The following example script renders a dLabPro <a
+				href="../automatic/fst.html">FST</a> instance as SVG graphic:
+			</p>
+			<pre class="code">
+$$ 1 &lt; $$ 2 &gt; || <a href="../automatic/function.html#mth_if"><code class="link">if</code></a>                            <span class="c-cmt"># Bad no. of cmd. line args &gt;&gt; 01</span>
+  "\n Usage: dlabpro fst2svg.itp "             <span class="c-cmt">#   Print usage info           02</span>
+  "infile [outfile]" + <a href="../automatic/function.html#mth_-echo"><code class="link">-echo</code></a>;                  <span class="c-cmt">#   |                          03</span>
+  <a href="../automatic/function.html#mth_quit"><code class="link">quit</code></a>;                                        <span class="c-cmt">#   Terminate session          04</span>
+<a href="../automatic/function.html#mth_end"><code class="link">end</code></a>                                            <span class="c-cmt"># &lt;&lt;                           05</span>
+
+<a href="../automatic/fst.html"><code class="link">fst</code></a> itFsm;                                     <span class="c-cmt"># FST instance                 07</span>
+<a href="../automatic/var.html"><code class="link">var</code></a> sOutfn;                                    <span class="c-cmt"># Output file name             08</span>
+
+$$ 2 &lt; <a href="../automatic/function.html#mth_if"><code class="link">if</code></a>                                      <span class="c-cmt"># No output file name given &gt;&gt; 10</span>
+  <a href="../automatic/data.html"><code class="link">data</code></a> idAux;                                  <span class="c-cmt">#   Auxilary data instance #1  11</span>
+  255 1 1 idAux <a href="../automatic/data.html#mth_-array"><code class="link">-array</code></a> <a href="../automatic/data.html#mth_{"><code class="link">{</code></a> "$1" };               <span class="c-cmt">#   Store input file name      12</span>
+  idAux "" "psplit" idAux <a href="../automatic/data.html#mth_-strop"><code class="link">-strop</code></a>;              <span class="c-cmt">#   Split path                 13</span>
+  "${idAux[0,0]}/${idAux[0,1]}.svg" sOutfn <a href="../automatic/var.html#mth_="><code class="link">=</code></a>;  <span class="c-cmt">#   Create output file name    14</span>
+<a href="../automatic/function.html#mth_else"><code class="link">else</code></a>                                           <span class="c-cmt"># &lt;&lt; Output file name given &gt;&gt; 15</span>
+  "$2" sOutfn <a href="../automatic/var.html#mth_="><code class="link">=</code></a>;                               <span class="c-cmt">#   Use it                     16</span>
+<a href="../automatic/function.html#mth_end"><code class="link">end</code></a>                                            <span class="c-cmt"># &lt;&lt;                           17</span>
+
+"$1" itFsm <a href="../automatic/function.html#mth_-restore"><code class="link">-restore</code></a>                            <span class="c-cmt"># Read DNorm 3 fst-file        19</span>
+<a href="../automatic/function.html#mth__error"><code class="link">?error</code></a> not <a href="../automatic/function.html#mth_if"><code class="link">if</code></a>                                  <span class="c-cmt"># Successfull &gt;&gt;               20</span>
+  sOutfn "svg" itFsm <a href="../automatic/file.html"><code class="link">stdfile</code></a> <a href="../automatic/file.html#mth_-export"><code class="link">-export</code></a>;          <span class="c-cmt">#   Export as SVG              21</span>
+<a href="../automatic/function.html#mth_end"><code class="link">end</code></a>                                            <span class="c-cmt"># &lt;&lt;                           22</span>
+			
+<span class="c-cmt"># EOF</span>
+</pre>
+			<p>
+				Note: it is provided that the <a href="http://www.graphviz.org"
+				target="_blank">AT&amp;T graph visualization toolkit</a> is installed
+				and <code>dot(.exe)</code> is found in the search path.
+			</p>
       </div>
     </div>
 
@@ -147,7 +304,11 @@ if (top==self)
         </tr>
       </table>
       <div class="mframe2">
-        <span class="TODO">[<b>TODO:</b> ...]</span>
+        <p>
+				dLabPro was designed for mass data processing. This requires the use of
+				file lists. The <a href="../automatic/file.html">introduction of class 
+				<code class="link">file</code></a> has a comprehensive example on that.
+		</p>
       </div>
     </div>
 
@@ -170,9 +331,12 @@ if (top==self)
       </table>
       <div class="mframe2">
         <ul class="linklist">
-          <li class="linklist"><a href="index.html"><img
-          src="../resources/file.gif" width="16" height="16" border="0"
-          style="vertical-align:middle" alt="class icon">&nbsp;<span class="TODO">[<b>TODO:</b> link]</span></a></li>
+          <li class="linklist"><a href="../automatic/file.html"><img
+          src="../resources/class_obj.gif" width="16" height="16" border="0"
+          style="vertical-align:middle" alt="icon">&nbsp;Class file</a></li>
+          <li class="linklist"><a href="../automatic/data.html"><img
+          src="../resources/class_obj.gif" width="16" height="16" border="0"
+          style="vertical-align:middle" alt="icon">&nbsp;Class data</a></li>
         </ul>
       </div>
     </div>
