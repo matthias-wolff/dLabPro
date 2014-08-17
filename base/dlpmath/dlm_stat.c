@@ -28,11 +28,19 @@
 #include "dlp_base.h"
 #include "dlp_math.h"
 
+#ifdef NUMINT_INTERVALS
+#undef NUMINT_INTERVALS
+#endif
+#define NUMINT_INTERVALS 1000000
+
 /**
- * Returns Student's t-density with k degrees of freedom of x
+ * Student's t-density with k degrees of freedom.
  *
- * @param x the x value
- * @param k the degrees of freedom
+ * @param x
+ *          The x value
+ * @param k
+ *          The degrees of freedom
+ * @return The value of the Student's t-density of x.
  */
 FLOAT64 dlm_studt(FLOAT64 x, FLOAT64 k)
 {
@@ -45,12 +53,15 @@ FLOAT64 dlm_studt(FLOAT64 x, FLOAT64 k)
 }
 
 /**
- * Returns the Gamma function of x.
+ * The Gamma function.
  *
- * @param x the x value
+ * @param x
+ *          The x value.
+ * @return The value of the Gamma function of x.
  */
 FLOAT64 dlm_gamma(FLOAT64 x)
 {
+  /*TODO: Implement complex gamma function */
   #ifdef __TMS
   return 0.;
   #else
@@ -59,9 +70,11 @@ FLOAT64 dlm_gamma(FLOAT64 x)
 }
 
 /**
- * Returns the natural logarithm of the Gamma function of x.
+ * Natural logarithm of the Gamma function.
  *
- * @param x the x value, must be positive
+ * @param x
+ *          The x value, must be positive.
+ * @return The value of the log-Gamma function of x.
  */
 FLOAT64 dlm_lgamma(FLOAT64 x)
 {
@@ -69,6 +82,100 @@ FLOAT64 dlm_lgamma(FLOAT64 x)
   return 0.;
   #else
   return lgamma(x);
+  #endif
+}
+
+/**
+ * Euler's Beta function.
+ *
+ * @param alpha
+ *          The alpha parameter.
+ * @param beta
+ *          The beta parameter.
+ * @return The value of the Beta function of alpha and beta.
+ */
+FLOAT64 dlm_beta(FLOAT64 alpha, FLOAT64 beta)
+{
+  #ifdef __TMS
+  return 0.;
+  #else
+  return exp(lgamma(alpha)+lgamma(beta)-lgamma(alpha+beta));
+  #endif
+}
+
+/**
+ * Beta density with the form parameters alpha and beta.
+ *
+ * @param x
+ *          The x value, 0&le;P&le;1.
+ * @param alpha
+ *          The alpha parameter, must be non-negative.
+ * @param beta
+ *          The beta parameter, must be non-negative.
+ * @return The value of the Beta density of x.
+ */
+FLOAT64 dlm_betadens(FLOAT64 x, FLOAT64 alpha, FLOAT64 beta)
+{
+  #ifdef __TMS
+  return 0.;
+  #else
+  FLOAT64 v;
+  if (x<0 || x>1) return 0;
+  v = exp(lgamma(alpha+beta) - lgamma(alpha) - lgamma(beta) +
+      (alpha-1)*log(x) + (beta-1)*log(1-x));
+  /*printf("\n*** dlp_betadens(%g,%g,%g)=%g",x,alpha,beta,v);*/
+  if (dlp_isnan(v)) return 0;
+  return v;
+  #endif
+}
+
+/**
+ * P-quantile of the Beta cumulative distribution function with the form
+ * parameters alpha and beta. The quantile is the inverse of the Beta CDF.
+ *
+ * @param P
+ *          The quantile probability, 0&le;P&le;1.
+ * @param alpha
+ *          The alpha parameter, must be non-negative.
+ * @param beta
+ *          The beta parameter, must be non-negative.
+ * @return The value of the Beta CDF of x.
+ */
+FLOAT64 dlm_betaquant(FLOAT64 P, FLOAT64 alpha, FLOAT64 beta)
+{
+  #ifdef __TMS
+  return 0.;
+  #else
+
+  FLOAT64 p;                                                                   /* Beta density value                 */
+  FLOAT64 s;                                                                   /* Sum of beta densities              */
+  FLOAT64 s0;                                                                  /* Previous sum                       */
+  FLOAT64 x;                                                                   /* x-value                            */
+  FLOAT64 x0;                                                                  /* Previous x-value                   */
+  FLOAT64 c;                                                                   /* Normalizing constant (1/Beta)      */
+  FLOAT64 i;                                                                   /* Interval width                     */
+  FLOAT64 N;                                                                   /* Interval counter                   */
+
+  if (P<=0) return 0;                                                          /* P out of bounds                    */
+  if (P>=1) return 1;                                                          /* P out of bounds                    */
+
+  c = lgamma(alpha) + lgamma(beta) - lgamma(alpha+beta);                       /* Initialize normalizing constant    */
+  i = 1/((FLOAT64)NUMINT_INTERVALS);                                           /* Initialize interval width          */
+  for (s=0, s0=0, x=i/2, x0=i/2, N=0; x<=1; x+=i)                              /* Loop over intervals                */
+  {                                                                            /* >>                                 */
+    p = exp((alpha-1)*log(x)+(beta-1)*log(1-x)-c);                             /*   Compute Beta density value       */
+    if (!dlp_isnan(p))                                                         /*   Density is a number              */
+    {                                                                          /*   >>                               */
+      s += p*i;                                                                /*     Sum up density intervals       */
+      N ++;                                                                    /*     Count intervals                */
+    }                                                                          /*   <<                               */
+    /*printf("\n*** x=%g, p(x)=%g, F(x)=%g, x0=%g, F(x0)=%g",x,p,s,x0,s0);*/
+    if (s>P) break;                                                            /*   Quantile prob. reached -> break  */
+    s0 = s; x0 = x;                                                            /*   Remember previous values         */
+  }                                                                            /* <<                                 */
+  if ((s-s0)==0) return x0;                                                    /* Prevent division by zero           */
+  return (P-s0)*(x-x0)/(s-s0)+x0;                                              /* Return linear interpolation        */
+
   #endif
 }
 

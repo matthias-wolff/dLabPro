@@ -108,9 +108,12 @@ INT16 dlm_distributionC(COMPLEX64*,COMPLEX64*,COMPLEX64*,INT32,INT32,INT32);    
 INT16 dlm_distribution (FLOAT64*,  FLOAT64*,  FLOAT64*,  INT32,INT32,INT32);    /* Distribution                      */
 
 /* Functions - dlm_stat.c */                                                    /* --------------------------------- */
-FLOAT64       dlm_studt(FLOAT64 x, FLOAT64 k);                                  /* Student-t density                 */
+FLOAT64       dlm_studt(FLOAT64 x, FLOAT64 k);                                  /* Student's t-density               */
 FLOAT64       dlm_gamma(FLOAT64 x);                                             /* Gamma function                    */
 FLOAT64       dlm_lgamma(FLOAT64 x);                                            /* Log. gamma function               */
+FLOAT64       dlm_beta(FLOAT64 a, FLOAT64 b);                                   /* Euler's beta function             */
+FLOAT64       dlm_betadens(FLOAT64 x, FLOAT64 alpha, FLOAT64 beta);             /* Beta density                      */
+FLOAT64       dlm_betaquant(FLOAT64 P, FLOAT64 alpha, FLOAT64 beta);            /* P-quantile of Beta CDF            */
 
 /* Functions - dlm_xft.c */                                                     /* --------------------------------- */
 INT16 dlm_fft_mag(FLOAT64*, FLOAT64*, INT32);                                   /* Magnitude spectrum                */
