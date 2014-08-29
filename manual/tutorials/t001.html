@@ -474,9 +474,9 @@ dLabPro&gt;_</pre>
     <pre class="code">dLabPro&gt; data x;                   <span class="c-cmt"># Create data instance named x</span>
 dLabPro&gt; data y;                   <span class="c-cmt"># Create another one named y</span>
 dLabPro&gt; 1 x 2 3 "x" "y" y TRUE PI <span class="c-cmt"># Push some values, do NOT finish the line with a semicolon!</span>
-dLabPro&gt; <a href="../automatic/function.html#mth_-list"><code
-      class="link">-list</code></a> stack;              <span
-      class="c-cmt"># Show stack contents</span>
+dLabPro.y&gt; <a href="../automatic/function.html#mth_-list"><code
+      class="link">-list</code></a> stack;            <span
+      class="c-cmt"># Show stack contents, y is "active" instance</span>
 
 --------------------------------------------------------------------------------
    Status of instance
@@ -948,7 +948,7 @@ dLabPro&gt;_</pre>
 
 Hello World!
 
-dLabPro&gt; /german -sayhello <span class="c-cmt"># Invoke the same method nut using the option /german</span>
+dLabPro&gt; iHello /german -sayhello <span class="c-cmt"># Invoke the same method nut using the option /german</span>
 
 Switch to German...        <span class="c-cmt"># Printed by /german</span>
 
@@ -959,7 +959,7 @@ Hallo Welt!                <span class="c-cmt"># Printed by -sayhello</span>
       class="link">greeting_english</code></a> with the method <a
       href="../automatic/function.html#mth_-set"><code class="link">-set</code></a>
     (of the interpreter) like this:</p>
-    <pre class="code">dLabPro.iHello&gt; "hi!" iHello <a
+    <pre class="code">dLabPro&gt; "hi!" iHello <a
       href="../automatic/function.html#mth_-set"><code class="link">-set</code></a> greeting_english;
 dLabPro&gt; iHello -sayhello
 
