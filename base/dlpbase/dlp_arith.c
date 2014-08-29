@@ -1180,24 +1180,31 @@ COMPLEX64 CGEN_IGNORE dlp_scalopC(COMPLEX64 nParam1, COMPLEX64 nParam2, INT16 nO
     }
     case OP_GAMMA   : { return CMPLX(dlm_gamma(nParam1.x)); }
     case OP_LGAMMA  : { return CMPLX(dlm_lgamma(nParam1.x)); }
+    case OP_BETA    : { return CMPLX(dlm_beta(nParam1.x,nParam2.x)); }
     case OP_STUDT   : { return CMPLX(dlm_studt(nParam1.x,nParam2.x)); }
     case OP_ERF     : { return CMPLX(erf(nParam1.x)); }
     case OP_ERFC    : { return CMPLX(erfc(nParam1.x)); }
+
     default: { DLPASSERT(FMSG("Unknown scalar operation code")); return CMPLX(0.); }
   }
 }
 
-#if 0
-/**
- * Performs scalar operation with two parameters.
- *
- * @param  nParam1 Parameter 1
- * @param  nParam2 Parameter 2
- * @param  nOpcode Operation code
- * @return The result or 0. if nOpcode is not valid.
- * @see    #dlp_get_type_size dlp_get_type_size
- */
-FLOAT64 dlp_scalop(FLOAT64 nParam1, FLOAT64 nParam2, INT16 nOpcode) {}
-#endif
+COMPLEX64 CGEN_IGNORE dlp_scalopC3(COMPLEX64 nParam1, COMPLEX64 nParam2, COMPLEX64 nParam3, INT16 nOpcode)
+{
+  switch (nOpcode)
+  {
+    /* TODO: The following real functions process the real part of the argument(s) only. */
+    case OP_BETADENS : { return CMPLX(dlm_betadens(nParam1.x,nParam2.x,nParam3.x)); }
+    case OP_BETAQUANT: { return CMPLX(dlm_betaquant(nParam1.x,nParam2.x,nParam3.x)); }
+
+    default: { DLPASSERT(FMSG("Unknown scalar operation code")); return CMPLX(0.); }
+  }
+}
+
+/* TODO: Implement scalar operation wrapper for arbitrary signatures.
+COMPLEX64* CGEN_IGNORE dlp_scalopCN(COMPLEX* args, COMPLEX* res, INT16 nOpcode)
+{
+}
+*/
 
 /* EOF */

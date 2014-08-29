@@ -611,7 +611,7 @@ INT16 CGEN_PROTECTED CFunction::OpMatrx(SWord* lpWord)
       return O_K;                                                               //     Operation executed
     }                                                                           //   <<
   }                                                                             // <<
-  return NOT_EXEC;                                                              // Ach n���!
+  return NOT_EXEC;                                                              // Ach nee!
 }
 
 /**
@@ -708,8 +708,8 @@ INT16 CGEN_PROTECTED CFunction::OpVerifySignature(const char* lpsSig, INT16 nOps
  *
  * @param lpsToken
  *          Pointer to the token to be interpreted
- * @return <code>O_K>/code> if the token was an operatiom code and the
- *         operation has been executed, a (negative) error code oterhwise
+ * @return <code>O_K>/code> if the token was an operation code and the
+ *         operation has been executed, a (negative) error code otherwise
  */
 INT16 CGEN_PROTECTED CFunction::ItpAsOperator(const char* lpsToken)
 {
@@ -757,9 +757,14 @@ INT16 CGEN_PROTECTED CFunction::ItpAsOperator(const char* lpsToken)
     // All other operations purely numeric                                      // ------------------------------------
     COMPLEX64 nArg1 = CMPLX(0.);                                                //   Argument #1
     COMPLEX64 nArg2 = CMPLX(0.);                                                //   Argument #2
-    if (nOps>1) nArg2 = PopNumber(2);                                           //   Get optional second argument
-    nArg1 = PopNumber(1);                                                       //   Get mandatory first argument
-    PushNumber(dlp_scalopC(nArg1,nArg2,nOpc));                                  //   Calculate result and push to stack
+    COMPLEX64 nArg3 = CMPLX(0.);                                                //   Argument #3
+    if (nOps>2) nArg3 = PopNumber(3);                                           //   Get third argument
+    if (nOps>1) nArg2 = PopNumber(2);                                           //   Get second argument
+    nArg1 = PopNumber(1);                                                       //   Get first argument
+    if (nOps==3)                                                                //   Three arguments >>
+      PushNumber(dlp_scalopC3(nArg1,nArg2,nArg3,nOpc));                         //     Calculate and push result
+    else                                                                        //   << Two or one argument
+      PushNumber(dlp_scalopC(nArg1,nArg2,nOpc));                                //     Calculate and push result
     return O_K;                                                                 //   Ok
   }                                                                             // <<
   if ((iCont=FindInstance("signal")) && (lpWord=iCont->FindOperator(lpsToken))) // Is lpsToken a signal op. symbol?

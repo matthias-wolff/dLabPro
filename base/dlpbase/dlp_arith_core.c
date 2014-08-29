@@ -100,6 +100,7 @@ ARITH_FTYPE dlp_scalop(ARITH_FTYPE nParam1, ARITH_FTYPE nParam2, INT16 nOpcode)
   case OP_STUDT    : return dlm_studt(nParam1,nParam2);
   case OP_GAMMA    : return dlm_gamma(nParam1);
   case OP_LGAMMA   : return dlm_lgamma(nParam1);
+  case OP_BETA     : return dlm_beta(nParam1,nParam2);
   case OP_ADD      : return nParam1+nParam2;
   case OP_LSADD    :
 #ifdef __OPTIMIZE_LSADD

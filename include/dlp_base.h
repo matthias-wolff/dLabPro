@@ -637,6 +637,9 @@ typedef struct { FLOAT64 x; FLOAT64 y; } COMPLEX64;
 #define OP_ERFC          1137                                                   /* Complementary error function      */
 #define OP_SINC          1138                                                   /* Sinc function                     */
 #define OP_ANGLE         1139                                                   /* Angle of complex value            */
+#define OP_BETA          1140                                                   /* Euler's Beta function             */
+#define OP_BETADENS      1141                                                   /* Beta density                      */
+#define OP_BETAQUANT     1142                                                   /* P-quantile of Beta CDF            */
 /* - Dyadic scalar math operations */                                           /* - - - - - - - - - - - - - - - - - */
 #define OP_ADD           1200                                                   /* Addition                          */
 #define OP_LSADD         1201                                                   /* Log semiring addition             */
@@ -1197,6 +1200,7 @@ extern "C" {
 void          dlp_arith_cleanup();
 FLOAT64       dlp_scalop(FLOAT64 nParam1, FLOAT64 nParam2, INT16 nOpcode);
 COMPLEX64     dlp_scalopC(COMPLEX64 nParam1, COMPLEX64 nParam2, INT16 nOpcode);
+COMPLEX64     dlp_scalopC3(COMPLEX64 nParam1, COMPLEX64 nParam2, COMPLEX64 nParam3, INT16 nOpcode);
 FLOAT32       dlp_scalopF(FLOAT32 nParam1, FLOAT32 nParam2, INT16 nOpcode);
 INT16         dlp_aggrop(FLOAT64* lpVec, FLOAT64* lpMask, FLOAT64 nParam, INT32 nDim, INT32 nFirst, INT32 nOffs, INT16 nOpcode, FLOAT64* lpnResult);
 INT16         dlp_aggropC(COMPLEX64* lpVec, COMPLEX64* lpMask, COMPLEX64 nParam, INT32 nDim, INT32 nFirst, INT32 nOffs, INT16 nOpcode, COMPLEX64* lpnResult);
