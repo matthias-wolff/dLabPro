@@ -13,3 +13,4 @@
 /.settings
 /build
 /include/automatic/dlp_rev.h
+cscope*

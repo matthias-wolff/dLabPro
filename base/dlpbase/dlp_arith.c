@@ -1184,6 +1184,11 @@ COMPLEX64 CGEN_IGNORE dlp_scalopC(COMPLEX64 nParam1, COMPLEX64 nParam2, INT16 nO
     case OP_STUDT   : { return CMPLX(dlm_studt(nParam1.x,nParam2.x)); }
     case OP_ERF     : { return CMPLX(erf(nParam1.x)); }
     case OP_ERFC    : { return CMPLX(erfc(nParam1.x)); }
+    case OP_AND     :
+    case OP_NOT     :
+    case OP_OR      :
+    case OP_POTENTIAL:
+    case OP_MOD     : { return CMPLX(dlp_scalop(nParam1.x,nParam2.x,nOpcode)); }
 
     default: { DLPASSERT(FMSG("Unknown scalar operation code")); return CMPLX(0.); }
   }
