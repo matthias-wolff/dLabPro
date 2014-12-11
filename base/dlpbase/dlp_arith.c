@@ -1165,8 +1165,8 @@ COMPLEX64 CGEN_IGNORE dlp_scalopC(COMPLEX64 nParam1, COMPLEX64 nParam2, INT16 nO
     case OP_SMIN     : { return (CMPLX_ABS(nParam1)<CMPLX_ABS(nParam2))?nParam1:nParam2; }
     case OP_ROUND    : {
       FLOAT64 x, y;
-      x = dlp_isnan(nParam1.x) ? nParam1.x : (INT64)round(nParam1.x);
-      y = dlp_isnan(nParam1.y) ? nParam1.y : (INT64)round(nParam1.y);
+      x = dlp_isnan(nParam1.x) ? nParam1.x : round(nParam1.x);
+      y = dlp_isnan(nParam1.y) ? nParam1.y : round(nParam1.y);
       return CMPLXY(x,y);
     }
 

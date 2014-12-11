@@ -142,7 +142,7 @@ ARITH_FTYPE dlp_scalop(ARITH_FTYPE nParam1, ARITH_FTYPE nParam2, INT16 nOpcode)
   case OP_MIN      : return dlp_isnan(nParam1)||dlp_isnan(nParam2) ? 0.0/0.0 : (nParam1<nParam2?nParam1:nParam2);
   case OP_AMIN     : return dlp_isnan(nParam1)||dlp_isnan(nParam2) ? 0.0/0.0 : (fabs(nParam1)<fabs(nParam2))?fabs(nParam1):fabs(nParam2);
   case OP_SMIN     : return dlp_isnan(nParam1)||dlp_isnan(nParam2) ? 0.0/0.0 : (fabs(nParam1)<fabs(nParam2))?nParam1:nParam2;
-  case OP_ROUND    : return dlp_isnan(nParam1) ? nParam1 : (INT32)round(nParam1);
+  case OP_ROUND    : return dlp_isnan(nParam1) ? nParam1 : round(nParam1);
   case OP_ERF      : return erf(nParam1);
   case OP_ERFC     : return erfc(nParam1);
   default          : DLPASSERT(FMSG("Unknown scalar operation code"));
