@@ -110,9 +110,8 @@ INT16 CGEN_PUBLIC CVmap_Setup
   {                                                                             /* >>                                */
     CData_DrecFetch(idTmx,lpBuf,m,N,-1);                                        /*   Fetch record from parameter     */
     CData_DrecStore(AS(CData,_this->m_idTmx),lpBuf,m,N,-1);                     /*   Store record to field           */
-    for(n=0;n<N;n++) if(lpBuf[n]!=_this->m_nZero && (_this->m_nType!=T_FLOAT || /*   Update used number              */
-      (FLOAT32)_this->m_nZero!=(FLOAT32)T_FLOAT_MAX || lpBuf[n]!=T_DOUBLE_MAX))     /*   |                               */
-        nUsed++;                                                                /*   |                               */
+    CData_DrecFetch(AS(CData,_this->m_idTmx),lpBuf,m,N,-1);                     /*   Refetch record from field       */
+    for(n=0;n<N;n++) if(lpBuf[n]!=_this->m_nZero) nUsed++;                      /*   Update used number from refetch */
   }                                                                             /* <<                                */
   dlp_free(lpBuf);                                                              /* Free the copy buffer              */
   /* Weak used tmx matrix ? */                                                  /* --------------------------------- */
