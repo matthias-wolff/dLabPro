@@ -883,6 +883,7 @@ INT16 CGEN_PUBLIC CData_Strop
           dlp_memset(sBuf,0,256);
           for (i=0; i<nXRec; i++)
           {
+          	if (i>0 && dlp_strlen(sParam)) strncat(sBuf,sParam,L_SSTR);
             dlp_memset(sBuf2,0,256);
             dlp_strncpy(sBuf2,(char*)CData_XAddr(idSrc,i,j),CData_GetCompType(idSrc,j));
             if (dlp_strlen(sBuf2)+dlp_strlen(sBuf)<254) dlp_strcat(sBuf,sBuf2);
