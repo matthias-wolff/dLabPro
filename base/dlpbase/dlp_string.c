@@ -751,7 +751,7 @@ INT16 dlp_strreplace_ex(char* lpsStr, const char* lpsKey, const char* lpsRpl, BO
     nRpl++;
     memmove(tx,&tx[dlp_strlen(lpsKey)],dlp_strlen(tx)-dlp_strlen(lpsKey)+1);
     memmove(&tx[dlp_strlen(lpsRpl)],tx,dlp_strlen(tx)+1);
-    memmove(tx,lpsRpl,dlp_strlen(lpsRpl));
+    if(lpsRpl) memmove(tx,lpsRpl,dlp_strlen(lpsRpl));
     tx+=(dlp_strlen(lpsRpl));
     tx = strstr(tx,lpsKey);
     if (bOnce) return 1;
