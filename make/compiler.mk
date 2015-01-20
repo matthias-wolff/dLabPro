@@ -43,7 +43,7 @@ ifneq ($(findstring msv,$(OS)),)
 endif
 
 ## Compiler config for GCC
-ifneq ($(or $(findstring mingw,$(OS)),$(findstring lin,$(OS))),)
+ifneq ($(or $(findstring mingw,$(OS)),$(findstring cygwin,$(OS)),$(findstring lin,$(OS))),)
   TOOLBOX  = GCC
   CC       = gcc
   CCoO     = -o
@@ -59,7 +59,7 @@ ifneq ($(or $(findstring mingw,$(OS)),$(findstring lin,$(OS))),)
   endif
 endif
 
-ifneq ($(or $(findstring mingw,$(OS)),$(findstring msv,$(OS))),)
+ifneq ($(or $(findstring mingw,$(OS)),$(findstring cygwin,$(OS)),$(findstring msv,$(OS))),)
   EEXT = .exe
 endif
 
@@ -92,7 +92,7 @@ ifeq ($(OS),msv1)
 endif
 
 ## Compiler flags for GCC
-ifneq ($(or $(findstring mingw,$(OS)),$(findstring lin,$(OS))),)
+ifneq ($(or $(findstring mingw,$(OS)),$(findstring cygwin,$(OS)),$(findstring lin,$(OS))),)
   CFLAGS  += -Wall $(CFLAGS_GCC)
   ARFLAGS  = rvs
   LFLAGS  += -lm

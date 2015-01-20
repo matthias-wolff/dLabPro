@@ -24,7 +24,7 @@
 ## along with dLabPro. If not, see <http://www.gnu.org/licenses/>.
 
 ## Platform specific - GNU on Windows
-ifneq ($(findstring mingw,$(OS)),)
+ifneq ($(or $(findstring mingw,$(OS)),$(findstring cygwin,$(OS))),)
   PT_AVAILABLE := $(shell echo -e "\#include <pthread.h>\nint main(){ return 0; }" | $(CC) $(INCL) $(CFLAGS) -E - >/dev/null 2>&1 && echo yes || echo no)
   CC_VERS := $(shell echo -e "int main(){ return 0; }" | $(CC) -E -dM - | grep __GNUC__ | cut -d" " -f3)
   ifeq ($(shell test ${CC_VERS} -lt 4 && echo yes || echo no ),yes)
@@ -33,7 +33,7 @@ ifneq ($(findstring mingw,$(OS)),)
     ifneq ($(findstring readline,$(LIBS_SYS)),)
       RL_AVAILABLE := $(shell echo -e "\#include <readline/readline.h>\nint main(){ return 0; }" | $(CC) $(INCL) $(CFLAGS) -E - >/dev/null 2>&1 && echo yes || echo no)
       ifeq ($(RL_AVAILABLE),yes)
-        LFLAGS  += -l:libreadline.a
+        LFLAGS  += -l:libreadline.a -l:libncursesw.a
       else
         CFLAGS += -D__NOREADLINE
       endif

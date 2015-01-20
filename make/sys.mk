@@ -40,7 +40,7 @@ else
 endif
 
 ## Detect compile OS
-## Implemented values: lin32, lin64, mingw32, mingw64, msv1, msv2
+## Implemented values: lin32, lin64, mingw32, mingw64, cygwin64, msv1, msv2
 
 # Test #1 for MSVC
 ifneq (${DLABPRO_USE_MSVC},)
@@ -63,6 +63,8 @@ else
       OS = lin32
     else ifneq ($(findstring mingw32,$(OS)),)
       OS = mingw32
+    else ifneq ($(and $(findstring -pc-cygwin,$(OS)),$(findstring x86_64-,$(OS))),)
+      OS = cygwin64
     else
       $(error Unimplemented machine of gcc: "$(OS)")
     endif
@@ -73,6 +75,8 @@ else
       OS = lin64
     else ifneq ($(findstring mingw32,$(OS)),)
       OS = mingw32
+    else ifneq ($(findstring cygwin,$(OS)),)
+      OS = cygwin64
     else
       $(error Unimplemented operating system: "$(OS)")
     endif

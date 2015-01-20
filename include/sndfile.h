@@ -257,6 +257,8 @@ typedef  struct SNDFILE_tag  SNDFILE ;
   #endif
 #elif (defined __CYGWIN32__)
   typedef off_t  sf_count_t ;
+#elif (defined __CYGWIN__)
+  typedef int64_t  sf_count_t ;
 #elif (defined __MINGW32__)
   typedef __int64  sf_count_t ;
 #elif (defined _MSC_VER)

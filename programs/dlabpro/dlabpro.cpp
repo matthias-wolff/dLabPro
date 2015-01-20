@@ -57,7 +57,7 @@
 #include "dlp_var.h"
 #include "dlp_vmap.h"
 
-#if (!defined __NOREADLINE && defined __LINUX)
+#if (!defined __NOREADLINE)
 #  include <readline/readline.h>
 #  include <readline/history.h>
 #endif
@@ -145,7 +145,7 @@ INT16 StartSession(CFunction* iRoot, INT32* lpArgc, char** lpArgv)
   }
   if (!(iRoot->m_nXm&XM_NOLOGO)) printf("\n");
 
-#if (!defined __NOREADLINE && defined __LINUX)
+#if (!defined __NOREADLINE)
   {
     char* lpHome;
     char lpHistory[L_PATH];
@@ -174,7 +174,7 @@ void EndSession(CFunction* iRoot)
   if (!(iRoot->m_nXm&XM_NOLOGO))
     printf("\n// Exiting %s...\n",iRoot->m_lpInstanceName);
 
-#if (!defined __NOREADLINE && defined __LINUX)
+#if (!defined __NOREADLINE)
   {
     char* lpHome;
     char lpHistory[L_PATH];
@@ -186,7 +186,7 @@ void EndSession(CFunction* iRoot)
       write_history(lpHistory);
     }
   }
-#endif // #if (!defined __NOREADLINE && defined __LINUX)
+#endif // #if (!defined __NOREADLINE)
 }
 
 /**

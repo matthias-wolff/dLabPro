@@ -43,7 +43,7 @@ ifeq ($(TRG_EXT),)
 endif
 
 ## Create dependency files
-ifneq ($(or $(findstring lin,$(OS)),$(findstring mingw,$(OS))),)
+ifneq ($(or $(findstring lin,$(OS)),$(findstring mingw,$(OS)),$(findstring cygwin,$(OS))),)
   ifeq ($(findstring CLEAN,$(call uc,$(MAKECMDGOALS))),)
     DEPINC = yes
   endif

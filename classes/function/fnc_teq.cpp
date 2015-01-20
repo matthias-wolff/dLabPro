@@ -29,7 +29,7 @@
 #include <sys/select.h>
 #endif
 
-#if (!defined __NOREADLINE && defined __LINUX)
+#if (!defined __NOREADLINE)
 #  include <readline/readline.h>
 #  include <readline/history.h>
 #endif
@@ -349,7 +349,7 @@ INT16 CGEN_PRIVATE CFunction::SendTokensInt
 INT16 __kbhit()
 {
 
-#ifndef __WIN32__                                                               /* #ifndef __WIN32__                 */
+#if !defined __WIN32__  && !defined __CYGWIN__                                  /* #ifndef __WIN32__                 */
 
   fd_set rfds;                                                                  /* File descriptor set               */
   struct timeval tv;                                                            /* Time value struct                 */
@@ -434,9 +434,9 @@ INT16 CGEN_PROTECTED CFunction::PumpToken(BOOL bPostSyn DEFAULT(FALSE))
   if (m_nXm & XM_BREAK)                                                         // In break mode
   {                                                                             // >>
     char lpsPrompt[L_INPUTLINE];
-#if (!defined __NOREADLINE && defined __LINUX)
+#if (!defined __NOREADLINE)
     char *lpsInput;
-#endif // #if (!defined __NOREADLINE && defined __LINUX)
+#endif // #if (!defined __NOREADLINE)
     if (iRoot && (iRoot->m_nXm&XM_PIPEMODE)!=0)                                 //   Root function in pipe mode
       snprintf(lpsPrompt,L_INPUTLINE-1,"\npipemode>\n");                        //     Pipe mode prompt
     else                                                                        //   Root function not in pipe mode
@@ -450,12 +450,12 @@ INT16 CGEN_PROTECTED CFunction::PumpToken(BOOL bPostSyn DEFAULT(FALSE))
         "Elapsed time: %1.16gs\n",(double)(t-m_time)/1000.0);                   //     |
     }                                                                           //   <<
     if (ferror(stdin) || feof(stdin) ||                                         //   Broken standard input pipe
-#if (!defined __NOREADLINE && defined __LINUX)
+#if (!defined __NOREADLINE)
         (lpsInput=readline(lpsPrompt))==NULL                                    //     Read command line via readline
-#else // #if (!defined __NOREADLINE && defined __LINUX)
+#else // #if (!defined __NOREADLINE)
         printf(lpsPrompt)<0 ||                                                  //     Show prompt
         fgets(lpsToken,L_INPUTLINE,stdin)==NULL                                 //     Read command line
-#endif // #if (!defined __NOREADLINE && defined __LINUX)
+#endif // #if (!defined __NOREADLINE)
     )
     {                                                                           //   >>
       printf(lpsPrompt);                                                        //     Show prompt
@@ -475,11 +475,11 @@ INT16 CGEN_PROTECTED CFunction::PumpToken(BOOL bPostSyn DEFAULT(FALSE))
     {                                                                           //   >>
       m_time = dlp_time();                                                      //   Save current clocks
       dlp_set_interrupt(FALSE);                                                 //   Clear user interrupt
-#if (!defined __NOREADLINE && defined __LINUX)
+#if (!defined __NOREADLINE)
       strncpy(lpsToken,lpsInput,L_INPUTLINE);                                   //     Copy command line
       if(lpsInput[0]) add_history(lpsInput);                                    //     Add to history if not empty
       free(lpsInput);                                                           //     Free memory
-#endif // #if (!defined __NOREADLINE && defined __LINUX)
+#endif // #if (!defined __NOREADLINE)
       dlp_strtrimleft(dlp_strtrimright(lpsToken));                              //     Trim white spaces
       EmptyUserInput(lpsToken);                                                 //     Remember/auto-insert token
     }                                                                           //   <<
