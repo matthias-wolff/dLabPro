@@ -516,7 +516,7 @@ INT16 dlp_chdir(const char* lpsDirname, BOOL bCreate)
   if (tx!=lpsDir) tx++;
 
   /* Create remaining sub directories */
-  while (tx[1])
+  while (tx[0])
   {
 #if (defined __MSOS || defined __WIN32)
     nError = (INT16)mkdir(tx);
