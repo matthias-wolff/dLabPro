@@ -165,7 +165,7 @@ END_CODE
 
 FIELD:   stkprn
 TYPE:    bool
-INIT:    TRUE
+INIT:    FALSE
 COMMENT: Prune hypothesis with different pushdown memory
 CODE:
 	CFstsearch_Restart(_this);
