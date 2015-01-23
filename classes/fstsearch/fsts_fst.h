@@ -52,6 +52,7 @@ struct fsts_unit {
 /* Internal transducer structure */
 struct fsts_fst {
   INT32 nunits;            /* Number of units */
+  UINT8 stk;               /* Has stk symbols */
   struct fsts_unit *units; /* Unit array      */
   CFst *itSrc;             /* A copy of the original source transducer or NULL */
 };

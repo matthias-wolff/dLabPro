@@ -78,6 +78,7 @@ const char *fsts_load(struct fsts_fst *src,CFst *itSrc,INT32 uid,UINT8 fast){
   csub = uid<0 ? CData_FindComp(AS(CData,itSrc->ud),"~SUB") : -1;
   psr  = CFst_Wsr_GetType(itSrc,NULL)==FST_WSR_PROB;
   cstk = CData_FindComp(AS(CData,itSrc->td),"~STK");
+  src->stk=0;
   if(!(src->units=(struct fsts_unit *)calloc(src->nunits,sizeof(struct fsts_unit)))) return FSTSERR("out of memory");
   for(ui=uid<0?0:uid ; uid<0 ? ui<src->nunits : ui==uid ; ui++){
     struct fsts_unit *u=src->units+(uid<0?ui:0);
@@ -101,6 +102,7 @@ const char *fsts_load(struct fsts_fst *src,CFst *itSrc,INT32 uid,UINT8 fast){
         t->is =lpTI->nOfTTis>0 ? *CFst_STI_TTis(lpTI,lpT) : -1;
         t->os =lpTI->nOfTTos>0 ? *CFst_STI_TTos(lpTI,lpT) : -1;
         t->stk=cstk>0 ? CData_Dfetch(AS(CData,itSrc->td),t->id,cstk) : 0;
+        if(t->stk) src->stk=1;
         t->w  =lpTI->nOfTW>0   ? *CFst_STI_TW(lpTI,lpT)   :  0;
         if(psr) t->w=-1.*log(t->w);
         t->nxt=u->tfroms[t->ini]; u->tfroms[t->ini]=t;
