@@ -132,6 +132,7 @@ const char *fsts_as_isearch(struct fsts_glob *glob,struct fsts_w *w){
   FLOAT64 *wmin;
   INT32 f;
   UINT16 nres=0;
+  if(glob->src.stk && !glob->cfg.stkprn) fprintf(stderr,"WARN: algo=as decoder with be slow with stkprn=FALSE\n");
   algo->ls.h.schg[0]=(void**)&s1;
   fsts_as_mapinit(algo->ls.map,(w->nf+1)*glob->src.units[0].ns);
   if(glob->cfg.as.sheu==AS_SH_MIN) fsts_as_sheumin(w);
@@ -166,7 +167,7 @@ const char *fsts_as_isearch(struct fsts_glob *glob,struct fsts_w *w){
         if(t->stk<0 && (!s1->nstk || s1->stk[s1->nstk-1]!=-t->stk)) continue;
         s2.s=t->ter;
         s2.id=s2.f*u->ns+s2.s;
-        if(fsts_as_mapget(algo->ls.map,s2.id)) continue;
+        if((!glob->src.stk || glob->cfg.stkprn) && fsts_as_mapget(algo->ls.map,s2.id)) continue; /* TODO: integrate stk in map */
         if((err=fsts_as_sgen(&s2,s1,t,&wf,&algo->btm))) return err;
         if(glob->cfg.as.prnw && s2.w-glob->cfg.as.prnw>=wmin[s2.f]){
           fsts_as_sfree(&s2,NULL,&algo->btm);
