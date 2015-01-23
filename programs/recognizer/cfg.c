@@ -377,7 +377,8 @@ void searchinit(){
     itSP->m_nAsPrnf= rCfg.rSearch.eRejTyp==RR_two ? rCfg.rSearch.nAS2Prn : rCfg.rSearch.nASPrn1;
     itSP->m_nTpPrnw=rCfg.rSearch.nTPPrnW;
     itSP->m_nTpPrnh=rCfg.rSearch.nTPPrnH;
-  }else itSP->m_bStkprn=FALSE;
+    itSP->m_bStkprn=TRUE;
+  }
   itSP->m_nTpThreads=rCfg.rSearch.nThreads;
   CFstsearch_Restart(itSP);
   searchload(rTmp.nFstSel);
