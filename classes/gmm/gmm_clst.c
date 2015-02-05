@@ -201,7 +201,7 @@ INT16 CGEN_PUBLIC CGmm_Split(CGmm* _this, FLOAT64 nParam, CData* idMap)
   {                                                                             /* >>                                */
     CData_DrecFetch(AS(CData,_this->m_idMean),lpMean,k,N,-1);                   /*   Fetch parent's mean vector      */
     CData_DblockFetch(idCov,lpCov,k,N,N,-1);                                    /*   Fetch parent's cov. matrix      */
-    m = CData_Find(idSmap,0,CData_GetNRecs(idSmap),1,1,k);                      /*   Find index k in splitting map   */
+    m = CData_Find(idSmap,0,CData_GetNRecs(idSmap),1,1,(INT64)k);               /*   Find index k in splitting map   */
     IFCHECKEX(1) printf("\n   - %4ld [map=%4ld]: ",(long)k,(long)m);            /*   Protocol (verbose level 1)      */
     if (m>=0)                                                                   /*   Split Gaussian                  */
     {                                                                           /*   >>                              */
