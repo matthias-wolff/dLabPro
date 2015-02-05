@@ -34,6 +34,11 @@ include $(DLABPRO_HOME)/make/target.mk
 include $(DLABPRO_HOME)/make/compiler.mk
 include $(DLABPRO_HOME)/make/paths.mk
 
+ifeq ($(LIBFILE),function)
+  LIBS_SYS = readline
+  include $(DLABPRO_HOME)/make/libsys.mk
+endif
+
 HFILE    = $(wildcard $(INC_PATH)/automatic/dlp_$(PROJNAME).h)
 CPPFILE  = $(PROJNAME).$(SEXT)
 
