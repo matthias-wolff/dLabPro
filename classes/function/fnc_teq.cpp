@@ -34,6 +34,10 @@
 #  include <readline/history.h>
 #endif
 
+#ifndef __WIN32__
+#  include <sys/time.h>
+#endif
+
 static char __CFunction_EmptyUserInput[L_INPUTLINE+1];                          // Most recent user input
 
 /**
@@ -349,7 +353,7 @@ INT16 CGEN_PRIVATE CFunction::SendTokensInt
 INT16 __kbhit()
 {
 
-#if !defined __WIN32__  && !defined __CYGWIN__                                  /* #ifndef __WIN32__                 */
+#ifndef __WIN32__                                                               /* #ifndef __WIN32__                 */
 
   fd_set rfds;                                                                  /* File descriptor set               */
   struct timeval tv;                                                            /* Time value struct                 */
@@ -358,7 +362,7 @@ INT16 __kbhit()
   tv.tv_sec = 0; tv.tv_usec = 0;                                                /* Dont't wait                       */
   return select(1, &rfds, NULL, NULL, &tv)>0;                                   /* Return if something has changes   */
 
-#elif !defined __CYGWIN__                                                        /* #ifndef __WIN32__                 */
+#else                                                                           /* #ifndef __WIN32__                 */
 
   return filelength(STDIN_FILENO)>0;                                            /* Return file length of stdin >0    */
 

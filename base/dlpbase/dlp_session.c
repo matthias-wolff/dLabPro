@@ -223,7 +223,7 @@ const char* dlp_get_version_info()
 #endif
 
   /* OS */
-#if (defined __WIN32 || defined __MINGW32__ || defined __CYGWIN32__)
+#if (defined __WIN32 || defined __MINGW32__ || defined __CYGWIN__)
 
   strcpy(lpsOS,"win32");
 

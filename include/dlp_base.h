@@ -65,8 +65,7 @@
     #endif
   #endif
 
-  #if (defined __CYGWIN32__)
-    #define __WIN32__
+  #if (defined __CYGWIN__)
     #define __I386
   #endif
 
@@ -156,10 +155,6 @@
 # define BSWAP_16(x) ((((x) & 0xff00) >> 8) | (((x) & 0x00ff) << 8))
 # define BSWAP_32(x) ((((x) & 0xff000000) >> 24) | (((x) & 0x00ff0000) >> 8) |\
                       (((x) & 0x0000ff00) << 8) | (((x) & 0x000000ff) << 24))
-#endif
-
-#if (defined __CYGWIN__ && defined __cplusplus)
-  extern "C" int snprintf(char*, size_t, const char*, ...);
 #endif
 
 #if (defined __GNUC__)

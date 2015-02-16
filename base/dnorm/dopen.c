@@ -1029,7 +1029,7 @@ short dclose( DNORM_DCB * stream, DPARA * parms )
       /* TODO: call zlib here */
 
       
-#if defined _TC_ || defined _BCWIN_ || defined _MSC_ || defined _MSCWIN_ || defined __MINGW32__ || __CYGWIN32__ || defined __TMS__
+#if defined _TC_ || defined _BCWIN_ || defined _MSC_ || defined _MSCWIN_ || defined __MINGW32__ || defined __TMS__
                             /* rename funktioniert nur, */
       remove( stream->fname );                  /* wenn Ziel nicht exist.!  */
       rename( stream->dvbfname, stream->fname );/* Namen der Ergebnisdatei  */

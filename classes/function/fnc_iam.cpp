@@ -552,7 +552,7 @@ BOOL CGEN_PUBLIC CFunction::Platform(const char* lpsPlatformId)
 {
   if (dlp_strcmp(lpsPlatformId,"WIN32")==0)
   {
-#if (defined __WIN32 || defined __CYGWIN32__)
+#if (defined __WIN32 || defined __CYGWIN__)
     return TRUE;
 #else
     return FALSE;

@@ -258,8 +258,8 @@
 
 
 
-#elif (defined __CYGWIN32__) || (defined __CYGWIN__)
-/* #warning "__CYGWIN32__" */
+#elif (defined __CYGWIN__)
+/* #warning "__CYGWIN__" */
 
 
 

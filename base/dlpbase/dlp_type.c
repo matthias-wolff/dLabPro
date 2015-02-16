@@ -467,11 +467,7 @@ COMPLEX64 dlp_fetch(const void* lpBuffer, INT16 nTypeCode)
  */
 INT32 dlp_isnan(FLOAT64 nVal)
 {
-#if !defined __CYGWIN32__ && !defined __TMS
   return isnan(nVal);
-#else
-  return FALSE;
-#endif
 }
 
 /**
