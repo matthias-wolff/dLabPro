@@ -117,6 +117,7 @@ INT16 CFstsearch_AutoRegisterWords(CDlpObject* __this)
 	REGISTER_METHOD("-load","",LPMF(CFstsearch,OnLoad),"Load the source automaton",0,"<fst itSrc> <long nUnit> <fstsearch this>","")
 	REGISTER_METHOD("-restart","",LPMF(CFstsearch,OnRestart),"Reset iterative search",0,"<fstsearch this>","")
 	REGISTER_METHOD("-search","",LPMF(CFstsearch,OnSearch),"All steps in one method",0,"<fst itSrc> <long nUnit> <data idWeights> <fst itDst> <fstsearch this>","")
+	REGISTER_METHOD("-status","",LPMF(CFstsearch,OnStatus),"Prints status information of the search processor.",0,"<fstsearch this>","")
 
 	/* Register options */
 	REGISTER_OPTION("/fast","",LPMV(m_bFast),NULL,"Do not copy the source automaton for backtracking",0)
@@ -442,6 +443,20 @@ INT16 CFstsearch_OnSearch(CDlpObject* __this)
 	return __nErr;
 }
 
+INT16 CFstsearch_OnStatus(CDlpObject* __this)
+/* DO NOT CALL THIS FUNCTION FROM C++ SCOPE.     */
+/* IT MAY INTERFERE WITH THE INTERPRETER SESSION */
+{
+	INT16 __nErr    = O_K;
+	INT32  __nErrCnt = 0;
+	GET_THIS_VIRTUAL_RV(CFstsearch,NOT_EXEC);
+	MIC_CHECK;
+	__nErrCnt = CDlpObject_GetErrorCount();
+	if (CDlpObject_GetErrorCount()>__nErrCnt) return NOT_EXEC;
+	__nErr = CFstsearch_Status(_this);
+	return __nErr;
+}
+
 /*}}CGEN_CPMIC */
 #endif /* #ifndef __NOITP */
 
@@ -751,6 +766,13 @@ INT16 CFstsearch::OnSearch()
 	return CFstsearch_OnSearch(this);
 }
 
+INT16 CFstsearch::OnStatus()
+/* DO NOT CALL THIS FUNCTION FROM C++ SCOPE.     */
+/* IT MAY INTERFERE WITH THE INTERPRETER SESSION */
+{
+	return CFstsearch_OnStatus(this);
+}
+
 /*}}CGEN_PMIC */
 #endif /* #ifndef __NOITP */
 
@@ -844,6 +866,11 @@ INT16 CFstsearch::OnTpThreadsChanged()
 /*}}CGEN_FCCF */
 
 /*{{CGEN_CXXWRAP */
+INT16 CFstsearch::Status()
+{
+	return CFstsearch_Status(this);
+}
+
 INT16 CFstsearch::Load(CFst* itSrc, long nUnit)
 {
 	return CFstsearch_Load(this, itSrc, nUnit);

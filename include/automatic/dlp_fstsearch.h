@@ -100,6 +100,7 @@ public:
 	INT16 OnLoad();
 	INT16 OnRestart();
 	INT16 OnSearch();
+	INT16 OnStatus();
 /*}}CGEN_PMIC */
 #endif /* #ifndef __NOITP */
 
@@ -138,6 +139,7 @@ public:
 /*{{CGEN_EXPORT */
 
 /* Taken from 'fsts_glob.c' */
+	public: INT16 Status();
 	public: INT16 Load(CFst* itSrc, long nUnit);
 	public: INT16 Isearch(CData* idWeights);
 	public: INT16 Backtrack(CFst* itDst);
@@ -263,6 +265,7 @@ INT16 CFstsearch_OnIsearch(CDlpObject*);
 INT16 CFstsearch_OnLoad(CDlpObject*);
 INT16 CFstsearch_OnRestart(CDlpObject*);
 INT16 CFstsearch_OnSearch(CDlpObject*);
+INT16 CFstsearch_OnStatus(CDlpObject*);
 /*}}CGEN_CPMIC */
 #endif /* #ifndef __NOITP */
 
@@ -298,6 +301,7 @@ INT16 CFstsearch_OnTpThreadsChanged(CDlpObject*);
 /*{{CGEN_CEXPORT */
 
 /* Taken from 'fsts_glob.c' */
+INT16 CFstsearch_Status(CFstsearch*);
 INT16 CFstsearch_Load(CFstsearch*, CFst* itSrc, long nUnit);
 INT16 CFstsearch_Isearch(CFstsearch*, CData* idWeights);
 INT16 CFstsearch_Backtrack(CFstsearch*, CFst* itDst);

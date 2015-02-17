@@ -30,11 +30,13 @@
 #define E(X)  FA_##X
 enum fsts_algo {FA};
 #undef E
+extern const char *fsts_algostr[];
 
 #define BT    E(T), E(OS), E(LAT)
 #define E(X)  BT_##X
 enum fsts_ebt {BT};
 #undef E
+extern const char *fsts_ebtstr[];
 
 /* Global config structure */
 struct fsts_cfg {

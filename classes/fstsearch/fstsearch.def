@@ -388,6 +388,10 @@ END_MAN
 ######################################################################
 ## Command definition
 
+METHOD:  -status
+SYNTAX:  ()
+COMMENT: Prints status information of the search processor.
+
 METHOD:  -load
 SYNTAX:  (INSTANCE(fst) itSrc, long nUnit)
 COMMENT: Load the source automaton

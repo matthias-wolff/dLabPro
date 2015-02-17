@@ -35,6 +35,8 @@ enum fsts_as_aheu { AS_AH };
 #define E(X)  AS_SH_##X
 enum fsts_as_sheu { AS_SH };
 #undef E
+extern const char *fsts_as_aheustr[];
+extern const char *fsts_as_sheustr[];
 
 /* A* deocoder config structure */
 struct fsts_as_cfg {

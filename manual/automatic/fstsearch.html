@@ -82,6 +82,7 @@ fstsearch.html fstsearch CFstsearch [
     fstsearch.html#mth_-load "-load" "-load"
     fstsearch.html#mth_-restart "-restart" "-restart"
     fstsearch.html#mth_-search "-search" "-search"
+    fstsearch.html#mth_-status "-status" "-status"
   ]
   fstsearch.html#cfn C/C++ API - [
     fstsearch.html#cfn_000 "CFstsearch_Unload" "Unload"
@@ -119,6 +120,7 @@ fstsearch.html fstsearch CFstsearch [
         top.TC1.InsertItem("-load","&lt;fst itSrc&gt; &lt;long nUnit&gt; &lt;fstsearch this&gt; -load     Load the source automaton",27,27,0,"automatic/fstsearch.html#mth_-load","CONT",nCls);
         top.TC1.InsertItem("-restart","&lt;fstsearch this&gt; -restart     Reset iterative search",27,27,0,"automatic/fstsearch.html#mth_-restart","CONT",nCls);
         top.TC1.InsertItem("-search","&lt;fst itSrc&gt; &lt;long nUnit&gt; &lt;data idWeights&gt; &lt;fst itDst&gt; &lt;fstsearch this&gt; -search     All steps in one method",27,27,0,"automatic/fstsearch.html#mth_-search","CONT",nCls);
+        top.TC1.InsertItem("-status","&lt;fstsearch this&gt; -status     Prints status information of the search processor.",27,27,0,"automatic/fstsearch.html#mth_-status","CONT",nCls);
         nCfn = top.TC1.InsertItem("C/C++ API","",8,9,0,"automatic/fstsearch.html#cfn","CONT",nCls);
         top.TC1.InsertItem("CFstsearch_Unload","INT16 CFstsearch_Unload(CFstsearch _this)    ",27,27,0,"automatic/fstsearch.html#cfn_000","CONT",nCfn);
         nErr = top.TC1.InsertItem("Errors","",8,9,0,"automatic/fstsearch.html#err","CONT",nCls);
@@ -317,6 +319,7 @@ Search processor for wFSTs.
     <tr><td><a href="#mth_-load"><code class="link">-load</code></a></td><td><code>&lt;fst itSrc&gt; &lt;long nUnit&gt; &lt;fstsearch this&gt; <b>-load</b> </code><br> Load the source automaton</td></tr>
     <tr><td><a href="#mth_-restart"><code class="link">-restart</code></a></td><td><code>&lt;fstsearch this&gt; <b>-restart</b> </code><br> Reset iterative search</td></tr>
     <tr><td><a href="#mth_-search"><code class="link">-search</code></a></td><td><code>&lt;fst itSrc&gt; &lt;long nUnit&gt; &lt;data idWeights&gt; &lt;fst itDst&gt; &lt;fstsearch this&gt; <b>-search</b> </code><br> All steps in one method</td></tr>
+    <tr><td><a href="#mth_-status"><code class="link">-status</code></a></td><td><code>&lt;fstsearch this&gt; <b>-status</b> </code><br> Prints status information of the search processor.</td></tr>
     <tr><td colspan="2" class="rowempty">&nbsp;</td></tr>
     <tr>
       <td class="rowgroup"><a name="cfn">C/C++ API</a></td>
@@ -2161,7 +2164,7 @@ INT16 <b>CFstsearch_Backtrack</b>(CFstsearch _this, CFst* itDst);<br>public: INT
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fsts_glob.c(127)</td>
+      <td class="hidden">fsts_glob.c(138)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -2254,7 +2257,7 @@ INT16 <b>CFstsearch_Isearch</b>(CFstsearch _this, CData* idWeights);<br>public: 
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fsts_glob.c(90)</td>
+      <td class="hidden">fsts_glob.c(100)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -2364,7 +2367,7 @@ INT16 <b>CFstsearch_Load</b>(CFstsearch _this, CFst* itSrc, long nUnit);<br>publ
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fsts_glob.c(75)</td>
+      <td class="hidden">fsts_glob.c(85)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -2488,7 +2491,7 @@ INT16 <b>CFstsearch_Restart</b>(CFstsearch _this);<br>public: INT16 <b>CFstsearc
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fsts_glob.c(175)</td>
+      <td class="hidden">fsts_glob.c(186)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -2556,7 +2559,7 @@ INT16 <b>CFstsearch_Search</b>(CFstsearch _this, CFst* itSrc, long nUnit, CData*
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fsts_glob.c(199)</td>
+      <td class="hidden">fsts_glob.c(210)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -2606,6 +2609,71 @@ All steps in one method
   </div>
   <img src="../resources/blank_stc.gif" height="10">
   </div>
+  <div id="mth_-status">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td nowrap width="25%" class="navbar"><a 
+        name="mth_-status"></a>Method <span 
+        class="mid">-status</span></td>
+      <td nowrap width="75%" class="navbar" style="text-align:right;">
+        <a class="navbar" href="javascript:__PrintSection('mth_-status','Class fstsearch');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
+  </table>
+  <div class="mframe"><table cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td class="hidden">dLabPro</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Identifier</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code><b>-status</b></code></td>
+    </tr>
+    <tr>
+      <td class="hidden">&nbsp;</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Syntax</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code>
+&lt;fstsearch this&gt; <b>-status</b> 
+</code></td>
+    </tr>
+    <tr>
+      <td class="hidden" colspan="5">&nbsp;</td>
+    </tr>
+    <tr>
+      <td class="hidden">C/C++</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Member function</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code>
+INT16 <b>CFstsearch_Status</b>(CFstsearch _this);<br>public: INT16 <b>CFstsearch::Status</b>();<br>
+</code></td>
+    </tr>
+    <tr>
+      <td class="hidden">&nbsp;</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Source</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">fsts_glob.c(75)</td>
+    </tr>
+  </table></div>
+  <div class="mframe2">
+  <h3>Synopsis</h3>
+  <p>
+Prints status information of the search processor.
+  </p>
+  <!--{{ CUSTOM_DOC -->
+  <!--}} CUSTOM_DOC -->
+  </div>
+  <img src="../resources/blank_stc.gif" height="10">
+  </div>
   <div id="cfn_000">
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
@@ -2639,7 +2707,7 @@ INT16 <b>CFstsearch_Unload</b>(CFstsearch _this);<br>public: INT16 <b>CFstsearch
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fsts_glob.c(162)</td>
+      <td class="hidden">fsts_glob.c(173)</td>
     </tr>
   </table></div>
   <div class="mframe2">

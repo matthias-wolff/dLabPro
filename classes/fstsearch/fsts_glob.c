@@ -72,6 +72,61 @@ void fsts_freealgo(struct fsts_glob *glob){
 }
 
 /* see fstsearch.def */
+INT16 CGEN_PUBLIC CFstsearch_Status(CFstsearch *_this){
+  struct fsts_glob *glob;
+  const char *err;
+  fsts_getglob();
+  if(glob->state==FS_FREE && (err=fsts_cfg(&glob->cfg,_this))) return IERROR(_this,FSTS_STR,err,0,0);
+  printf("\n"); dlp_fprint_x_line(stdout,'-',dlp_maxprintcols());
+  printf("\n   Status of instance\n   fstsearch %s",BASEINST(_this)->m_lpInstanceName);
+  printf("\n"); dlp_fprint_x_line(stdout,'-',dlp_maxprintcols());
+  printf("\n   Configuration");
+  printf("\n    - Debug level                   : %i",BASEINST(_this)->m_nCheck);
+  printf("\n    - Search algorithm type         : %s",fsts_algostr[glob->cfg.algo]);
+  printf("\n    - Backtrack type                : %s",fsts_ebtstr[glob->cfg.bt]);
+  printf("\n    - Number of paths               : %i",glob->cfg.numpaths);
+  printf("\n    - Stack pruning                 : %s",glob->cfg.stkprn?"on":"off");
+  if(glob->cfg.bt==BT_LAT)
+  printf("\n    - Lattice pruning threshold     : %.2f",glob->cfg.latprn);
+  switch(glob->cfg.algo){
+  case FA_AS:
+  printf("\n    - Queue size                    : ");
+  if(glob->cfg.as.qsize) printf("%i",glob->cfg.as.qsize); else printf("auto");
+  printf("\n    - Frame pruning threshold       : ");
+  if(glob->cfg.as.prnf ) printf("%i",glob->cfg.as.prnf ); else printf("off");
+  printf("\n    - Weight pruning threshold      : ");
+  if(glob->cfg.as.prnw ) printf("%.2f",glob->cfg.as.prnw ); else printf("off");
+  printf("\n    - Timeinvariant heuristic type  : %s",fsts_as_aheustr[glob->cfg.as.aheu]);
+  printf("\n    - Timevariant heuristic type    : %s",fsts_as_sheustr[glob->cfg.as.sheu]);
+  break;
+  case FA_TP:
+  printf("\n    - Number of jobs                : %i",glob->cfg.tp.jobs);
+  printf("\n    - Hypothesis pruning threshold  : ");
+  if(glob->cfg.tp.prnh ) printf("%i",glob->cfg.tp.prnh ); else printf("off");
+  printf("\n    - Weight pruning threshold      : ");
+  if(glob->cfg.tp.prnw ) printf("%.2f",glob->cfg.tp.prnw ); else printf("off");
+  break;
+  case FA_SDP:
+  printf("\n    - Pruning threshold             : ");
+  if(glob->cfg.sdp.prn ) printf("%.2f",glob->cfg.sdp.prn ); else printf("off");
+  printf("\n    - Eps removal after backtrack   : %s",glob->cfg.sdp.epsremove?"yes":"no");
+  printf("\n    - Forward algorithm             : %s",glob->cfg.sdp.fwd?"yes":"no");
+  break;
+  }
+  printf("\n   Status");
+  printf("\n    - Recognition network           : %s",_this->m_bLoaded?"loaded":"not loaded");
+  printf("\n    - Decoder state                 : ");
+  switch(glob->state){
+  case FS_FREE:      printf("free - not ready"); break;
+  case FS_BEGIN:     printf("loaded - ready for first frame"); break;
+  case FS_SEARCHING: printf("within decoding - ready for next frame"); break;
+  case FS_END:       printf("decdogin finalized - ready for backtracking"); break;
+  }
+  printf("\n    - Memory used for current dec.  : %.0fB",glob->mem);
+  return O_K;
+}
+
+/* see fstsearch.def */
 INT16 CGEN_PUBLIC CFstsearch_Load(CFstsearch *_this,CFst *itSrc,long nUnit){
   struct fsts_glob *glob;
   const char *err;
