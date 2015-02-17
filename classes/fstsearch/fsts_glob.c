@@ -106,11 +106,12 @@ INT16 CGEN_PUBLIC CFstsearch_Isearch(CFstsearch *_this,CData *idWeights){
     if(glob->cfg.algo!=FA_TP && glob->cfg.algo!=FA_AS) return IERROR(_this,FSTS_STR,FSTSERR("timeinvariant decoding not implemented for this algo"),0,0);
     if(!_this->m_bFinal) return IERROR(_this,FSTS_STR,FSTSERR("timeinvariant iterative decoding not possible"),0,0);
   }else if(!_this->m_bFinal && glob->cfg.algo!=FA_TP){ err=FSTSERR("iterative decoding not implemented for that algo"); goto end; }
+  if(_this->m_bStart && glob->cfg.algo!=FA_TP){ err=FSTSERR("start option not implemented for that algo"); goto end; }
   glob->state=FS_SEARCHING;
   _this->m_bLoaded=FALSE;
   fsts_gettime();
   switch(glob->cfg.algo){
-  case FA_TP:  err=fsts_tp_isearch(glob,&w,_this->m_bFinal); break;
+  case FA_TP:  err=fsts_tp_isearch(glob,&w,_this->m_bFinal,_this->m_bStart); break;
   case FA_AS:  err=fsts_as_isearch(glob,&w);  break;
   case FA_SDP: err=fsts_sdp_isearch(glob,&w); break;
   }

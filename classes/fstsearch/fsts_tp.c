@@ -93,6 +93,22 @@ const char *fsts_tp_chksrc(struct fsts_fst *src){
   return NULL;
 }
 
+/* TP decoder generate initial state
+ *
+ * This function generates an initial state for the current
+ * frame and adds it to the queue.
+ *
+ * @param glob  Pointer to the global memory structure
+ * @return <code>NULL</code> if successfull, the error string otherwise
+ */
+const char *fsts_tp_geninitial(struct fsts_glob *glob){
+  struct fsts_tp_algo *algo=(struct fsts_tp_algo *)glob->algo;
+  struct fsts_tp_s s;
+  const char *err;
+  if((err=fsts_tp_sgen(&s,NULL,NULL,&glob->src,NULL,&algo->btm,0,0))) return err;
+  return fsts_tp_lsadd(glob->cfg.tp.jobs>1?&algo->jobs[0].ls1:&algo->ls1,&s,0);
+}
+
 /* TP decoder initialize function
  *
  * This function initializes the decoder.
@@ -103,7 +119,6 @@ const char *fsts_tp_chksrc(struct fsts_fst *src){
  */
 const char *fsts_tp_init(struct fsts_glob *glob){
   struct fsts_tp_algo *algo;
-  struct fsts_tp_s s;
   const char *err;
   if(glob->cfg.bt==BT_T && !glob->src.itSrc) return FSTSERR("fast loading not possible with tp_bt=\"t\"");
   if((err=fsts_tp_chksrc(&glob->src))) return err;
@@ -132,8 +147,7 @@ const char *fsts_tp_init(struct fsts_glob *glob){
     if((err=fsts_tp_lsinit(&algo->ls1,&algo->btm,&glob->cfg,T_DOUBLE_MIN))) return err;
     if((err=fsts_tp_lsinit(&algo->ls2,&algo->btm,&glob->cfg,glob->cfg.tp.prnw?0.:T_DOUBLE_MIN))) return err;
   }
-  if((err=fsts_tp_sgen(&s,NULL,NULL,&glob->src,NULL,&algo->btm,0,0))) return err;
-  return fsts_tp_lsadd(glob->cfg.tp.jobs>1?&algo->jobs[0].ls1:&algo->ls1,&s,0);
+  return fsts_tp_geninitial(glob);
 }
 
 /* TP decoder free function
@@ -513,12 +527,13 @@ const char *fsts_tp_isearch1(struct fsts_glob *glob,struct fsts_w *w){
  * @param final Decode until final states if TRUE
  * @return <code>NULL</code> if successfull, the error string otherwise
  */
-const char *fsts_tp_isearch(struct fsts_glob *glob,struct fsts_w *w,UINT8 final){
+const char *fsts_tp_isearch(struct fsts_glob *glob,struct fsts_w *w,UINT8 final,UINT8 start){
   struct fsts_tp_algo *algo=(struct fsts_tp_algo *)glob->algo;
   const char *err;
   INT32 f;
   for(f=0;f<w->nf;f++){
     struct fsts_w wf;
+    if(start) fsts_tp_geninitial(glob); /* TODO: weight ?? */
     fsts_wf(w,f,&wf);
     if((err=glob->cfg.tp.jobs>1 ? fsts_tp_isearchj(glob,&wf) : fsts_tp_isearch1(glob,&wf))) return err;
   }

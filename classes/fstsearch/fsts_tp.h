@@ -36,7 +36,7 @@ struct fsts_tp_cfg {
 const char *fsts_tp_cfg(struct fsts_cfg *cfg,CFstsearch *_this);
 const char *fsts_tp_init(struct fsts_glob *glob);
 void fsts_tp_free(struct fsts_glob *glob);
-const char *fsts_tp_isearch(struct fsts_glob *glob,struct fsts_w *w,UINT8 final);
+const char *fsts_tp_isearch(struct fsts_glob *glob,struct fsts_w *w,UINT8 final,UINT8 start);
 const char *fsts_tp_backtrack(struct fsts_glob *glob,CFst *itDst);
 
 #endif

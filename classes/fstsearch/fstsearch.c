@@ -121,6 +121,7 @@ INT16 CFstsearch_AutoRegisterWords(CDlpObject* __this)
 	/* Register options */
 	REGISTER_OPTION("/fast","",LPMV(m_bFast),NULL,"Do not copy the source automaton for backtracking",0)
 	REGISTER_OPTION("/final","",LPMV(m_bFinal),NULL,"Decode until a final state is reached",0)
+	REGISTER_OPTION("/start","",LPMV(m_bStart),NULL,"Start state in every frame",0)
 
 	/* Register fields */
 	REGISTER_FIELD("algo","",LPMV(m_lpsAlgo),LPMF(CFstsearch,OnAlgoChanged),"Search algorithm to use",0,5000,1,"string","tp")
@@ -344,6 +345,7 @@ INT16 CFstsearch_ResetAllOptions(CDlpObject* __this, BOOL bInit)
 	/*{{CGEN_RESETALLOPTIONS*/
 	_this->m_bFast = FALSE;
 	_this->m_bFinal = FALSE;
+	_this->m_bStart = FALSE;
 	/*}}CGEN_RESETALLOPTIONS*/
 	}
 

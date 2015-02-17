@@ -374,6 +374,17 @@ COMMENT: Decode until a final state is reached
   @see -backtrack
 END_MAN
 
+OPTION:  /start
+COMMENT: Start state in every frame
+/html MAN:
+  Create a new initial state for every frame
+  in the iterative search. The option may be set
+  only for some calls of {@link -isearch}, for all calls
+  or for the call to {@link -search}.
+  @see -search
+  @see -isearch
+END_MAN
+
 ######################################################################
 ## Command definition
 
@@ -436,6 +447,7 @@ COMMENT: Iterative search: decode frames in idWeights
   @param idWeights Timevariant weight array.
 
   @see /final
+  @see /start
 END_MAN
 
 METHOD:  -backtrack
@@ -471,6 +483,7 @@ COMMENT: All steps in one method
   @see -isearch
   @see -backtrack
   @see /fast
+  @see /start
 END_MAN
 
 ######################################################################

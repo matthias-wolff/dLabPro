@@ -223,6 +223,7 @@ typedef struct CFstsearch
 /*{{CGEN_OPTIONS */
 	BOOL m_bFast;
 	BOOL m_bFinal;
+	BOOL m_bStart;
 /*}}CGEN_OPTIONS */
 }
 
