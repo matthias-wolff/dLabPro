@@ -192,7 +192,7 @@ INT16 CGEN_PUBLIC CFstsearch_Backtrack(CFstsearch *_this,CFst *itDst){
     return IERROR(_this,FSTS_STR,FSTSERR("no search before backtracking"),0,0);
   fsts_gettime();
   switch(glob->cfg.algo){
-  case FA_TP:  err=fsts_tp_backtrack(glob,itDst);  break;
+  case FA_TP:  err=fsts_tp_backtrack(glob,itDst,_this->m_bFinal);  break;
   case FA_AS:  err=fsts_as_backtrack(glob,itDst);  break;
   case FA_SDP: err=fsts_sdp_backtrack(glob,itDst); break;
   }

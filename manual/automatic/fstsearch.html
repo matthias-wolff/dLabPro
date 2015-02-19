@@ -2019,10 +2019,15 @@ m_bFinal
 Decode until a final state is reached
   </p>
   <h3>Description</h3>
-  <p>Continue with decoding after the last frame until
+  <ul>
+  <li><b><a href="#mth_-isearch"><code class="link">-isearch</code></a>:</b> Continue with decoding after the last frame until
   <a href="#fld_numpaths"><code class="link">numpaths</code></a> reach a final state. Afterwards no
   further decoding is possible. You need to call
-  <a href="#mth_-backtrack"><code class="link">-backtrack</code></a> or <a href="#mth_-restart"><code class="link">-restart</code></a>.</p>
+  <a href="#mth_-backtrack"><code class="link">-backtrack</code></a> or <a href="#mth_-restart"><code class="link">-restart</code></a>.</li>
+  <li><b><a href="#mth_-backtrack"><code class="link">-backtrack</code></a>:</b> When backtracking while iterative decoding:
+  backtrack only paths ending at a final state in the previous time frame.
+  Without this option paths ending at any state in the current time frame are returned.</li>
+  </ul>
 	<h3>See also</h3>
 	<table>
 		<tr>
@@ -2164,7 +2169,7 @@ INT16 <b>CFstsearch_Backtrack</b>(CFstsearch _this, CFst* itDst);<br>public: INT
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fsts_glob.c(138)</td>
+      <td class="hidden">fsts_glob.c(183)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -2177,6 +2182,12 @@ Backtrack from the current decoding state
   It will generate one unit for every path.
   The transitions are copied from the source automaton with all components unless you used <a href="#opt__fast"><code class="link">/fast</code></a>.
   The total path weight is stored in the unit table in the componet <code>"~GW"</code>.</p>
+
+  <p>When backtracking while iterative decoding with the option <a href="#opt__final"><code class="link">/final</code></a>
+  backtrack only paths ending at a final state in the previous time frame.
+  Without this option paths ending at any state in the current time frame are returned.
+  After running <a href="#mth_-isearch"><code class="link">-isearch</code></a> with <a href="#opt__final"><code class="link">/final</code></a> in any case only paths ending at
+  a final state in the current time frame are decoded.</p>
 
 	<h3>Parameters</h3>
 	<table>
@@ -2257,7 +2268,7 @@ INT16 <b>CFstsearch_Isearch</b>(CFstsearch _this, CData* idWeights);<br>public: 
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fsts_glob.c(100)</td>
+      <td class="hidden">fsts_glob.c(145)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -2367,7 +2378,7 @@ INT16 <b>CFstsearch_Load</b>(CFstsearch _this, CFst* itSrc, long nUnit);<br>publ
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fsts_glob.c(85)</td>
+      <td class="hidden">fsts_glob.c(130)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -2491,7 +2502,7 @@ INT16 <b>CFstsearch_Restart</b>(CFstsearch _this);<br>public: INT16 <b>CFstsearc
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fsts_glob.c(186)</td>
+      <td class="hidden">fsts_glob.c(231)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -2559,7 +2570,7 @@ INT16 <b>CFstsearch_Search</b>(CFstsearch _this, CFst* itSrc, long nUnit, CData*
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fsts_glob.c(210)</td>
+      <td class="hidden">fsts_glob.c(255)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -2707,7 +2718,7 @@ INT16 <b>CFstsearch_Unload</b>(CFstsearch _this);<br>public: INT16 <b>CFstsearch
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fsts_glob.c(173)</td>
+      <td class="hidden">fsts_glob.c(218)</td>
     </tr>
   </table></div>
   <div class="mframe2">

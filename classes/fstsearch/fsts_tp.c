@@ -147,6 +147,7 @@ const char *fsts_tp_init(struct fsts_glob *glob){
     if((err=fsts_tp_lsinit(&algo->ls1,&algo->btm,&glob->cfg,T_DOUBLE_MIN))) return err;
     if((err=fsts_tp_lsinit(&algo->ls2,&algo->btm,&glob->cfg,glob->cfg.tp.prnw?0.:T_DOUBLE_MIN))) return err;
   }
+  if((err=fsts_tp_lsinit(&algo->lsf,&algo->btm,&glob->cfg,T_DOUBLE_MIN))) return err;
   return fsts_tp_geninitial(glob);
 }
 
@@ -182,6 +183,7 @@ void fsts_tp_free(struct fsts_glob *glob){
     fsts_tp_lsfree(&algo->ls1);
     fsts_tp_lsfree(&algo->ls2);
   }
+  fsts_tp_lsfree(&algo->lsf);
   fsts_btm_free(&algo->btm);
   free(glob->algo);
   glob->algo=NULL;
@@ -326,13 +328,13 @@ const char *fsts_tp_propagate(struct fsts_tp_ls *ls1,struct fsts_tp_ls *ls2,FLOA
           #ifdef _DEBUG
           if(glob->debug>=4) printf("\n");
           #endif
-        }else if(!w && !s1->nstk){
+        }else if(!s1->nstk){
           struct fsts_tp_s s2;
           if((err=fsts_tp_sgen(&s2,s1,NULL,&glob->src,NULL,&algo->btm,0,0))) return err;
           #ifdef _DEBUG
           if(glob->debug>=4) printf("  >fin: f %4i s %8i w %8.1f os: 0x%08x\n",algo->f,s2.id,s2.w,glob->cfg.numpaths>1?BTHASH(s2.bt.os):0);
           #endif
-          if((err=fsts_tp_lsaddj(1,&s2,glob->debug))) return err;
+          if((err=fsts_tp_lsadd(&algo->lsf,&s2,glob->debug))) return err;
           #ifdef _DEBUG
           if(glob->debug>=4) printf("\n");
           #endif
@@ -533,7 +535,9 @@ const char *fsts_tp_isearch(struct fsts_glob *glob,struct fsts_w *w,UINT8 final,
   INT32 f;
   for(f=0;f<w->nf;f++){
     struct fsts_w wf;
-    if(start) fsts_tp_geninitial(glob); /* TODO: weight ?? */
+    fsts_tp_lsfree(&algo->lsf);
+    if((err=fsts_tp_lsinit(&algo->lsf,NULL,NULL,T_DOUBLE_MIN))) return err;
+    if(start) fsts_tp_geninitial(glob);
     fsts_wf(w,f,&wf);
     if((err=glob->cfg.tp.jobs>1 ? fsts_tp_isearchj(glob,&wf) : fsts_tp_isearch1(glob,&wf))) return err;
   }
@@ -563,23 +567,28 @@ const char *fsts_tp_isearch(struct fsts_glob *glob,struct fsts_w *w,UINT8 final,
  *
  * @param glob  Pointer to the global memory structure
  * @param itDst Destination transducer for backtracking
+ * @param final In iterative decoding: backtrack only paths ending at a final state in the previous time frame
  * @return <code>NULL</code> if successfull, the error string otherwise
  */
-const char *fsts_tp_backtrack(struct fsts_glob *glob,CFst *itDst){
+const char *fsts_tp_backtrack(struct fsts_glob *glob,CFst *itDst,UINT8 final){
   struct fsts_tp_algo *algo=(struct fsts_tp_algo *)glob->algo;
   struct fsts_btinfo bti;
   struct fsts_tp_s *s;
   const char *err;
-  if(glob->cfg.tp.jobs>1){
-    INT32 j;
-    for(j=0;j<glob->cfg.tp.jobs;j++) if(algo->jobs[j].ls1.qs){
-      if(algo->ls1.qe) algo->ls1.qe->nxt=algo->jobs[j].ls1.qs;
-      else algo->ls1.qs=algo->jobs[j].ls1.qs;
-      algo->ls1.qe=algo->jobs[j].ls1.qe;
+  struct fsts_tp_ls *ls=&algo->lsf;
+  if(glob->state==FS_SEARCHING && !final){
+    ls=&algo->ls1;
+    if(glob->cfg.tp.jobs>1){
+      INT32 j;
+      for(j=0;j<glob->cfg.tp.jobs;j++) if(algo->jobs[j].ls1.qs){
+        if(algo->ls1.qe) algo->ls1.qe->nxt=algo->jobs[j].ls1.qs;
+        else algo->ls1.qs=algo->jobs[j].ls1.qs;
+        algo->ls1.qe=algo->jobs[j].ls1.qe;
+      }
     }
   }
   if((err=fsts_btstart(&bti,glob,&algo->btm,itDst))) return err;
-  while((s=fsts_tp_lsbest(&algo->ls1,glob->state!=FS_SEARCHING))){
+  while((s=fsts_tp_lsbest(ls,glob->state!=FS_SEARCHING))){
     fsts_btpath(&bti,s->w,&s->bt);
     if(glob->state==FS_SEARCHING) break;
     fsts_tp_sfree(s,NULL,&algo->btm);

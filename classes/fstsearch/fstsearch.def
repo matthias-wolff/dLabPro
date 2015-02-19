@@ -366,10 +366,15 @@ END_MAN
 OPTION:  /final
 COMMENT: Decode until a final state is reached
 /html MAN:
-  <p>Continue with decoding after the last frame until
+  <ul>
+  <li><b>{@link -isearch}:</b> Continue with decoding after the last frame until
   {@link numpaths} reach a final state. Afterwards no
   further decoding is possible. You need to call
-  {@link -backtrack} or {@link -restart}.</p>
+  {@link -backtrack} or {@link -restart}.</li>
+  <li><b>{@link -backtrack}:</b> When backtracking while iterative decoding:
+  backtrack only paths ending at a final state in the previous time frame.
+  Without this option paths ending at any state in the current time frame are returned.</li>
+  </ul>
   @see -isearch
   @see -backtrack
 END_MAN
@@ -462,6 +467,12 @@ COMMENT: Backtrack from the current decoding state
   It will generate one unit for every path.
   The transitions are copied from the source automaton with all components unless you used {@link /fast}.
   The total path weight is stored in the unit table in the componet <code>"~GW"</code>.</p>
+
+  <p>When backtracking while iterative decoding with the option {@link /final}
+  backtrack only paths ending at a final state in the previous time frame.
+  Without this option paths ending at any state in the current time frame are returned.
+  After running {@link -isearch} with {@link /final} in any case only paths ending at
+  a final state in the current time frame are decoded.</p>
 
   @param itDst Destination transducer
 

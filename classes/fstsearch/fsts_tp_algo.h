@@ -36,6 +36,7 @@ struct fsts_tp_algo;
 struct fsts_tp_algo {
   INT32  f;                      /* Current frame index        */
   struct fsts_tp_ls ls1, ls2;    /* Active state queues        */
+  struct fsts_tp_ls lsf;         /* Final state queue          */
   struct fsts_btm btm;           /* Backtrack memory           */
   INT64  nstates;                /* Number of expanded states  */
   struct fsts_tp_job *jobs;      /* Job specific memories      */
