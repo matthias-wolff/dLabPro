@@ -88,7 +88,7 @@ const char *fsts_tp_lsadd(struct fsts_tp_ls *ls,struct fsts_tp_s *s,UINT8 dbg){
     /* state visited before + only one path => replace state if weight improved */
     struct fsts_tp_s *sh=(struct fsts_tp_s*)fsts_hs2s(hs);
     #ifdef _DEBUG
-    if(dbg>=4) printf(" => %s0 (wn: %8.1f os: 0x%08x)",sh->wn<=s->wn?"del":"rpl",sh->wn,sh->bt.os?BTHASH(sh->bt.os):0);
+    if(dbg>=4) printf(" => %s0 (wn: %6.3f os: 0x%08x)",sh->wn<=s->wn?"del":"rpl",sh->wn,sh->bt.os?BTHASH(sh->bt.os):0);
     #endif
     if(sh->wn<=s->wn) fsts_tp_sfree(s,sh,ls->btm); else{
       s->nxt=sh->nxt;
@@ -104,7 +104,7 @@ const char *fsts_tp_lsadd(struct fsts_tp_ls *ls,struct fsts_tp_s *s,UINT8 dbg){
     for(i=0;i<hs->use;i++,sh++) if(fsts_bteql(sh->bt.os,s->bt.os)){
       /* hypo with equal history => replace sate if weight improved */
       #ifdef _DEBUG
-      if(dbg>=4) printf(" => %s%i (wn: %8.1f os: 0x%08x)",sh->wn<=s->wn?"del":"rpl",i,sh->wn,BTHASH(sh->bt.os));
+      if(dbg>=4) printf(" => %s%i (wn: %6.3f os: 0x%08x)",sh->wn<=s->wn?"del":"rpl",i,sh->wn,BTHASH(sh->bt.os));
       #endif
       if(sh->wn<=s->wn) fsts_tp_sfree(s,sh,ls->btm); else{
         s->nxt=sh->nxt;
@@ -130,7 +130,7 @@ const char *fsts_tp_lsadd(struct fsts_tp_ls *ls,struct fsts_tp_s *s,UINT8 dbg){
         struct fsts_tp_s *shmax=sh;
         for(i=1,sh++;i<hs->use;i++,sh++) if(sh->wn>shmax->wn) shmax=sh;
         #ifdef _DEBUG
-        if(dbg>=4) printf(" => %sX (wn: %8.1f os: 0x%08x)",shmax->wn<=s->wn?"del":"rpl",shmax->wn,BTHASH(shmax->bt.os));
+        if(dbg>=4) printf(" => %sX (wn: %6.3f os: 0x%08x)",shmax->wn<=s->wn?"del":"rpl",shmax->wn,BTHASH(shmax->bt.os));
         #endif
         if(shmax->wn<=s->wn) fsts_tp_sfree(s,shmax,ls->btm); else {
           s->nxt=shmax->nxt;
