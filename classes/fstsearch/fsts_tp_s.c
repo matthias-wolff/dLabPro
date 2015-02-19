@@ -38,7 +38,7 @@
 void fsts_tp_sfree(struct fsts_tp_s *s,struct fsts_tp_s *sref,struct fsts_btm *btm){
   if(s->btfree) return;
   s->btfree=1;
-  fsts_btsfree(&s->bt,sref?&sref->bt:NULL,sref?s->w-sref->w:0.,btm);
+  fsts_btsfree(&s->bt,sref?&sref->bt:NULL,sref?s->wc-sref->wc:0.,btm);
 }
 
 /* TP active state generation function
@@ -62,7 +62,8 @@ const char *fsts_tp_sgen(struct fsts_tp_s *s,struct fsts_tp_s *sref,struct fsts_
   if(!sref){
     s->ds=s->s[0]=0;
     s->nstk=0;
-    s->w=0.;
+    s->wc=s->wn=0.;
+    s->l=0;
     s->id=0;
     s->btfree=0;
 /*    s->mid=1;*/
@@ -71,10 +72,11 @@ const char *fsts_tp_sgen(struct fsts_tp_s *s,struct fsts_tp_s *sref,struct fsts_
   s->ds=sref->ds;
   for(d=0;d<=s->ds;d++) s->s[d]=sref->s[d];
   for(d=0;d<s->ds;d++)  s->u[d]=sref->u[d];
-  s->w=sref->w;
+  s->wc=sref->wc;
+  s->l=sref->l;
 /*  s->mid=sref->mid;*/
   s->btfree=0;
-  if((err=fsts_btsgen(&s->bt,&sref->bt,t,ui0,s->w,btm))) return err;
+  if((err=fsts_btsgen(&s->bt,&sref->bt,t,ui0,s->wc,btm))) return err;
   s->nstk=sref->nstk;
   if(!t){
     if(--s->ds<0){
@@ -86,6 +88,7 @@ const char *fsts_tp_sgen(struct fsts_tp_s *s,struct fsts_tp_s *sref,struct fsts_
       s->id = sref->id%mid;
 /*      s->mid/=src->units[s->ds?s->u[s->ds-1]:0].ns;*/
     }
+    s->wn=s->wc/(FLOAT64)(s->l?s->l:1);
     return NULL;
   }
   for(d=0;d<s->nstk;d++) s->stk[d]=sref->stk[d];
@@ -93,14 +96,14 @@ const char *fsts_tp_sgen(struct fsts_tp_s *s,struct fsts_tp_s *sref,struct fsts_
     if(s->nstk+1==MAXSTK) return FSTSERR("stk: out of memory");
     s->stk[s->nstk++]=t->stk;
   }else if(t->stk<0) s->nstk--;
-  s->w+=t->w;
+  s->wc+=t->w;
   s->s[s->ds]=t->ter;
   mid=1;
   for(d=-1;d<s->ds-1;d++) mid*=src->nunits*src->units[d>=0?s->u[d]:0].ns;
   s->id = sref->id%mid + s->s[s->ds]*mid;
   if(t->is>=0){
     if(!sub){
-      if(w) s->w+=w->w[t->is];
+      if(w){ s->wc+=w->w[t->is]; s->l++; }
     }else{
       if(++s->ds==MAXLAYER) return FSTSERR("out of layers");
       s->u[s->ds-1]=t->is;
@@ -111,6 +114,7 @@ const char *fsts_tp_sgen(struct fsts_tp_s *s,struct fsts_tp_s *sref,struct fsts_
 /*      s->mid*=src->nunits;*/
     }
   }
+  s->wn=s->wc/(FLOAT64)(s->l?s->l:1);
   return NULL;
 }
 

@@ -80,17 +80,17 @@ void fsts_tp_lsfree(struct fsts_tp_ls *ls){
  */
 const char *fsts_tp_lsadd(struct fsts_tp_ls *ls,struct fsts_tp_s *s,UINT8 dbg){
   struct fsts_hs *hs;
-  if(s->w>ls->wmax) ls->wmax=s->w;
-  if(s->w<ls->wmin) ls->wmin=s->w;
-  fsts_tp_histins(&ls->hist,s->w);
+  if(s->wn>ls->wmax) ls->wmax=s->wn;
+  if(s->wn<ls->wmin) ls->wmin=s->wn;
+  fsts_tp_histins(&ls->hist,s->wn);
   /* state visitied before ? */
   if((hs=fsts_hfind(&ls->h,s))) if(ls->numpaths==1){
     /* state visited before + only one path => replace state if weight improved */
     struct fsts_tp_s *sh=(struct fsts_tp_s*)fsts_hs2s(hs);
     #ifdef _DEBUG
-    if(dbg>=4) printf(" => %s0 (w: %8.1f os: 0x%08x)",sh->w<=s->w?"del":"rpl",sh->w,sh->bt.os?BTHASH(sh->bt.os):0);
+    if(dbg>=4) printf(" => %s0 (wn: %8.1f os: 0x%08x)",sh->wn<=s->wn?"del":"rpl",sh->wn,sh->bt.os?BTHASH(sh->bt.os):0);
     #endif
-    if(sh->w<=s->w) fsts_tp_sfree(s,sh,ls->btm); else{
+    if(sh->wn<=s->wn) fsts_tp_sfree(s,sh,ls->btm); else{
       s->nxt=sh->nxt;
       fsts_tp_sfree(sh,s,ls->btm);
       *sh=*s;
@@ -104,9 +104,9 @@ const char *fsts_tp_lsadd(struct fsts_tp_ls *ls,struct fsts_tp_s *s,UINT8 dbg){
     for(i=0;i<hs->use;i++,sh++) if(fsts_bteql(sh->bt.os,s->bt.os)){
       /* hypo with equal history => replace sate if weight improved */
       #ifdef _DEBUG
-      if(dbg>=4) printf(" => %s%i (w: %8.1f os: 0x%08x)",sh->w<=s->w?"del":"rpl",i,sh->w,BTHASH(sh->bt.os));
+      if(dbg>=4) printf(" => %s%i (wn: %8.1f os: 0x%08x)",sh->wn<=s->wn?"del":"rpl",i,sh->wn,BTHASH(sh->bt.os));
       #endif
-      if(sh->w<=s->w) fsts_tp_sfree(s,sh,ls->btm); else{
+      if(sh->wn<=s->wn) fsts_tp_sfree(s,sh,ls->btm); else{
         s->nxt=sh->nxt;
         fsts_tp_sfree(sh,s,ls->btm);
         *sh=*s;                                         /* insert the state */
@@ -128,11 +128,11 @@ const char *fsts_tp_lsadd(struct fsts_tp_ls *ls,struct fsts_tp_s *s,UINT8 dbg){
         /* full => replace maximal weight if possible */
         struct fsts_tp_s *sh=(struct fsts_tp_s*)fsts_hs2s(hs);
         struct fsts_tp_s *shmax=sh;
-        for(i=1,sh++;i<hs->use;i++,sh++) if(sh->w>shmax->w) shmax=sh;
+        for(i=1,sh++;i<hs->use;i++,sh++) if(sh->wn>shmax->wn) shmax=sh;
         #ifdef _DEBUG
-        if(dbg>=4) printf(" => %sX (w: %8.1f os: 0x%08x)",shmax->w<=s->w?"del":"rpl",shmax->w,BTHASH(shmax->bt.os));
+        if(dbg>=4) printf(" => %sX (wn: %8.1f os: 0x%08x)",shmax->wn<=s->wn?"del":"rpl",shmax->wn,BTHASH(shmax->bt.os));
         #endif
-        if(shmax->w<=s->w) fsts_tp_sfree(s,shmax,ls->btm); else {
+        if(shmax->wn<=s->wn) fsts_tp_sfree(s,shmax,ls->btm); else {
           s->nxt=shmax->nxt;
           fsts_tp_sfree(shmax,s,ls->btm);
           *shmax=*s;                                         /* insert the state */
@@ -179,7 +179,7 @@ struct fsts_tp_s *fsts_tp_lsdel(struct fsts_tp_ls *ls){
 struct fsts_tp_s *fsts_tp_lsbest(struct fsts_tp_ls *ls,UINT8 del){
   struct fsts_tp_s **s, **best=NULL, *ret;
   for(s=&ls->qs;s[0];s=&s[0]->nxt)
-    if(!best || s[0]->w<best[0]->w) best=s;
+    if(!best || s[0]->wn<best[0]->wn) best=s;
   if(!best) return NULL;
   if(!del) return best[0];
   ls->qe=NULL;

@@ -287,10 +287,10 @@ const char *fsts_tp_propagate(struct fsts_tp_ls *ls1,struct fsts_tp_ls *ls2,FLOA
     INT32 u1i=s1->ds?s1->u[s1->ds-1]:0;
     struct fsts_unit *u=glob->src.units+u1i;
     struct fsts_t *t=u->tfroms[s1i];
-    if(!wprn || s1->w<wprn){
+    if(!wprn || s1->wn<wprn){
       algo->nstates++;
       #ifdef _DEBUG
-      if(glob->debug>=3) printf(" state: f %4i s %8i w %8.1f os: 0x%08x\n",algo->f,s1->id,s1->w,glob->cfg.numpaths>1?BTHASH(s1->bt.os):0);
+      if(glob->debug>=3) printf(" state: f %4i s %8i wc %8.1f wn %8.1f os: 0x%08x\n",algo->f,s1->id,s1->wc,s1->wn,glob->cfg.numpaths>1?BTHASH(s1->bt.os):0);
       #endif
       for(;t;t=t->nxt){
         struct fsts_tp_s s2;
@@ -307,8 +307,8 @@ const char *fsts_tp_propagate(struct fsts_tp_ls *ls1,struct fsts_tp_ls *ls2,FLOA
           if(id!=s2.id) abort();
         }
         #endif
-        if(glob->debug>=4) printf("  => t: f %4i s %8i w %8.1f os: 0x%08x",
-          algo->f+(t->is>=0 && w && !u->sub?1:0),s2.id,s2.w,glob->cfg.numpaths>1?BTHASH(s2.bt.os):0);
+        if(glob->debug>=4) printf("  => t: f %4i s %8i wc %8.1f wn %8.1f os: 0x%08x",
+          algo->f+(t->is>=0 && w && !u->sub?1:0),s2.id,s2.wc,s2.wn,glob->cfg.numpaths>1?BTHASH(s2.bt.os):0);
         #endif
         if((err=fsts_tp_lsaddj(
           t->is>=0 && w && !u->sub,
@@ -322,7 +322,7 @@ const char *fsts_tp_propagate(struct fsts_tp_ls *ls1,struct fsts_tp_ls *ls2,FLOA
           struct fsts_tp_s s2;
           if((err=fsts_tp_sgen(&s2,s1,NULL,&glob->src,NULL,&algo->btm,0,0))) return err;
           #ifdef _DEBUG
-          if(glob->debug>=4) printf("  => u: f %4i s %8i w %8.1f os: 0x%08x",algo->f,s2.id,s2.w,glob->cfg.numpaths>1?BTHASH(s2.bt.os):0);
+          if(glob->debug>=4) printf("  => u: f %4i s %8i wc %8.1f wn %8.1f os: 0x%08x",algo->f,s2.id,s2.wc,s2.wn,glob->cfg.numpaths>1?BTHASH(s2.bt.os):0);
           #endif
           if((err=fsts_tp_lsaddj(0,&s2,glob->debug))) return err;
           #ifdef _DEBUG
@@ -332,7 +332,7 @@ const char *fsts_tp_propagate(struct fsts_tp_ls *ls1,struct fsts_tp_ls *ls2,FLOA
           struct fsts_tp_s s2;
           if((err=fsts_tp_sgen(&s2,s1,NULL,&glob->src,NULL,&algo->btm,0,0))) return err;
           #ifdef _DEBUG
-          if(glob->debug>=4) printf("  >fin: f %4i s %8i w %8.1f os: 0x%08x\n",algo->f,s2.id,s2.w,glob->cfg.numpaths>1?BTHASH(s2.bt.os):0);
+          if(glob->debug>=4) printf("  >fin: f %4i s %8i wc %8.1f wn %8.1f os: 0x%08x\n",algo->f,s2.id,s2.wc,s2.wn,glob->cfg.numpaths>1?BTHASH(s2.bt.os):0);
           #endif
           if((err=fsts_tp_lsadd(&algo->lsf,&s2,glob->debug))) return err;
           #ifdef _DEBUG
@@ -589,7 +589,7 @@ const char *fsts_tp_backtrack(struct fsts_glob *glob,CFst *itDst,UINT8 final){
   }
   if((err=fsts_btstart(&bti,glob,&algo->btm,itDst))) return err;
   while((s=fsts_tp_lsbest(ls,glob->state!=FS_SEARCHING))){
-    fsts_btpath(&bti,s->w,&s->bt);
+    fsts_btpath(&bti,s->wc,&s->bt);
     if(glob->state==FS_SEARCHING) break;
     fsts_tp_sfree(s,NULL,&algo->btm);
   }

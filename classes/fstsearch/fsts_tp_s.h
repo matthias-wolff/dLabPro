@@ -31,7 +31,9 @@ struct fsts_tp_s {
   uint64_t id;             /* State id                               */
   struct fsts_tp_s *nxt;   /* Next active state in queue             */
   struct fsts_bts bt;      /* State backtrack node                   */
-  FLOAT64 w;               /* Current path weight                    */
+  FLOAT64 wc;              /* Current path weight                    */
+  FLOAT64 wn;              /* Normalized current path weight         */
+  INT32   l;               /* Path length                            */
   INT8    ds;              /* Depth level for on-the-fly composition */
   INT8    nstk;            /* Usage of pushdown stack memory         */
   INT8    btfree;
