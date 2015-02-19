@@ -266,6 +266,27 @@ UINT8 fsts_tp_rbput(struct fsts_tp_job *jobs,UINT8 ls,struct fsts_tp_s *s,INT32 
   (glob->cfg.tp.jobs>1 && fsts_tp_rbput(algo->jobs,ls,s,glob->cfg.tp.jobs-1,jid) ? NULL : \
    fsts_tp_lsadd((ls)?ls2:ls1,s,dbg))
 
+/* TP decoder debug format function
+ *
+ * @param f    Frame index                
+ * @param s    State to debug             
+ * @param glob Pointer to the global memory structure
+ * @return     Debug string
+ */
+const char *fsts_tp_dbg(INT32 f,struct fsts_tp_s *s,struct fsts_glob *glob){
+  static char buf[512];
+  size_t l;
+  INT8 i;
+  l=snprintf(buf,512,"f %4i s %8lu wc %8.1f wn %6.3f l %4i",
+    f,s->id,s->wc,s->wn,s->l);
+  if(glob->cfg.numpaths>1) l+=snprintf(buf+l,512-l," os: 0x%08x",BTHASH(s->bt.os));
+  if(s->nstk){
+    l+=snprintf(buf+l,512-l," stk: ");
+    for(i=0;i<s->nstk;i++) l+=snprintf(buf+l,512-l,"%s%i",i?",":"",s->stk[i]);
+  }
+  return buf;
+}
+
 /* TP decoder propagate function
  *
  * This function propagates one active state out of the first active state queue.
@@ -290,7 +311,7 @@ const char *fsts_tp_propagate(struct fsts_tp_ls *ls1,struct fsts_tp_ls *ls2,FLOA
     if(!wprn || s1->wn<wprn){
       algo->nstates++;
       #ifdef _DEBUG
-      if(glob->debug>=3) printf(" state: f %4i s %8i wc %8.1f wn %6.3f l %4i os: 0x%08x\n",algo->f,s1->id,s1->wc,s1->wn,s1->l,glob->cfg.numpaths>1?BTHASH(s1->bt.os):0);
+      if(glob->debug>=3) printf(" state: %s\n",fsts_tp_dbg(algo->f,s1,glob));
       #endif
       for(;t;t=t->nxt){
         struct fsts_tp_s s2;
@@ -307,8 +328,7 @@ const char *fsts_tp_propagate(struct fsts_tp_ls *ls1,struct fsts_tp_ls *ls2,FLOA
           if(id!=s2.id) abort();
         }
         #endif
-        if(glob->debug>=4) printf("  => t: f %4i s %8i wc %8.1f wn %6.3f l %4i os: 0x%08x",
-          algo->f+(t->is>=0 && w && !u->sub?1:0),s2.id,s2.wc,s2.wn,s2.l,glob->cfg.numpaths>1?BTHASH(s2.bt.os):0);
+        if(glob->debug>=4) printf("  => t: %s",fsts_tp_dbg(algo->f+(t->is>=0 && w && !u->sub?1:0),&s2,glob));
         #endif
         if((err=fsts_tp_lsaddj(
           t->is>=0 && w && !u->sub,
@@ -322,7 +342,7 @@ const char *fsts_tp_propagate(struct fsts_tp_ls *ls1,struct fsts_tp_ls *ls2,FLOA
           struct fsts_tp_s s2;
           if((err=fsts_tp_sgen(&s2,s1,NULL,&glob->src,NULL,&algo->btm,0,0))) return err;
           #ifdef _DEBUG
-          if(glob->debug>=4) printf("  => u: f %4i s %8i wc %8.1f wn %6.3f l %4i os: 0x%08x",algo->f,s2.id,s2.wc,s2.wn,s2.l,glob->cfg.numpaths>1?BTHASH(s2.bt.os):0);
+          if(glob->debug>=4) printf("  => u: %s",fsts_tp_dbg(algo->f,&s2,glob));
           #endif
           if((err=fsts_tp_lsaddj(0,&s2,glob->debug))) return err;
           #ifdef _DEBUG
@@ -332,7 +352,7 @@ const char *fsts_tp_propagate(struct fsts_tp_ls *ls1,struct fsts_tp_ls *ls2,FLOA
           struct fsts_tp_s s2;
           if((err=fsts_tp_sgen(&s2,s1,NULL,&glob->src,NULL,&algo->btm,0,0))) return err;
           #ifdef _DEBUG
-          if(glob->debug>=4) printf("  >fin: f %4i s %8i wc %8.1f wn %6.3f l %4i os: 0x%08x\n",algo->f,s2.id,s2.wc,s2.wn,s2.l,glob->cfg.numpaths>1?BTHASH(s2.bt.os):0);
+          if(glob->debug>=4) printf("  >fin: %s",fsts_tp_dbg(algo->f,&s2,glob));
           #endif
           if((err=fsts_tp_lsadd(&algo->lsf,&s2,glob->debug))) return err;
           #ifdef _DEBUG
