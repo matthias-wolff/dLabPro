@@ -909,6 +909,7 @@ INT16 online(struct recosig *lpSig)
         if(rCfg.bVADForce) nVadSfa = nVal;
         if(rCfg.bFSTForce && nVal) searchload(nVal);
       }
+      if(rCfg.rSearch.bPermanent) nVadSfa=1;
 
       /* VAD Debug output */
       if(nVadSfa!=nVadSfaLast)
@@ -982,14 +983,21 @@ INT16 online(struct recosig *lpSig)
       if(nVadSfa>0 && rCfg.rSearch.bIter){
         rCfg.rDSession.itGM->m_bNeglog = TRUE;
         IF_NOK(CGmm_Density(rCfg.rDSession.itGM,rTmp.idFea,NULL,rTmp.idFea)) break;
+        rCfg.rDSession.itSP->m_bFinal=FALSE;
+        if(rCfg.rSearch.bPermanent) rCfg.rDSession.itSP->m_bStart=TRUE;
         CFstsearch_Isearch(rCfg.rDSession.itSP,rTmp.idFea);
-        if(rCfg.rSearch.eRejTyp==RR_phn) CFstsearch_Isearch(rCfg.rDSession.itSPr,rTmp.idFea);
+        if(rCfg.rSearch.eRejTyp==RR_phn){
+          rCfg.rDSession.itSPr->m_bFinal=FALSE;
+          if(rCfg.rSearch.bPermanent) rCfg.rDSession.itSPr->m_bStart=TRUE;
+          CFstsearch_Isearch(rCfg.rDSession.itSPr,rTmp.idFea);
+        }
         if(rCfg.sPostProc[0]) CData_Cat(rTmp.idNld,rTmp.idFea);
         CData_Array(rTmp.idFea,T_FLOAT,nMsf,1);
         if(nFea%10==0){
           CFst *itDC;
           INT32 nT,nCTos;
           ICREATEEX(CFst, itDC, "itDC", NULL);
+          rCfg.rDSession.itSP->m_bFinal=TRUE;
           CFstsearch_Backtrack(rCfg.rDSession.itSP,itDC);
           nCTos=CData_FindComp(AS(CData,itDC->td),"~TOS");
           if(nCTos>=0 && !CData_IsEmpty(AS(CData,itDC->os))){

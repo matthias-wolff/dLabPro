@@ -142,6 +142,11 @@ search.twotne = 0\n\
 # only used in token passing search (see fstsearch.tp_threads)\n\
 search.threads = 1\n\
 \n\
+# Permanent decoding (without VAD)\n\
+#\n\
+# Disables VAD!\n\
+search.permanent = no\n\
+\n\
 # Force vad decission or selected fst\n\
 #\n\
 # If you use one of these two options, you have to\n\

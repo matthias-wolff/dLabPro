@@ -97,6 +97,7 @@ struct recosearch {
   FLOAT32 nTPPrnW;
   INT32   nTPPrnH;
   INT32   nThreads;
+  BOOL    bPermanent;
 };
 
 struct recovad {
@@ -329,6 +330,7 @@ struct recoopt {
   { "search.twotna",   OT_FLOAT, FALSE, &rCfg.rSearch.nTWOTNA   },
   { "search.twotne",   OT_FLOAT, FALSE, &rCfg.rSearch.nTWOTNE   },
   { "search.threads",  OT_INT,   FALSE, &rCfg.rSearch.nThreads  },
+  { "search.permanent",OT_BOOL,  FALSE, &rCfg.rSearch.bPermanent},
   { "fst.force",       OT_BOOL,  FALSE, &rCfg.bFSTForce         },
   { "fst.sel",         OT_INT,   TRUE,  &rTmp.nFstSel           },
   { "fst.sleep",       OT_FLOAT, FALSE, &rCfg.nFstSleep         },
