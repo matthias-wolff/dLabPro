@@ -235,6 +235,36 @@ END_CODE
   @see tp_prnw
 END_MAN
 
+FIELD:   wnorm_off
+TYPE:    double
+INIT:    20
+COMMENT: Weight normalization offset
+CODE:
+	CFstsearch_Restart(_this);
+END_CODE
+/html MAN:
+  <p>Penalty for short paths when using {@link /start} in
+  iterative decoding. The penalty decreases with {@link wnorm_dec}
+  over path length starting with wnorm_off at length zero.</p>
+  @see /start
+  @see wnorm_dec
+END_MAN
+
+FIELD:   wnorm_dec
+TYPE:    double
+INIT:    0.75
+COMMENT: Weight normalization decrement
+CODE:
+	CFstsearch_Restart(_this);
+END_CODE
+/html MAN:
+  <p>Penalty decrease for short paths when using {@link /start} in
+  iterative decoding. The penalty {@link wnorm_off} decreases by wnorm_dec
+  in every time frame.</p>
+  @see /start
+  @see wnorm_off
+END_MAN
+
 ######################################################################
 ## A* configuration
 
@@ -382,12 +412,21 @@ END_MAN
 OPTION:  /start
 COMMENT: Start state in every frame
 /html MAN:
-  Create a new initial state for every frame
+  <p>Create a new initial state for every frame
   in the iterative search. The option may be set
   only for some calls of {@link -isearch}, for all calls
-  or for the call to {@link -search}.
+  or for the call to {@link -search}. The path weights
+  will be normalized to path length. Without normalization
+  path weights of paths with different starting frame are not
+  comparable. Additinally the is a penalty for short paths
+  configured by {@link wnorm_off} and {@link wnorm_dec}.</p>
+
+  <p><span class="warning">Warning:</span> With this option the search
+  will be no longer admissible due to weight normalization.</p>
   @see -search
   @see -isearch
+  @see wnorm_off
+  @see wnorm_dec
 END_MAN
 
 ######################################################################

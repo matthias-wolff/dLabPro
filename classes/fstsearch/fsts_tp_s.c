@@ -53,19 +53,21 @@ void fsts_tp_sfree(struct fsts_tp_s *s,struct fsts_tp_s *sref,struct fsts_btm *b
  * @param btm   Bactrack memory
  * @param sub   Switch indicating lowest level for on-the-fly composition
  * @param ui0   Switch indicating the highest level
+ * @param cfg   Configuration
  * @return <code>NULL</code> if successfull, the error string otherwise
  */
-const char *fsts_tp_sgen(struct fsts_tp_s *s,struct fsts_tp_s *sref,struct fsts_t *t,struct fsts_fst *src,struct fsts_w *w,struct fsts_btm *btm,UINT8 sub,UINT8 ui0){
+const char *fsts_tp_sgen(struct fsts_tp_s *s,struct fsts_tp_s *sref,struct fsts_t *t,struct fsts_fst *src,struct fsts_w *w,struct fsts_btm *btm,UINT8 sub,UINT8 ui0,struct fsts_cfg *cfg){
   INT32 d;
   uint64_t mid;
   const char *err;
   if(!sref){
     s->ds=s->s[0]=0;
     s->nstk=0;
-    s->wc=s->wn=0.;
+    s->wc=0.;
     s->l=0;
     s->id=0;
     s->btfree=0;
+    fsts_tp_swnorm(s,cfg);
 /*    s->mid=1;*/
     return fsts_btsgen(&s->bt,NULL,NULL,0,0.,btm);
   }
@@ -88,7 +90,7 @@ const char *fsts_tp_sgen(struct fsts_tp_s *s,struct fsts_tp_s *sref,struct fsts_
       s->id = sref->id%mid;
 /*      s->mid/=src->units[s->ds?s->u[s->ds-1]:0].ns;*/
     }
-    s->wn=s->wc/(FLOAT64)(s->l?s->l:1);
+    fsts_tp_swnorm(s,cfg);
     return NULL;
   }
   for(d=0;d<s->nstk;d++) s->stk[d]=sref->stk[d];
@@ -114,7 +116,7 @@ const char *fsts_tp_sgen(struct fsts_tp_s *s,struct fsts_tp_s *sref,struct fsts_
 /*      s->mid*=src->nunits;*/
     }
   }
-  s->wn=s->wc/(FLOAT64)(s->l?s->l:1);
+  fsts_tp_swnorm(s,cfg);
   return NULL;
 }
 
@@ -134,5 +136,19 @@ UINT8 fsts_tp_scmpstk(void *a,void *b){
   if(bs->nstk!=as->nstk) return 0;
   for(i=0;i<as->nstk;i++) if(as->stk[i]!=bs->stk[i]) return 0;
   return 1;
+}
+
+/* TP active state weight normalization
+ *
+ * This function calculates the normalized path weight.
+ *
+ * @param s    Active state
+ * @param cfg  Configuration
+ */
+void fsts_tp_swnorm(struct fsts_tp_s *s,struct fsts_cfg *cfg){
+  if(!cfg->wn) s->wn=s->wc;
+  else
+    if(!s->l) s->wn=s->wc+cfg->wnoff;
+    else s->wn=s->wc/(FLOAT64)s->l+cfg->wnoff*exp((FLOAT64)s->l*cfg->wnexp);
 }
 

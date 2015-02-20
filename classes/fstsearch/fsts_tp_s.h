@@ -43,7 +43,8 @@ struct fsts_tp_s {
 };
 
 void fsts_tp_sfree(struct fsts_tp_s *s,struct fsts_tp_s *sref,struct fsts_btm *btm);
-const char *fsts_tp_sgen(struct fsts_tp_s *s,struct fsts_tp_s *sref,struct fsts_t *t,struct fsts_fst *src,struct fsts_w *w,struct fsts_btm *btm,UINT8 sub,UINT8 ui0);
+const char *fsts_tp_sgen(struct fsts_tp_s *s,struct fsts_tp_s *sref,struct fsts_t *t,struct fsts_fst *src,struct fsts_w *w,struct fsts_btm *btm,UINT8 sub,UINT8 ui0,struct fsts_cfg *cfg);
 UINT8 fsts_tp_scmpstk(void *a,void *b);
+void fsts_tp_swnorm(struct fsts_tp_s *s,struct fsts_cfg *cfg);
 
 #endif

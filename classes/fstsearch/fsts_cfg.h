@@ -45,6 +45,9 @@ struct fsts_cfg {
   UINT16 numpaths;         /* Number of paths to decode */
   UINT8 stkprn;            /* Stack pruning             */
   FLOAT64 latprn;          /* Lattice pruning threshold */
+  UINT8 wn;                /* Weight normalization flag     */
+  FLOAT64 wnoff;           /* Weight normalization offset   */
+  FLOAT64 wnexp;           /* Weight normalization exponent */
   struct fsts_as_cfg  as;  /* A* decoder config         */
   struct fsts_tp_cfg  tp;  /* TP decoder config         */
   struct fsts_sdp_cfg sdp; /* DP decoder config         */

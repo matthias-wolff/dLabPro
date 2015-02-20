@@ -133,6 +133,8 @@ public:
 	INT16 OnTpPrnhChanged();
 	INT16 OnTpPrnwChanged();
 	INT16 OnTpThreadsChanged();
+	INT16 OnWnormDecChanged();
+	INT16 OnWnormOffChanged();
 /*}}CGEN_FCCF */
 
 /* Scanned member functions */
@@ -220,6 +222,8 @@ typedef struct CFstsearch
 	INT64            m_nTpPrnh;
 	FLOAT64          m_nTpPrnw;
 	INT64            m_nTpThreads;
+	FLOAT64          m_nWnormDec;
+	FLOAT64          m_nWnormOff;
 /*}}CGEN_FIELDS */
 
 /*{{CGEN_OPTIONS */
@@ -295,6 +299,8 @@ INT16 CFstsearch_OnStkprnChanged(CDlpObject*);
 INT16 CFstsearch_OnTpPrnhChanged(CDlpObject*);
 INT16 CFstsearch_OnTpPrnwChanged(CDlpObject*);
 INT16 CFstsearch_OnTpThreadsChanged(CDlpObject*);
+INT16 CFstsearch_OnWnormDecChanged(CDlpObject*);
+INT16 CFstsearch_OnWnormOffChanged(CDlpObject*);
 /*}}CGEN_CFCCF */
 
 /* Scanned C (member) functions */

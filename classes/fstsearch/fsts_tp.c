@@ -105,7 +105,7 @@ const char *fsts_tp_geninitial(struct fsts_glob *glob){
   struct fsts_tp_algo *algo=(struct fsts_tp_algo *)glob->algo;
   struct fsts_tp_s s;
   const char *err;
-  if((err=fsts_tp_sgen(&s,NULL,NULL,&glob->src,NULL,&algo->btm,0,0))) return err;
+  if((err=fsts_tp_sgen(&s,NULL,NULL,&glob->src,NULL,&algo->btm,0,0,&glob->cfg))) return err;
   return fsts_tp_lsadd(glob->cfg.tp.jobs>1?&algo->jobs[0].ls1:&algo->ls1,&s,0);
 }
 
@@ -317,7 +317,7 @@ const char *fsts_tp_propagate(struct fsts_tp_ls *ls1,struct fsts_tp_ls *ls2,FLOA
         struct fsts_tp_s s2;
         if(t->is>=0 && !u->sub && !w && algo->f) continue;
         if(t->stk<0 && (!s1->nstk || s1->stk[s1->nstk-1]!=-t->stk)) continue;
-        if((err=fsts_tp_sgen(&s2,s1,t,&glob->src,w,&algo->btm,u->sub,u1i==0))) return err;
+        if((err=fsts_tp_sgen(&s2,s1,t,&glob->src,w,&algo->btm,u->sub,u1i==0,&glob->cfg))) return err;
         #ifdef _DEBUG
         #if 0
         { uint64_t id=s2.s[0],m=glob->src.units[0].ns; INT32 d;
@@ -340,7 +340,7 @@ const char *fsts_tp_propagate(struct fsts_tp_ls *ls1,struct fsts_tp_ls *ls2,FLOA
       if(u->sfin[s1i]){
         if(s1->ds){
           struct fsts_tp_s s2;
-          if((err=fsts_tp_sgen(&s2,s1,NULL,&glob->src,NULL,&algo->btm,0,0))) return err;
+          if((err=fsts_tp_sgen(&s2,s1,NULL,&glob->src,NULL,&algo->btm,0,0,&glob->cfg))) return err;
           #ifdef _DEBUG
           if(glob->debug>=4) printf("  => u: %s",fsts_tp_dbg(algo->f,&s2,glob));
           #endif
@@ -350,7 +350,7 @@ const char *fsts_tp_propagate(struct fsts_tp_ls *ls1,struct fsts_tp_ls *ls2,FLOA
           #endif
         }else if(!s1->nstk){
           struct fsts_tp_s s2;
-          if((err=fsts_tp_sgen(&s2,s1,NULL,&glob->src,NULL,&algo->btm,0,0))) return err;
+          if((err=fsts_tp_sgen(&s2,s1,NULL,&glob->src,NULL,&algo->btm,0,0,&glob->cfg))) return err;
           #ifdef _DEBUG
           if(glob->debug>=4) printf("  >fin: %s",fsts_tp_dbg(algo->f,&s2,glob));
           #endif
@@ -553,6 +553,10 @@ const char *fsts_tp_isearch(struct fsts_glob *glob,struct fsts_w *w,UINT8 final,
   struct fsts_tp_algo *algo=(struct fsts_tp_algo *)glob->algo;
   const char *err;
   INT32 f;
+  if(start && !glob->cfg.wn){
+    glob->cfg.wn=1;
+    fsts_tp_lswnorm(&algo->ls1,&glob->cfg);
+  }
   for(f=0;f<w->nf;f++){
     struct fsts_w wf;
     fsts_tp_lsfree(&algo->lsf);

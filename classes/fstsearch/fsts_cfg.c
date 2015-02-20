@@ -51,6 +51,9 @@ const char *fsts_cfg(struct fsts_cfg *cfg,CFstsearch *_this){
   cfg->numpaths=_this->m_nNumpaths;
   cfg->stkprn=_this->m_bStkprn;
   cfg->latprn=_this->m_nLatprn;
+  cfg->wn=0;
+  cfg->wnoff=_this->m_nWnormOff;
+  cfg->wnexp=log(_this->m_nWnormDec);
   if(_this->m_nNumpaths>65535) return FSTSERR("numpaths greater than 65535");
   if(cfg->algo<0)   return FSTSERR("algo unkown");
   if(cfg->bt  <0)   return FSTSERR("backtrack type (bt) unkown");

@@ -187,3 +187,16 @@ struct fsts_tp_s *fsts_tp_lsbest(struct fsts_tp_ls *ls,UINT8 del){
   best[0]=ret->nxt;
   return ret;
 }
+
+/* TP active state weight normalization of queue
+ *
+ * This function calculates the normalized path weight for all states in the queue.
+ *
+ * @param ls   Queue
+ * @param cfg  Configuration
+ */
+void fsts_tp_lswnorm(struct fsts_tp_ls *ls,struct fsts_cfg *cfg){
+  struct fsts_tp_s *s;
+  for(s=ls->qs;s;s=s->nxt) fsts_tp_swnorm(s,cfg);
+}
+

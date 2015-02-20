@@ -145,6 +145,8 @@ INT16 CFstsearch_AutoRegisterWords(CDlpObject* __this)
 	REGISTER_FIELD("tp_prnh","",LPMV(m_nTpPrnh),LPMF(CFstsearch,OnTpPrnhChanged),"Hypothesis number pruning threshold",0,2008,1,"long",(INT64)0)
 	REGISTER_FIELD("tp_prnw","",LPMV(m_nTpPrnw),LPMF(CFstsearch,OnTpPrnwChanged),"Weight pruning threshold",0,3008,1,"double",(FLOAT64)0)
 	REGISTER_FIELD("tp_threads","",LPMV(m_nTpThreads),LPMF(CFstsearch,OnTpThreadsChanged),"Number of threads to use for decoding",0,2008,1,"long",(INT64)1)
+	REGISTER_FIELD("wnorm_dec","",LPMV(m_nWnormDec),LPMF(CFstsearch,OnWnormDecChanged),"Weight normalization decrement",0,3008,1,"double",(FLOAT64)0.75)
+	REGISTER_FIELD("wnorm_off","",LPMV(m_nWnormOff),LPMF(CFstsearch,OnWnormOffChanged),"Weight normalization offset",0,3008,1,"double",(FLOAT64)20)
 
 	/* Register errors */
 	REGISTER_ERROR("~e1_0_0__1",EL_ERROR,FSTS_STR,"%s")
@@ -636,6 +638,26 @@ INT16 CFstsearch_OnTpThreadsChanged(CDlpObject* __this)
 	return O_K;
 }
 
+INT16 CFstsearch_OnWnormDecChanged(CDlpObject* __this)
+{
+	GET_THIS_VIRTUAL_RV(CFstsearch,NOT_EXEC);
+	{
+  	CFstsearch_Restart(_this);
+	}
+
+	return O_K;
+}
+
+INT16 CFstsearch_OnWnormOffChanged(CDlpObject* __this)
+{
+	GET_THIS_VIRTUAL_RV(CFstsearch,NOT_EXEC);
+	{
+  	CFstsearch_Restart(_this);
+	}
+
+	return O_K;
+}
+
 /*}}CGEN_CFCCF */
 
 
@@ -861,6 +883,16 @@ INT16 CFstsearch::OnTpPrnwChanged()
 INT16 CFstsearch::OnTpThreadsChanged()
 {
 	return CFstsearch_OnTpThreadsChanged(this);
+}
+
+INT16 CFstsearch::OnWnormDecChanged()
+{
+	return CFstsearch_OnWnormDecChanged(this);
+}
+
+INT16 CFstsearch::OnWnormOffChanged()
+{
+	return CFstsearch_OnWnormOffChanged(this);
 }
 
 /*}}CGEN_FCCF */
