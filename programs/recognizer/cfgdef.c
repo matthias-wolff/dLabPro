@@ -144,6 +144,7 @@ search.threads = 1\n\
 \n\
 # Permanent decoding (without VAD)\n\
 #\n\
+# Only valid for iterative search.\n\
 # Disables VAD!\n\
 search.permanent = no\n\
 \n\

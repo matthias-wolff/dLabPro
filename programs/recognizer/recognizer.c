@@ -995,18 +995,22 @@ INT16 online(struct recosig *lpSig)
         CData_Array(rTmp.idFea,T_FLOAT,nMsf,1);
         if(nFea%10==0){
           CFst *itDC;
-          INT32 nT,nCTos;
+          INT32 nT,nCTos,nCTis;
           ICREATEEX(CFst, itDC, "itDC", NULL);
           rCfg.rDSession.itSP->m_bFinal=TRUE;
           CFstsearch_Backtrack(rCfg.rDSession.itSP,itDC);
           nCTos=CData_FindComp(AS(CData,itDC->td),"~TOS");
-          if(nCTos>=0 && !CData_IsEmpty(AS(CData,itDC->os))){
+          nCTis=CData_FindComp(AS(CData,itDC->td),"~TIS");
+          if(nCTos>=0 && nCTis>=0 && !CData_IsEmpty(AS(CData,itDC->os))){
+            INT32 nLen=0;
             routput(O_sta,1,"liveres: ");
             for(nT=0;nT<CData_GetNRecs(AS(CData,itDC->td));nT++){
               INT32 nTos=CData_Dfetch(AS(CData,itDC->td),nT,nCTos);
+              INT32 nTis=CData_Dfetch(AS(CData,itDC->td),nT,nCTis);
               if(nTos>=0) routput(O_sta,0,"%s",CData_Sfetch(AS(CData,itDC->os),nTos,0));
+              if(nTis>=0) nLen++;
             }
-            routput(O_sta,0,"\n");
+            routput(O_sta,0," [range %i-%i (%i)]\n",nFea-nLen,nFea,nLen);
           }
           IDESTROYFST(itDC);
         }
