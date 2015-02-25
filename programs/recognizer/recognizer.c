@@ -1010,7 +1010,9 @@ INT16 online(struct recosig *lpSig)
               if(nTos>=0) routput(O_sta,0,"%s",CData_Sfetch(AS(CData,itDC->os),nTos,0));
               if(nTis>=0) nLen++;
             }
-            routput(O_sta,0," [range %i-%i (%i)]\n",nFea-nLen,nFea,nLen);
+            if(rCfg.rSearch.bPermanent){
+              routput(O_sta,0," [range %i-%i (%i) - max %i]\n",nFea-nLen,nFea,nLen,nSigMax); nSigMax=0;
+            }else routput(O_sta,0,"\n");
           }
           IDESTROYFST(itDC);
         }
@@ -1022,7 +1024,7 @@ INT16 online(struct recosig *lpSig)
 #endif
 
     /* End of feature vector collection reached ? */
-    if(nFea && ((nVadSfa<=0) || nFea==lpVadParam->nMaxSp || (lpSig && nSigPos>=lpSig->nLen+lpVadState.nDelay*nCrate))){
+    if(!rCfg.rSearch.bPermanent && nFea && ((nVadSfa<=0) || nFea==lpVadParam->nMaxSp || (lpSig && nSigPos>=lpSig->nLen+lpVadState.nDelay*nCrate))){
       if(rCfg.bMeasureTime) measuretime(&tms_c_star);
       routput(O_sta,1,"vad collected %3i frames from %3i (sigmax: %5i)\n",nFea,nFrame-1-lpVadState.nDelay-nFea,nSigMax);
       if(nFea>=rCfg.rVAD.nMinSp && nSigMax>rCfg.rVAD.nSigMin){

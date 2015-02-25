@@ -237,7 +237,7 @@ END_MAN
 
 FIELD:   wnorm_off
 TYPE:    double
-INIT:    20
+INIT:    10
 COMMENT: Weight normalization offset
 CODE:
 	CFstsearch_Restart(_this);
@@ -252,7 +252,7 @@ END_MAN
 
 FIELD:   wnorm_dec
 TYPE:    double
-INIT:    0.75
+INIT:    0.5
 COMMENT: Weight normalization decrement
 CODE:
 	CFstsearch_Restart(_this);

@@ -145,8 +145,8 @@ INT16 CFstsearch_AutoRegisterWords(CDlpObject* __this)
 	REGISTER_FIELD("tp_prnh","",LPMV(m_nTpPrnh),LPMF(CFstsearch,OnTpPrnhChanged),"Hypothesis number pruning threshold",0,2008,1,"long",(INT64)0)
 	REGISTER_FIELD("tp_prnw","",LPMV(m_nTpPrnw),LPMF(CFstsearch,OnTpPrnwChanged),"Weight pruning threshold",0,3008,1,"double",(FLOAT64)0)
 	REGISTER_FIELD("tp_threads","",LPMV(m_nTpThreads),LPMF(CFstsearch,OnTpThreadsChanged),"Number of threads to use for decoding",0,2008,1,"long",(INT64)1)
-	REGISTER_FIELD("wnorm_dec","",LPMV(m_nWnormDec),LPMF(CFstsearch,OnWnormDecChanged),"Weight normalization decrement",0,3008,1,"double",(FLOAT64)0.75)
-	REGISTER_FIELD("wnorm_off","",LPMV(m_nWnormOff),LPMF(CFstsearch,OnWnormOffChanged),"Weight normalization offset",0,3008,1,"double",(FLOAT64)20)
+	REGISTER_FIELD("wnorm_dec","",LPMV(m_nWnormDec),LPMF(CFstsearch,OnWnormDecChanged),"Weight normalization decrement",0,3008,1,"double",(FLOAT64)0.5)
+	REGISTER_FIELD("wnorm_off","",LPMV(m_nWnormOff),LPMF(CFstsearch,OnWnormOffChanged),"Weight normalization offset",0,3008,1,"double",(FLOAT64)10)
 
 	/* Register errors */
 	REGISTER_ERROR("~e1_0_0__1",EL_ERROR,FSTS_STR,"%s")
