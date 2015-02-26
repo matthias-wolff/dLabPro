@@ -595,9 +595,9 @@ INT16 CGEN_IGNORE dlm_vectopC
  * @param nOpcode  Operation code
  */
 INT16 dlm_aggrop(FLOAT64 *Z,const FLOAT64 *A,INT32 nXC,INT32 nXR,INT16 nOpcode){
-  INT32 nC;
+  INT32 nR;
   INT16  nErr    = O_K;                                                         /* Be optimistic! :)                 */
-  for(nC=0;nC<nXC;nC++) if((nErr=dlp_aggrop(A,NULL,0.,nXR,nC,nXC,nOpcode,Z+nC))!=O_K) return nErr;
+  for(nR=0;nR<nXR;nR++) if((nErr=dlp_aggrop(A,NULL,0.,nXC,nR,nXR,nOpcode,Z+nR))!=O_K) return nErr;
   return O_K;
 }
 
@@ -1597,8 +1597,8 @@ INT16 dlm_matrop
   case OP_LSSUM:
   case OP_LSMEAN:
     if(A && Z) dlm_aggrop(Z,A,nXCa,nXRa,nOpcode);
-    if(A && lpnXRz) *lpnXRz=1;
-    if(A && lpnXCz) *lpnXCz=nXRa;
+    if(lpnXRz) *lpnXRz=nXRa;
+    if(lpnXCz) *lpnXCz=1;
     bElemws = FALSE; break;
   }                                                                             /* <<                                */
 
@@ -1915,8 +1915,8 @@ INT16 dlm_matropC
   case OP_LSSUM:
   case OP_LSMEAN:
     if(A && Z) dlm_aggropC(Z,A,nXCa,nXRa,nOpcode);
-    if(A && lpnXRz) *lpnXRz=1;
-    if(A && lpnXCz) *lpnXCz=nXRa;
+    if(lpnXRz) *lpnXRz=1;
+    if(lpnXCz) *lpnXCz=nXRa;
     bElemws = FALSE; break;
   }                                                                             /* <<                                */
 
