@@ -569,6 +569,71 @@ if (top==self)
             <td nowrap style="text-align:center; vertical-align:middle">---</td>
             <td nowrap><i>a</i>&times;<i>b</i> matrix of zeros</td>
           </tr>
+          <tr><td colspan="6">&nbsp;<br>Aggregate operators</td></tr>
+          <tr>
+            <td nowrap><code>sum</code></td>
+            <td nowrap><code>OP_SUM</code></td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap><b><i>w</i></b> = (&sum;<sub><i>i</i></sub>&nbsp;<i>v<sub>i</sub></i>)</td>
+            <td nowrap><b><i>Z</i></b> = (&sum;<sub><i>i</i></sub>&nbsp;<i>a<sub>ik</sub></i>)</td>
+            <td nowrap>Summation</td>
+          </tr>
+          <tr>
+            <td nowrap><code>mean</code></td>
+            <td nowrap><code>OP_MEAN</code></td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap><b><i>w</i></b> = (1/<i>N</i>&nbsp;&sum;<sub><i>i</i></sub>&nbsp;<i>v<sub>i</sub></i>)</td>
+            <td nowrap><b><i>Z</i></b> = (1/<i>N</i>&nbsp;&sum;<sub><i>i</i></sub>&nbsp;<i>a<sub>ik</sub></i>)</td>
+            <td nowrap>Average</td>
+          </tr>
+          <tr>
+            <td nowrap><code>max</code></td>
+            <td nowrap><code>OP_MAX</code></td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap><b><i>w</i></b> = (max<sub><i>i</i></sub>&nbsp;<i>v<sub>i</sub></i>)</td>
+            <td nowrap><b><i>Z</i></b> = (max<sub><i>i</i></sub>&nbsp;<i>a<sub>ik</sub></i>)</td>
+            <td nowrap>Maximum</td>
+          </tr>
+          <tr>
+            <td nowrap><code>imax</code></td>
+            <td nowrap><code>OP_IMAX</code></td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap><b><i>w</i></b> = (argmax<sub><i>i</i></sub>&nbsp;<i>v<sub>i</sub></i>)</td>
+            <td nowrap><b><i>Z</i></b> = (argmax<sub><i>i</i></sub>&nbsp;<i>a<sub>ik</sub></i>)</td>
+            <td nowrap>Index of maximum</td>
+          </tr>
+          <tr>
+            <td nowrap><code>min</code></td>
+            <td nowrap><code>OP_MIN</code></td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap><b><i>w</i></b> = (min<sub><i>i</i></sub>&nbsp;<i>v<sub>i</sub></i>)</td>
+            <td nowrap><b><i>Z</i></b> = (min<sub><i>i</i></sub>&nbsp;<i>a<sub>ik</sub></i>)</td>
+            <td nowrap>Minimum</td>
+          </tr>
+          <tr>
+            <td nowrap><code>imin</code></td>
+            <td nowrap><code>OP_IMIN</code></td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap><b><i>w</i></b> = (argmin<sub><i>i</i></sub>&nbsp;<i>v<sub>i</sub></i>)</td>
+            <td nowrap><b><i>Z</i></b> = (argmin<sub><i>i</i></sub>&nbsp;<i>a<sub>ik</sub></i>)</td>
+            <td nowrap>Index of minimum</td>
+          </tr>
+          <tr>
+            <td nowrap><code>lssum</code></td>
+            <td nowrap><code>OP_LSSUM</code></td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap><b><i>w</i></b> = (-ln(&sum;<sub><i>i</i></sub>&nbsp;exp(-<i>v<sub>i</sub></i>)))</td>
+            <td nowrap><b><i>Z</i></b> = (-ln(&sum;<sub><i>i</i></sub>&nbsp;exp(-<i>a<sub>ik</sub></i>)))</td>
+            <td nowrap>Logarithmic summation</td>
+          </tr>
+          <tr>
+            <td nowrap><code>lsmean</code></td>
+            <td nowrap><code>OP_LSMEAN</code></td>
+            <td nowrap style="text-align:center; vertical-align:middle">---</td>
+            <td nowrap><b><i>w</i></b> = (-ln(1/<i>N</i>&nbsp;&sum;<sub><i>i</i></sub>&nbsp;exp(-<i>v<sub>i</sub></i>)))</td>
+            <td nowrap><b><i>Z</i></b> = (-ln(1/<i>N</i>&nbsp;&sum;<sub><i>i</i></sub>&nbsp;exp(-<i>a<sub>ik</sub></i>)))</td>
+            <td nowrap>Logarithmic average</td>
+          </tr>
           <tr><td colspan="6" class="rowempty">&nbsp;</td></tr>
         </table>
 
