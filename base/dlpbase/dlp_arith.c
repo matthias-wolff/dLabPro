@@ -342,7 +342,7 @@ FLOAT64 dlp_lsadd_errorlin(FLOAT64 diff){
  */
 INT16 dlp_aggrop
 (
-  FLOAT64* lpVec,
+  const FLOAT64* lpVec,
   FLOAT64* lpMask,
   FLOAT64  nParam,
   INT32    nDim,
@@ -748,7 +748,7 @@ INT16 dlp_aggrop
 
 INT16 CGEN_IGNORE dlp_aggropC
 (
-  COMPLEX64* lpVec,
+  const COMPLEX64* lpVec,
   COMPLEX64* lpMask,
   COMPLEX64  nParam,
   INT32      nDim,

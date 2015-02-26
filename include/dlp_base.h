@@ -1197,8 +1197,8 @@ FLOAT64       dlp_scalop(FLOAT64 nParam1, FLOAT64 nParam2, INT16 nOpcode);
 COMPLEX64     dlp_scalopC(COMPLEX64 nParam1, COMPLEX64 nParam2, INT16 nOpcode);
 COMPLEX64     dlp_scalopC3(COMPLEX64 nParam1, COMPLEX64 nParam2, COMPLEX64 nParam3, INT16 nOpcode);
 FLOAT32       dlp_scalopF(FLOAT32 nParam1, FLOAT32 nParam2, INT16 nOpcode);
-INT16         dlp_aggrop(FLOAT64* lpVec, FLOAT64* lpMask, FLOAT64 nParam, INT32 nDim, INT32 nFirst, INT32 nOffs, INT16 nOpcode, FLOAT64* lpnResult);
-INT16         dlp_aggropC(COMPLEX64* lpVec, COMPLEX64* lpMask, COMPLEX64 nParam, INT32 nDim, INT32 nFirst, INT32 nOffs, INT16 nOpcode, COMPLEX64* lpnResult);
+INT16         dlp_aggrop(const FLOAT64* lpVec, FLOAT64* lpMask, FLOAT64 nParam, INT32 nDim, INT32 nFirst, INT32 nOffs, INT16 nOpcode, FLOAT64* lpnResult);
+INT16         dlp_aggropC(const COMPLEX64* lpVec, COMPLEX64* lpMask, COMPLEX64 nParam, INT32 nDim, INT32 nFirst, INT32 nOffs, INT16 nOpcode, COMPLEX64* lpnResult);
 
 /* Functios - dlp_optab.c */
 INT16               dlp_op_opstype(const char* lpSignature, INT16 nOp);

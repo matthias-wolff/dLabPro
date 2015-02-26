@@ -110,6 +110,14 @@ static const opcode_table __mtab[] =
   { OP_IHLBMAT     ,1,1,"D:on" ,"Inv. Hilbert mat. (dim. x)"         ,"ihlb"      },
   { OP_CCF         ,1,2,"D:DoD" ,"Cross correlation function"        ,"ccf"       },
   { OP_SOLV_LU     ,1,2,"D:oDD" ,"Solve AX=B using LU decomposition" ,"solve_lud" },
+  { OP_SUM         ,1,1,"D:oD" ,"Sum"                                ,"sum"       },
+  { OP_MEAN        ,1,1,"D:oD" ,"Arithmetic mean"                    ,"mean"      },
+  { OP_MAX         ,1,1,"D:oD" ,"Maximum"                            ,"max"       },
+  { OP_IMAX        ,1,1,"D:oD" ,"Index of maximum"                   ,"imax"      },
+  { OP_MIN         ,1,1,"D:oD" ,"Minimum"                            ,"min"       },
+  { OP_IMIN        ,1,1,"D:oD" ,"Index of minimum"                   ,"imin"      },
+  { OP_LSSUM       ,1,1,"D:oD" ,"Log semiring sum"                   ,"lssum"     },
+  { OP_LSMEAN      ,1,1,"D:oD" ,"Log semiring mean"                  ,"lsmean"    },
 
   /* do not change the following line!               */
   /* The values are used for end of table detection. */
@@ -576,6 +584,36 @@ INT16 CGEN_IGNORE dlm_vectopC
     }
   }
   return O_K;                                                                   /* Ok                                */
+}
+
+/* Matrix aggregation operation
+ *
+ * @param Z        Return vector (should have nXC elements)
+ * @param A        Input matrix (should have nXC*nXR elements)
+ * @param nXC      Number of components
+ * @param nXR      Number of records
+ * @param nOpcode  Operation code
+ */
+INT16 dlm_aggrop(FLOAT64 *Z,const FLOAT64 *A,INT32 nXC,INT32 nXR,INT16 nOpcode){
+  INT32 nC;
+  INT16  nErr    = O_K;                                                         /* Be optimistic! :)                 */
+  for(nC=0;nC<nXC;nC++) if((nErr=dlp_aggrop(A,NULL,0.,nXR,nC,nXC,nOpcode,Z+nC))!=O_K) return nErr;
+  return O_K;
+}
+
+/* Matrix aggregation operation - complex version
+ *
+ * @param Z        Return vector (should have nXC elements)
+ * @param A        Input matrix (should have nXC*nXR elements)
+ * @param nXC      Number of components
+ * @param nXR      Number of records
+ * @param nOpcode  Operation code
+ */
+INT16 dlm_aggropC(COMPLEX64 *Z,const COMPLEX64 *A,INT32 nXC,INT32 nXR,INT16 nOpcode){
+  INT32 nC;
+  INT16  nErr    = O_K;                                                         /* Be optimistic! :)                 */
+  for(nC=0;nC<nXC;nC++) if((nErr=dlp_aggropC(A,NULL,CMPLX(0),nXR,nC,nXC,nOpcode,Z+nC))!=O_K) return nErr;
+  return O_K;
 }
 
 /**
@@ -1548,6 +1586,20 @@ INT16 dlm_matrop
     if (A && lpnXRz) *lpnXRz = A[0];                                            /*   Store no. of rows of result     */
     if (A && lpnXCz) *lpnXCz = A[0];                                            /*   Store no. of columns of result  */
     bElemws = FALSE; break;                                                     /*   == (no elementwise computation) */
+
+  /* Aggregate operations */                                                    /* --------------------------------- */
+  case OP_SUM:
+  case OP_MEAN:
+  case OP_MAX:
+  case OP_IMAX:
+  case OP_MIN:
+  case OP_IMIN:
+  case OP_LSSUM:
+  case OP_LSMEAN:
+    if(A && Z) dlm_aggrop(Z,A,nXCa,nXRa,nOpcode);
+    if(A && lpnXRz) *lpnXRz=1;
+    if(A && lpnXCz) *lpnXCz=nXRa;
+    bElemws = FALSE; break;
   }                                                                             /* <<                                */
 
   /* General scalar or elementwise operations */                                /* --------------------------------- */
@@ -1852,6 +1904,20 @@ INT16 dlm_matropC
     if (A && lpnXRz) *lpnXRz = A->x;                                            /*   Store no. of rows of result     */
     if (A && lpnXCz) *lpnXCz = A->x;                                            /*   Store no. of columns of result  */
     bElemws = FALSE; break;                                                     /*   == (no elementwise computation) */
+
+  /* Aggregate operations */                                                    /* --------------------------------- */
+  case OP_SUM:
+  case OP_MEAN:
+  case OP_MAX:
+  case OP_IMAX:
+  case OP_MIN:
+  case OP_IMIN:
+  case OP_LSSUM:
+  case OP_LSMEAN:
+    if(A && Z) dlm_aggropC(Z,A,nXCa,nXRa,nOpcode);
+    if(A && lpnXRz) *lpnXRz=1;
+    if(A && lpnXCz) *lpnXCz=nXRa;
+    bElemws = FALSE; break;
   }                                                                             /* <<                                */
 
 
