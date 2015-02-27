@@ -731,6 +731,8 @@ typedef struct { FLOAT64 x; FLOAT64 y; } COMPLEX64;
 #define OP_MINKPOW       2028                                                   /* Minkowski sum (power k) w/o root  */
 #define OP_LSSUM         2029                                                   /* Log semiring sum                  */
 #define OP_LSMEAN        2030                                                   /* Log semiring mean                 */
+#define OP_VMAX          2031                                                   /* Vector maximum                    */
+#define OP_VMIN          2032                                                   /* Vector minimum                    */
 
 /* Defines - AOP_XXX: automaton operation codes */                              /* --------------------------------- */
 #define AOP_UNION        1000                                                   /* Union                             */

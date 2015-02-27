@@ -112,9 +112,9 @@ static const opcode_table __mtab[] =
   { OP_SOLV_LU     ,1,2,"D:oDD" ,"Solve AX=B using LU decomposition" ,"solve_lud" },
   { OP_SUM         ,1,1,"D:oD" ,"Sum"                                ,"sum"       },
   { OP_MEAN        ,1,1,"D:oD" ,"Arithmetic mean"                    ,"mean"      },
-  { OP_MAX         ,1,1,"D:oD" ,"Maximum"                            ,"max"       },
+  { OP_VMAX        ,1,1,"D:oD" ,"Vector maximum"                     ,"vmax"      },
   { OP_IMAX        ,1,1,"D:oD" ,"Index of maximum"                   ,"imax"      },
-  { OP_MIN         ,1,1,"D:oD" ,"Minimum"                            ,"min"       },
+  { OP_VMIN        ,1,1,"D:oD" ,"Vector minimum"                     ,"vmin"      },
   { OP_IMIN        ,1,1,"D:oD" ,"Index of minimum"                   ,"imin"      },
   { OP_LSSUM       ,1,1,"D:oD" ,"Log semiring sum"                   ,"lssum"     },
   { OP_LSMEAN      ,1,1,"D:oD" ,"Log semiring mean"                  ,"lsmean"    },
@@ -597,6 +597,8 @@ INT16 CGEN_IGNORE dlm_vectopC
 INT16 dlm_aggrop(FLOAT64 *Z,const FLOAT64 *A,INT32 nXC,INT32 nXR,INT16 nOpcode){
   INT32 nR;
   INT16  nErr    = O_K;                                                         /* Be optimistic! :)                 */
+  if(nOpcode==OP_VMAX) nOpcode=OP_MAX;
+  if(nOpcode==OP_VMIN) nOpcode=OP_MIN;
   for(nR=0;nR<nXR;nR++) if((nErr=dlp_aggrop(A,NULL,0.,nXC,nR,nXR,nOpcode,Z+nR))!=O_K) return nErr;
   return O_K;
 }
@@ -612,6 +614,8 @@ INT16 dlm_aggrop(FLOAT64 *Z,const FLOAT64 *A,INT32 nXC,INT32 nXR,INT16 nOpcode){
 INT16 dlm_aggropC(COMPLEX64 *Z,const COMPLEX64 *A,INT32 nXC,INT32 nXR,INT16 nOpcode){
   INT32 nC;
   INT16  nErr    = O_K;                                                         /* Be optimistic! :)                 */
+  if(nOpcode==OP_VMAX) nOpcode=OP_MAX;
+  if(nOpcode==OP_VMIN) nOpcode=OP_MIN;
   for(nC=0;nC<nXC;nC++) if((nErr=dlp_aggropC(A,NULL,CMPLX(0),nXR,nC,nXC,nOpcode,Z+nC))!=O_K) return nErr;
   return O_K;
 }
@@ -1590,9 +1594,9 @@ INT16 dlm_matrop
   /* Aggregate operations */                                                    /* --------------------------------- */
   case OP_SUM:
   case OP_MEAN:
-  case OP_MAX:
+  case OP_VMAX:
   case OP_IMAX:
-  case OP_MIN:
+  case OP_VMIN:
   case OP_IMIN:
   case OP_LSSUM:
   case OP_LSMEAN:
@@ -1908,9 +1912,9 @@ INT16 dlm_matropC
   /* Aggregate operations */                                                    /* --------------------------------- */
   case OP_SUM:
   case OP_MEAN:
-  case OP_MAX:
+  case OP_VMAX:
   case OP_IMAX:
-  case OP_MIN:
+  case OP_VMIN:
   case OP_IMIN:
   case OP_LSSUM:
   case OP_LSMEAN:
