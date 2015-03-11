@@ -59,6 +59,18 @@ void fsts_tp_lsfree(struct fsts_tp_ls *ls){
   fsts_hfree(&ls->h);
 }
 
+/* TP active state queue reset function
+ *
+ * This function reset's the active state queue and all it's subordinated memories
+ * by free and init with wmin=T_DOUBLE_MIN
+ *
+ * @param ls  The queue
+ */
+const char *fsts_tp_lsreset(struct fsts_tp_ls *ls){
+  fsts_tp_lsfree(ls);
+  return fsts_tp_lsinit(ls,NULL,NULL,T_DOUBLE_MIN);
+}
+
 /* This macro defines the deactivated next state pointer */
 #define SNXT_NONE ((struct fsts_tp_s *)-1)
 /* This macro inserts a new state into the connected list of the queue */

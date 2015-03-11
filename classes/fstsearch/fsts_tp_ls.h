@@ -38,6 +38,7 @@ struct fsts_tp_ls {
 
 const char *fsts_tp_lsinit(struct fsts_tp_ls *ls,struct fsts_btm *btm,struct fsts_cfg *cfg,FLOAT64 wmin);
 void fsts_tp_lsfree(struct fsts_tp_ls *ls);
+const char *fsts_tp_lsreset(struct fsts_tp_ls *ls);
 const char *fsts_tp_lsadd(struct fsts_tp_ls *ls,struct fsts_tp_s *s,UINT8 dbg);
 struct fsts_tp_s *fsts_tp_lsdel(struct fsts_tp_ls *ls);
 struct fsts_tp_s *fsts_tp_lsbest(struct fsts_tp_ls *ls,UINT8 del);

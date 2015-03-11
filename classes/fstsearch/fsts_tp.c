@@ -559,13 +559,13 @@ const char *fsts_tp_isearch(struct fsts_glob *glob,struct fsts_w *w,UINT8 final,
   }
   for(f=0;f<w->nf;f++){
     struct fsts_w wf;
-    fsts_tp_lsfree(&algo->lsf);
-    if((err=fsts_tp_lsinit(&algo->lsf,NULL,NULL,T_DOUBLE_MIN))) return err;
+    if((err=fsts_tp_lsreset(&algo->lsf))) return err;
     if(start) fsts_tp_geninitial(glob);
     fsts_wf(w,f,&wf);
     if((err=glob->cfg.tp.jobs>1 ? fsts_tp_isearchj(glob,&wf) : fsts_tp_isearch1(glob,&wf))) return err;
   }
   if(!final) return NULL;
+  if((err=fsts_tp_lsreset(&algo->lsf))) return err;
   if((err=glob->cfg.tp.jobs>1 ? fsts_tp_isearchj(glob,NULL) : fsts_tp_isearch1(glob,NULL))) return err;
   if(glob->debug>=1){
     if(glob->debug>=2) printf("Info:\n");
