@@ -760,12 +760,12 @@ INT16 dlp_strreplace_ex(char* lpsStr, const char* lpsKey, const char* lpsRpl, BO
 }
 
 /**
- * Replaces occurrances of a string by another string.
+ * Replaces occurrences of a string by another string.
  *
  * @param lpsStr The string to be processed
  * @param lpsKey The string to replace
  * @param lpsRpl The string to replace lpKey with
- * @return The number of occurracnes of lpKey replaced by lpReplace
+ * @return The number of occurrences of lpKey replaced by lpReplace
  * @see dlp_strreplace_ex
  */
 INT16 dlp_strreplace(char* lpsStr, const char* lpsKey, const char* lpsRpl)
