@@ -64,9 +64,8 @@ INT16 CFWTproc::AutoRegisterWords()
 	//{{CGEN_REGISTERWORDS
 	REGISTER_METHOD("-analyze","",LPMF(CFWTproc,OnAnalyze),"Run DWT.",0,"<data idSignal> <data idPitch> <data idReal> <data idImag> <FWTproc this>","")
 	REGISTER_METHOD("-synthesize","",LPMF(CFWTproc,OnSynthesize),"Convert scaling function and wavelet coefficients to signal.",0,"<data idTrans> <data idSignal> <FWTproc this>","")
-	REGISTER_OPTION("/d4","",LPMV(m_bD4),NULL,"Compute Daubechies D4-Wavelet transformation. (default)",0)
-	REGISTER_OPTION("/haar","",LPMV(m_bHaar),NULL,"Compute fast Haar-transformation.",0)
 	REGISTER_FIELD("level","",LPMV(m_nLevel),NULL,"Transformation detail level. (max. level (default) = -1; If defined          level is greater then possible transformation depth, transformation          provides with max. detail level.)",0,2002,1,"short",(INT16)-1)
+	REGISTER_FIELD("wvltype","",LPMV(m_lpsWvltype),NULL,"Wavelet type (available values: haar,d2,d4,d6,...,d20)",0,5000,1,"string","d4")
 	REGISTER_ERROR("~e8_1_0__1",EL_ERROR,FWT_DIM_ERROR,"Length of frame %d isn't 2^n.")
 	//}}CGEN_REGISTERWORDS
 
@@ -220,8 +219,6 @@ INT16 CFWTproc::ResetAllOptions(BOOL bInit)
 {
 	DEBUGMSG(-1,"CFWTproc::ResetAllOptions;",0,0,0);
 	//{{CGEN_RESETALLOPTIONS
-	_this->m_bD4 = FALSE;
-	_this->m_bHaar = FALSE;
 	//}}CGEN_RESETALLOPTIONS
 
 	return inherited::ResetAllOptions(bInit);

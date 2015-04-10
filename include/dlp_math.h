@@ -358,10 +358,9 @@ INT16 dlm_det_lud(FLOAT64* A, INT32 n, FLOAT64* d);                             
 INT16 dlm_det_ludC(COMPLEX64* A, INT32 n, COMPLEX64* d);                        /* Determinant      (complex version)*/
 
 /* Functions - dlm_fwt.c */
-INT16 dlm_fwt_d4(FLOAT64* sig, FLOAT64* trans, INT32 size, INT16 level);        /* fast wavelet transform (D4)       */
-INT16 dlm_fwt_d4_inv(FLOAT64* trans, FLOAT64* sig, INT32 size, INT16 level);    /* inverse fast wavelet transf. (D4) */
-INT16 dlm_fwt_haar(FLOAT64* sig, FLOAT64* trans, INT32 size, INT16 level);      /* fast wavelet transform (Haar/D2)  */
-INT16 dlm_fwt_haar_inv(FLOAT64* trans, FLOAT64* sig, INT32 size, INT16 level);  /* inv. wavelet transform (Haar/D2)  */
+const FLOAT64* dlm_fwt_geth(INT16 di);                                          /* Get wavelet coefficients          */
+INT16 dlm_fwt_dx(FLOAT64* sig, FLOAT64* trans, INT32 size, INT16 di, INT16 level); /* fast wavelet transform         */
+INT16 dlm_fwt_dx_inv(FLOAT64* trans, FLOAT64* sig, INT32 size, INT16 di, INT16 level); /* inverse fast wavelet transf. */
 
 /* Functions - dlm_vad.c */
 struct dlm_vad_param {

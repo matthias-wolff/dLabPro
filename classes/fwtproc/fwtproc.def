@@ -69,14 +69,10 @@ COMMENT: Transformation detail level. (max. level (default) = -1; If defined \
 TYPE:    short
 INIT:    -1
 
-
-## Options
-
-OPTION:  /d4
-COMMENT: Compute Daubechies D4-Wavelet transformation. (default)
-
-OPTION:  /haar
-COMMENT: Compute fast Haar-transformation.
+FIELD:   wvltype
+COMMENT: Wavelet type (available values: haar,d2,d4,d6,...,d20) 
+TYPE:    string
+INIT:    "d4"
 
 
 ## Methods
@@ -86,7 +82,7 @@ COMMENT: Run DWT.
 SYNTAX:    (data idSignal, data idPitch, data idReal, data idImag)
 /html MAN:
            <p>Run FWT of signal <CODE>idSignal</CODE> using the desired 
-           transformation method (default is Daubechies D4).</br></br> 
+           transformation method (default is Daubechies D4) - see {@link wvltype}.</br></br> 
            If <CODE>idPitch</CODE> is omitted pitch asynchronuous analysis 
            is performed.</p>
 
@@ -94,8 +90,7 @@ SYNTAX:    (data idSignal, data idPitch, data idReal, data idImag)
            @param idPitch     data object containing pitch information (maybe NULL)
            @param idReal      data object of transformed signal
            @param idImag      not used (NULL)
-           @see /d4
-           @see /haar
+           @see wvltype
 END_MAN
 
 
@@ -107,8 +102,7 @@ MAN:
 
          @param Output transformed signal
          @param idSignal    Output signal
-         @see /d4
-         @see /haar
+         @see wvltype
 END_MAN
 
 

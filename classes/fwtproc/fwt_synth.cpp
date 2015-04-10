@@ -37,6 +37,7 @@ INT16 CGEN_PROTECTED CFWTproc::Synthesize(CData* idTrans, CData* idSignal)
 {  
   INT32   nNrOfCoeff;   /* number of signal values */
   INT16  ret = NOT_EXEC;
+  INT16  di;
 
   if (idTrans == NULL)    return IERROR(this,ERR_NULLINST,0,0,0);
   if (idTrans->IsEmpty())   return IERROR(idTrans,DATA_EMPTY,idTrans->m_lpInstanceName,0,0);
@@ -62,19 +63,15 @@ INT16 CGEN_PROTECTED CFWTproc::Synthesize(CData* idTrans, CData* idSignal)
   idSignal->Alloc(nNrOfCoeff);
   idSignal->SetNRecs(nNrOfCoeff);
 
-  if(m_bHaar == true)
-  {
-    ret = dlm_fwt_haar_inv((FLOAT64*)idTrans->XAddr(0,0),
+  if(!dlp_strncmp(m_lpsWvltype,"haar",4)) di=2;
+  else if(m_lpsWvltype[0]=='d') di=atoi(m_lpsWvltype+1);
+  else return NOT_EXEC;
+
+  return dlm_fwt_dx_inv((FLOAT64*)idTrans->XAddr(0,0),
                            (FLOAT64*)idSignal->XAddr(0,0),
                            (INT32)nNrOfCoeff,
+                           di,
                            (INT16)m_nLevel);
-  }
-  else
-  {
-    ret = dlm_fwt_d4_inv((FLOAT64*)idTrans->XAddr(0,0),
-                         (FLOAT64*)idSignal->XAddr(0,0),
-                         (INT32)nNrOfCoeff,
-                         (INT16)m_nLevel);
-  }  
+
   return ret;
 }

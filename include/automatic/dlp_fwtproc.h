@@ -131,11 +131,10 @@ public:
 
 //{{CGEN_FIELDS
 	INT16            m_nLevel;
+	char*            m_lpsWvltype;
 //}}CGEN_FIELDS
 
 //{{CGEN_OPTIONS
-	BOOL m_bD4;
-	BOOL m_bHaar;
 //}}CGEN_OPTIONS
 }
 

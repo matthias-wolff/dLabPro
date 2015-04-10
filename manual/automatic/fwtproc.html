@@ -52,10 +52,9 @@
 fwtproc.html FWTproc CFWTproc [
   fwtproc.html#fld Fields - [
     fwtproc.html#fld_level "level" "m_nLevel"
+    fwtproc.html#fld_wvltype "wvltype" "m_lpsWvltype"
   ]
   fwtproc.html#opt Options - [
-    fwtproc.html#opt__d4 "/d4" "m_bD4"
-    fwtproc.html#opt__haar "/haar" "m_bHaar"
   ]
   fwtproc.html#mth Methods - [
     fwtproc.html#mth_-analyze "-analyze" "-analyze"
@@ -71,8 +70,7 @@ fwtproc.html FWTproc CFWTproc [
 }} END_SITEMAP
 //{{ BEGIN_TOC
         top.TC1.InsertItem("level","short    Transformation detail level. (max. level (default) = -1; If defined          level is greater then possible transformation depth, transformation          provides with max. detail level.)",28,28,0,"automatic/fwtproc.html#fld_level","CONT",nCls);
-        top.TC1.InsertItem("/d4","Compute Daubechies D4-Wavelet transformation. (default)",29,29,0,"automatic/fwtproc.html#opt__d4","CONT",nCls);
-        top.TC1.InsertItem("/haar","Compute fast Haar-transformation.",29,29,0,"automatic/fwtproc.html#opt__haar","CONT",nCls);
+        top.TC1.InsertItem("wvltype","string    Wavelet type (available values: haar,d2,d4,d6,...,d20)",28,28,0,"automatic/fwtproc.html#fld_wvltype","CONT",nCls);
         top.TC1.InsertItem("-analyze","&lt;data idSignal&gt; &lt;data idPitch&gt; &lt;data idReal&gt; &lt;data idImag&gt; &lt;FWTproc this&gt; -analyze     Run DWT.",27,27,0,"automatic/fwtproc.html#mth_-analyze","CONT",nCls);
         top.TC1.InsertItem("-synthesize","&lt;data idTrans&gt; &lt;data idSignal&gt; &lt;FWTproc this&gt; -synthesize     Convert scaling function and wavelet coefficients to signal.",27,27,0,"automatic/fwtproc.html#mth_-synthesize","CONT",nCls);
         nCfn = top.TC1.InsertItem("C/C++ API","",8,9,0,"automatic/fwtproc.html#cfn","CONT",nCls);
@@ -199,6 +197,7 @@ Base class for fast discrete wavelet transformation.
       </td>
     </tr>
     <tr><td><a href="#fld_level"><code class="link">level</code></a></td><td> Transformation detail level. (max. level (default) = -1; If defined          level is greater then possible transformation depth, transformation          provides with max. detail level.)</td></tr>
+    <tr><td><a href="#fld_wvltype"><code class="link">wvltype</code></a></td><td> Wavelet type (available values: haar,d2,d4,d6,...,d20)</td></tr>
 <tr><td colspan="2">[<a href="fbaproc.html#fld" class="code">Inherited fields</a>]</td></tr>
     <tr><td colspan="2" class="rowempty">&nbsp;</td></tr>
     <tr>
@@ -213,8 +212,7 @@ Base class for fast discrete wavelet transformation.
         <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
-    <tr><td><a href="#opt__d4"><code class="link">/d4</code></a></td><td> Compute Daubechies D4-Wavelet transformation. (default)</td></tr>
-    <tr><td><a href="#opt__haar"><code class="link">/haar</code></a></td><td> Compute fast Haar-transformation.</td></tr>
+    <tr><td colspan="2">This class does not have options.</td></tr>
 <tr><td colspan="2">[<a href="fbaproc.html#opt" class="code">Inherited oprtions</a>]</td></tr>
     <tr><td colspan="2" class="rowempty">&nbsp;</td></tr>
     <tr>
@@ -349,14 +347,14 @@ Transformation detail level. (max. level (default) = -1; If defined          lev
   </div>
   <img src="../resources/blank_stc.gif" height="10">
   </div>
-  <div id="opt__d4">
+  <div id="fld_wvltype">
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="opt__d4"></a>Option <span 
-        class="mid">/d4</span></td>
+        name="fld_wvltype"></a>Field <span 
+        class="mid">wvltype</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
-        <a class="navbar" href="javascript:__PrintSection('opt__d4','Class FWTproc');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
+        <a class="navbar" href="javascript:__PrintSection('fld_wvltype','Class FWTproc');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
         <a class="navbar" href="../home.html">Home</a>
         <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
@@ -373,7 +371,34 @@ Transformation detail level. (max. level (default) = -1; If defined          lev
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Identifier</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden"><code><b>/d4</b></code></td>
+      <td class="hidden"><code><b>wvltype</b></code></td>
+    </tr>
+    <tr>
+      <td class="hidden">&nbsp;</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Type</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">
+string
+</td>
+    </tr>
+    <tr>
+      <td class="hidden">&nbsp;</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Default</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">
+"d4"
+</td>
+    </tr>
+    <tr>
+      <td class="hidden"> </td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Properties</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">
+-
+</td>
     </tr>
     <tr>
       <td class="hidden" colspan="5">&nbsp;</td>
@@ -383,64 +408,15 @@ Transformation detail level. (max. level (default) = -1; If defined          lev
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Member variable</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden"><code>BOOL <b>
-m_bD4
-</b>;</code></td>
+      <td class="hidden"><code>
+public char* <b>m_lpsWvltype</b>;
+</code></td>
     </tr>
   </table></div>
   <div class="mframe2">
   <h3>Synopsis</h3>
   <p>
-Compute Daubechies D4-Wavelet transformation. (default)
-  </p>
-  <!--{{ CUSTOM_DOC -->
-  <!--}} CUSTOM_DOC -->
-  </div>
-  <img src="../resources/blank_stc.gif" height="10">
-  </div>
-  <div id="opt__haar">
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-    <tr>
-      <td nowrap width="25%" class="navbar"><a 
-        name="opt__haar"></a>Option <span 
-        class="mid">/haar</span></td>
-      <td nowrap width="75%" class="navbar" style="text-align:right;">
-        <a class="navbar" href="javascript:__PrintSection('opt__haar','Class FWTproc');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
-        <a class="navbar" href="../home.html">Home</a>
-        <a class="navbar" href="#cls">Top</a>
-        <a class="navbar" href="#fld">Fields</a>
-        <a class="navbar" href="#opt">Options</a>
-        <a class="navbar" href="#mth">Methods</a>
-        <a class="navbar" href="#cfn">C/C++</a>
-        <a class="navbar" href="#err">Errors</a>
-      </td>
-    </tr>
-  </table>
-  <div class="mframe"><table cellpadding="0" cellspacing="0" border="0">
-    <tr>
-      <td class="hidden">dLabPro</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Identifier</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden"><code><b>/haar</b></code></td>
-    </tr>
-    <tr>
-      <td class="hidden" colspan="5">&nbsp;</td>
-    </tr>
-    <tr>
-      <td class="hidden">C/C++</td>
-      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">Member variable</td>
-      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden"><code>BOOL <b>
-m_bHaar
-</b>;</code></td>
-    </tr>
-  </table></div>
-  <div class="mframe2">
-  <h3>Synopsis</h3>
-  <p>
-Compute fast Haar-transformation.
+Wavelet type (available values: haar,d2,d4,d6,...,d20)
   </p>
   <!--{{ CUSTOM_DOC -->
   <!--}} CUSTOM_DOC -->
@@ -499,7 +475,7 @@ Compute fast Haar-transformation.
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fwtproc.def(84)</td>
+      <td class="hidden">fwtproc.def(80)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -509,7 +485,7 @@ Run DWT.
   </p>
   <h3>Description</h3>
            <p>Run FWT of signal <CODE>idSignal</CODE> using the desired
-           transformation method (default is Daubechies D4).</br></br>
+           transformation method (default is Daubechies D4) - see <a href="#fld_wvltype"><code class="link">wvltype</code></a>.</br></br>
            If <CODE>idPitch</CODE> is omitted pitch asynchronuous analysis
            is performed.</p>
 
@@ -561,13 +537,7 @@ idImag
 		<tr>
 			<td class="hidden">&nbsp;&nbsp;</td>
 			<td class="hidden">
-<a href="#opt__d4"><code class="link">/d4</code></a>
-			</td>
-		</tr>
-		<tr>
-			<td class="hidden">&nbsp;&nbsp;</td>
-			<td class="hidden">
-<a href="#opt__haar"><code class="link">/haar</code></a>
+<a href="#fld_wvltype"><code class="link">wvltype</code></a>
 			</td>
 		</tr>
 	</table>

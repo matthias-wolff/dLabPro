@@ -39,26 +39,21 @@
 INT16 CGEN_PROTECTED CFWTproc::AnalyzeFrame()
 {
   INT16  ret = NOT_EXEC;
+  INT16  di;
 
   if(dlm_log2_i(m_nLen) == -1)                                               /* handle to short signal array */
   {
     return ret = FWT_DIM_ERROR;
   }
 
-  if(m_bHaar == true)
-  {
-    ret = dlm_fwt_haar((FLOAT64*)m_idRealFrame->XAddr(0,0),
+  if(!dlp_strncmp(m_lpsWvltype,"haar",4)) di=2;
+  else if(m_lpsWvltype[0]=='d') di=atoi(m_lpsWvltype+1);
+  else return NOT_EXEC;
+  return dlm_fwt_dx((FLOAT64*)m_idRealFrame->XAddr(0,0),
                        (FLOAT64*)m_idRealFrame->XAddr(0,0),
                        m_nLen,
+                       di,
                        m_nLevel);
-  }
-  else
-  {
-    ret = dlm_fwt_d4((FLOAT64*)m_idRealFrame->XAddr(0,0),
-                     (FLOAT64*)m_idRealFrame->XAddr(0,0),
-                     m_nLen,
-                     m_nLevel);
-  }
 
   return ret;
 }
