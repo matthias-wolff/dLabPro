@@ -37,8 +37,9 @@ INT16 CGEN_PROTECTED CFWTproc::Synthesize(CData* idTrans, CData* idSignal)
 {  
   INT32   nNrOfCoeff;   /* number of signal values */
   INT16  ret = NOT_EXEC;
-  INT16  di;
+  INT16  di=GetDindex();
 
+  if(!di) return IERROR(this,ERR_INVALARG,"wvltype invalid",0,0);
   if (idTrans == NULL)    return IERROR(this,ERR_NULLINST,0,0,0);
   if (idTrans->IsEmpty())   return IERROR(idTrans,DATA_EMPTY,idTrans->m_lpInstanceName,0,0);
   if (idTrans->GetCompType(0)!=T_DOUBLE)

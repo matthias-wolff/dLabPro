@@ -63,6 +63,7 @@ INT16 CFWTproc::AutoRegisterWords()
 
 	//{{CGEN_REGISTERWORDS
 	REGISTER_METHOD("-analyze","",LPMF(CFWTproc,OnAnalyze),"Run DWT.",0,"<data idSignal> <data idPitch> <data idReal> <data idImag> <FWTproc this>","")
+	REGISTER_METHOD("-get_coef","",LPMF(CFWTproc,OnGetCoef),"Get scaling function coefficients of configured wavelet type ({@link wvltype})",0,"<data idCoef> <FWTproc this>","")
 	REGISTER_METHOD("-synthesize","",LPMF(CFWTproc,OnSynthesize),"Convert scaling function and wavelet coefficients to signal.",0,"<data idTrans> <data idSignal> <FWTproc this>","")
 	REGISTER_FIELD("level","",LPMV(m_nLevel),NULL,"Transformation detail level. (max. level (default) = -1; If defined          level is greater then possible transformation depth, transformation          provides with max. detail level.)",0,2002,1,"short",(INT16)-1)
 	REGISTER_FIELD("wvltype","",LPMV(m_lpsWvltype),NULL,"Wavelet type (available values: haar,d2,d4,d6,...,d20)",0,5000,1,"string","d4")
@@ -242,6 +243,20 @@ INT16 CFWTproc::OnAnalyze()
 	data* idSignal = MIC_GET_I_EX(idSignal,data,4,4);
 	if (CDlpObject_GetErrorCount()>__nErrCnt) return NOT_EXEC;
 	__nErr = Analyze(idSignal, idPitch, idReal, idImag);
+	return __nErr;
+}
+
+INT16 CFWTproc::OnGetCoef()
+/* DO NOT CALL THIS FUNCTION FROM C++ SCOPE.     */
+/* IT MAY INTERFERE WITH THE INTERPRETER SESSION */
+{
+	INT16 __nErr    = O_K;
+	INT32  __nErrCnt = 0;
+	MIC_CHECK;
+	__nErrCnt = CDlpObject_GetErrorCount();
+	data* idCoef = MIC_GET_I_EX(idCoef,data,1,1);
+	if (CDlpObject_GetErrorCount()>__nErrCnt) return NOT_EXEC;
+	__nErr = GetCoef(idCoef);
 	return __nErr;
 }
 

@@ -97,6 +97,7 @@ public:
 public:
 //{{CGEN_PMIC
 	INT16 OnAnalyze();
+	INT16 OnGetCoef();
 	INT16 OnSynthesize();
 //}}CGEN_PMIC
 #endif // #ifndef __NOITP
@@ -120,6 +121,8 @@ public:
 //{{CGEN_EXPORT
 
 // Taken from 'fwt_work.cpp'
+	private: INT16 GetDindex();
+	public: INT16 GetCoef(CData* idCoef);
 	protected: INT16 AnalyzeFrame();
 
 // Taken from 'fwt_synth.cpp'

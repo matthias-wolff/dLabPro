@@ -105,6 +105,10 @@ MAN:
          @see wvltype
 END_MAN
 
+METHOD:  -get_coef
+SYNTAX:  (data idCoef)
+COMMENT: Get scaling function coefficients of configured wavelet type ({@link wvltype})
+
 
 ## Release notes
 
