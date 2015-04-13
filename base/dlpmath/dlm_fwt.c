@@ -71,7 +71,6 @@ INT16 CGEN_IGNORE dlm_fwt_dx(FLOAT64* sig, FLOAT64* trans, INT32 size, INT16 di,
   FLOAT64 *sigTemp;
   const FLOAT64 *h;
   FLOAT64 *t1, *t2;
-  
 
   if(size<di || !(h=dlm_fwt_geth(di))) return NOT_EXEC;
   
@@ -93,8 +92,7 @@ INT16 CGEN_IGNORE dlm_fwt_dx(FLOAT64* sig, FLOAT64* trans, INT32 size, INT16 di,
       trans[l2+i]=o; /* wavelet function coefficents */
     }
     if(t1>t2) t1=sigTemp; else t2=sigTemp;
-    level--;
-    if(level == 0) break; /* reduce detail level and exit if reaching 0; if detail level is max. (-1) nothing happens */
+    if(!--level) break; /* reduce detail level and exit if reaching 0; if detail level is max. (-1) nothing happens */
   }
   for(i=0;i<l;i++) trans[i]=*t1++;
   
@@ -113,44 +111,43 @@ INT16 CGEN_IGNORE dlm_fwt_dx(FLOAT64* sig, FLOAT64* trans, INT32 size, INT16 di,
  */
 INT16 CGEN_IGNORE dlm_fwt_dx_inv(FLOAT64* trans, FLOAT64* sig, INT32 size, INT16 di, INT16 level)
 {
-  register INT32 i;
-  register INT32 n;
-  register INT32 size2;
+  INT32 i,l;
   FLOAT64*  transTemp;
   const FLOAT64 *h;
+  FLOAT64 *t1, *t2;
 
   if(size<di || !(h=dlm_fwt_geth(di))) return NOT_EXEC;
-  if(di!=4) return NOT_EXEC; /* TODO: synthesis for any Daubechies index */
 
-  transTemp = (FLOAT64*)dlp_calloc(size, sizeof(FLOAT64));
-  dlp_memmove(transTemp, trans, size * sizeof(FLOAT64));
+  transTemp=(FLOAT64*)dlp_calloc(size*2,sizeof(FLOAT64));
+  t1=transTemp; t2=transTemp+size;
 
-  if(level > 0)
-  {
-    n = size >> (level-1);
-    if(n<4) n=4;
-  }
-  else
-    n=4;
+  for(l=1;l<di;) l<<=1;
+  for(;level>0;level--) l<<=1;
+  dlp_memmove(t1,trans,(l>>1)*sizeof(FLOAT64));
+  trans+=l>>1;
 
-  for (; n <= size; n <<= 1)
-  {
-    size2 = n >> 1;
-    sig[0] = transTemp[size2-1]*h[2] + transTemp[size2+size2-1]*h[1] + transTemp[0]*h[0] + transTemp[size2]*h[3];
-    sig[1] = transTemp[size2-1]*h[3] - transTemp[size2+size2-1]*h[0] + transTemp[0]*h[1] - transTemp[size2]*h[2];
-        
-    for (i = 0; i < size2-1; i++)
-    {
-      sig[2*i+2] = transTemp[i]*h[2] + transTemp[i+size2]*h[1] + transTemp[i+1]*h[0] + transTemp[i+size2+1]*h[3];
-      sig[2*i+3] = transTemp[i]*h[3] - transTemp[i+size2]*h[0] + transTemp[i+1]*h[1] - transTemp[i+size2+1]*h[2];
+  for(;l<=size;l<<=1){
+    INT32 l2=l>>1;
+    for(i=0;i<l;i+=2){
+      register INT32 j;
+      register FLOAT64 s0=0,s1=0;
+      for(j=0;j<di;j+=2){
+        register INT32 k=(i>>1)-(j>>1);
+        if(k<0) k+=l2;
+        s0 += h[j  ]*t1[k] + h[di-1-j]*trans[k];
+        s1 += h[j+1]*t1[k] - h[di-2-j]*trans[k];
+      }
+      t2[i  ]=s0;
+      t2[i+1]=s1;
     }
-    
-    dlp_memmove(transTemp, sig, n * sizeof(FLOAT64));
-    level--;
-    if(level == 0) break;
+    if(t1==transTemp){ t1=t2; t2=transTemp; }
+    else{ t2=t1; t1=transTemp; }
+    trans+=l2;
   }
  
+  dlp_memmove(sig,t1,size*sizeof(FLOAT64));
   dlp_free(transTemp);
+
   return O_K;
 }
 
