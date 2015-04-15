@@ -387,10 +387,10 @@ void postprocess(CFst* itDC, CFst* itDCr)
   char sTmpSig[L_PATH];
   char sCmd[L_PATH*4];
   CData *idColSig;
-  snprintf(sTmpDC, L_PATH,"%s-dc.fst", dlp_tempnam(NULL,"recognizer"));
-  snprintf(sTmpDCr,L_PATH,"%s-dcr.fst",dlp_tempnam(NULL,"recognizer"));
-  snprintf(sTmpNld,L_PATH,"%s-nld.fst",dlp_tempnam(NULL,"recognizer"));
-  snprintf(sTmpSig,L_PATH,"%s-sig.wav",dlp_tempnam(NULL,"recognizer"));
+  snprintf(sTmpDC, L_PATH,"%s-dc.fst", dlp_tempnam(NULL,"recognizer")); dlp_strreplace(sTmpDC ,"\\","/");
+  snprintf(sTmpDCr,L_PATH,"%s-dcr.fst",dlp_tempnam(NULL,"recognizer")); dlp_strreplace(sTmpDCr,"\\","/");
+  snprintf(sTmpNld,L_PATH,"%s-nld.fst",dlp_tempnam(NULL,"recognizer")); dlp_strreplace(sTmpNld,"\\","/");
+  snprintf(sTmpSig,L_PATH,"%s-sig.wav",dlp_tempnam(NULL,"recognizer")); dlp_strreplace(sTmpSig,"\\","/");
   CDlpObject_Save(BASEINST(itDC),      sTmpDC, SV_XML);
   CDlpObject_Save(BASEINST(itDCr),     sTmpDCr,SV_XML);
   CDlpObject_Save(BASEINST(rTmp.idNld),sTmpNld,SV_XML);

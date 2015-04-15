@@ -117,7 +117,7 @@ INT32 CGEN_PROTECTED CFunction::AddSrcFile(const char* lpsFilename)
   dlp_strcpy(lpsBuf,lpsFilename);                                               // Copy file name
   dlp_strreplace(lpsBuf,"\\","/");                                              // Convert to canonical form
   for (nSrc=0; nSrc<CData_GetNRecs(m_idSfl); nSrc++)                            // Loop over source files
-    if (dlp_strpcmp(lpsFilename,(const char*)CData_XAddr(m_idSfl,nSrc,0))==0)   //   lpsFilename already listed
+    if (dlp_strpcmp(lpsBuf,(const char*)CData_XAddr(m_idSfl,nSrc,0))==0)        //   File name already listed
     {                                                                           //   >>
       dlp_free(lpsBuf);                                                         //     Free string buffer
       return nSrc;                                                              //     Well...
