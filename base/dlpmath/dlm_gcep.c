@@ -210,7 +210,7 @@ INT16 dlm_mgcep(FLOAT64* input, INT32 n, FLOAT64* output, INT16 order, FLOAT64 g
   for (i = 0; i < n; i ++) lpS_C[i] = CMPLX(dlm_pow(CMPLX_ABS(lpS_C[i]),2.0));
 
   dlm_lpc_mburg(input, n, output, order, lambda, scale);
-  dlm_gc2gc(output, order, -1, output, order, gamma);
+  dlm_gc2gc(output, m, -1, output, m, gamma);
 
   for(j = 0; (j < itr2) && !flag; j++) {
     ep = output[0];
@@ -287,7 +287,7 @@ INT16 dlm_mgcep(FLOAT64* input, INT32 n, FLOAT64* output, INT16 order, FLOAT64 g
     }
   }
 
-  dlm_ignorm(output, output, order, gamma);
+  dlm_ignorm(output, output, m, gamma);
 
   dlp_free(lpS_C);
   dlp_free(lpD);
