@@ -106,6 +106,7 @@
 #define XM_INLINE     0x0080
 #define XM_IN_IDE     0x0100
 #define XM_NOPROMPT   0x0200
+#define XM_ARCHIVE    0x0400
 #define FNC_ALIC_ID   0
 #define FNC_ALIC_TYPE 1
 #define FNC_ALIC_PTR  2

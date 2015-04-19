@@ -30,9 +30,10 @@
  */
 INT16 CGEN_PUBLIC CFunction::Exec()
 {
-  DLPASSERT(!(m_nXm & XM_EXEC));                                                // Is already being executed!
+  DLPASSERT((m_nXm & XM_ARCHIVE) || !(m_nXm & XM_EXEC));                        // Is already being executed!
 
   // Start execution                                                            // ------------------------------------
+  dlp_register_signals();                                                       // Register dlp_interrupt to CTRL-C
   IFCHECKEX(1)                                                                  // On verbose level 1
   {                                                                             // >>
     char lpsFqName[255];                                                        //   Do some screen protocol
@@ -72,8 +73,6 @@ INT16 CGEN_PRIVATE CFunction::StartExec()
   FNC_MSG(1,"Initializing",0,0,0,0,0);                                          // Protocol
   DLPASSERT(m_idArg)                                                            // Must initialize arg. list before!
 
-  dlp_register_signals();                                                       // Register dlp_interrupt to CTRL-C
-
   // Initialize token sequence                                                  // ------------------------------------
   iCaller = GetCaller();                                                        // Get caller
   if ((m_nXm & XM_INLINE) && iCaller)                                           // Inline function (and have caller)
@@ -92,9 +91,10 @@ INT16 CGEN_PRIVATE CFunction::StartExec()
   // Initialize function                                                        // ------------------------------------
   IFIELD_RESET(CData,"teq"); CDgen::TsqInit(m_idTeq);                           // Initialize token execution queue
   StackInit();                                                                  // Initialize stack
-  m_lpMic   = NULL;                                                             // Clear MIC (caller in m_iCaller!)
-  m_nPp     = 0;                                                                // Initialize program pointer
-  m_nXm     = m_nXm | XM_EXEC;                                                  // Set executing state
+  m_lpMic = NULL;                                                               // Clear MIC (caller in m_iCaller!)
+  if (!(m_nXm&XM_ARCHIVE)) m_nPp = 0;                                           // Initialize program pointer
+  m_nXm &= ~XM_ARCHIVE;                                                         // Clear archive flag
+  m_nXm |= XM_EXEC;                                                             // Set executing state
   m_bDisarm = FALSE;                                                            // Reset disarm option
   if (m_idTsq->GetNRecs()==0 && GetRoot()==this) m_nXm |= XM_BREAK;             // Empty root function -> break mode
   StepBreak();                                                                  // Break here in step mode

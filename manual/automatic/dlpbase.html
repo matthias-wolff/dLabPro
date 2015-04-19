@@ -238,7 +238,7 @@ dlpbase.html dlpbase  [
         top.TC1.InsertItem("__dlp_printstop_ni","INT32 __dlp_printstop_ni(INT32 nItem, const char* lpNext, char* lpAnswer)    ",27,27,0,"automatic/dlpbase.html#cfn_038","CONT",nCls);
         top.TC1.InsertItem("__dlp_ptr2hash","hash_val_t __dlp_ptr2hash(const void* lpMemblock, void* lpHint)    ",27,27,0,"automatic/dlpbase.html#cfn_020","CONT",nCls);
         top.TC1.InsertItem("__dlp_realloc","void* __dlp_realloc(void* lpMemblock, size_t nNum, size_t nSize, const char* lpsFilename, INT32 nLine, const char* lpsClassname, const char* lpsInstancename)     NEVER CALL THIS FUNCTION DIRECTLY; use macro dlp_realloc() instead.",27,27,0,"automatic/dlpbase.html#cfn_034","CONT",nCls);
-        top.TC1.InsertItem("dlp_aggrop","INT16 dlp_aggrop(FLOAT64* lpVec, FLOAT64* lpMask, FLOAT64 nParam, INT32 nDim, INT32 nFirst, INT32 nOffs, INT16 nOpcode, FLOAT64* lpnResult)     Performs scalar vector operations (aggregation of vector components).",27,27,0,"automatic/dlpbase.html#cfn_002","CONT",nCls);
+        top.TC1.InsertItem("dlp_aggrop","INT16 dlp_aggrop(const FLOAT64* lpVec, FLOAT64* lpMask, FLOAT64 nParam, INT32 nDim, INT32 nFirst, INT32 nOffs, INT16 nOpcode, FLOAT64* lpnResult)     Performs scalar vector operations (aggregation of vector components).",27,27,0,"automatic/dlpbase.html#cfn_002","CONT",nCls);
         top.TC1.InsertItem("dlp_aggrop_code","INT16 dlp_aggrop_code(const char* lpsOpSymbol)     Get operation code from operation symbol.",27,27,0,"automatic/dlpbase.html#cfn_080","CONT",nCls);
         top.TC1.InsertItem("dlp_aggrop_name","const char* dlp_aggrop_name(INT16 nOpcode)     Get operation name from operation code.",27,27,0,"automatic/dlpbase.html#cfn_079","CONT",nCls);
         top.TC1.InsertItem("dlp_aggrop_printtab","void dlp_aggrop_printtab()     Prints a table of scalar vector operation codes at stdout.",27,27,0,"automatic/dlpbase.html#cfn_091","CONT",nCls);
@@ -368,7 +368,7 @@ dlpbase.html dlpbase  [
         top.TC1.InsertItem("dlp_strop_printtab","void dlp_strop_printtab()     Prints a table of string operation codes at stdout.",27,27,0,"automatic/dlpbase.html#cfn_092","CONT",nCls);
         top.TC1.InsertItem("dlp_strpcmp","INT32 dlp_strpcmp(const char* lpsStr1, const char* lpsStr2)     Compares two path names.",27,27,0,"automatic/dlpbase.html#cfn_124","CONT",nCls);
         top.TC1.InsertItem("dlp_strquotate","char* dlp_strquotate(char* lpsStr, char nLeft, char nRight)     Puts a string in quotation marks.",27,27,0,"automatic/dlpbase.html#cfn_129","CONT",nCls);
-        top.TC1.InsertItem("dlp_strreplace","INT16 dlp_strreplace(char* lpsStr, const char* lpsKey, const char* lpsRpl)     Replaces occurrances of a string by another string.",27,27,0,"automatic/dlpbase.html#cfn_138","CONT",nCls);
+        top.TC1.InsertItem("dlp_strreplace","INT16 dlp_strreplace(char* lpsStr, const char* lpsKey, const char* lpsRpl)     Replaces occurrences of a string by another string.",27,27,0,"automatic/dlpbase.html#cfn_138","CONT",nCls);
         top.TC1.InsertItem("dlp_strreplace_ex","INT16 dlp_strreplace_ex(char* lpsStr, const char* lpsKey, const char* lpsRpl, BOOL bOnce)     Replaces occurrances of a string by another string.",27,27,0,"automatic/dlpbase.html#cfn_137","CONT",nCls);
         top.TC1.InsertItem("dlp_strsep","char* dlp_strsep(char** stringp, const char* delims, char* del)     Extract token from string",27,27,0,"automatic/dlpbase.html#cfn_139","CONT",nCls);
         top.TC1.InsertItem("dlp_strstartswith","INT16 dlp_strstartswith(const char* lpsStr, const char* lpsOther)     Returns a non-zero value if and only if lpsStr starts with the  character sequence lpsOther.",27,27,0,"automatic/dlpbase.html#cfn_140","CONT",nCls);
@@ -461,7 +461,7 @@ dLabPro base library
     <tr><td><a href="#cfn_038"><code class="link">__dlp_printstop_ni</code></a></td><td><code>INT32 <b>__dlp_printstop_ni</b>(INT32 nItem, const char* lpNext, char* lpAnswer);<br></code><br> </td></tr>
     <tr><td><a href="#cfn_020"><code class="link">__dlp_ptr2hash</code></a></td><td><code>hash_val_t <b>__dlp_ptr2hash</b>(const void* lpMemblock, void* lpHint);<br></code><br> </td></tr>
     <tr><td><a href="#cfn_034"><code class="link">__dlp_realloc</code></a></td><td><code>void* <b>__dlp_realloc</b>(void* lpMemblock, size_t nNum, size_t nSize, const char* lpsFilename, INT32 nLine, const char* lpsClassname, const char* lpsInstancename);<br></code><br>  NEVER CALL THIS FUNCTION DIRECTLY; use macro dlp_realloc() instead.</td></tr>
-    <tr><td><a href="#cfn_002"><code class="link">dlp_aggrop</code></a></td><td><code>INT16 <b>dlp_aggrop</b>(FLOAT64* lpVec, FLOAT64* lpMask, FLOAT64 nParam, INT32 nDim, INT32 nFirst, INT32 nOffs, INT16 nOpcode, FLOAT64* lpnResult);<br></code><br>  Performs scalar vector operations (aggregation of vector components).</td></tr>
+    <tr><td><a href="#cfn_002"><code class="link">dlp_aggrop</code></a></td><td><code>INT16 <b>dlp_aggrop</b>(const FLOAT64* lpVec, FLOAT64* lpMask, FLOAT64 nParam, INT32 nDim, INT32 nFirst, INT32 nOffs, INT16 nOpcode, FLOAT64* lpnResult);<br></code><br>  Performs scalar vector operations (aggregation of vector components).</td></tr>
     <tr><td><a href="#cfn_080"><code class="link">dlp_aggrop_code</code></a></td><td><code>INT16 <b>dlp_aggrop_code</b>(const char* lpsOpSymbol);<br></code><br>  Get operation code from operation symbol.</td></tr>
     <tr><td><a href="#cfn_079"><code class="link">dlp_aggrop_name</code></a></td><td><code>const char* <b>dlp_aggrop_name</b>(INT16 nOpcode);<br></code><br>  Get operation name from operation code.</td></tr>
     <tr><td><a href="#cfn_091"><code class="link">dlp_aggrop_printtab</code></a></td><td><code>void <b>dlp_aggrop_printtab</b>();<br></code><br>  Prints a table of scalar vector operation codes at stdout.</td></tr>
@@ -591,7 +591,7 @@ dLabPro base library
     <tr><td><a href="#cfn_092"><code class="link">dlp_strop_printtab</code></a></td><td><code>void <b>dlp_strop_printtab</b>();<br></code><br>  Prints a table of string operation codes at stdout.</td></tr>
     <tr><td><a href="#cfn_124"><code class="link">dlp_strpcmp</code></a></td><td><code>INT32 <b>dlp_strpcmp</b>(const char* lpsStr1, const char* lpsStr2);<br></code><br>  Compares two path names.</td></tr>
     <tr><td><a href="#cfn_129"><code class="link">dlp_strquotate</code></a></td><td><code>char* <b>dlp_strquotate</b>(char* lpsStr, char nLeft, char nRight);<br></code><br>  Puts a string in quotation marks.</td></tr>
-    <tr><td><a href="#cfn_138"><code class="link">dlp_strreplace</code></a></td><td><code>INT16 <b>dlp_strreplace</b>(char* lpsStr, const char* lpsKey, const char* lpsRpl);<br></code><br>  Replaces occurrances of a string by another string.</td></tr>
+    <tr><td><a href="#cfn_138"><code class="link">dlp_strreplace</code></a></td><td><code>INT16 <b>dlp_strreplace</b>(char* lpsStr, const char* lpsKey, const char* lpsRpl);<br></code><br>  Replaces occurrences of a string by another string.</td></tr>
     <tr><td><a href="#cfn_137"><code class="link">dlp_strreplace_ex</code></a></td><td><code>INT16 <b>dlp_strreplace_ex</b>(char* lpsStr, const char* lpsKey, const char* lpsRpl, BOOL bOnce);<br></code><br>  Replaces occurrances of a string by another string.</td></tr>
     <tr><td><a href="#cfn_139"><code class="link">dlp_strsep</code></a></td><td><code>char* <b>dlp_strsep</b>(char** stringp, const char* delims, char* del);<br></code><br>  Extract token from string</td></tr>
     <tr><td><a href="#cfn_140"><code class="link">dlp_strstartswith</code></a></td><td><code>INT16 <b>dlp_strstartswith</b>(const char* lpsStr, const char* lpsOther);<br></code><br>  Returns a non-zero value if and only if lpsStr starts with the  character sequence lpsOther.</td></tr>
@@ -1751,7 +1751,7 @@ Pointer to allocated memory or NULL if no more memory is available
       <td class="hidden">Signature</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden"><code>
-INT16 <b>dlp_aggrop</b>(FLOAT64* lpVec, FLOAT64* lpMask, FLOAT64 nParam, INT32 nDim, INT32 nFirst, INT32 nOffs, INT16 nOpcode, FLOAT64* lpnResult);<br>
+INT16 <b>dlp_aggrop</b>(const FLOAT64* lpVec, FLOAT64* lpMask, FLOAT64 nParam, INT32 nDim, INT32 nFirst, INT32 nOffs, INT16 nOpcode, FLOAT64* lpnResult);<br>
 </code></td>
     </tr>
     <tr>
@@ -10367,7 +10367,7 @@ INT16 <b>dlp_strreplace</b>(char* lpsStr, const char* lpsKey, const char* lpsRpl
   </table></div>
   <div class="mframe2">
   <h3>Description</h3>
- Replaces occurrances of a string by another string.
+ Replaces occurrences of a string by another string.
 	<h3>Parameters</h3>
 	<table>
 		<tr>
@@ -10403,7 +10403,7 @@ The string to replace lpKey with
 	</table>
 	<h3>Return value</h3>
 	<p>
-The number of occurracnes of lpKey replaced by lpReplace
+The number of occurrences of lpKey replaced by lpReplace
 	</p>
 	<h3>See also</h3>
 	<table>

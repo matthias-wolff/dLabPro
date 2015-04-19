@@ -129,7 +129,7 @@ INT16 StartSession(CFunction* iRoot, INT32* lpArgc, char** lpArgv)
     dlp_set_color_mode(TRUE);
   if (dlp_scancmdlineoption(lpArgc,lpArgv,"-c","",NULL,FALSE))
     dlp_set_color_mode(TRUE);
- dlp_set_binary_path(lpArgv[0]);
+  dlp_set_binary_path(lpArgv[0]);
   dlp_set_binary_name(iRoot->m_lpInstanceName);
 
   // Print logo
@@ -140,8 +140,20 @@ INT16 StartSession(CFunction* iRoot, INT32* lpArgc, char** lpArgv)
   if (*lpArgc>=2)
   {
     if (!(iRoot->m_nXm&XM_NOLOGO)) printf("\n// Executing %s",lpArgv[1]);
-    IF_NOK(iRoot->Load(lpArgv[1])) return NOT_EXEC;
-    iRoot->ArgCmdline(*lpArgc-2,&lpArgv[2]);
+    INT16 nElevel = CDlpObject_SetErrorLevel(0);
+    IF_OK(CDlpObject_Restore(iRoot,lpArgv[1],0))
+    {
+      CDlpObject_SetErrorLevel(nElevel);
+      iRoot->m_nXm|=XM_ARCHIVE;
+      // TODO: if (!<keep arguments stored in archive>)
+      iRoot->ArgCmdline(*lpArgc-2,&lpArgv[2]);
+    }
+    else
+    {
+      CDlpObject_SetErrorLevel(nElevel);
+      IF_NOK(iRoot->Load(lpArgv[1])) return NOT_EXEC;
+      iRoot->ArgCmdline(*lpArgc-2,&lpArgv[2]);
+    }
   }
   if (!(iRoot->m_nXm&XM_NOLOGO)) printf("\n");
 
@@ -230,6 +242,7 @@ int main(int nArgc, char** lpArgv)
 #endif
 
   BOOL bTml = dlp_scancmdlineoption(&nArgc,lpArgv,"--trace-mem","",NULL,TRUE);
+  BOOL bContArchive = FALSE;                                                    // Continuing restored program archive
 
   // Register classes
   REGISTER_CLASS(CDlpObject);

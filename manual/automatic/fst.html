@@ -5774,16 +5774,18 @@ Transition description table
     <tr><td>1<b>*</b></td><td>FST_ITYPE   </td><td>"~INI"        </td><td><a href="#fld_IC_TD_INI"><code class="link">IC_TD_INI</code></a> </td><td>Inital state<sup>1)</sup></td></tr>
     <tr><td>2        </td><td>user defined</td><td>&nbsp;        </td><td><a href="#fld_IC_TD_DATA"><code class="link">IC_TD_DATA</code></a></td><td>Arbitrary user defined comps.</td></tr>
     <tr><td>...      </td><td>...         </td><td>&nbsp;        </td><td>&nbsp;            </td><td>&nbsp;</td></tr>
-    <tr><td>?        </td><td>numeric     </td><td>"~RC"<b>�</b> </td><td><a href="#fld_NC_TD_RC"><code class="link">NC_TD_RC</code></a>  </td><td>Reference counter</td></tr>
-    <tr><td>?        </td><td>FST_WTYPE   </td><td>"~PSR"<b>�</b></td><td><a href="#fld_NC_TD_PSR"><code class="link">NC_TD_PSR</code></a> </td><td>Transition probability (probability semiring)</td></tr>
-    <tr><td>?        </td><td>FST_WTYPE   </td><td>"~LSR"<b>�</b></td><td><a href="#fld_NC_TD_LSR"><code class="link">NC_TD_LSR</code></a> </td><td>Negative log transition probability (log semiring)</td></tr>
-    <tr><td>?        </td><td>FST_WTYPE   </td><td>"~TSR"<b>�</b></td><td><a href="#fld_NC_TD_TSR"><code class="link">NC_TD_TSR</code></a> </td><td>Transition weight (tropical semiring)</td></tr>
-    <tr><td>?        </td><td>FST_STYPE   </td><td>"~TIS"<b>�</b></td><td><a href="#fld_NC_TD_TIS"><code class="link">NC_TD_TIS</code></a> </td><td>Transducer input symbol</td></tr>
-    <tr><td>?        </td><td>FST_STYPE   </td><td>"~TOS"<b>�</b></td><td><a href="#fld_NC_TD_TOS"><code class="link">NC_TD_TOS</code></a> </td><td>Transducer output symbol</td></tr>
+    <tr><td>?        </td><td>numeric     </td><td>"~RC"<b>**</b> </td><td><a href="#fld_NC_TD_RC"><code class="link">NC_TD_RC</code></a>  </td><td>Reference counter</td></tr>
+    <tr><td>?        </td><td>FST_WTYPE   </td><td>"~PSR"<b>**</b></td><td><a href="#fld_NC_TD_PSR"><code class="link">NC_TD_PSR</code></a> </td><td>Transition probability (probability semiring)</td></tr>
+    <tr><td>?        </td><td>FST_WTYPE   </td><td>"~LSR"<b>**</b></td><td><a href="#fld_NC_TD_LSR"><code class="link">NC_TD_LSR</code></a> </td><td>Negative log transition probability (log semiring)</td></tr>
+    <tr><td>?        </td><td>FST_WTYPE   </td><td>"~TSR"<b>**</b></td><td><a href="#fld_NC_TD_TSR"><code class="link">NC_TD_TSR</code></a> </td><td>Transition weight (tropical semiring)</td></tr>
+    <tr><td>?        </td><td>FST_STYPE   </td><td>"~TIS"<b>**</b></td><td><a href="#fld_NC_TD_TIS"><code class="link">NC_TD_TIS</code></a> </td><td>Transducer input symbol<sup>2)</sup></td></tr>
+    <tr><td>?        </td><td>FST_STYPE   </td><td>"~TOS"<b>**</b></td><td><a href="#fld_NC_TD_TOS"><code class="link">NC_TD_TOS</code></a> </td><td>Transducer output symbol<sup>2)</sup></td></tr>
   </table>
   <p><b>*</b> Component <i>index</i> is significant, names do not matter.<br>
-  <b>�</b> Component <i>name</i> is significant, index does not matter.<br>
-  <sup>1)</sup> State indices count per unit, starting from 0 for the first state.</p>
+  <b>**</b> Component <i>name</i> is significant, index does not matter.<br>
+  <sup>1)</sup> State indices count per unit, starting from 0 for the first state.<br>
+  <sup>2)</sup> Input and output symbols are non-negative indexes in the input and output symbol tables <a href="#fld_is"><code class="link">is</code></a> and <a href="#fld_os"><code class="link">os</code></a>. The
+  index -1 denotes the epsilon symbol.</p>
 	<h3>See also</h3>
 	<table>
 		<tr>

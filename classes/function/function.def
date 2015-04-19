@@ -191,6 +191,7 @@ DEFINE:  XM_AUTOBREAK  0x0040                                                   
 DEFINE:  XM_INLINE     0x0080                                                   # Inline function
 DEFINE:  XM_IN_IDE     0x0100                                                   # Called with --in-IDE
 DEFINE:  XM_NOPROMPT   0x0200                                                   # No user prompts except break points
+DEFINE:  XM_ARCHIVE    0x0400                                                   # Continuing restored program archive
 
 ## Define - Argument list component indices
 DEFINE:  FNC_ALIC_ID   0                                                        # Formal argument identifier
