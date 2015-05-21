@@ -1407,33 +1407,45 @@ int cf_long_down(const void* a, const void* b)
 
 int cf_float_up(const void* a, const void* b)
 {
-  if(*(FLOAT32*)a > *(FLOAT32*)b) return  1;
-  if(*(FLOAT32*)a < *(FLOAT32*)b) return -1;
-
+  FLOAT32 fa=*(FLOAT32*)a;
+  FLOAT32 fb=*(FLOAT32*)b;
+  if(isnan(fb)) return  1;
+  if(isnan(fa)) return -1;
+  if(fa > fb)   return  1;
+  if(fa < fb)   return -1;
   return 0;
 }
 
 int cf_float_down(const void* a, const void* b)
 {
-  if(*(FLOAT32*)a > *(FLOAT32*)b) return -1;
-  if(*(FLOAT32*)a < *(FLOAT32*)b) return  1;
-
+  FLOAT32 fa=*(FLOAT32*)a;
+  FLOAT32 fb=*(FLOAT32*)b;
+  if(isnan(fb)) return -1;
+  if(isnan(fa)) return  1;
+  if(fa > fb)   return -1;
+  if(fa < fb)   return  1;
   return 0;
 }
 
 int cf_double_up(const void* a, const void* b)
 {
-  if(*(FLOAT64*)a > *(FLOAT64*)b) return  1;
-  if(*(FLOAT64*)a < *(FLOAT64*)b) return -1;
-
+  FLOAT64 fa=*(FLOAT64*)a;
+  FLOAT64 fb=*(FLOAT64*)b;
+  if(isnan(fb)) return  1;
+  if(isnan(fa)) return -1;
+  if(fa > fb)   return  1;
+  if(fa < fb)   return -1;
   return 0;
 }
 
 int cf_double_down(const void* a, const void* b)
 {
-  if(*(FLOAT64*)a > *(FLOAT64*)b) return -1;
-  if(*(FLOAT64*)a < *(FLOAT64*)b) return  1;
-
+  FLOAT64 fa=*(FLOAT64*)a;
+  FLOAT64 fb=*(FLOAT64*)b;
+  if(isnan(fb)) return -1;
+  if(isnan(fa)) return  1;
+  if(fa > fb)   return -1;
+  if(fa < fb)   return  1;
   return 0;
 }
 
