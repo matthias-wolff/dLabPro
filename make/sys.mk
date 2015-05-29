@@ -61,6 +61,8 @@ else
       OS = lin64
     else ifneq ($(and $(findstring -linux,$(OS)),$(findstring x86-,$(OS))),)
       OS = lin32
+    else ifneq ($(and $(findstring -linux,$(OS)),$(findstring i686-,$(OS))),)
+      OS = lin32
     else ifneq ($(findstring mingw32,$(OS)),)
       OS = mingw32
     else ifneq ($(and $(findstring -pc-cygwin,$(OS)),$(findstring x86_64-,$(OS))),)
