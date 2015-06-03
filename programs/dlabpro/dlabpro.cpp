@@ -38,6 +38,7 @@
 #include "dlp_fst.h"
 #include "dlp_fsttools.h"
 #include "dlp_fstsearch.h"
+#include "dlp_fvrtools.h"
 #include "dlp_function.h"
 #include "dlp_gmm.h"
 #include "dlp_helloworld.h"
@@ -260,6 +261,7 @@ int main(int nArgc, char** lpArgv)
   REGISTER_CLASS(CFst);
   REGISTER_CLASS(CFsttools);
   REGISTER_CLASS(CFstsearch);
+  REGISTER_CLASS(CFvrtools);
   REGISTER_CLASS(CFunction);
   REGISTER_CLASS(CGmm);
   REGISTER_CLASS(CHelloworld);

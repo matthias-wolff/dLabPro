@@ -35,6 +35,7 @@ SOURCES  = $(PROJNAME)
 LIBS      = \
   ${CLS_LPTH}/fstsearch$(LET) $(LPOST)  \
   ${CLS_LPTH}/fsttools$(LET) $(LPOST)   \
+  ${CLS_LPTH}/fvrtools$(LET) $(LPOST)   \
   ${CLS_LPTH}/melproc$(LET) $(LPOST)    \
   ${CLS_LPTH}/fttproc$(LET) $(LPOST)    \
   ${CLS_LPTH}/vadproc$(LET) $(LPOST)    \
