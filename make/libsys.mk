@@ -44,7 +44,7 @@ endif
 ifneq ($(findstring lin,$(OS)),)
 ## Test for lib readline
   ifneq ($(findstring readline,$(LIBS_SYS)),)
-    RL_AVAILABLE := $(shell echo -e "\#include <readline/readline.h>\nint main(){ return 0; }" | $(CC) $(INCL) $(CFLAGS) -E - >/dev/null 2>&1 && echo yes || echo no)
+    RL_AVAILABLE := $(shell echo "\#include <readline/readline.h>\nint main(){ return 0; }" | $(CC) $(INCL) $(CFLAGS) -E - >/dev/null 2>&1 && echo yes || echo no)
     LD_VERS := $(shell ld -v | sed -e 's/([[:alnum:][:blank:][:punct:]]*)//g;s/^[[:alpha:][:blank:]]*//;s/\.//;s/\..*//')
     LD_V_OK := $(shell test "$(LD_VERS)" -ge 218 && echo yes || echo no)
     ifeq ($(LD_V_OK),yes)
@@ -61,8 +61,7 @@ ifneq ($(findstring lin,$(OS)),)
         LFLAGS  += -lreadline
       endif
     else
-      DLABPRO_GCC_CFLAGS_DEBUG += -D__NOREADLINE
-      DLABPRO_GCC_CFLAGS_RELEASE += -D__NOREADLINE
+      CFLAGS += -D__NOREADLINE
       $(shell echo "-- Warning: readline libary support disabled (please install readline-devel with <readline/readline.h>) --" >&2)
     endif
   endif
