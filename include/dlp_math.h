@@ -307,7 +307,6 @@ INT16 dlm_cep_quantize(FLOAT64*, INT16, INT16);                                 
 INT16 dlm_cep_dequantize(FLOAT64*, INT16, INT16);                               /* Cepstrum downscale and dequantize */
 
 /* Functions - dlm_gcep.c */
-INT16 dlm_mgcep      (FLOAT64*, INT32, FLOAT64*, INT16, FLOAT64, FLOAT64, FLOAT64);
 INT16 dlm_gmult      (FLOAT64*, FLOAT64*, INT32, FLOAT64);
 INT16 dlm_igmult     (FLOAT64*, FLOAT64*, INT32, FLOAT64);
 INT16 dlm_gnorm      (FLOAT64*, FLOAT64*, INT32, FLOAT64);
@@ -315,6 +314,11 @@ INT16 dlm_ignorm     (FLOAT64*, FLOAT64*, INT32, FLOAT64);
 INT16 dlm_gcep2gcep  (FLOAT64*, INT32, FLOAT64, FLOAT64*, INT32, FLOAT64);
 INT16 dlm_mgcep2mgcep(FLOAT64*, INT32, FLOAT64, FLOAT64, FLOAT64*, INT32, FLOAT64, FLOAT64);
 INT16 dlm_gc2gc      (FLOAT64*, INT32, FLOAT64, FLOAT64*, INT32, FLOAT64);
+
+/* Functions - dlm_mgcep.c */
+void dlm_mgcep_init(INT32 n, INT16 order, FLOAT64 lambda);
+void dlm_mgcep_free();
+INT16 dlm_mgcep      (FLOAT64*, INT32, FLOAT64*, INT16, FLOAT64, FLOAT64, FLOAT64);
 
 /* Functions - dlm_pow.c */
 INT64     dlm_log2_i(UINT64 n);

@@ -41,6 +41,7 @@ SOURCES = dlm_arith     \
           dlm_eigen     \
           dlm_filter    \
           dlm_gcep      \
+          dlm_mgcep     \
           dlm_gel       \
           dlm_lpc       \
           dlm_lsf       \
