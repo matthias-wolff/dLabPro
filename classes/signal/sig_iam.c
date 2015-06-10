@@ -1674,19 +1674,38 @@ INT16 CGEN_PUBLIC CSignal_MGCep(CData* idY, CData* idX, FLOAT64 nGamma, FLOAT64 
   nRS = CData_GetNRecs(idS);
   nTS = CData_GetCompType(idS, 0);
 
-  CData_Tconvert(idS, idS, T_DOUBLE);
-  CData_Array(idR, T_DOUBLE, nCoeff, nRS);
-  CData_SetNBlocks(idR, CData_GetNBlocks(idS));
+  if(CData_IsHomogen(idS)==T_SHORT && nGamma!=0.){
+    /* Fixed point mgcep */
 
-  dlm_mgcep_init(nCS,nCoeff,nLambda);
-  for (iR = 0; iR < nRS; iR++) {
-    if (nGamma == 0.0) {
-      dlm_mcep_uels_sptk((FLOAT64*) CData_XAddr(idS, iR, 0), nCS, (FLOAT64*) CData_XAddr(idR, iR, 0), nCoeff, nLambda, nScale.x);
-    } else {
-      dlm_mgcep((FLOAT64*) CData_XAddr(idS, iR, 0), nCS, (FLOAT64*) CData_XAddr(idR, iR, 0), nCoeff, nGamma, nLambda, nScale.x);
+    CData_Array(idR, T_SHORT, nCoeff, nRS);
+    CData_SetNBlocks(idR, CData_GetNBlocks(idS));
+
+    dlm_mgcepfix_init(nCS,nCoeff,(INT16)round(nLambda*32767.));
+    for (iR = 0; iR < nRS; iR++)
+      dlm_mgcepfix((INT16*) CData_XAddr(idS, iR, 0), nCS,
+                   (INT16*) CData_XAddr(idR, iR, 0), nCoeff,
+                   (INT16)round(nGamma*32767.),
+                   (INT16)round(nLambda*32767.));
+    dlm_mgcepfix_free();
+
+  }else{
+    /* Floating point mgcep */
+
+    CData_Tconvert(idS, idS, T_DOUBLE);
+    CData_Array(idR, T_DOUBLE, nCoeff, nRS);
+    CData_SetNBlocks(idR, CData_GetNBlocks(idS));
+
+    dlm_mgcep_init(nCS,nCoeff,nLambda);
+    for (iR = 0; iR < nRS; iR++) {
+      if (nGamma == 0.0) {
+        dlm_mcep_uels_sptk((FLOAT64*) CData_XAddr(idS, iR, 0), nCS, (FLOAT64*) CData_XAddr(idR, iR, 0), nCoeff, nLambda, nScale.x);
+      } else {
+        dlm_mgcep((FLOAT64*) CData_XAddr(idS, iR, 0), nCS, (FLOAT64*) CData_XAddr(idR, iR, 0), nCoeff, nGamma, nLambda, nScale.x);
+      }
     }
+    dlm_mgcep_free();
+
   }
-  dlm_mgcep_free();
 
   CData_Tconvert(idS, idS, nTS);
   FOP_POSTCALC(idX, idY, idS, idR, idL);

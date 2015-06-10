@@ -320,6 +320,11 @@ void dlm_mgcep_init(INT32 n, INT16 order, FLOAT64 lambda);
 void dlm_mgcep_free();
 INT16 dlm_mgcep      (FLOAT64*, INT32, FLOAT64*, INT16, FLOAT64, FLOAT64, FLOAT64);
 
+/* Functions - dlm_mgcep.c */
+void dlm_mgcepfix_init(INT32, INT16, INT16);
+void dlm_mgcepfix_free();
+INT16 dlm_mgcepfix    (INT16*, INT32, INT16*, INT16, INT16, INT16);
+
 /* Functions - dlm_pow.c */
 INT64     dlm_log2_i(UINT64 n);
 FLOAT64   dlm_pow2(INT64 n);
