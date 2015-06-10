@@ -64,7 +64,8 @@ SOURCES = dlm_arith     \
           dlm_xft       \
           dlm_ldl       \
           dlm_fwt       \
-          dlm_vq
+          dlm_vq        \
+          dlm_fix
 DEPS    = dlp_base.h dlp_math.h
 
 include $(DLABPRO_HOME)/make/base.mk

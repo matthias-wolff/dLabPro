@@ -421,6 +421,24 @@ INT16 dlm_lbg(FLOAT64*,INT32,INT32,FLOAT64*,INT32 nRQ);                         
 INT16 dlm_vq(FLOAT64*,INT32,FLOAT64*,INT32,INT32,INT32*);                       /* Wrapper for SPTK-VQ-Algorithm     */
 INT16 dlm_ivq(FLOAT64*,INT32,FLOAT64*,INT32,INT32,INT32*);                      /* Wrapper for SPTK-IVQ-Algorithm    */
 
+/* Functions - dlm_fix.c */
+INT16 dlmx_rnd32(INT32 a);
+INT16 dlmx_abs16(INT16 a);
+INT32 dlmx_shl32(INT32 a,INT8 shf);
+INT16 dlmx_neg16(INT16 a);
+INT16 dlmx_add16(INT16 a,INT16 b);
+INT32 dlmx_neg32(INT32 a);
+INT32 dlmx_add32(INT32 a,INT32 b);
+INT32 dlmx_sub32(INT32 a,INT32 b);
+INT32 dlmx_mul16_32(INT16 a,INT16 b);
+INT16 dlmx_mul16(INT16 a,INT16 b);
+INT32 dlmx_mul32(INT32 a,INT32 b);
+INT32 dlmx_mul3216(INT32 a,INT16 b);
+INT32 dlmx_cabINT32(INT32 a,INT32 b);
+void dlmx_matmul16(UINT16 m,UINT16 n,INT16 *a,INT16 *b,INT16 *c);
+INT16 dlmx_vecmul16(UINT16 n,INT16 *a,INT16 *b,INT8 shf);
+void dlmx_vecadd16(UINT16 n,INT16 *a,INT16 *bc);
+
 /* Undocumented functions */                                                    /* --------------------------------- */
 INT16 dlm_constant(FLOAT64* Z, INT32 nXRz, INT32 nXCz, INT16 nOpcode);          /* in dlm_arith.c                    */
 INT16 dlm_scalop(FLOAT64* Z, const FLOAT64* A, INT32 nXR, INT32 nXC, FLOAT64 x, /* in dlm_arith.c                    */
