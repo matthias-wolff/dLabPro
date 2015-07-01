@@ -60,35 +60,6 @@ FLOAT64 dlm_pow2(INT64 n)
 }
 
 /* NO JAVADOC
- * <p>x^y for x and y of type <CODE>long int</CODE>.</p>
- *
- * @param x
- * @param y
- * @return the result of x^y
- */
-FLOAT64 __dlm_pow_ii(INT64 x, INT64 y)
-{
-  UINT64 xy = x;
-  INT64 i = ABS(y);
-
-  if (y == 0) return 1.0;
-
-  if (ABS(x) == 1)
-  {
-    if(x < 0)
-      return (((y/2)*2) == y) ? 1 : -1;
-    else
-      return 1;
-  }
-
-  for(; i > 1; i--)
-    xy *= x;
-
-  if (y < 0) return 1.0 / (FLOAT64)xy;
-  return (FLOAT64)xy;
-}
-
-/* NO JAVADOC
  * <p>x^y for x of type <CODE>double</CODE> and y of type <CODE>long int</CODE>.</p>
  *
  * @param x
@@ -124,17 +95,7 @@ FLOAT64 dlm_pow(FLOAT64 x, FLOAT64 y)
 
   y_i = (INT64)(y + EPS);
   if (ABS(y - y_i) < (2 * EPS))
-  {
-    x_i = (INT64)(x + EPS);
-    if (ABS(x - x_i) < (2 * EPS))
-#ifdef __MAX_TYPE_32BIT
-      return __dlm_pow_fi(x, y_i);
-#else
-      return __dlm_pow_ii(x_i, y_i);
-#endif
-    else
-      return __dlm_pow_fi(x, y_i);
-  }
+    return __dlm_pow_fi(x, y_i);
   return pow(x, y);
 }
 
