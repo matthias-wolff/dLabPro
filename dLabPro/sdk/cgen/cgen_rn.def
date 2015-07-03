@@ -1,0 +1,843 @@
+## dLabPro SDK class CCgen (cgen)
+## - Additional manual pages
+##
+## AUTHOR : Matthias Wolff
+## PACKAGE: dLabPro/sdk
+## 
+## Copyright 2013 dLabPro contributors and others (see COPYRIGHT file) 
+## - Chair of System Theory and Speech Technology, TU Dresden
+## - Chair of Communications Engineering, BTU Cottbus
+## 
+## This file is part of dLabPro.
+## 
+## dLabPro is free software: you can redistribute it and/or modify it under the
+## terms of the GNU Lesser General Public License as published by the Free
+## Software Foundation, either version 3 of the License, or (at your option)
+## any later version.
+## 
+## dLabPro is distributed in the hope that it will be useful, but WITHOUT ANY
+## WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+## FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+## details.
+## 
+## You should have received a copy of the GNU Lesser General Public License
+## along with dLabPro. If not, see <http://www.gnu.org/licenses/>.
+
+NOTE:    Custom dLabPro Classes (CDC)
+COMMENT: Extending dLabPro by custom classes.
+/html MAN:
+  <p>A dLabPro class is an object in the usual meaning of this word
+  in computer science. Thus it is similar what you would call a class
+  in the C++ world. Actually CGen creates a C++ class for each CDC to
+  implement it with the dLabPro kernel and to shell its functionality.
+  On the dLabPro interpreter level a CDC is represented by a dLabPro
+  class. So a CDC is an object with a C++ interface on the one hand a
+  dLabPro interpreter interface on the other hand.</p>
+
+  <p>CDC's have four different types of members:</p>
+  <table>
+    <tr>
+      <td><b>Methods:</b></td>
+      <td>Methods of the object.CGen will generate respective member
+          functions in the CDC's C++ class.<br>&nbsp;</td>
+    </tr>
+    <tr>
+      <td><b>Fields:</b></td>
+      <td>Properties of the object.CGen will generate respective
+          member variables in the CDC's C++ class.<br>&nbsp;</td>
+    </tr>
+    <tr>
+      <td><b>Options:</b></td>
+      <td>An option can be seen as a mode you can put method in. For
+          instance if you want to load a file in ASCII mode you might
+          have a respective option on the read method:
+          <code>"myfilename" /ascii -read</code><br>&nbsp;</td>
+    </tr>
+    <tr>
+      <td><b>Errors:</b></td>
+      <td>Each CDC contains a set of errors which are used to
+          indicate error states and display errors at the standard
+          error stream.<br>&nbsp;</td>
+    </tr>
+  </table>
+
+  <p>Options and errors are, like fields and methods, true members of
+  a CDC. They can be inherited and overwritten.</p>
+
+  <p>CDC's are runtime-objects. Unlike in C++ two instances of the same 
+  object may differ in their method table. Even though this feature 
+  is not available to the dLabPro user it can be used by CDC developers
+  to modify the method table at run-time.</p>
+
+  <p>&rarr; An instance of a CDC is defined by:</p>
+  <ul>
+    <li>the contents of all its parameters <em>and</em></li>
+    <li>the state of all its options <em>and</em></li>
+    <li>the instance dictionary.</li>
+  </ul>
+
+  <h3>Note</h3>
+  <p>The instance dictionary is a list which containes the identifiers
+  and properties of all CDC members, i.e. methods, fields, options and
+  errors.</p>
+END_MAN
+
+## Definition Scripts
+NOTE:    Definition Scripts
+COMMENT: Introduction
+/html MAN:
+  <p>A CDC definition script is a source file for the code generator CGen. It
+  provides all information CGen needs to create C/C++ code that will implement
+  the CDC and integrate your custom C/C++ code with dLabPro.</p>
+
+  <p>This section describes in general how to write a CDC definition script.
+  For information on special keywords see the respective manual sections.</p>
+END_MAN
+
+NOTE:    --- Definition Scripts I - Keywords and Structure
+COMMENT: The structure of a CDC definition script.
+/html MAN:
+  <p>Definition scripts consist of a number of lists, sections and interface
+  code snippets.</p>
+    
+  <h4>1. Lists</h4>
+  <div class="indent">
+  <p>Lists in definition scripts enumerate items of the same
+  category, such as source files to be included, define statements, etc. Each
+  list item is preceeded by its respective list keyword.Valid list keywords
+  are:</p>
+  <table>
+    <tr><th>List Keyword   </th><th>Description                                                 </th></tr>
+    <tr><td>{@link DEFINE:  }</td><td><code>#define</code> statement for class header file      </td></tr>
+    <tr><td>{@link FILE:    }</td><td>Custom C/C++ source to be included into CDC               </td></tr>
+    <tr><td>{@link INCLUDE: }</td><td>Include file to be included from class header file        </td></tr>
+    <tr><td>{@link PINCLUDE:}</td><td>Include file to be included from class implementation file</td></tr>
+  </table>
+  </div>
+
+  <h4>2. Sections</h4>
+  <div class="indent">
+  <p>A section defines either the CDC itself or one of its
+  members. Sections are headed by a section keyword. Section keywords are:</p>
+  <table>
+    <tr><th>Section Keyword </th><th>Description            </th><th>Number of usages  </th></tr>
+    <tr><td>{@link PROJECT:}</td><td>Defines the CDC        </td><td>exactly once      </td></tr>
+    <tr><td>{@link METHOD: }</td><td>Defines a method member</td><td>optional, multiple</td></tr>
+    <tr><td>{@link FIELD:  }</td><td>Defines a field member </td><td>optional, multiple</td></tr>
+    <tr><td>{@link OPTION: }</td><td>Defines a option member</td><td>optional, multiple</td></tr>
+    <tr><td>{@link ERROR:  }</td><td>Defines a error member </td><td>optional, multiple</td></tr>
+    <tr><td>{@link NOTE:   }</td><td>Defines a release note </td><td>optional, multiple</td></tr>
+  </table>
+  <p>Each section contains a number of sub-keywords. Most of the CGen methods
+  described in this manual are sub-keywords. The following table shows an
+  overview which sub-keywords are valid in the different sections. For
+  detailled information on the particular meaning of the sub-keywords in any
+  of the sections see the section keywords' description.</p>
+  <table>
+    <tr><th></th><th colspan="6">Section keyword</th></tr>
+    <tr>
+      <th>Sub-keyword</th>
+      <th>{@link PROJECT:}</th>
+      <th>{@link METHOD: }</th>
+      <th>{@link FIELD:  }</th>
+      <th>{@link OPTION: }</th>
+      <th>{@link ERROR:  }</th>
+      <th>{@link NOTE:   }</th>
+    </tr>
+    <tr><td>{@link AR:          }</td><td>X<sup>1</sup></td><td>-            </td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+    <tr><td>{@link AUTHOR:      }</td><td>U            </td><td>-            </td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+    <tr><td>{@link AUTOINSTANCE:}</td><td>O            </td><td>-            </td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+    <tr><td>{@link GCCFLAGS:    }</td><td>O<sup>1</sup></td><td>-            </td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+    <tr><td>{@link CLASS:       }</td><td>O            </td><td>-            </td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+    <tr><td>{@link CNAME:       }</td><td>O            </td><td>O            </td><td>O</td><td>O</td><td>-</td><td>-</td></tr>
+    <tr><td>{@link CODE:        }</td><td>-            </td><td>X<sup>2</sup></td><td>O</td><td>O</td><td>-</td><td>-</td></tr>
+    <tr><td>{@link COMMENT:     }</td><td>X            </td><td>X            </td><td>X</td><td>X</td><td>X</td><td>X</td></tr>
+    <tr><td>{@link COMPILER:    }</td><td>X<sup>1</sup></td><td>-            </td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+    <tr><td>{@link CSTRUCTNAME: }</td><td>O            </td><td>-            </td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+    <tr><td>{@link FLAGS:       }</td><td>O            </td><td>O            </td><td>O</td><td>O</td><td>-</td><td>-</td></tr>
+    <tr><td>{@link INIT:        }</td><td>-            </td><td>-            </td><td>O</td><td>-</td><td>-</td><td>-</td></tr>
+    <tr><td>{@link IPATH:       }</td><td>U            </td><td>-            </td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+    <tr><td>{@link MAN:         }</td><td>U            </td><td>U            </td><td>U</td><td>U</td><td>U</td><td>X</td></tr>
+    <tr><td>{@link MPATH:       }</td><td>U            </td><td>-            </td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+    <tr><td>{@link LEVEL:       }</td><td>-            </td><td>-            </td><td>-</td><td>-</td><td>O</td><td>-</td></tr>
+    <tr><td>{@link LFILE:       }</td><td>O            </td><td>-            </td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+    <tr><td>{@link LPATH:       }</td><td>U            </td><td>-            </td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+    <tr><td>{@link OBSOLETE:    }</td><td>O            </td><td>O            </td><td>O</td><td>O</td><td>-</td><td>-</td></tr>
+    <tr><td>{@link OPATH:       }</td><td>U            </td><td>-            </td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+    <tr><td>{@link PARENT:      }</td><td>O            </td><td>-            </td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+    <tr><td>{@link PLATFORM:    }</td><td>X            </td><td>-            </td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+    <tr><td>{@link POSTSYN:     }</td><td>-            </td><td>O            </td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+    <tr><td>{@link TYPE:        }</td><td>-            </td><td>-            </td><td>X</td><td>-</td><td>-</td><td>-</td></tr>
+    <tr><td>{@link SYNTAX:      }</td><td>-            </td><td>X            </td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+    <tr><td>{@link VERSION:     }</td><td>X            </td><td>-            </td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+  </table>
+  <table>
+    <tr><td class="hidden">Symbols: &nbsp;</td><td class="hidden">- &nbsp;</td><td class="hidden">not valid</td></tr>
+    <tr><td class="hidden"></td><td class="hidden">O</td><td class="hidden">optional</td></tr>
+    <tr><td class="hidden"></td><td class="hidden">U</td><td class="hidden">usually</td></tr>
+    <tr><td class="hidden"></td><td class="hidden">X</td><td class="hidden">required</td></tr>
+    <tr><td class="hidden"></td><td class="hidden"><sup>1</sup></td><td class="hidden">for the GNU C++ platform only</td></tr>
+    <tr><td class="hidden"></td><td class="hidden"><sup>1</sup></td><td class="hidden">see release note "CGen Insight II - Implementing Callbacks Efficiently"</td></tr>
+  </table>
+  </div>
+
+  <h4>3. Interface code snippets</h4>
+  <div class="indent">
+  <p>You can customize the CDC's interface to the dLabPro kernel by writing
+     custom C/C++ code to be executed in any of the interface functions.
+     Customizable interface functions are:</p>
+  <table>
+    <tr><th>Interface function</th><th>Code snipped keyword</th><th>Called on</th></tr>
+    <tr><td>AutoRegisterWords()</td><td>{@link INSTALLCODE:}</td><td>instanciation                      </td></tr>
+    <tr><td>ClassProc()        </td><td>{@link CLASSCODE:  }</td><td>interpreting instance name         </td></tr>
+    <tr><td>Copy()             </td><td>{@link COPYCODE:   }</td><td>instance copy                      </td></tr>
+    <tr><td>Init()             </td><td>{@link INITCODE:   }</td><td>destruction                        </td></tr>
+    <tr><td>InstallProc()      </td><td>{@link INSTALLCODE:}</td><td>registering class with dLabPro     </td></tr>
+    <tr><td>Reset()            </td><td>{@link RESETCODE:  }</td><td>instance reset                     </td></tr>
+    <tr><td>Restore()          </td><td>{@link RESTORECODE:}</td><td>deserializing from Dnorm 3 file    </td></tr>
+    <tr><td>Save()             </td><td>{@link SAVECODE:   }</td><td>serializing to Dnorm 3 file        </td></tr>
+    <tr><td>n/a                </td><td>{@link HEADERCODE: }</td><td>inserted into generated header file</td></tr>
+  </table>
+
+  <p><b>Important note:</b> If you provide code snippets for interface
+  functions you will (in most cases) call the base classes' implementation
+  if that interface function from within your code snippet thus providing
+  the default behaviour along with your custom code.</p>
+  <p>For convenience the base class calls are encapsulated by macros which
+  may be included into the code snippets. Please note that most of the base
+  class calls <b>must</b> be made at a defined position of the code snippet!</p>
+  <table>
+    <tr><th>C/C++ macro</th><th>Interface function</th><th>Section key</th><th>Usual placement of base call</th></tr>
+    <tr><td><code>INSTALL  </code></td><td><code>::AutoRegisterWords()</code></td><td>{@link INSTALLCODE:}</td><td>no matter</td></tr>
+    <tr><td><code>INIT     </code></td><td><code>::Init()             </code></td><td>{@link INITCODE:   }</td><td>before custom code</td></tr>
+    <tr><td><code>DONE     </code></td><td><code>::Done()             </code></td><td>{@link DONECODE:   }</td><td>after custom code</td></tr>
+    <tr><td><code>RESET    </code></td><td><code>::Reset()            </code></td><td>{@link RESETCODE:  }</td><td>before custom code</td></tr>
+    <tr><td><code>SAVE     </code></td><td><code>::Save()             </code></td><td>{@link SAVECODE:   }</td><td>after custom code</td></tr>
+    <tr><td><code>RESTORE  </code></td><td><code>::Restore()          </code></td><td>{@link RESTORECODE:}</td><td>after custom code</td></tr>
+    <tr><td><code>COPY     </code></td><td><code>::Copy()             </code></td><td>{@link COPYCODE:   }</td><td>before custom code</td></tr>
+    <tr><td><code>CLASSPROC</code></td><td><code>::ClassProc()        </code></td><td>{@link CLASSCODE:  }</td><td>after custom code</td></tr>
+  </table>
+
+  <p><b>Example</b></p>
+<pre class="code">
+
+  {@link RESETCODE:}
+    RESET;               <span class="c-cmt">// <-- This calls the default reset (CDlpInstance::Reset)</span>
+    MyCustomReset();
+  <span class="c-key">END_CODE</span>
+
+</pre>
+
+  <p>An empty code snippet will be treated as not written (i.e. the base class
+  implementation will be called). If you neither want to call the base class
+  nor do anything else, just write a single semicolon ';' as code snippet.</p>
+  
+<pre class="code">
+
+  <span class="c-cmt"># This will cause no base call during the reset process while ...</span>
+  {@link RESETCODE:}
+  ;
+  <span class="c-key">END_CODE</span>
+  
+  <span class="c-cmt"># ... this will call the base class as it is treated as not written.</span>
+  {@link RESETCODE:}
+
+  <span class="c-key">END_CODE</span>
+       
+</pre>
+
+  <p>For a detailled description of the customization keywords see the
+  respective manual sections.</p>
+  </div>
+END_MAN
+
+NOTE:    --- Definition Scripts II - Methods and Options
+COMMENT: Methods and options of CGen.
+/html MAN:
+  <p>Besides list, section and code-snippet keywords CGen has some ordinary
+  methods and options.</p>
+
+  <table>
+    <tr><td class="rowgroup" colspan="3">Methods</td></tr>
+    <tr><th>Identifier</th><th> </th><th>Description</th></tr>
+    <tr><td>{@link -cgen}</td><td> </td><td><b>required!</b> Writes the output files<br>- Place at the very end of a defition script</td></tr>
+    <tr><td class="hidden" colspan="3">&nbsp;</td></tr>
+    <tr><td class="rowgroup" colspan="3">Options</td></tr>
+    <tr><th>Identifier</th><th>Applies to</th><th>Description</th></tr>
+    <tr><td>{@link /append    }</td><td>section keywords</td><td>Continue an existring section.</td></tr>
+    <tr><td>{@link /cLib      }</td><td>global          </td><td>Project is a library (default is DCD).</td></tr>
+    <tr><td>{@link /cProject  }</td><td>global          </td><td>Generate ANSI C code (default is ANSI C++).</td></tr>
+    <tr><td>{@link /cxx_nconv }</td><td>global          </td><td>Use strict C++ naming conventions for member identifiers.</td></tr>
+    <tr><td>{@link /html      }</td><td>{@link MAN:}    </td><td>Manual text is HTML (default is plain text)</td></tr>
+    <tr><td>{@link /no_idcheck}</td><td>global          </td><td>Do not enforce dLabPro naming conventions for member identifiers.</td></tr>
+    <tr><td>{@link /no_stdincl}</td><td>global          </td><td>Do not include stabdard dLabPro header file from CDC header file.</td></tr>
+  </table>
+
+  <p>As CGen itself is an CDC, i.e. runs a normal dLabPro session, you can use
+  all methods of the dLabPro interpreter (see <a href="itp.html">class
+  <code>itp</code></a>). Namely you can run other scripts from within a
+  definition script (method <code>load</code>).</p>
+
+  <h3>Important Note</h3>
+  <p>You should always terminate the CGen session with the <code>quit</code>
+  method (see <a href="itp.html">class <code>itp</code></a>).
+  Otherwise after having finished with the definition script CGen will continue
+  in interactive (command prompt) mode. This is particularly important when
+  calling CGen from shell scripts or make files.</p>
+END_MAN
+
+NOTE:    --- Definition Scripts III - C/C++ Code
+COMMENT: On implementing custom C/C++ code in a CDC.
+/html MAN:
+  <p>Besides interface code-snippets (as described in the previous section)
+  CGen can include custom C or C++ source files into a CDC. As CGen writes the
+  classes' header file it has to scan your source files for function and member
+  function prototypes. All member function definitions and selected function
+  definitions have to be marked by one of the following scanner macroes:</p>
+
+  <table>
+    <tr><th>Scanner Macro</th><th>Function Type</th><th>Access</th></tr>
+    <tr><td><code>CGEN_PUBLIC     </code></td><td>member function</td><td><code>public:</code></td></tr>
+    <tr><td><code>CGEN_PROTECTED  </code></td><td>member function</td><td><code>protected:</code></td></tr>
+    <tr><td><code>CGEN_PRIVATE    </code></td><td>member function</td><td><code>private:</code></td></tr>
+    <tr><td><code>CGEN_VPUBLIC    </code></td><td>member function</td><td><code>public: virtual</code></td></tr>
+    <tr><td><code>CGEN_VPROTECTED </code></td><td>member function</td><td><code>protected: virtual</code></td></tr>
+    <tr><td><code>CGEN_VPPUBLIC   </code></td><td>member function</td><td><code>public: </code>pure<code> virtual</code></td></tr>
+    <tr><td><code>CGEN_VPPROTECTED</code></td><td>member function</td><td><code>protected: </code>pure<code> virtual</code></td></tr>
+    <tr><td><code>CGEN_SPUBLIC    </code></td><td>member function</td><td><code>public: static</code></td></tr>
+    <tr><td><code>CGEN_SPROTECTED </code></td><td>member function</td><td><code>protected: static</code></td></tr>
+    <tr><td><code>CGEN_SPRIVATE   </code></td><td>member function</td><td><code>private: static</code></td></tr>
+    <tr><td><code>CGEN_EXPORT     </code></td><td>function       </td><td>n/a</td></tr>
+  </table>
+
+  <p>Like a calling convention the scanner macroes have to be placed between
+  the return type and the function name in the function definition:</p>
+
+<pre class="code">
+
+  INT16 CGEN_PUBLIC CMyproc::MyFunction()
+
+</pre>
+
+  <h3>Default Arguments</h3>
+  <p>CGen also supports default arguments for C++ functions. This is made
+  possible through the <code><b>DEFAULT()</b></code> macro defined in C++
+  scope:</p>
+<pre class="code">
+
+  INT16 CGEN_PUBLIC CMyproc::MyFunction(long nDefarg DEFAULT(0))
+
+</pre>
+
+  <h3>C++ Class name</h3>
+  <p>The C++ class identifier of a CDC is generated automatically by CGen
+  according to the C++ naming conventions (by capitalizing the first character
+  of the dLabPro project name and putting a capital 'C' before it). For
+  instance</p>
+<pre class="code">
+
+  PROJECT: MYproc
+
+</pre>
+  <p>will creates a C++ class named <code>CMYproc</code>. You can override the
+  automatism by specifying the C++ class name directly using the {@link CNAME:}
+  subkey in the {@link PROJECT:} section.</p>
+  <p>In definitions of member functions you can replace the require C++ class
+  name by the symbol <code><b>thisclass</b></code> which will be defined by
+  CGen for CDC as a synonym for the C++ class name. This functionality is
+  provided for your convenience as you are not longer required to learn much
+  about CGen's naming conventions:</p>
+<pre class="code">
+
+  INT16 CGEN_PUBLIC thisclass::MyFunction()
+
+</pre>
+
+  <h3>C++ Base class name</h3>
+  <p>If you want to call a base class function you can use the symbol 
+  <code><b>inherited</b></code> which will by defined as the base class' name:
+  </p>
+<pre class="code">
+
+  INT16 CGEN_VPUBLIC thisclass::MyFunction()
+  {
+   return inherited::MyFunction();
+  }
+
+</pre>
+
+  <h4>Including additional header files</h4>
+  <p>If you have to include other files than the class header in any of your
+  custom C/C++ source files make sure that the class header file will be
+  included <i>last</i>. CGen generated header files define some equally named
+  but differently defined symbols and types for each CDC. Inlcuding the class
+  header file last makes sure that you will use the correct definitions for
+  your CDC.</p>
+END_MAN
+
+NOTE:    --- Definition Scripts IV - Types
+COMMENT: Argument and field type identifiers.
+/html MAN:
+  <p>Use the following type identifiers as field (see {@link TYPE:}) and method
+  argument types (see {@link SYNTAX:}):</p>
+
+  <table>
+    <tr><td class="rowgroup" colspan="5">Simple types, strings and instance types</td></tr>
+    <tr><th>Indentifier</th><th>F</th><th>A</th><th>C++ Type</th><th>Description</th></tr>
+    <tr><td><code>char                  </code></td><td>X</td><td>X</td><td><code>char          </code></td><td><sup>1</sup></td></tr>
+    <tr><td><code>unsigned char         </code></td><td>X</td><td>X</td><td><code>unsigned char </code></td><td><sup>1</sup></td></tr>
+    <tr><td><code>short                 </code></td><td>X</td><td>X</td><td><code>short         </code></td><td><sup>1</sup></td></tr>
+    <tr><td><code>unsigned short        </code></td><td>X</td><td>X</td><td><code>unsigned short</code></td><td><sup>1</sup></td></tr>
+    <tr><td><code>int                   </code></td><td>X</td><td>X</td><td><code>int           </code></td><td><sup>1</sup></td></tr>
+    <tr><td><code>long                  </code></td><td>X</td><td>X</td><td><code>long          </code></td><td><sup>1</sup></td></tr>
+    <tr><td><code>unsigned long         </code></td><td>X</td><td>X</td><td><code>unsigned long </code></td><td><sup>1</sup></td></tr>
+    <tr><td><code>double                </code></td><td>X</td><td>X</td><td><code>double        </code></td><td><sup>1</sup></td></tr>
+    <tr><td><code>string                </code></td><td>X</td><td>X</td><td><code>char*         </code></td><td> </td></tr>
+    <tr><td><code>1,2,...,255           </code></td><td>X</td><td>-</td><td><code>char[n]       </code></td><td> </td></tr>
+    <tr><td><code>INSTANCE()            </code></td><td>X</td><td>-</td><td><code>CDlpInstance* </code></td><td>No runtime type validation</td></tr>
+    <tr><td><code>INSTANCE(<i>class</i>)</code></td><td>X</td><td>X</td><td><code><i>class</i>* </code></td><td>RTT validation as kind of <code><i>class</code></i></td></tr>
+    <tr><td><code>data                  </code></td><td>X</td><td>X</td><td><code>CData*        </code></td><td><a href="data.html">Class <code>data</code></a> instance</td></tr>
+    <tr><td><code>structure             </code></td><td>X</td><td>X</td><td><code>CStr*         </code></td><td><a href="str.html">Class structure</code></a> instance</td></tr>
+
+    <tr><td class="hidden" colspan="5">&nbsp;</td></tr>
+    <tr><td class="rowgroup" colspan="5">Pointer types and arrays</td></tr>
+    <tr><th>Indentifier</th><th>F</th><th>A</th><th>C++ Type</th><th>Description</th></tr>
+    <tr><td><code><i>type</i>*          </code></td><td>X</td><td>-</td><td><code><i>type</i>*   </code></td><td><sup>2</sup> Simple pointer</td></tr>
+    <tr><td><code><i>type></i>[n]       </code></td><td>X</td><td>-</td><td><code><i>type</i>[n] </code></td><td><sup>3</sup> Array</td></tr>
+    <tr><td><code><i>type></i>*[n]      </code></td><td>X</td><td>-</td><td><code><i>type</i>*[n]</code></td><td><sup>2 3</sup> Pointer array</td></tr>
+
+    <tr><td class="hidden" colspan="5">&nbsp;</td></tr>
+    <tr><td class="rowgroup" colspan="5">Unknown identifiers</td></tr>
+    <tr><th>Indentifier</th><th>F</th><th>A</th><th>C++ Type</th><th>Description</th></tr>
+    <tr><td><code><i>unknown</i>        </code></td><td>X</td><td>-</td><td><code><i>unknown</i> </code></td><td><sup>4</sup> Pointer type assumed</td></tr>
+    <tr><td><code><i>unknown</i>        </code></td><td>-</td><td>X</td><td><code><i>unknown</i>*</code></td><td><sup>4</sup><code>INSTANCE(<i>unknown</i>)</code> assumed</td></tr>
+    <tr><td><code>(<i>unknown</i>)      </code></td><td>X</td><td>-</td><td><code><i>unknown</i> </code></td><td><sup>5</sup>Type will be "ignored"</td></tr>
+
+    <tr><td class="hidden" colspan="5">&nbsp;</td></tr>
+    <tr><td class="rowgroup" colspan="5">Obsolete identifiers</td></tr>
+    <tr><th>Indentifier</th><th>F</th><th>A</th><th>C++ Type</th><th>Description</th></tr>
+    <tr><td><code>text                    </code></td><td>X</td><td>X</td><td> </td><td>replace by <code>string</code></td></tr>
+    <tr><td><code>INSTANCE                </code></td><td>X</td><td>-</td><td> </td><td>replace by <code>INSTANCE()</code></td></tr>
+    <tr><td><code>INSTANCE("<i>class</i>")</code></td><td>X</td><td>X</td><td> </td><td>replace by <code>INSTANCE(<i>class</i>)</code></td></tr>
+    <tr><td><code>DATA                    </code></td><td>X</td><td>X</td><td> </td><td>replace by <code>data</code></td></tr>
+    <tr><td><code>STRUCTURE               </code></td><td>X</td><td>X</td><td> </td><td>replace by <code>structure</code></td></tr>
+    <tr><td><code>THIS                    </code></td><td>-</td><td>X</td><td> </td><td>delete from syntax description</td></tr>
+  </table>
+  <table>
+    <tr><td class="hidden" colspan="2">&nbsp;</td></tr>
+    <tr><td class="hidden" nowrap>F: &nbsp;</td><td class="hidden">Valid as field type ({@link FIELD:} {@link TYPE:})</td></tr>
+    <tr><td class="hidden">A:          </td><td class="hidden">Valid as argument type ({@link METHOD:} {@link SYNTAX:})</td></tr>
+    <tr><td class="hidden"><sup>1</sup></td><td class="hidden">Actual length in bytes depends on the machine.</td></tr>
+    <tr><td class="hidden"><sup>2</sup></td><td class="hidden">Everything is accepted as <code><i>type</i></code>; there may be
+        several <code>*</code>'s, however, the serialization machanism of dLabPro processes simple pointers only.</td></tr>
+    <tr><td class="hidden"><sup>3</sup></td><td class="hidden">Everything is accepted as <code><i>type</i></code>; you may
+        specify multi-dimensional arrays, howerver, the serialization mechanism of dLabPro processes one-dimensional arrays
+        only.</td></tr>
+    <tr><td class="hidden"><sup>4</sup></td><td class="hidden">In case of unknown identifiers CGen prints a warning. 
+        To avoid these warnings use <br>
+        F: <code><i>type</i>*</code> for pointer types<br>
+        A: <code>INSTANCE(<i>class</i>)</code> for instance types.</td></tr>
+    <tr><td class="hidden"><sup>5</sup></td><td class="hidden">This is the only way to define fields with unknown
+      non-pointer types (such as C++ structures or classes). dLabPro will "ignore" such fields, i.e. they will not
+      be automatically handled, reset, serialized, etc. It is <i>not</i> recommended to use "ignore" parameters!</td></tr>
+  </table>
+END_MAN
+
+#NOTE: --- Definition Scripts V - Example
+#COMMENT: Example for a CDC definition script.
+#MAN:
+#  Copy the following example and interprete it with CGen.
+#
+#END_MAN
+
+## JavaDoc
+NOTE:    JavaDoc
+COMMENT: JavaDoc support for documentation of dLabPro class members and C/C++ functions.
+/html MAN:
+  <p>CGen supports JavaDoc for the documentation of C/C++ functions in a CDC's
+  user supplied files. As in Java, the JavaDoc comments must be
+  placed directly above the functions they describe. JavaDoc comments are C
+  block comments which start with <code><b>/**</b></code> (instead of
+  <code><b>/*</b></code>).</p>
+
+  <p>JavaDoc comments are expected to be in HTML format. Plaintext, however,
+  will be fine, too. But avoid HTML relevant characters like "&lt;", "&gt;",
+  "&amp;", etc. They must be replaced by the respective HTML entities
+  ("&amp;lt;", "&amp;gt;", "&amp;amp;", etc.).</p>
+
+  <p>JavaDoc includes so called "tags" for special documentation purposes. CGen
+  supports the following (subset of) JavaDoc tags:</p>
+  <table>
+    <tr><th>Tag</th><th>Description</th></tr>
+    <tr>
+      <td nowrap><code><b>@deprecated</b></code> <i>deprecated-text</i></td>
+      <td>Adds a comment indicating that this API should no longer be used (even
+          though it may continue to work). CGen moves the <i>deprecated-text</i> ahead
+          of the description, preceding it with a bold, red warning:
+          "DEPRECATED".<br>&nbsp;</td>
+    </tr>
+    <tr>
+      <td nowrap><code><b>&#123;@link</b> <i>identifier [label]</i><b>}</b></code></td>
+      <td>Inserts an in-line link with visible text <i>label</i> that points to
+          the documentation for the specified <i>identifier</i> that is
+          referenced. This tag accepts exactly the same syntax for
+          <i>identifier</i> as the <code>@see</code> tag, described below, but
+          generates an in-line link rather than placing the link in the 'See
+          Also' section. This tag begins and ends with curly braces to separate
+          it from the rest of the in-line text. If you need to use "}" inside
+          the label, use the HTML entity notation <code>&amp;#125;</code> There is no limit
+          to the number of <code>&#123;@link}</code> tags allowed in a sentence. You
+          can use this tag in the description part of a documentation comment
+          or in the text portion of any tag (such as <code>@deprecated</code>,
+          <code>@return</code> or <code>@param</code>). Please note, that
+          CGen will only generate links within the same HTML file (i.e.
+          references to elements of the same class or library). For external
+          links please use <code>&lt;a
+          href="<i>URL#anchor</i>"&gt;<i>label</i>&lt;/a&gt;</code>.
+          <br>&nbsp;</td>
+    </tr>
+    <tr>
+      <td nowrap><code><b>@param</b></code> <i>parameter-name description</i></td>
+      <td>Adds a parameter to the "Parameters" section. The description may be
+          continued on the next line.<br>&nbsp;<br></td>
+    </tr>
+    <tr>
+      <td nowrap><code><b>@return</b></code> <i>description</i></td>
+      <td>Adds a "Return value" section with the <i>description</i> text. This text
+          should describe the return type and permissible range of values.
+          <br>&nbsp;</td>
+    </tr>
+    <tr>
+      <td nowrap><code><b>@see</b></code> <i>reference</i></td>
+      <td>Adds a "See Also" heading with a link or text entry that points to
+          <i>reference</i>. A doc comment may contain any number of
+          <code>@see</code> tags, which are all grouped under the same heading.
+          The <code>@see</code> tag has three variations; the third form below
+          is the most common.<br>&nbsp;<br>
+          
+          <code><b>@see</b></code> <i>"string"</i><br>
+          Adds a text entry for string. No link is generated. The string is a
+          book or other reference to information not available by URL. CGen
+          distinguishes this from the previous cases by looking for a
+          double-quote as the first character.<br>&nbsp;<br>
+          
+          <code><b>@see</b> &lt;a
+          href="<i>URL#anchor</i>"&gt;label&lt;/a&gt;</code><br> Adds a link as
+          defined by <i>URL#anchor</i>. The <i>URL#anchor</i> is a relative or
+          absolute URL. CGen distinguishes this from other cases by looking for
+          a less-than symbol (&lt;) as the first character.<br>&nbsp;<br>
+
+          <code><b>@see</b></code> <i>identifier [label]</i><br>
+          Adds a link, with visible text <i>label</i>, that points to the
+          documentation for the specified <identifier> that is referenced. The
+          <i>label</i> is optional; if omitted, the <i>identifier</i> appears
+          instead as the visible text. Use the label when you want the visible
+          text to be abbreviated or different from the name. Please note, that
+          CGen will only generate links within the same HTML file (i.e.
+          references to elements of the same class or library). Use the second
+          variant of the <code>@see</code> tag if you need external references.
+          </td><br>&nbsp;</td>
+    </tr>
+    <tr>
+      <td nowrap><code><b>&#123;@cgen:index</b> <i>indexentry</i><b>}</b></code></td>
+      <td>Adds a new entry to the alphabetical index. Index entries may define an
+          index key and, optionally, sub keys. The syntax is borrowed from
+          L<sup>A</sup>T<sub>E</sub>X:<br>&nbsp;<br>
+          <span class="indent"><code><b>{@cgen:index</b></code> <i>Key</i><code><b>}</b></code><span><br>
+          <span class="indent"><code><b>{@cgen:index</b></code> <i>Key!Subkey</i><code><b>}</b></code></span><br>
+          <span class="indent"><code><b>{@cgen:index</b></code> <i>Key!Subkey!Subsubkey</i><code><b>}</b></code></span><br>&nbsp;<br>
+          <b>This feature is not yet implemented.</b> However, the
+          <code>{@cgen:index}</code>-tags are removed from the JavaDocs.
+          <br>&nbsp;</td>
+    </tr>
+    <tr>
+      <td nowrap><code><b>@cgen:experimental</b></code> <i>experimental-text</i></td>
+      <td>Adds a comment indicating that this API is experimental and may be
+          essetially modified or entirely removed without notice. CGen moves
+          the <i>experimental-text</i> ahead of the description, preceding it
+          with a bold, red warning: "EXPERIMENTAL".<br>&nbsp;</td>
+    </tr>
+    <tr>
+      <td nowrap><code><b>@cgen:option</b></code> <i>option-name description</i></td>
+      <td>Adds a parameter to the "Options" section. The description may be
+          continued on the next line.<br>&nbsp;<br></td>
+    </tr>
+    <tr>
+      <td nowrap><code><b>@cgen:TODO:</b></code> <i>TODO-text</i></td>
+      <td>Adds a parameter to the "Developers' TODO List" section. The
+          description may be continued on the next line.<br>&nbsp;</td>
+    </tr>
+  </table>
+  <p>You may use JavaDoc tags in {@link /html} {@link MAN:} manual entries
+  for CDC members.</p>
+END_MAN
+
+## Naming conventions
+NOTE:    Naming Conventions
+COMMENT: On Naming Identifiers in CDC's.
+/html MAN:
+  <p>This section contains information about the naming conventions used by 
+  dLabPro itself and by CGen to convert dLabPro identifiers you provided in
+  the CDC definition script into their respective C++ identifiers in the
+  generated C++ class for the CDC.</p>
+
+  <p><b>The naming conventions are binding for all developers.</b></p>
+END_MAN
+
+NOTE:    --- Naming Conventions I - dLabPro
+COMMENT: dLabPro naming conventions
+/html MAN:
+  dLabPro identifiers (specified through the {@link CLASS:}, {@link OPTION:},
+  {@link FIELD:} and {@link METHOD:} keywords) must only contain alphanumeric
+  characters and underscores '_'. Further there are additional conventions for
+  method and option identifiers:</p>
+  <ul>
+    <li>Method identifiers begin with a hyphen '-' or with a question mark
+    '?'.</li>
+    <li>Option identifiers begin with a slash '/'.</li>
+  </ul>
+
+  <p>CGen will print a warning whenever other than the described charcters
+  occour in an identifier. You can turn off these warnings placing the
+  {@link /no_idcheck} option on top of your definition script. However, this
+  is not recommended.</p>
+
+  <h3>Important note</h3>
+  <p>CGen automatically generates C++ identifiers from the dLabPro
+  identifiers. CGen will just warn you on eventually invalid characters. Your
+  C++ compiler will, however, probably fail. If you are not sure if a
+  generated C++ identifier will be valid or if you wish to use special
+  characters in a dLabPro identifier you should specify the name of the
+  respective C++ identifier explicitly using the {@link CNAME:} subkey.</p>
+END_MAN
+
+NOTE:    --- Naming Conventions II - C++
+COMMENT: C++ naming conventions
+/html MAN:
+  <p>Generally CGen will convert dLabPro identifiers for the CDC project
+  ({@link PROJECT:}), for fields ({@link FIELD:}), options ({@link OPTION:})
+  and methods ({@link METHOD:}) to obtain their respective C++ identifiers.</p>
+
+  <p><b>This automatism is applied unless you expilicitely specify a C++
+  identifier using the {@link CNAME:} subkey.</b></p>
+
+  <p>Identifier conversion takes place by:</p>
+  <ol>
+     <li>removing any leading slashes '/', question marks '?' and hyphens 
+     '-',</li>
+     <li>removing all underscores '_' from the identifier and converting
+     all characters which immediately follow an underscore to capital
+     letters,</li>
+     <li>applying further conversions depending on the member type (see below).
+  </ol>
+
+  <h3>Member type depending conversions</h3>
+
+  <p><b>Fields</b></p>
+  <div class="indent">
+  <p>Put the member variable tag 'm_' before the identifier. If you
+  choosed to use strict C++ naming conventions (i.e. you specified the
+  {@link /cxx_nconv} option) an additional variable type dependent tag
+  will be placed between 'm_' and the identifier itself. The first
+  character of the identifier will then be converted into a capital
+  letter. The following tags will be inserted:</p>
+  <table>
+    <tr><th>Field type                 </th><th>Tag  </th></tr>
+    <tr><td>boolean                    </td><td>'b'  </td></tr>
+    <tr><td>numeric types              </td><td>'n'  </td></tr>
+    <tr><td>pointer types              </td><td>'lp' </td></tr>
+    <tr><td>pointer to character arrays</td><td>'lps'</td></tr>
+    <tr><td>pointers to instances      </td><td>'i'  </td></tr>
+    <tr><td><code>CData*</code>        </td><td>'id' </td></tr>
+    <tr><td><code>CFst*</code>         </td><td>'it' </td></tr>
+    <tr><td>all other types            </td><td>none </td></tr>
+  </table>
+  </div>
+  
+  <p><b>Options</b></p>
+  <div class="indent">
+  <p>Convert the first character in the identifier into a capital letter
+  and putting the boolean member variable tag 'm_b' before the identifier.</p>
+  </div>
+
+  <p><b>C++ Class</b></p>
+  <div class="indent">
+  <p>Put a capital 'C' before the project identifier (see {@link PROJECT:})<br>
+  <b>Note:</b> Definition scripts provide two identifiers for a CDC, the
+  project name ({@link PROJECT:}) and the dLabPro class name ({@link CLASS:}).
+  The C++ class identifier is derived from the project name.</p>
+  </div>
+
+  <p><b>Callback functions</b></p>
+  <div class="indent">
+  <p>Put prefixes (like 'On') and/or suffixes (like 'Set' or 'Changed')
+  before and/or behind the identifier. Callback functions implement dLabPro
+  methods in C or C++ or define reactions on changing option or field values.
+  There are four types of callback functions. The following table list these
+  types and and shows how CGen generates the function identifiers:</p>
+  <table>
+    <tr><th>Callback Function (CF)           </th><th>Prefix</th><th>ID</th><th>Suffix   </th><th>Called when</th></tr>
+    <tr><td>Option Set CF                    </td><td>'On'  </td><td>S </td><td>'Set'    </td><td>Option identifier is interpreted</td></tr>
+    <tr><td>Parameter Change CF              </td><td>'On'  </td><td>S </td><td>'Changed'</td><td>Field is being set</td></tr>
+    <tr><td>Primary Command CF <sup>1</sup>  </td><td>'On'  </td><td>C </td><td>---      </td><td>Method identifier is interpreted</td></tr>
+    <tr><td>Secondary Command CF <sup>1</sup></td><td>---   </td><td>C </td><td>---      </td><td>Method identifier is interpreted</td></tr>
+  </table>
+  <table
+    <tr><td class="hidden" nowrap>S: &nbsp;</td><td class="hidden">{@link CNAME:} if specified, else converted dLabPro identifier ({@link OPTION:}, {@link FIELD:})</td></tr>
+    <tr><td class="hidden">C:</td><td class="hidden">{@link CNAME:} if specified, else converted dLabPro identifier ({@link METHOD:})</td></tr>
+    <tr><td class="hidden"><sup>1</sup></td><td class="hidden">For more information on command callback functions see section
+        {@link --- CGen Insight I - Callback Functions}.</td></tr>
+  </table>
+  </div>
+
+  <h3>Examples</h3>
+  <table>
+    <tr><td class="rowgroup" colspan="2">Methods</td></tr>
+    <tr><th>dLabPro identifier definition          </th><th>Respective C++ identifier(s) generated by CGen               </th></tr>
+    <tr><td>{@link METHOD:} <code>-my_method</code></td><td><code>MyMethod</code> (,<code>OnMyMethod</code>) <sup>1</sup></td></tr>
+
+  <tr><td class="hidden">&nbsp;</td></tr>
+    <tr><td class="rowgroup" colspan="2">Options</td></tr>
+    <tr><th>dLabPro identifier definition          </th><th>Respective C++ identifier(s) generated by CGen               </th></tr>
+    <tr><td>{@link OPTION:} <code>/myoption </code></td><td><code>m_bMyoption</code>, <code>OnMyoptionSet</code>         </td></tr>
+
+  <tr><td class="hidden">&nbsp;</td></tr>
+    <tr><td class="rowgroup" colspan="2">Fields</td></tr>
+    <tr><th>dLabPro identifier definition          </th><th>Respective C++ identifier(s) generated by CGen               </th></tr>
+    <tr><td>{@link FIELD:} <code>my_field         </code></td><td><code>m_MyField</code>, <code>OnMyFieldChanged</code></td></tr>
+
+  <tr><td class="hidden">&nbsp;</td></tr>
+    <tr><td class="rowgroup" colspan="2">Fields - with C++ naming conventions enforced <sup>2</sup> ({@link /cxx_nconv})</td></tr>
+    <tr><th>dLabPro identifier definition          </th><th>Respective C++ identifier(s) generated by CGen               </th></tr>
+    <tr><td>{@link FIELD:} <code>my_field<br>{@link TYPE: } <code>long</code></td>
+                                                      <td>&nbsp;<br><code>m_nMyField</code>, <code>OnMyFieldChanged</code> </td></tr>
+    <tr><td>{@link TYPE: } <code>100              </code></td><td><code>m_lpsMyField</code>, <code>OnMyFieldChanged</code></td></tr>
+    <tr><td>{@link TYPE: } <code>INSTANCE(MyClass)</code></td><td><code>m_iMyField</code>, <code>OnMyFieldChanged</code> </td></tr>
+    <tr><td>{@link TYPE: } <code>data             </code></td><td><code>m_idMyField</code>, <code>OnMyFieldChanged</code> </td></tr>
+    <tr><td>{@link TYPE: } <code>MyCStruct*       </code></td><td><code>m_lpMyField</code>, <code>OnMyFieldChanged</code></td></tr>
+    <tr><td>{@link TYPE: } <code>(MyCStruct)      </code></td><td><code>m_MyField</code>, <code>OnMyFieldChanged</code>  </td></tr>
+  </table>
+  <table>
+    <tr><td class="hidden" nowrap><sup>1</sup> &nbsp;</td><td class="hidden">Primary command callback function only if necessary</td></tr>
+    <tr><td class="hidden" nowrap><sup>2</sup> &nbsp;</td><td class="hidden">Normal C++ naming convention is default! Strict C++ 
+        naming convention has to be explicitly selected through option {@link /cxx_nconv}.</td></tr>
+  </table>
+END_MAN
+
+## CGen Insight
+NOTE:    CGen Insight
+COMMENT: Advanced Developers Topics.
+/html MAN:
+  <p>The 'CGen Insight' section provides detailled information for advanced
+  developers.</p>
+END_MAN
+
+NOTE:    --- CGen Insight I - Callback Functions
+COMMENT: Method execution and field/option set mechanisms
+/html MAN:
+  <p>Each member C/C++ code snippet you provide through {@link CODE:} subkeys
+  will be transferred into a callback function. You can specify custom code
+  for the following CDC members:</p>
+  <table>
+    <tr><th>Member type</th><th>Callback function is executed when</th></tr>
+    <tr><td>Option     </td><td>the option is set (option identifier is interpreted)</td></tr>
+    <tr><td>Field      </td><td>the field is changed (<code>set</code> method in <a href="itp.html">class <code>itp</code></a>)</td></tr>
+    <tr><td>Method     </td><td>the method identifier is interpreted</td></tr>
+  </table>
+  <p>CGen will generate only necessary callback functions, i.e. if you do not
+  specify code there will be no callback function.</p>
+
+  <h3>Important Note</h3>
+  <p>The C/C++ compiler will report eventual errors in {@link CODE:} snippets
+  in the generated callback functions which are located in the class
+  implementation file (.c or .cpp). This file, however, is automatically 
+  maintained - every correction there will be overwritten by the next CGen
+  pass!</p>
+  <p><b>You must correct errors in respective {@link CODE:} snippets in the
+  definition script!</b></p>
+                       
+  <h3>Option update callback functions (OUCF)</h3>
+  <p>Prototype: <code>INT16 CGEN_PROTECTED thisclass::OnXXXSet()</code></p>
+  <p>Option udate code is particularly useful if an option is declared as
+  non-automatic ({@clink FLAGS:} {@clink /nonautomatic}). As dLabPro does not
+  handle non-automatic options you have to implement any option handling in
+  this code snippet.</p>
+
+  <h3>Field update callback functions (FUCF)</h3>
+  <p>Prototype: <code>INT16 CGEN_PROTECTED thisclass::OnXXXChanged()</code></p>
+  <p>FUCF's are called during the set procedure of fields. They provide the
+  chance to check the new field value. When a FUCF is called the member
+  variable representing the field in the C++ class has been temporarily set to
+  the new value. You can check the value of the member variable. Leave the FUCF
+  returning NOT_EXEC or an error code in order to refuse the new value; the
+  original value will be restored in this case. If your code snippet does not
+  return a negative value (it fact it does not need not return at all) the new
+  value will be accepted.</p>
+  
+  <h3>Primary method callback functions (PMCF)</h3>
+  <p>Prototype: <code>INT16 CGEN_PROTECTED thisclass::OnXXX()</code></p>
+  <p>A PMCF is the immediate action to be taken when dLabPro is interpreting a
+  method identifier. PMCF's are generated fully automatically (your code
+  snippet is placed in the secondary command callback function). PMCF's simply
+  supply their respective secondary callback function with actual arguments 
+  taken from dLabPro's stacks. If a method does not have any arguments CGen
+  will not generate a primary method callback function but call the secondary
+  method callback function directly.</p>
+
+  <h3>Secondary method callback functions (SMCF)</h3>
+  <p>Prototype: <code>INT16 CGEN_PUBLIC
+  thisclass::XXX(<i>argument-list</i>)</code></p>
+  <p>The {@link CODE:} snippet you supply for methods is included into the
+  SMCF. Its prototype is exactly the C++ equivalent of the dLabPro method. It
+  has the same formal argument list. The access protection is
+  <code>public</code>, the default return type is <code>INT16</code> (unless
+  otherwise specified in the {@link SYNTAX:} subkey). SMCF's should return
+  <code>O_K</code> to indicate successful operation or <code>NOT_EXEC</code>
+  or an error code to indicate failures.</p>
+  <p>The entirety of SMCF's makes up a C/C++ interface of the CDC which is
+  equivalent to its dLabPro method interface. Together with the basic field
+  and option access functions in <a href="dlpinst.html">class
+  <code>CDlpInstance</code></a> it facilitates the use of CDC's as a C/C++
+  library.</p>
+END_MAN
+
+NOTE:    --- CGen Insight II - Implementing Callbacks Efficiently
+COMMENT: Considerations on writing method callback code.
+/html MAN:
+  <p>The method execution strategy of dLabPro through primary and secondary
+  method callback functions is somewhat long-winded. Therefore a shortcut is
+  implemented in the mechanism.</p>
+  <p><b>Warning:</b> The technique described below is recommended for
+  experienced developers only.</p>
+  <p>You do not neccessarily need to specify a {@link CODE:} snippet within a
+  {@link METHOD:} section. If CGen finds a method definition without code it
+  simply assumes that you defined the secondary method callback function in
+  one of the additional C++ source files (see {@link FILE:}). In other words:
+  </p>
+  <p><b>If you do not provide a {@link CODE:} snippet for a method you
+  <u>must</u> define a suitable SMCF which has exactly the same signature
+  as CGen would have generated.</b></p>
+
+  <h3>Notes</h3>
+  <ul>
+    <li>You can customize the SMCF identifier using the {@link CNAME:}
+    subkey.</li>
+    <li>The signature of the SMCF's is included in the method's description in
+    the HTML manual.</li>
+    <li>You should avoid code snippets consisting of one function call only. In
+    these cases you should rather delete the entire {@link CODE:} subkey and
+    implement the SMCF by hand as described above.</li>
+  </ul>
+END_MAN
+
+## EOF
+
+
+
+
+
+
+
+
+
+

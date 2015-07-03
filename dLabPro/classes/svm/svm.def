@@ -1,0 +1,908 @@
+## dLabPro class CSvm (svm)
+## - Definition script
+##
+## AUTHOR : Robert Schubert
+## PACKAGE: dLabPro/classes
+## 
+## Copyright 2013 dLabPro contributors and others (see COPYRIGHT file) 
+## - Chair of System Theory and Speech Technology, TU Dresden
+## - Chair of Communications Engineering, BTU Cottbus
+## 
+## This file is part of dLabPro.
+## 
+## dLabPro is free software: you can redistribute it and/or modify it under the
+## terms of the GNU Lesser General Public License as published by the Free
+## Software Foundation, either version 3 of the License, or (at your option)
+## any later version.
+## 
+## dLabPro is distributed in the hope that it will be useful, but WITHOUT ANY
+## WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+## FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+## details.
+## 
+## You should have received a copy of the GNU Lesser General Public License
+## along with dLabPro. If not, see <http://www.gnu.org/licenses/>.
+
+## NOTE: This class wraps libsvm in dLabPro/ext
+
+PLATFORM: GNUC++
+COMPILER: gcc
+AR:       ar
+
+PROJECT:  svm
+COMMENT:  Support vector machine classifier (wraps dLabPro/ext/libsvm).
+AUTHOR:   Robert Schubert
+VERSION:  v2005.10
+
+CLASS:    svm
+/cProject
+/cxx_nconv
+
+/html MAN:
+<p>
+Instances of this class allow multi-class sample data, given as points in a 
+potentially very high-dimensional feature space, to be learned, and then
+classified by the Support Vector Machine (<i>SVM</i>) technique, using any of
+a set of standard kernels.  
+</p><p>
+SVMs are a state-of-the-art classification, regression, and pattern
+recognition technology that evolved from Statistical Learning Theory and
+the theory of Reproducing Kernel Hilbert Spaces (<i>Kernel Method</i>) in the
+mid 1990s. They are based on the <i>Structural Risk Minimisation</i> (SRM) 
+principle. This aims to control the complexity, or capacity, of the solution 
+besides minimising the empirical estimate of the risk. It thus inherently avoids 
+under- and overfitting. The result can thus be guaranteed to produce the optimal 
+<i>generalisation error</i>, given only the training data without their probability 
+distribution (assuming they are subject to some extent of noise). 
+</p><p>
+SVMs derive from linear classifiers and contain three well-studied ingredients, namely
+<ul>
+ <li>margin,</li>
+ <li>duality,</li>
+ <li>kernels.</li>
+</ul>
+The first concept is a consequence of Generalisation Theory in its application
+to linear learning machines, and gives the optimisation objective (combined 
+margin maximisation and margin error minimisation). The Generalised Lagrange Method 
+picks up the latter and then incorporates the second concept (dual representation). 
+The obtained solution can be shown to effectively compress the training data. Now the 
+third concept fits in very beneficially, qualifying the technique to produce arbitrarily 
+shaped non-linear decision surfaces.
+</p><p>
+One of the key advantages of this approach is its ability to converge and
+scale well with increasing numbers of input features (possibly &gt;10,000) and
+training samples (&gt;100,000). Depending on the kernel type, the optimisation
+method, and implementation issues like caching, stopping criteria and working
+set size reduction, its computational complexity can be estimated around 
+<i>O(d*l<sup>2</sup>)</i> with <i>d</i> input dimensions and <i>l</i> input samples. 
+</p><p>
+There does exist a whole menu of different flavours all sharing the label SVM
+(hence the term "support vector method"). Apart from successful applications
+to disciplines as diverse as probability density estimation, clustering,
+time-series prediction, stream learning, feature extraction, and regression,
+one must, even for the standard classification setting, distinguish SVMs
+between C and &nu; parametrisation, linear and quadratic programming
+objective, generic, chunking, and decomposition algorithms, generic and
+special kernels, termination criterions etc. (See below for details concerning
+this implementation.)
+</p><p>
+Among the technological fields that successfully apply SVMs are:
+<ul>
+<li>text classification/categorisation</li>
+<li>genome processing</li>
+<li>image/object detection</li>
+<li>on-line handwriting recognition</li>
+<li>proteine structure prediction</li>
+</ul>
+</p><p>
+This class is based on the free <a 
+href="http://www.csie.ntu.edu.tw/~cjlin/libsvm">LIBSVM</a> package from the <a
+href="http://www.ntu.edu.tw">National University of Taiwan</a> (whose <a
+href="http://www.csie.ntu.edu.tw/~cjlin/libsvm/COPYRIGHT">license</a> does
+allow for commercial use) and the highly influential work of its authors,
+Chih-Chung Chang and Chih-Jen Lin.  
+</p><p>
+This class' underlying SVM method is the <i>C</i>-parametrisation variant of 
+soft margin maximisation (as opposed to its &nu;-variant). Both its flavours, 
+L<sub>1</sub>-SVM (&quot;box constraint&quot;) and L<sub>2</sub>-SVM, can be used. 
+Its optimisation method is a generalisation from the two popular (heuristical) 
+<i>decomposition</i> algorithms <b>Sequential Minimal Optimisation</b> (SMO) 
+and <b>SVM<sup>light</sup></b>, with the additions of 
+<i>{@link /no_shrinking shrinking}</i>, selection heuristics based on second order 
+information, and kernel matrix caching. Its multi-class method is pairwise 
+(&quot;1-against-1&quot;) with a voting strategy - unless, of course, 
+{@link /probabilities probability estimates} are
+requested. For the latter, first the class-pairwise posterior probabilities are 
+estimated in terms of the classifiers' decision function outputs from the training 
+data. Later during classification these are used together with the SVM outputs to 
+obtain the class posterior probabilities.
+</p><p>
+The fields <i>param_*</i> are training parameters. The learned model is stored in 
+<i>model_*</i>. The former influence only training and cross-validation, the latter 
+is needed for classification. However, the kernel fields (<i>param_knl_*</i>) 
+belong to both of them. In addition, different kinds of statistics about performance
+and errors are stored in <i>stat_*</i>.
+</p>
+@see <a href="http://www.csie.ntu.edu.tw/~cjlin/papers/libsvm.pdf">
+LIBSVM paper</a>
+@see <a href="http://citeseer.ist.psu.edu/osuna97support.html">
+E.E. Osuna, R. Freund, F. Girosi. <i>Support Vector Machines: Training and
+Applications</i>. AI Memo 1602, MIT, 1997</a>
+@see <a href="http://www.csie.ntu.edu.tw/cjlin/papers/generalSMO.pdf">
+P.-H. Chen, R.-E. Fan, C.-J. Lin. <i>A study on SMO-type decomposition methods for
+Support Vector Machines</i>. IEEE Transactions on Neural Networks. 2006.</a>
+@see <a href="file://">
+Robert Schubert. <i>Domainkategorisierung und -indizierung mit
+Supportvektormaschinen</i>. Studienarbeit, Institut f&uuml;r Akustik und 
+Sprachkommunikation, Fakult&auml;t Elektrotechnik und Informationstechnik, 
+TU Dresden, 2006.</a>
+
+@cgen:TODO: upper bound on size of update chunk in /incremental
+@cgen:TODO: training option for a model selection procedure complementing cross-validation in the case of many parameters
+@cgen:TODO: possibly: transduction (unsupervised learning from a tiny initial supervised set) 
+@cgen:TODO: user defined kernels, esp. featurewise-variance RBF for feature-selection
+@cgen:TODO: better generalisation error estimates after training
+@cgen:TODO: &nu;-SVM
+@cgen:TODO: unified and controlled text output (incl. number of iterations, working set size, KKT violation percentage, cache hit rate, rate of basic support vectors ...)
+
+END_MAN
+
+## Include and source files
+## NOTE: for a pure C release LIBSVM can be pre-built with a C++ compiler 
+INCLUDE: "dlp_data.h"
+INCLUDE: "dlp_base.h"
+FILE:    svm_data.c                    # conversion layer
+FILE:    svm_meth.c                    # method frontends
+
+## Defines
+DEFINE: __NEW_LIBSVM_INTERFACE         # Does the libsvm API provide customisations?
+DEFINE: SVM_CACHESIZE          50      # Main memory size in MB used to cache kernel evaluations
+DEFINE: SVM_KT_LINEAR           0      # Kernel type parameter - linear kernel
+DEFINE: SVM_KT_POLY             1      # Kernel type parameter - polynomial kernel
+DEFINE: SVM_KT_RBF              2      # Kernel type parameter - radial basis function (Gaussian) kernel
+DEFINE: SVM_KT_SIGMOID          3      # Kernel type parameter - sigmoid kernel
+
+## Errors
+ERROR:   SVM_NOTALLOWED
+COMMENT: this parameter value is forbidden (%s)
+
+ERROR:   SVM_LABELS
+COMMENT: class label is not allowed (%s)
+
+ERROR:   SVM_INCONSISTENT
+LEVEL:   EL_WARNING
+COMMENT: model is inconsistent (%s)
+
+ERROR:   SVM_PARAMETERS
+COMMENT: given problem set does not match training parameters (%s)
+
+ERROR:   SVM_CONVERT
+COMMENT: Data conversion error (%s%d%s).
+
+ERROR:   SVM_NOMODEL
+COMMENT: no consistent model available, train one first
+
+ERROR:   SVM_NOTIMPL
+COMMENT: the requested feature is not implemented, please use the customised LIBSVM
+
+ERROR:   SVM_LABNOTFOUND
+LEVEL:   EL_WARNING
+COMMENT: class label %ld not found in model
+
+ERROR:   SVM_INTERNAL
+COMMENT: Internal error (%s)
+
+## Fields - SVM model
+FIELD:   model_SVs
+TYPE:   INSTANCE(data)
+COMMENT: labelled support vectors
+/html MAN:
+        <p>
+  This table comprises those input vectors among the training dataset
+  that lie closest to the linear decision boundary in feature space, or,
+  equivalently, that have non-zero {@link model_alphas alphas}.
+  </p><p>
+  Rows correspond to samples, components to features. The last component
+  will be the SV's class label, and must be integer (just as in the
+  {@link -train input data}).
+  </p><p>
+  The ordering initially is by class, but can be changed as long as it
+  is applied to {@link model_alphas} likewise.
+  </p>
+END_MAN
+CODE:
+ printf("careful: make sure this change is consistent with model_alphas and model_classes\n");
+END_CODE;
+
+FIELD:   model_alphas
+TYPE:   INSTANCE(data)
+COMMENT: alphas corresponding to support vectors of each classifier
+/html MAN:
+        <p>
+  This table comprises the positive alpha coefficients belonging to each
+  single {@link model_SVs support vector} in each binary
+  classifier. They define the weight vector of the respective decision
+  boundary hyperplane: <br>
+  <code><u>w</u> = &sum;<sub>i</sub>
+  y<sub>i</sub>&middot;&alpha;<sub>i</sub>&middot;&Phi;(<u>x</u><sub>i</sub>) 
+  </code> where <code>&Phi;(&middot;)</code> is the implicit feature
+  mapping defined by the kernel <code>K(<u>u</u>,<u>v</u>) =
+  &Phi;(<u>u</u>)<sup>T</sup>&middot;&Phi;(<u>v</u>) </code>, the
+  <code><u>x</u><sub>i</sub></code> are the support vectors, and
+  <code>y<sub>i</sub> = {&plusmn;1}</code> are their respective class
+  targets. They are bounded by {@link param_C C}. 
+  </p><p>
+  Rows correspond to support vectors, components to classifiers. For
+  <b>nrclasses</b> classes there will be
+  <code>nrclasses&middot;(nrclasses-1)/2</code> binary classifiers. The 
+  ordering is in ascending class indices (positive side first, negative
+  second; indices correspond to records of {@link model_classes}). For
+  example, with 4 classes the components of this table will comprise the
+  coefficients of the classifiers <code>(0 vs 1), (0 vs 2), (0 vs 3), (1
+  vs 2), (1 vs 3), (2 vs 3)</code>, in that order. 
+  </p>
+END_MAN
+CODE:
+ printf("careful: make sure this change is consistent with model_SVs\n");
+END_CODE;
+
+FIELD:   model_b
+TYPE:   INSTANCE(data)
+FLAGS:   /noset
+COMMENT: decision function bias (b) of each classifier
+/html MAN:
+  This table comprises a list of the biases b to the decision function
+  <code>f(<u>x</u>) = &sum;<sub>i</sub>
+  y<sub>i</sub>&middot;&alpha;<sub>i</sub>&middot;K(<u>x</u><sub>i</sub>,<u>x</u>) + 
+  b</code> of the respective classifier. 
+  @see model_alphas
+END_MAN
+
+FIELD:   model_classes
+TYPE:   INSTANCE(data)
+FLAGS:   /noset
+COMMENT: class labels of the training set
+
+FIELD:   model_nrfeatures
+TYPE:   unsigned long
+INIT:   0
+FLAGS:   /noset /hidden
+COMMENT: dimensionality of the input space, redundant convenience attribute
+
+FIELD:   model_nrsamples
+TYPE:   unsigned long
+INIT:   0
+FLAGS:   /noset /hidden
+COMMENT: size of the previous training set, redundant convenience attribute
+
+FIELD:   stat_errs
+TYPE:   INSTANCE(data)
+FLAGS:   /noset
+COMMENT: statistics about mispredictions
+/html MAN:
+      <p>
+      This table is filled with class-pairwise prediction error statistics 
+      whenever {@link -classify} is run with labelled data samples (supervised). 
+      </p><p>
+      Records correspond to classes, components to assignments. The first
+      component simply counts the data samples. The rest forms a square matrix
+      of misprediction counts. Each of its non-diagonal cells counts the
+      number of binary classification mistakes (preferring the component's
+      class instead of the record's class). Its diagonal elements, however,
+      count the number of multiclass classification mistakes of that class
+      (i.e. each non-diagonal is necessarily smaller or equal to the same
+      row's diagonal). The very last classes (records as well as components)
+      may include any labels not recognised previously by the classifier. They
+      can be distinguished by an exclamation mark in the component name and
+      by not appearing in {@link model_classes}.
+      </p><p>
+      Record numbers are indices of {@link model_classes} (as are component
+      numbers minus one). The components' names reproduce their labels. 
+      @see stat_rates
+      </p>
+END_MAN
+
+FIELD:   stat_rates
+TYPE:   INSTANCE(data)
+FLAGS:   /noset
+COMMENT: statistics about precision/recall rates
+/html MAN:
+      <p>
+      This table is filled with prediction accuracy statistics whenever 
+      {@link -classify} is run with labelled data samples (supervised).
+      </p><p>
+      The records are defined as follows (in that order): 
+      <ul>
+      <li>0 number of correctly assigned labels</li>
+      <li>1 number of incorrectly assigned labels</li>
+      <li>2 number of correctly not assigned labels</li>
+      <li>3 number of incorrectly not assigned labels</li>
+      <li>4 precision rate (<sup>|0|</sup>/<sub>(|0|+|1|)</sub>)</li>
+      <li>5 recall rate (<sup>|0|</sup>/<sub>(|0|+|3|)</sub>)</li>
+      <li>6 F-measure rate (<sup>2*|0|</sup>/<sub>(2*|0|+|1|+|3|)</sub>)</li>
+      <li>7 error rate (<sup>(|1|+|3|)</sup>/<sub>(|0|+|1|+|2|+|3|)</sub>)</li>
+      </ul>
+      Each component corresponds to a class (ordered equally as 
+      {@link model_classes}). The first two components, however, contain the
+      macro- and micro-average<sup><a href="#memb__stat_rates_footnote1">
+      1</a></sup>, respectively. The components' names reproduce
+      their labels. 
+      </p>
+      <div id="memb__stat_rates_footnote1">
+      1:&nbsp;the <i>micro-average</i> treats each sample equally, 
+      (<sup>x</sup>/<sub>y</sub>)<sub><sub>&mu;</sub></sub>=
+      <sup>1/K &sum;<sub>k=1</sub><sup>K</sup> x<sub>k</sub></sup>/
+      <sub>1/K &sum;<sub>k=1</sub><sup>K</sup> y<sub>k</sub></sub>),<br>
+      whereas the <i>macro-average</i> treats each class equally,
+      (<sup>x</sup>/<sub>y</sub>)<sub><sub>M</sub></sub>=
+      1/K &sum;<sub>k=1</sub><sup>K</sup> (<sup>x<sub>k</sub></sup>/
+      <sub>y<sub>k</sub></sub>).<br>
+      (Precision, Recall, and F-measure are thus equal for the micro-avg,
+      except, of course, when {@link param_threshold} is not zero. Moreover,
+      the definitions entail that each per-class F-measure equals its harmonic 
+      average<sup><a href="#mem__stat_rates_footnote2">2</a></sup> between 
+      precision and recall, whereas this does not in general hold for the 
+      macro-averaged F-measure.
+      </div>
+      <div id="memb__stat_rates_footnote2">
+      2:&nbsp;the <i>harmonic average</i> is the reciprocal of the arithmetic average
+      of the reciprocals, 2&nbsp;(x&#124;&#124;y)=2&nbsp;<sup>(x&nbsp;y)</sup>/<sub>(x+y)</sub>
+      </div>
+      @see stat_errs
+END_MAN
+
+FIELD:   model_prob_A
+TYPE:   INSTANCE(data)
+FLAGS:   /noset
+COMMENT: parameters A of the sigmoid class pdf estimates used for probability estimates
+/html MAN:
+        <p>
+  These are the A parameters of the sigmoid
+  <code>r<sub>ij</sub>(<u>x</u>) = (1 +
+  exp(A<sub>ij</sub>&middot;f<sub>ij</sub>(<u>x</u>)+B<sub>ij</sub>))<sup>-1</sup></code> 
+  serving as a non-parametric model in estimating the probability
+  density function <code>p(y=i | y=i&or;j,<u>x</u>)</code> of class i in
+  each pair of classes <code>(i,j)</code> from its SVM decision function
+  <code>f<sub>ij</sub>(<u>x</u>)</code>. The other pdf is obtained by
+  <code>r<sub>ji</sub> = 1 - r<sub>ij</sub></code>,
+  respectively. Beneath and beyond the margin region, these
+  functions are clipped to nearly 1 and 0. 
+  </p><p>
+  Note that they are trained from the complete training set in a
+  cross-validation setting.
+  </p>
+  @see /probabilities
+END_MAN
+
+FIELD:   model_prob_B
+TYPE:   INSTANCE(data)
+FLAGS:   /noset
+COMMENT: parameters B of the sigmoid class pdf estimates used for probability estimates
+/html MAN:
+        <p>
+  These are the B parameters of the sigmoid
+  <code>r<sub>ij</sub>(<u>x</u>) = (1 +
+  exp(A<sub>ij</sub>&middot;f<sub>ij</sub>(<u>x</u>)+B<sub>ij</sub>))<sup>-1</sup></code> 
+  serving as a non-parametric model in estimating the probability
+  density function <code>p(y=i | y=i&or;j,<u>x</u>)</code> of class i in
+  each pair of classes <code>(i,j)</code> from its SVM decision function
+  <code>f<sub>ij</sub>(<u>x</u>)</code>. The other pdf is obtained by
+  <code>r<sub>ji</sub> = 1 - r<sub>ij</sub></code>,
+  respectively. Beneath and beyond the margin region, these
+  functions are clipped to nearly 1 and 0. 
+  </p><p>
+  Note that they are trained from the complete training set in a
+  cross-validation setting.
+  </p>
+  @see /probabilities
+END_MAN
+
+FIELD:   param_knl_type
+TYPE:   short
+INIT:   SVM_KT_LINEAR
+COMMENT: type of kernel for the implicit non-linear mapping from input to feature space
+/html MAN:
+      <p>learning and classification phase parameter.</p>
+      <p>
+      The optimal kernel type always depends on the nature of the data in
+      question. Since different kernels correspond to different dimensionality
+      increases - from zero with linear to infinity with RBF kernels -, this
+      also influences the amount of computation necessary during both training
+      and classification phase.
+      <ul>
+      <li>0</li> linear - x<sup>T</sup>&middot;y
+      <li>1</li> polynomial - ({@link param_knl_gradient gradient} &middot; x<sup>T</sup>&middot;y + {@link param_knl_offset offset})<sup>{@link param_knl_degree degree}</sup>
+      <li>2</li> radial basis function - exp( -{@link param_knl_gradient gradient} &middot; (x-y)<sup>T</sup> &middot; (x-y))
+      <li>3</li> sigmoid - tanh({@link param_knl_gradient gradient} &middot; x<sup>T</sup>&middot;y + {@link param_knl_offset offset})
+      </ul>
+      </p>
+END_MAN
+CODE:
+ char gradientexplanation[80];
+ if (_this->m_nParamKnlGradient)
+  sprintf(gradientexplanation, "%.5f", (FLOAT32)_this->m_nParamKnlGradient);
+ else
+  sprintf(gradientexplanation, "1/nr_features");
+
+ switch (_this->m_nParamKnlType) 
+ {
+  case SVM_KT_LINEAR:
+    IFCHECK
+      printf("kernel K(x,y) will be (x'*y)\n");
+    break;
+  case SVM_KT_POLY:
+    IFCHECK
+      printf("kernel K(x,y) will be (%s*x'*y + %.2f)^%d\n", gradientexplanation, (FLOAT32)_this->m_nParamKnlOffset, (int)_this->m_nParamKnlDegree);
+    break;
+  case SVM_KT_RBF:
+    IFCHECK
+      printf("kernel K(x,y) will be exp(-%s*(x-y)'*(x-y))\n", gradientexplanation);
+    break;
+  case SVM_KT_SIGMOID:
+    IFCHECK
+      printf("kernel K(x,y) will be tanh(%s*x'*y + %.2f)\n", gradientexplanation, (FLOAT32)_this->m_nParamKnlOffset);
+    break;
+  default:   
+    return IERROR(_this,SVM_NOTALLOWED,"must be one of 0 (linear), 1 (polynomial), 2 (RBF), 3 (sigmoid)", 0, 0);
+ }
+END_CODE
+
+FIELD:   param_knl_gradient
+TYPE:   double
+INIT:   0.0
+COMMENT: factor parameter in polynomial, RBF, and sigmoid kernels
+/html MAN:
+  <p>learning and classification phase parameter.</p>
+  <p>
+  When set to zero, defaults to one over the number of input features.
+  </p>
+END_MAN
+
+FIELD:   param_knl_offset
+TYPE:   double
+INIT:   0.0
+COMMENT: addend parameter in polynomial and sigmoid kernels
+/html MAN:
+       <p>learning and classification phase parameter.</p>
+END_MAN
+
+FIELD:   param_knl_degree
+TYPE:    short
+INIT:    2
+COMMENT: degree parameter in polynomial kernel
+/html MAN:
+  <p>learning and classification phase parameter.</p>
+END_MAN
+
+## Fields - training parameters
+FIELD:  param_C
+TYPE:  double
+INIT:  1.0
+COMMENT: regularisation parameter, upper bound on alphas
+CODE:   
+ if (_this->m_nParamC <= 0) 
+  return IERROR(_this,SVM_NOTALLOWED," <= 0", 0, 0);
+END_CODE
+/html MAN:
+  <p>learning phase parameter.</p>
+        <p>
+  This parameter is crucial to the underlying SVM method: It controls
+  the trade-off between weight-vector minimisation (margin maximisation,
+  generality) and training error rate minimisation (empirical risk
+  minimisation, consistency). It is
+  therefore also called the <i>penalty</i>, or <i>regularisation</i>
+  parameter on the training misclassification rate, and affects both the
+  shape of the optimisation problem, and the influence any single data
+  point (support vector) can have on the solution ("box constraint").
+  </p>
+  <p>
+  With respect to Radius (Soft)margin Bound on the generalisation error, 
+  <i>R</i> being the smallest radius of the hypersphere in feature 
+  space which encloses all input data images, an optimal value for C
+  should be R<sup>-2</sup>. However, for best performance (as is true
+  for all <i>param_*</i>), the optimal value of C should still be
+  derived using {@link -crossvalidate cross-validation} or 
+  other means of model selection. 
+  </p>
+END_MAN
+
+FIELD:  param_C_weights
+TYPE:  INSTANCE(data)
+COMMENT: factors/weights to the C parameter for each class (for unbalanced data)
+CODE:
+ if (2 != CData_GetNComps(_this->m_idParamCWeights) \
+     || !dlp_is_integer_type_code(CData_GetCompType(_this->m_idParamCWeights, 0)) \
+     || !dlp_is_float_type_code(CData_GetCompType(_this->m_idParamCWeights, 1))) 
+ {
+  return IERROR(_this,SVM_NOTALLOWED,"first column must be labels, second column weights",0,0);
+ } 
+ else 
+ {
+ if (_this->m_idModelClasses)
+  if (CData_GetNRecs(_this->m_idModelClasses) != CData_GetNRecs(_this->m_idParamCWeights)) 
+   printf("warning: number of C weights different from the number of classes in the last training set\n");
+ }
+END_CODE
+/html MAN:
+      <p>learning phase parameter.</p>
+      <p>
+  If your data is quite unbalanced (unequal proportion of sample
+  between classes), or misclassification would be more expensive for you
+  in some classes than in others, or data in some classes is less
+  reliable for you than in others, this parameter will help to improve your SVM
+  model a lot. The {@link param_C C} parameter now becomes different for every
+  class - the higher the factor, the higher the respective
+  training error penalty, the closer the class's training samples will
+  be fitted.
+  </p><p>
+  Rows correspond to classes, the first column for labels (integer), the
+  second weights (double).
+  </p>
+END_MAN
+
+FIELD:  param_epsilon
+TYPE:   double
+INIT:   0.01
+COMMENT: termination criterion tolerance
+CODE:   
+ if (_this->m_nParamEpsilon <= 0 || _this->m_nParamEpsilon >= 1) 
+  return IERROR(_this,SVM_NOTALLOWED,"value must fall in the interval (0,1)",0,0);
+END_CODE
+/html MAN:
+  <p>learning phase parameter.</p>
+  <p>
+  This sets the tolerance to the Karush-Kuhn-Tucker convergence
+  conditions. 
+  </p>
+END_MAN
+
+FIELD:  param_threshold
+TYPE:  double
+INIT:  0.0
+COMMENT: modulus of the decision function treshold for rejection
+CODE:
+#ifndef __NEW_LIBSVM_INTERFACE
+ IERROR(_this,SVM_NOTIMPL, 0, 0, 0, SVM_NOTIMPL);
+#else
+ if (_this->m_nParamThreshold < 0 || _this->m_nParamThreshold > 1)
+  return IERROR(_this,SVM_NOTALLOWED,"value must fall in the interval [0,1]",0,0);
+#endif
+END_CODE
+/html MAN:
+  <p>classification phase parameter.</p><p>
+  This allows to reject samples during classification, assigning 
+  the special label zero. If set to a value greater than zero, and
+  {@link /probabilities} are 
+  <ul>
+  <li> disabled, this will threshold the modulus of each decision function's
+  output, rejecting below, and accepting above it. The rejection is thus
+  symmetric for both classes, applies only to the margin region (f
+  &isin; [-1,+1]), and allows for a weak kind of global rejects.
+  </li><li> enabled, this will threshold the probability estimates,
+  rejecting globally if the highest bid is still below, and accepting
+  it if above. Note that this does not, despite being related, allow for
+  multiple assignment. 
+  </li>
+  </ul>
+  </p><p>
+  Both structure and calculation of the members {@link stat_rates} and 
+  {@link stat_errs} will be affected in that additional rows/columns will
+  be inserted in the beginning (without account in the averaged measures).
+  </p>
+END_MAN
+  
+## Options
+OPTION:  /hard_margin
+COMMENT: always disallow support vectors to lie beyond their class margin
+CODE:
+ if (_this->m_b2norm)
+ {
+  _this->m_bHardMargin = FALSE;
+  return IERROR(_this,SVM_NOTALLOWED, "/hard_margin not possible with explicit soft-margin option /2norm enabled", 0, 0);
+ }
+ else
+  printf ("warning: the values of param_C and param_C_weights will be ignored\n");
+END_CODE
+/html MAN:
+  <p>learning phase option.</p>
+  <p>
+  This is equivalent to a {@link param_C C} value of positive
+  infinity. Despite accuracy possibly improving, beware that this might
+  not only considerably slow down computation, but even cause the
+  solution to become infeasible (not obey the margin constraints), if
+  your data was not linearly separable in (kernel mapped) feature
+  space. In general, this makes the solution more liable to outliers and
+  noise. 
+  </p>
+  @see /2norm
+END_MAN
+
+OPTION:   /no_shrinking
+COMMENT: do not use shrinking heuristics when training
+/html MAN:
+  <p>learning phase option.</p>
+  <p>
+  Shrinking is a performance improving technique that potentially
+  applies to all SVM decomposition schemes. The working set selection is
+  modified in a way such that no bounded support vectors are taken into
+  account, since they cannot contribute changes to the
+  optimisation. This particular version of the method performs over the
+  complete optimisation process, i.e. not just at its end.
+  </p><p>
+  Disabling shrinking might considerably slow down the algorithm, while
+  maintaining some kind of correctness.
+  </p>
+END_MAN
+
+OPTION:  /2norm
+COMMENT: compute the 2-norm of the soft-margin slack instead of the 1-norm
+CODE:
+#ifndef __NEW_LIBSVM_INTERFACE
+ _this->m_b2norm = FALSE;
+ ERRORMSG(SVM_NOTIMPL, 0, 0, 0, SVM_NOTIMPL);
+#else
+ if (_this->m_bHardMargin)
+ {
+  _this->m_b2norm = FALSE;
+  return IERROR(_this,SVM_NOTALLOWED, "/2norm is a soft-margin option but we run /hard_margin", 0, 0);
+ }
+ else
+ {
+ }
+#endif
+END_CODE
+/html MAN:
+      <p>learning phase option.</p>
+      <p>
+      This is equivalent to having no constraints on the 
+      {@link model_alphas alphas} whatsoever, but add a diagonal of one over 
+      {@link param_C C} to the {@link param_knl_type kernel} matrix. It is
+      sometimes called "L2-SVM" (as opposed to the default "L1-SVM", both
+      being variants of {@link param_C C}-parametrised <i>soft-margin</i>
+      SVM. The effects on the computed hyperplane and prediction accuracy
+      cannot be anticipated, leave alone explicated here. In general, the
+      optimisation might take longer and yield more support vectors.
+      </p>
+      @see /hard_margin
+END_MAN
+
+OPTION:  /incremental
+COMMENT: improve the existing model when training with new data
+/html MAN:
+      <p>learning phase option.</p>
+      <p>
+      This constitutes a combination of the <i>exceeding-margin</i> and
+      <i>fixed-partition</i> techniques proposed in 
+      <a href="http://www.cs.ucr.edu/~carlotta/two.ps">[1]</a>. The approach
+      is inspired by <i>chunking</i> and can be understood as an approximation
+      of the latter, allowing for loss of information between the individual
+      steps (by not keeping and checking input not previously assigned support
+      vectors). However, empirically it comes close to the original's accuracy,
+      while often outperforming it. This does not hold in comparison to SMO,
+      however. Incremental training should therefore only be used, as long as
+      RAM capacity limitations, or time-dependency of the data leave the user
+      with no other option. 
+      </p><p>
+      The SVM optimisation method is left unchanged (in contrast to <a
+      href="http://ieeexplore.ieee.org/xpls/abs_all.jsp?arnumber=1388462">
+      other approaches</a> towards incremental SVM learning): with each
+      training cycle, the existing model is used to find these points among
+      the new data set that exceed its margin 
+      (<code>y<sub>i</sub>*f<sub>old</sub>(x<sub>i</sub>)&le;1</code>). The
+      new model is then trained from only these new points, together with the
+      support vectors of the old model. 
+      </p>
+      @see <a href="http://citeseer.ist.psu.edu/domeniconi01incremental.html">[1] C. Domeniconi,
+      D. Gunopulos. <i>Incremental Support Vector Machine Construction.</i> In ICDM,
+      2001. </a>
+END_MAN
+
+OPTION:   /probabilities
+COMMENT: estimate a-posteriori class probabilities
+/html MAN:
+      <p>learning phase option.</p>
+      <p>classification phase option.</p>
+      <p>
+      Clipped {@link model_prob_A sigmoid functions}
+      <code>r(f)=(1+exp(A&middot;f+B))<sup>-1</sup></code> will be used to map
+      the SVM decision value outputs (<code>f<sub>ij</sub>(<u>x</u>)</code> for
+      classifier <code>(i,j)</code>) directly to posterior class probabilities
+      <code>p(y=i|<u>x</u>)</code>, thus eliminating the need for error-prone,
+      computationally demanding estimation of the class-conditional
+      probability density functions <code>p(<u>x</u>|y=i)</code> (e.g. by the
+      Parzen window method). Using no other model than the SVM decision
+      functions, however, summons the risk of obtaining a biased model (the
+      SVM decision value distributions are clearly biased at and beyond the
+      margin). This issue is overcome by the following cross-validation setting:<br>
+      Interpolating the class-pairwise margin regions, the sigmoids will be
+      trained from the decision function outputs of all folds of a 5-fold
+      cross-validation on the SVM (using the normal training parameters). This
+      is done by maximising each class-pairwise log-likelihood function <br>
+      <code>&sum;<sub>k,y=i</sub> log(r<sub>ij</sub>(<u>x</u><sub>k</sub>)) + 
+      &sum;<sub>k,y=j</sub> log(1-r<sub>ij</sub>(<u>x</u><sub>k</sub>)) 
+      <br> &cong;
+      log(P(f<sub>ij</sub>(<u>x</u><sub>1</sub>)&and;&hellip;
+      &and;f<sub>ij</sub>(<u>x</u><sub>l</sub>)|
+      A<sub>ij</sub>,B<sub>ij</sub>))</code>
+      <sup><a href="#opt__probabilities_footnote1">1</a></sup>. <br>
+      Afterwards, the SVM model itself will be trained separately from the
+      complete training set. Over all, this should takes roughly 2.2 times as
+      much computing time as a simple training cycle. 
+      </p><p>
+      The mapping from the obtained sigmoids, estimating the class-pairwise
+      (classifier's) probability density functions
+      <code>r<sub>ij</sub>&cong;p(y=i|y=i&or;j,<u>x</u>)</code>, to each of the
+      classes' posterior probabilities <code>p(y=i|<u>x</u>)</code> is
+      obtained solving the linear system derived from <code>min<sub>p</sub>
+      &sum;<sub>i</sub> &sum;<sub>j&ne;i</sub> (r<sub>ji</sub>p<sub>i</sub> -
+      r<sub>ij</sub>p<sub>j</sub>)<sup>2</sup></code> subject to
+      <code>&sum;<sub>i</sub> p<sub>i</sub> = 1, &forall;i
+      p<sub>i</sub>&ge;0</code> (since computing them directly delivers an
+      over-determined equation system whose solution strongly depends on the
+      choice of equations incorporated).
+      </p>
+      <div id="opt__probabilities_footnote1">
+      1:&nbsp;To be precise, the addends of both sums in this maximum
+      likelihood task look somewhat different in order to prevent overfitting
+      the training sample, which is especially useful when only few points of
+      that class are actually available. The idea is to assume that for each
+      sample point there might with a tiny chance exist just another one
+      outside the training sample with opposite label at the same
+      co-ordinates.  Therefore each point will show up in both sums, but with
+      a factor close to one in its true, and to zero in its opposite class (and
+      converging to one and zero with the size of the samples, respectively.
+      </div>
+      @see <a href="http://citeseer.ist.psu.edu/platt99probabilistic.html">
+      J.C. Platt. <i>Probabilistic Outputs for Support Vector Machines and
+      Comparisons to Regularized Likelihood Methods</i>. In Advances in Large
+      Margin Classifiers. MIT Press, 2000</a>
+      @see <a href="http://www.csie.ntu.edu.tw/~cjlin/papers/plattprob.ps">
+      H.-T. Lin, C.-J. Lin, R. C. Weng. <i>A Note on Platt's Probabilistic
+      Outputs for Support Vector Machines</i>. National Chengchi University,
+      Taipei, Taiwan. Technical Report, 2003</a>
+      @see <a href="http://www.csie.ntu.edu.tw/~cjlin/papers/svmprob/svmprob.pdf">
+      T.-F. Wu, C.-J. Lin, R.C. Weng. <i>Probability Estimates for Multi-class
+      Classification by Pairwise Coupling</i>. In Journal of Machine Learning
+      Research 5/2004.</a>
+      
+END_MAN
+
+OPTION:  /newstats
+COMMENT: clear error and performance statistics before prediction
+/html MAN:
+  <p>classification phase option.</p>
+  <p>Clears accuracy statistics with a subsequent call to {@link -classify}.</p>
+  @see stat_errs
+ @see stat_rates
+END_MAN
+
+## Methods
+METHOD:  -crossvalidate
+COMMENT: cross-validate the parameters from sample data
+SYNTAX:   double (short n_fold, data trainset)
+/html MAN:
+ The samples are shuffled and regrouped into a number of segments, such that
+ every segment will be used as a test set exactly once. The average accuracy
+ of predicting each such test set from the model trained by the other segments
+ respectively will be printed and returned (in percent).
+
+ <h3>Example</h3>
+ <pre class="code">
+    data samples
+    "training.txt" "ascii" samples stdfile -import
+    svm machine
+    var accuracy
+    5 samples machine -crossvalidate
+    accuracy -vset -vset
+ </pre>
+ (careful with this kind of file import: make sure that all but the
+ last component are of type double in the first line of the input file, 
+ or otherwise explicitly define components of the data instance before 
+ the import!)
+
+ Note that both learning and classification phase parameters apply here.
+
+@param n_fold The number of segments, i.e. the number of training-validation
+        cycles.
+@param trainset A matrix of pre-scaled, class-annotated numeric feature vectors.
+    Rows correspond to samples, components to features. The last component
+    will be the sample's class label, and must be integer.   
+@cgen:option /hard_margin 
+@cgen:option /2norm
+@cgen:option /no_shrinking
+@return The average accuracy in percent.
+END_MAN
+
+METHOD:  -train
+COMMENT: train the SVM model from sample data
+SYNTAX:  (data trainset)
+/html MAN:
+ Trains an SVM model from the samples (overwriting any previous versions,
+ i.e. non-incremental). 
+
+ <h3>Example</h3>
+ <pre class="code">
+    data samples
+    "training.csv" "csv" samples stdfile -import
+    svm machine
+    samples machine -train
+    "svm_model.dn3" machine -save
+ </pre>
+ (careful with this kind of file import: make sure that all but the
+ last component are of type double in the first line of the input file, 
+ or otherwise explicitly define components of the data instance before 
+ the import!)
+
+@param trainset A matrix of pre-scaled, class-annotated numeric feature vectors. 
+    Rows correspond to samples, components to features. The last
+    component will be the sample's class label, and must be
+    integer. The order of the samples need not in any way be
+    randomised.
+@cgen:option /hard_margin 
+@cgen:option /2norm
+@cgen:option /no_shrinking
+@cgen:option /incremental
+@cgen:option /probabilities 
+END_MAN
+
+METHOD:  -is_trained
+COMMENT: is the instance ready for classification?
+SYNTAX:   BOOL ()
+/html MAN:
+@return TRUE if this instance already has a full, consistent model 
+ ({@link model_classes}, {@link model_SVs}, {@link model_alphas}, 
+ {@link model_b}), and FALSE otherwise.
+END_MAN
+
+METHOD:  -classify
+COMMENT: classify sample data from the SVM model
+SYNTAX:  (data testset, data results)
+/html MAN:
+ Classifies the samples and returns each predicted class label.
+ If supervised, the overall prediction accuracy will be printed, as well. 
+
+ <h3>Example</h3>
+ <pre class="code">
+    svm machine
+    "svm_model.dn3" machine -restore
+    data samples
+    "testing.txt" "ascii" samples stdfile -import
+    data results
+    samples results machine -classify
+    results -print
+ </pre>
+ (careful with this kind of file import: make sure that all but the
+ last component are of type double in the first line of the input file, 
+ or otherwise explicitly define components of the data instance before 
+ the import!)
+@param testset A matrix of pre-scaled numeric feature vectors (of just the
+         same length as in the last {@link -train} cycle, or equally, as
+         {@link model_SVs}). 
+         Rows correspond to samples, components to features. If in the
+         last (integer) component the samples' class labels are
+         provided (supervised classification), then the classification
+         accuracy can be computed.
+@param results Instance will be overwritten with the predicted class labels in 
+         the first component. If run with {@link /probabilities}, an 
+         additional component for each class will provide its estimated 
+         posterior probability.
+@cgen:option /probabilities 
+@cgen:option /newstats
+END_MAN
+
+METHOD:  -status
+COMMENT: print information about the parameters and model
+SYNTAX:   ()
+/html MAN:
+      <p>
+      The detailed training paramters will be displayed. If present, error
+      statistics will be printed. A few predictions about the model are
+      computed and presented along the way. 
+      </p>
+END_MAN
+
+## Generate files
+-cgen
+quit
+
+## EOF

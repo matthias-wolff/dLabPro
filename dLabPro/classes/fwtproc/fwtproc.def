@@ -1,0 +1,130 @@
+## dLabPro class CFWTproc (FWTproc)
+## - Definition file
+##
+## AUTHOR : Soeren Wittenberg
+## PACKAGE: dLabPro/classes
+## 
+## Copyright 2013 dLabPro contributors and others (see COPYRIGHT file) 
+## - Chair of System Theory and Speech Technology, TU Dresden
+## - Chair of Communications Engineering, BTU Cottbus
+## 
+## This file is part of dLabPro.
+## 
+## dLabPro is free software: you can redistribute it and/or modify it under the
+## terms of the GNU Lesser General Public License as published by the Free
+## Software Foundation, either version 3 of the License, or (at your option)
+## any later version.
+## 
+## dLabPro is distributed in the hope that it will be useful, but WITHOUT ANY
+## WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+## FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+## details.
+## 
+## You should have received a copy of the GNU Lesser General Public License
+## along with dLabPro. If not, see <http://www.gnu.org/licenses/>.
+
+PLATFORM: GNUC++
+COMPILER: gcc
+AR:       ar
+
+PROJECT:  FWTproc
+COMMENT:  Base class for fast discrete wavelet transformation.
+AUTHOR:   Soeren Wittenberg
+VERSION:  1.0
+
+CLASS:    FWTproc
+SUPERCLASS: ../fbaproc/fbaproc.def
+/cxx_nconv                                                                      # Use strict C++ naming conventions
+
+/html MAN: 
+       <p>This is the class for fast discrete wavelet transformation</p>
+END_MAN
+
+## Files
+INCLUDE: "kzl_list.h"
+INCLUDE: "dlp_data.h"
+INCLUDE: "dlp_math.h"
+
+FILE:    fwt_work.cpp
+FILE:    fwt_synth.cpp
+
+## Defines
+
+HEADERCODE:
+
+END_CODE
+
+## Errors
+
+ERROR:   FWT_DIM_ERROR
+COMMENT: Length of frame %d isn't 2^n.
+LEVEL:   EL_ERROR
+
+## Fields
+
+FIELD:   level
+COMMENT: Transformation detail level. (max. level (default) = -1; If defined \
+         level is greater then possible transformation depth, transformation \
+         provides with max. detail level.)
+TYPE:    short
+INIT:    -1
+
+FIELD:   wvltype
+COMMENT: Wavelet type (available values: haar,d2,d4,d6,...,d20) 
+TYPE:    string
+INIT:    "d4"
+
+
+## Methods
+
+METHOD:  -analyze
+COMMENT: Run DWT.
+SYNTAX:    (data idSignal, data idPitch, data idReal, data idImag)
+/html MAN:
+           <p>Run FWT of signal <CODE>idSignal</CODE> using the desired 
+           transformation method (default is Daubechies D4) - see {@link wvltype}.</br></br> 
+           If <CODE>idPitch</CODE> is omitted pitch asynchronuous analysis 
+           is performed.</p>
+
+           @param idSignal    data object containing signal to analyse 
+           @param idPitch     data object containing pitch information (maybe NULL)
+           @param idReal      data object of transformed signal
+           @param idImag      not used (NULL)
+           @see wvltype
+END_MAN
+
+
+METHOD:  -synthesize
+COMMENT: Convert scaling function and wavelet coefficients to signal.
+SYNTAX:  (data idTrans,data idSignal)
+MAN:
+         Convert scaling function and wavelet coefficients to signal.
+
+         @param Output transformed signal
+         @param idSignal    Output signal
+         @see wvltype
+END_MAN
+
+METHOD:  -get_coef
+SYNTAX:  (data idCoef)
+COMMENT: Get scaling function coefficients of configured wavelet type ({@link wvltype})
+
+
+## Release notes
+
+## System functions
+
+INITCODE:
+  INIT;
+END_CODE
+
+RESETCODE:
+  RESET;
+END_CODE
+
+DONECODE:
+  DONE;
+END_CODE
+
+-cgen
+quit

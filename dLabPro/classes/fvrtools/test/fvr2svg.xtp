@@ -1,0 +1,18 @@
+"$UASR_HOME/scripts/dlabpro/util/fst.itp" include;
+
+$$ 2 < if
+  "\nUSAGE:\n\n  dlabpro $__SFILE__.xtp <fvrstring> <svgfile>\n\n" -echo;
+  "EXAMPLE:\n\n  dlabpro $__SFILE__.xtp FVR[A[B][C]] output.svg\n\n" -echo;
+  "NOTES:\n  - UASR must be installed and UASR_HOME must be set\n" -echo;
+  "  - GraphViz must be installed an path to dot must be set\n\n" -echo;
+  1 return;
+end
+
+var s;    ( 1 -argv ) s -sset;
+var fout; ( 2 -argv ) fout -sset;
+fst f; 
+
+s f fvrtools -from_string;
+fout f.is NULL 0 f -FST_render;
+
+0 return;

@@ -1,0 +1,540 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+<!-- UASR: Unified Approach to Speech Synthesis and Recognition
+<    - Documentation home page
+<   
+<    AUTHOR : Matthias Wolff
+<    PACKAGE: n/a
+<   
+<    Copyright 2013-2014 UASR contributors (see COPYRIGHT file)
+<    - Chair of System Theory and Speech Technology, TU Dresden
+<    - Chair of Communications Engineering, BTU Cottbus
+<   
+<    This file is part of UASR.
+<   
+<    UASR is free software: you can redistribute it and/or modify it under the
+<    terms of the GNU Lesser General Public License as published by the Free
+<    Software Foundation, either version 3 of the License, or (at your option)
+<    any later version.
+<   
+<    UASR is distributed in the hope that it will be useful, but WITHOUT ANY
+<    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<    FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for 
+<    more details.
+<   
+<    You should have received a copy of the GNU Lesser General Public License
+<    along with UASR. If not, see [http://www.gnu.org/licenses/].
+  -->
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title>Tutorial 2 - Variables and Data Objects</title>
+  <link rel=stylesheet type="text/css" href="../default.css">
+</head>
+<script type="text/javascript">
+if (top==self)
+{
+  var sLocation = "../index.html?tutorials/template.html";
+  if (location.hash.length>0)
+    sLocation += ";"+location.hash.substr(1);
+  top.location = sLocation;
+}
+</script>
+<script type="text/javascript" src="../default.js"></script>
+<body>
+  <a name="top"></a>
+  <div id="clp_top">
+    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+      <tr>
+        <td nowrap width="25%" class="navbar">
+          Tutorial 2 - Variables and Data Objects
+        </td>
+        <td nowrap width="75%" class="navbar" style="text-align:right;">
+          <a class="navbar" href="javascript:__PrintSection('clp_top','Tutorial 2 - Variables and Data Objects','..');"
+          ><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle;" 
+          alt="Print"></a>
+          <a class="navbar" href="../home.html">Home</a>
+          <a class="navbar" href="index.html">Tutorials</a>
+        </td>
+      </tr>
+    </table>
+    <div class="mframe">
+      <table width="100%" cellSpacing="0" cellPadding="6" border="0">
+        <tr>
+          <td width="50%">
+            <h3 style="margin-top:2pt; margin-bottom:2pt">Contents</h3>
+            <ul class="linklist">
+              <li class="linklist"><a class="Linklist" href="#var">Variables</a></li>
+              <li class="linklist"><a class="Linklist" href="#data">Data Objects</a></li>
+              <li class="linklist"><a class="Linklist" href="#further">Further Reading</a></li>
+            </ul>
+          </td>
+          <td width="50%">
+            <h3 style="margin-top:2pt; margin-bottom:2pt">Related Topics</h3>
+            <ul class="linklist">
+              <li class="linklist"><a class="Linklist" href="t001.html">Tutorial 1 - dLabPro Basics</a></li>
+              <li class="linklist"><a class="Linklist" href="t003.html">Tutorial 3 - Writing Scripts</a></li>
+              <li class="linklist"><a class="Linklist" href="t004.html">Tutorial 4 - Using Data Files</a></li>
+            </ul>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="mframe2">
+      <h3>Synopsis</h3>
+      <p>Variables gives a overview how to use variables in dLabPro. Most dLabPro classes share a common
+       data interface which is provided by a special <a href="../automatic/data.html">data container
+		class</a>. Data Objects gives a introduction about handling data objects.</p>
+    </div>
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <a name="var"></a>
+    <div id="clp_var">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td nowrap width="25%" class="navbar">
+            Variables
+          </td>
+          <td nowrap width="75%" class="navbar" style="text-align:right;">
+            <a class="navbar" href="javascript:__PrintSection('clp_var','Variables','..');"
+            ><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle;" alt="Print"></a> 
+            <a class="navbar" href="../home.html">Home</a>
+            <a class="navbar" href="index.html">Tutorials</a>
+            <a class="navbar" href="#top">Top</a>
+          </td>
+        </tr>
+      </table>
+      <div class="mframe2">
+        <p>Instances of class <a href="../automatic/var.html">var</a> can hold
+         four types of variable values: boolean values, (complex) numeric values, strings
+         and instances. The value of a variable can be set using the polymorphic 
+		<a href="../automatic/var.html#mth_=" class="code">=</a> method:</p>
+		<pre class="code">dLabPro&gt; <a href="../automatic/var.html"><code class="link">var</code></a> k;                     <span
+			class="c-cmt"># Create instance k</span>
+dLabPro&gt; 42 k <a href="../automatic/var.html#mth_="><code
+			class="link">=</code></a>;                    <span class="c-cmt"># Set variable value to 42 </span>
+dLabPro&gt; k <a href="../automatic/var.html#mth_-status"><code
+			class="link">-status</code></a>;                 <span class="c-cmt"># Show type and content of k</span>
+
+------------------------------------------------------------------------------------------------------------------------
+   Status of instance
+   var k
+------------------------------------------------------------------------------------------------------------------------
+   Type : complex
+   Value:  42
+------------------------------------------------------------------------------------------------------------------------</pre>
+    <p>There are also typed set methods  (<a
+			href="../automatic/var.html#mth_-bset"><code class="link">-bset</code></a>,
+		<a href="../automatic/var.html#mth_-vset"><code class="link">-vset</code></a>,
+		<a href="../automatic/var.html#mth_-sset"><code class="link">-sset</code></a>
+		and <a href="../automatic/var.html#mth_-iset"><code class="link">-iset</code></a>)
+		which may be used to force type casts.</p>
+		<p>When interpreting a variable identifier dLabPro pushes the variable
+		value to the stack. Thus the variable identifier can be used exactly
+		the same way as the variable value. Variables are instances of the <a
+			href="../automatic/var.html">variable</a>-class. They have methods
+		like every other class. Type:</p>
+		<pre class="code">dLabPro&gt; k -help;
+		
+-----------------------------------------------------------------------------------------------------------------------
+   Help for instance
+   var k
+------------------------------------------------------------------------------------------------------------------------
+   k
+   |
+   |-- METHODS
+   |   |-- -bset             Set boolean value
+   |   |-- ++=               Increment variable
+   |   |-- --=               Decrement variable
+   |   |-- +=                Add value to variable
+   |   |-- *=                Multiply variable with value
+   |   |-- -iset             Set instance value
+   |   |-- -vset             Set numeric value
+   |   |-- -sset             Set string value
+   |   |-- -status           Print status of var
+   |   |-- -intv             Define interval for randomized selection.
+   |   |-- /=                Divide variable by value
+   |   |-- -rset             Assign data instance for randomized selection
+   |   |-- =                 Set variable value
+   |   '-- -=                Subtract value from variable
+   |
+   |-- OPTIONS
+   |
+   |-- FIELDS
+   |   '-- check             Verbose level
+   |
+   |-- CLASSES
+   |
+   '-- INSTANCES
+
+------------------------------------------------------------------------------------------------------------------------</pre>
+		<p>The introduction of the <a href="../automatic/var.html">variable
+		class' documentation</a> contains a comprehensive example which
+		illustrates the usage of the class.</p>		
+      </div>
+    </div>
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <a name="data"></a>
+    <div id="clp_data">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td nowrap width="25%" class="navbar">
+            Data Objects
+          </td>
+          <td nowrap width="75%" class="navbar" style="text-align:right;">
+            <a class="navbar" href="javascript:__PrintSection('clp_data','Data Objects','..');"
+            ><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle;" alt="Print"></a> 
+          <a class="navbar" href="../home.html">Home</a>
+          <a class="navbar" href="index.html">Tutorials</a>
+          <a class="navbar" href="#top">Top</a>
+          </td>
+        </tr>
+      </table>
+      <div class="mframe2">
+<p>Most dLabPro classes share a common data interface which is
+		provided by a special <a href="../automatic/data.html">data container
+		class</a>. Instances of this class are versatile storage objects which
+		admit a wide range of type and size data into one container.</p>
+
+		<h3>The structure of the data</h3>
+		<p>The data are stored as a table whose columns are called "<em>records</em>"
+		and whose rows are called "<em>components</em>". This notation originates
+		in a database interpretation of the data container (however, there is
+		absolutely no database technology involved here!). All components of
+		data containers have their own name and variable type. There are
+		primitive numeric types and character strings of up to 255 characters
+		length supported. The entirety of the component types is called the <em>component
+		structure</em> of the data container. All records share the same
+		component structure. The storage space of one particular component in
+		one particular record is called a <em>cell</em>. Access to cells is
+		usually made by specifying its record index <i>r</i> and its component
+		index <i>c</i>. Throughout the documentation the notation</p>
+		<p class="indent"><code>x[</code><i>r</i><code>,</code><i>c</i><code>]</code></p>
+		<p>denotes the value of component <i>c</i> in record <i>r</i> of the
+		data instance <code>x</code>. As dLabPro is primarily a signal processing and modeling toolkit,
+		the records of data containers are usually associated with a time
+		dimension. However, this is not stringent.</p>
+		<p>Let's create a data container and define its component structure:</p>
+		<pre class="code">dLabPro&gt; <a href="../automatic/data.html"><code class="link">data</code></a> x;				<span class="c-cmt"># Create a data container named "x"</span>
+dLabPro&gt; "N1" <a href="../automatic/function.html#mth_-type"><code class="link">-type</code></a> double x <a href="../automatic/data.html#mth_-addcomp"><code class="link">-addcomp</code></a>;		<span class="c-cmt"># Add a double component named "N1"</span>
+dLabPro&gt; "S1" 48 x <a href="../automatic/data.html#mth_-addcomp"><code class="link">-addcomp</code></a>			<span class="c-cmt"># Add a string component (max. 48 characters) named "S1"</span>
+dLabPro.x&gt; <a href="../automatic/data.html#mth_-status"><code class="link">-status</code></a>				<span class="c-cmt"># See what we've got</span>
+
+------------------------------------------------------------------------------------------------------------------------
+   Status of instance
+   data x
+------------------------------------------------------------------------------------------------------------------------
+   Components     :      2 (Capacity         : 20)
+   Records        :      0 (Capacity         : 0)
+   Blocks         :      1 (Records per block: 0)
+   Records
+   - Length       :     56 bytes
+   - Width        :      0 ms
+   - Increment    :      0 ms
+   - Offset of 1st:      0 ms
+   User descriptions
+   - 0            :      0
+   - 1            :      0
+   - 2            :      0
+   - 3            :      0
+   - 4            :      0
+   - File text    : -none-
+   - Realization  : -none-
+   - Description  : -none-
+------------------------------------------------------------------------------------------------------------------------
+   Component structure
+                        Name  Offset   Bytes   Type
+                 0:       N1       0       8   3008 double
+                 1:       S1       8      48     48 char[48]
+------------------------------------------------------------------------------------------------------------------------
+Use &lt;-print&gt; to view the data content.
+dLabPro.x&gt;_
+</pre>
+<p>Please note that <a href="../automatic/function.html#mth_-type"><code 
+  class="link">-type</code></a> is a method of the
+  <a href="../automatic/function.html">interpreter</a>. The command "<a
+  href="../automatic/function.html#mth_-type"><code
+  class="link">-type</code></a> <code>short</code>" pushes a numeric code for
+  the variable type short	to the stack from which it will be taken as argument
+  to <a href="../automatic/data.html#mth_-addcomp"><code
+  class="link">-addcomp</code></a>.</p>
+  
+<h3>Manipulating data</h3>
+
+<p>Use the <a href="../automatic/data.html#mth_-print"><code
+class="link">-print</code></a> method to display the data content:</p>
+
+<pre class="code">dLabPro.x&gt; <a href="../automatic/data.html#mth_-print"><code
+			class="link">-print</code></a>                  <span class="c-cmt"># Show content</span>
+
+ data x
+------------------------------------------------------------------------------------------------------------------------
+   [no data]
+------------------------------------------------------------------------------------------------------------------------</pre>
+
+<p>After having defined the component structure we need to allocate memory for
+  records. Lets allocate 3 records:</p>
+
+<pre class="code">dLabPro.x&gt; 3 x <a href="../automatic/data.html#mth_-allocate"><code class="link">-allocate</code></a>           <span class="c-cmt"># Allocate 3 records</span>
+dLabPro.x&gt; <a href="../automatic/data.html#mth_-print"><code class="link">-print</code></a>                  <span class="c-cmt"># Show content</span>
+			
+ data x
+------------------------------------------------------------------------------------------------------------------------
+       0 1 2
+       . . .
+ 0 N1: 0 0 0
+ 1 S1:
+------------------------------------------------------------------------------------------------------------------------</pre>
+
+<p>As you can see, <a href="../automatic/data.html#mth_-allocate"><code
+  class="link">-allocate</code></a> adds zero-initialized records. The <a href="../automatic/data.html#mth_-print"><code
+  class="link">-print</code></a> method outputs records as columns and components as lines. This follows the notion that
+  the records axis is usually with the discrete time and hence is plotted from left to right. For some data instances
+  you may find a listing more useful. Try the following:
+
+<pre class="code">dLabPro.x&gt; <a href="../automatic/data.html#opt__list"><code class="link">/list</code></a> <a href="../automatic/data.html#mth_-print"><code class="link">-print</code></a>             <span class="c-cmt"># Show content as table listing</span>
+			
+------------------------------------------------------------------------------------------------------------------------
+   Data content of instance
+   data x
+------------------------------------------------------------------------------------------------------------------------
+   Components  :      2 (Capacity         : 20)
+   Records     :      3 (Capacity         : 3)
+   Blocks      :      1 (Records per block: 3)
+------------------------------------------------------------------------------------------------------------------------
+   Data contents
+   Rec.(offset):           N1                       S1
+     0 (000000):            0
+     1 (000056):            0
+     2 (000112):            0
+ -   End of block 0 - - - - -
+  No more data - Stop.
+------------------------------------------------------------------------------------------------------------------------
+
+Use &lt;-status&gt; for further information.</pre>
+  
+<p>Next we fill some data in:</p>
+
+<pre class="code">dLabPro.x&gt; <a href="../automatic/data.html#mth_{"><code class="link">{</code></a> { 13 "x" }
+&gt;  { 4 "}" }
+&gt;  { 64 "42" } } x =             <span class="c-cmt"># Initialize data contents (line breaks NOT significant)</span>
+dLabPro.x&gt; <a href="../automatic/data.html#mth_-print"><code class="link">-print</code></a>
+
+ data x
+------------------------------------------------------------------------------------------------------------------------
+        0  1  2
+       .. .. ..
+ 0 N1: 13  4 64
+ 1 S1:  x  } 42
+------------------------------------------------------------------------------------------------------------------------</pre>
+
+<p>The <a href="../automatic/data.html#mth_{">opening curly brace</a> is method
+  of the <a href="../automatic/data.html"><code class="link">data</code></a>
+  class (such weird things are possible in dLabPro :). It reads constant
+  initializers separated by white spaces until it encounters a closing curly
+  brace (which is <em>not</em> a method but just a marker character). <a
+  href="../automatic/data.html#mth_{"><code class="link">{</code></a> reads the
+  initializers record by record in the order displayed by <a
+  href="../automatic/data.html#opt__list"><code class="link"><b>/list</b></code></a>
+  <a href="../automatic/data.html#mth_-print"><code
+  class="link">-print</code></a>.</p>
+<p>Single values can be written with <a
+  href="../automatic/data.html#mth_-store"><code class="link">-store</code></a>
+  and read with <a
+  href="../automatic/data.html#mth_-fetch"><code class="link">-fetch</code></a>:
+  </p>
+
+<pre class="code">dLabPro.x> 2 1 x <a href="../automatic/data.html#mth_-fetch"><code class="link">-fetch</code></a> 1 0 x <a href="../automatic/data.html#mth_-store"><code class="link">-store</code></a>
+dLabPro.x&gt; <a href="../automatic/data.html#mth_-print"><code class="link">-print</code></a>
+
+ data x
+------------------------------------------------------------------------------------------------------------------------
+        0  1  2
+       .. .. ..
+ 0 N1: 13 42 64
+ 1 S1:  x  } 42
+------------------------------------------------------------------------------------------------------------------------</pre>
+
+<p>As the example shows, <a
+  href="../automatic/data.html#mth_-store"><code class="link">-store</code></a>
+  is polymorphic and performs necessary type casts.</p>
+
+<p>To get a better feeling of working with data, use the help table and try some
+  more commands like <a href="../automatic/data.html#mth_-delete)"><code
+  class="link">-delete</code></a>, <a
+  href="../automatic/data.html#mth_-fill"><code class="link">-fill</code></a> or
+  <a href="../automatic/data.html#mth_-tconvert"><code
+  class="link">-tconvert</code></a>.</p>
+
+<h3>Computations</h3>
+
+<p>There are three basic computation types with <a
+  href="../automatic/data.html"><code class="link">data</code></a> tables.</p>
+
+<h4>Scalar operations</h4>
+<p>There are data-number and data-data operations:</p>
+
+<pre class="code">dLabPro&gt; x 1 - x =;
+dLabPro&gt; x x .* x =;
+dLabPro&gt; x <a href="../automatic/data.html#mth_-print"><code class="link">-print</code></a>;
+
+ data x
+------------------------------------------------------------------------------------------------------------------------
+          0    1    2
+       .... .... ....
+ 0 N1:  144 1681 3969
+ 1 S1:    x    }   42
+------------------------------------------------------------------------------------------------------------------------</pre>
+
+<p>The first command is an example for a data-number operation, the second
+  command is a data-data operation. Both operation types are performed on
+  numeric cells only and leave string ("symbolic") data untouched.</p>
+
+<p>Notes:</p>
+<ul>
+  <li>In the second command the operator <code>.*</code> denotes the elementwise
+  multiplication. The <code>*</code> operator stands for the matrix product
+  (which is applicable here and would destroy <code>x</code> because it does not
+  have the right dimensions). But this one time just try it: <pre class="code">
+dLabPro&gt; data y; x x * y =;
+
+error data1021: Matrix dimension error (in operation *).dLabPro.y&gt; <a href="../automatic/data.html#mth_-print"><code class="link">-print</code></a>;
+
+ data y
+------------------------------------------------------------------------------------------------------------------------
+   [no data]
+------------------------------------------------------------------------------------------------------------------------</pre></li>
+  <li>The same result can be accomplished using the <a
+  href="../automatic/matrix.html"><code class="link">matrix</code></a> <a
+  href="../automatic/matrix.html#mth_-op"><code
+  class="link">-op</code></a> method.</li>
+  <li>Lists of available scalar and matrix operations can be displayed by the
+  commands <pre class="code">
+  <a href="../automatic/function.html#mth_-list"><code
+  class="link">-list</code></a> <code>scalops;</code>
+  <a href="../automatic/function.html#mth_-list"><code
+  class="link">-list</code></a> <code>matrops;</code></pre>
+  </li>
+  <li>A list of math constants can be displayed by the
+  command <pre class="code">
+  <a href="../automatic/function.html#mth_-list"><code
+  class="link">-list</code></a> <code>const;</code></pre>
+  </li>
+</ul>
+
+<h4>String operations</h4>
+
+<p>String operations form the counterpart of scalar operations: they only
+  process string cells:</p>
+<pre class="code">dLabPro&gt; x "/x/foo" "replace" x <a href="../automatic/data.html#mth_-strop"><code class="link">-strop</code></a>
+dLabPro.x&gt; <a href="../automatic/data.html#mth_-print"><code class="link">-print</code></a>;
+
+ data x
+------------------------------------------------------------------------------------------------------------------------
+          0    1    2
+       .... .... ....
+ 0 N1:  144 1681 3969
+ 1 S1:  foo    }   42
+------------------------------------------------------------------------------------------------------------------------</pre>
+
+<p>Note: A list of available string operations can be displayed by the
+  command</p>
+<pre class="code">
+  <a href="../automatic/function.html#mth_-list"><code
+  class="link">-list</code></a> <code>strops;</code></pre>
+
+<h4>Aggregation operations</h4>
+
+<p>Finally, there's a set of aggregation operations. They aggregate the numeric
+  cells of components or records into one value:</p>
+
+<pre class="code">dLabPro&gt; x NULL 0 "mean" x <a href="../automatic/data.html#opt_/rec"><code class="link">/rec</code></a> <a href="../automatic/data.html#mth_-aggregate"><code class="link">-aggregate</code></a>
+dLabPro.x&gt; <a href="../automatic/data.html#mth_-print"><code class="link">-print</code></a>;
+
+ data x
+------------------------------------------------------------------------------------------------------------------------
+             0
+       .......
+ 0 N1: 1931.33
+ 1 S1:
+------------------------------------------------------------------------------------------------------------------------</pre>
+
+<p>Notes:</p>
+<ul>
+  <li>There are no aggregation operations for strings, so the value in the
+    second component is empty after the aggrgation operation.</li>
+  <li>A list of available aggregation operations can be displayed by the
+  command <pre class="code">
+  <a href="../automatic/function.html#mth_-list"><code
+  class="link">-list</code></a> <code>aggrops;</code></pre></li>
+</ul>
+
+<h3>Other functionality</h3>
+
+<ul>
+  <li>Indexing and table lookup: <a
+    href="../automatic/data.html#mth_-gen_index"><code
+    class="link">-gen_index</code></a>, <a
+    href="../automatic/data.html#mth_-lookup"><code
+    class="link">-lookup</code></a> and <a
+    href="../automatic/data.html#mth_-lookup_2"><code
+    class="link">-lookup_2</code></a></li>
+  <li>Sorting and RLE compression: <a
+    href="../automatic/data.html#mth_-sortup"><code
+    class="link">-sortup</code></a>, <a
+    href="../automatic/data.html#mth_-sortdown"><code
+    class="link">-sortdown</code></a>, <a
+    href="../automatic/data.html#mth_-compress"><code
+    class="link">-compress</code></a> and <a
+    href="../automatic/data.html#mth_-expand"><code
+    class="link">-expand</code></a></li>
+  <li>Reading and writing files: <a
+    href="../automatic/function.html#mth_-save"><code
+    class="link">-save</code></a>, <a
+    href="../automatic/function.html#mth_-restore"><code
+    class="link">-restore</code></a>, <a
+    href="../automatic/file.html#mth_-export"><code
+    class="link">-export</code></a> and <a
+    href="../automatic/file.html#mth_-import"><code
+    class="link">-import</code></a> (see <a href="t004.html">Tutorial IV -
+    Using Data Files</a> for details)</li>
+</ul>
+      </div>
+    </div>
+  
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <a name="further"></a>
+    <div id="clp_further">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td nowrap width="25%" class="navbar">
+            Further Reading
+          </td>
+          <td nowrap width="75%" class="navbar" style="text-align:right;">
+            <a class="navbar" href="javascript:__PrintSection('clp_further','Further Reading','..');"
+            ><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle;" alt="Print"></a> 
+            <a class="navbar" href="../home.html">Home</a>
+            <a class="navbar" href="index.html">Tutorials</a>
+            <a class="navbar" href="#top">Top</a>
+          </td>
+        </tr>
+      </table>
+      <div class="mframe2">
+        <ul class="linklist">
+          <li class="linklist"><a href="../automatic/data.html"><img
+          src="../resources/class_obj.gif" width="16" height="16" border="0"
+          style="vertical-align:middle" alt="icon">&nbsp;Class data</a></li>
+          <li class="linklist"><a href="../automatic/var.html"><img
+          src="../resources/class_obj.gif" width="16" height="16" border="0"
+          style="vertical-align:middle" alt="icon">&nbsp;Class variable</a></li>
+        </ul>
+      </div>
+    </div>
+  
+  </div>
+  <div class="footer">End of page</div>
+
+</body>
+</html>

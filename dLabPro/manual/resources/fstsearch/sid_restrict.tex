@@ -1,0 +1,12 @@
+\documentclass{article}
+\usepackage{rotating}
+\begin{document}
+\begin{eqnarray}
+64 & \ge & (numlayers-1) \cdot \log_2(numunits) \\
+        && +  \sum\limits_{layer=0}^{numlayers-1} \log_2(\max(\mathrm{statesperunit}(layer))) \\
+64 & \ge & 2 \cdot \log_2(1+\mathrm{numunits}(LX)+\mathrm{numunits}(AM)) \\
+        && +\ \log_2(\mathrm{numstates}(LM)) \\
+        && +\ \log_2(\max(\mathrm{statesperunit}(LX))) \\
+        && +\ \log_2(\max(\mathrm{statesperunit}(AM)))
+\end{eqnarray}
+\end{document}

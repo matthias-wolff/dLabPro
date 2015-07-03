@@ -1,0 +1,1653 @@
+## dLabPro class CFst (fst)
+## - Definition file
+##
+## AUTHOR : Matthias Wolff, Maximiliano Cuevas and Matthias Eichner
+## PACKAGE: dLabPro/classes
+## 
+## Copyright 2013 dLabPro contributors and others (see COPYRIGHT file) 
+## - Chair of System Theory and Speech Technology, TU Dresden
+## - Chair of Communications Engineering, BTU Cottbus
+## 
+## This file is part of dLabPro.
+## 
+## dLabPro is free software: you can redistribute it and/or modify it under the
+## terms of the GNU Lesser General Public License as published by the Free
+## Software Foundation, either version 3 of the License, or (at your option)
+## any later version.
+## 
+## dLabPro is distributed in the hope that it will be useful, but WITHOUT ANY
+## WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+## FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+## details.
+## 
+## You should have received a copy of the GNU Lesser General Public License
+## along with dLabPro. If not, see <http://www.gnu.org/licenses/>.
+
+PLATFORM: GNUC++
+COMPILER: gcc
+AR:       ar
+#CFLAGS:   -Wno-trigraphs
+CFLAGS:   -Wno-trigraphs -finline-functions
+
+PROJECT:  fst
+COMMENT:  Finite state transducers
+AUTHOR:   M. Wolff, M. Cuevas and M. Eichner
+VERSION:  1.0.1
+/html MAN:
+  <p>An instance of this class may contain one or several finite state automaton graphs. Graphs consists of a state set
+  and a transition (edge) set. Both, states and transitions, may be qualified, i.e. "carry" additional information.
+  The states of a graph are at least qualified with a flag indicating if the state is a final (end) state of the graph.
+  The transitions of a graph are at least qualified with two maps: the initial state and the terminal state of the
+  transition.</p>
+  <p>A graph is represented by three tables (instances of
+  <a href="data.html">class <code class="link">data</code></a>):</p>
+  <ul>
+    <li>Unit description table (field {@link ud})</li>
+    <li>State description table (field {@link sd})</li>
+    <li>Transition description table (field {@link td})</li>
+  </ul>
+  <p>The follwing tables give, if not empty, symbolic names for transition intupt and output symbols:</p>
+  <ul>
+    <li>Input symbol table (field {@link is})</li>
+    <li>Output symbol table (field {@link os})</li>
+  </ul>
+END_MAN
+
+CLASS:    fst
+/cProject                                                                       # Generate ANSI C compatible code
+/cxx_nconv                                                                      # Use strict C++ naming conventions
+/xDoc                                                                           # Document hidden and private members
+
+## Defines - Component indices
+DEFINE: IC_UD_NAME  0                                                           # ud: unit name
+DEFINE: IC_UD_XS    1                                                           # ud: number of states
+DEFINE: IC_UD_XT    2                                                           # ud: number of transitions
+DEFINE: IC_UD_FS    3                                                           # ud: first state
+DEFINE: IC_UD_FT    4                                                           # ud: first transition
+DEFINE: IC_UD_DATA  5                                                           # ud: first component for custom data
+DEFINE: IC_SD_FLAG  0                                                           # sd: final state flag
+DEFINE: IC_SD_DATA  1                                                           # sd: first component for custom data
+DEFINE: IC_TD_TER   0                                                           # td: terminal state of transition
+DEFINE: IC_TD_INI   1                                                           # td: initial state of transition
+DEFINE: IC_TD_DATA  2                                                           # td: first component for custom data
+
+## Defines - Component names
+DEFINE: NC_SD_RC    "~RC"                                                       # sd: state reference counter
+DEFINE: NC_SD_POT   "~POT"                                                      # sd: state potential (min. cost to reach the final state)
+DEFINE: NC_SD_RNK   "~RNK"                                                      # sd: state rank (topological order)
+DEFINE: NC_TD_RC    "~RC"                                                       # td: transition reference counter
+DEFINE: NC_TD_PSR   "~PSR"                                                      # td: transition probability (prob. semiring)
+DEFINE: NC_TD_LSR   "~LSR"                                                      # td: negative log. trans. probability (log semiring)
+DEFINE: NC_TD_TSR   "~TSR"                                                      # td: transition weight (tropical semiring)
+DEFINE: NC_TD_TIS   "~TIS"                                                      # td: transducer input symbol
+DEFINE: NC_TD_TOS   "~TOS"                                                      # td: transducer output symbol
+
+## Defines - Variable types
+DEFINE: FST_ITYPE   INT32                                                       # Index type (for state and transition indices)
+DEFINE: FST_STYPE   INT32                                                       # Symbol type (for input and output symbol indices)
+DEFINE: FST_WTYPE   FLOAT64                                                     # Weight type
+DEFINE: FST_WTYPE_MAX  T_DOUBLE_MAX
+DEFINE: DLP_TYPESTR(A) \#A
+DEFINE: DLP_TYPE(A)    dlp_get_type_code(DLP_TYPESTR(A))
+
+## Defines - FST property flags (CFst_Analyze)
+DEFINE: FST_FWDCONN    0x0001                                                   # Forward connected
+DEFINE: FST_BKWCONN    0x0002                                                   # Backward connected
+DEFINE: FST_FWDTREE    0x0004                                                   # Forward tree
+DEFINE: FST_BKWTREE    0x0008                                                   # Backward tree
+DEFINE: FST_LOOPS      0x0010                                                   # Has loops (trivial cicles)
+DEFINE: FST_WEIGHTED   0x0100                                                   # Is weighted
+DEFINE: FST_ACCEPTOR   0x0200                                                   # Is acceptor
+DEFINE: FST_TRANSDUCER 0x0600                                                   # Is transducer (implies FST_ACCEPTOR)
+
+## Defines - Weight semiring types
+DEFINE: FST_WSR_NONE   0                                                        # Not weighted
+DEFINE: FST_WSR_PROB   1                                                        # Probability semiring
+DEFINE: FST_WSR_LOG    2                                                        # Log semiring
+DEFINE: FST_WSR_TROP   3                                                        # Tropical semiring
+
+## Defines - Graph iterator modes / unit change flags
+DEFINE: FSTI_SORTINI   0x0001                                                   # Sort transitions by initial state
+DEFINE: FSTI_SORTTER   0x0002                                                   # Sort transitions by terminal state
+DEFINE: FSTI_SLOPPY    0x0004                                                   # -- Reserved --
+DEFINE: FSTI_PTR       0x0008                                                   # -- Reserved --
+DEFINE: FSTI_CADD      0x0001                                                   # Unit change was adding states/trans.
+DEFINE: FSTI_CANY      0x0000                                                   # Any unit change
+
+## Defines - Magic numbers for sync. DP pruning (/prune -sdp)
+##           Some may become fields
+DEFINE: FST_SDP_KEEPA  10                                                       # Keep N states active
+DEFINE: FST_SDP_KEEPR  0.1                                                      # Keep N*100 % states active
+DEFINE: FST_SDP_DMZ    10                                                       # No-pruning zone after start/before end
+
+## Defines - State flags
+DEFINE: SD_FLG_FINAL   0x01                                                     # Final flag
+DEFINE: SD_FLG_USER1   0x10                                                     # User flag 1
+DEFINE: SD_FLG_USER2   0x20                                                     # User flag 2
+DEFINE: SD_FLG_USER3   0x40                                                     # User flag 3
+DEFINE: SD_FLG_USER4   0x80                                                     # User flag 4
+
+## Defines - Descriptor table access
+DEFINE: UD_XXU(A)   (FST_ITYPE)CData_GetNRecs(AS(CData,A->ud))                  # Number of units
+DEFINE: UD_XXS(A)   (FST_ITYPE)CData_GetNRecs(AS(CData,A->sd))                  # Total number of states
+DEFINE: UD_XXT(A)   (FST_ITYPE)CData_GetNRecs(AS(CData,A->td))                  # Total number of transitions
+DEFINE: UD_MXT(A)   (FST_ITYPE)CData_GetMaxRecs(AS(CData,A->td))                # Maximal number of transitions
+DEFINE: UD_NAME(A,B)(char*)CData_XAddr(AS(CData,A->ud),B,IC_UD_NAME)            # Unit name
+DEFINE: UD_FS(A,B)  (*(FST_ITYPE*)(CData_XAddr(AS(CData,A->ud),B,IC_UD_FS  )))  # First state of unit
+DEFINE: UD_XS(A,B)  (*(FST_ITYPE*)(CData_XAddr(AS(CData,A->ud),B,IC_UD_XS  )))  # Number of states of unit
+DEFINE: UD_FT(A,B)  (*(FST_ITYPE*)(CData_XAddr(AS(CData,A->ud),B,IC_UD_FT  )))  # First transition of unit
+DEFINE: UD_XT(A,B)  (*(FST_ITYPE*)(CData_XAddr(AS(CData,A->ud),B,IC_UD_XT  )))  # Number of transitions of unit
+DEFINE: SD_FLG(A,B) (*(BYTE*     )(CData_XAddr(AS(CData,A->sd),B,IC_SD_FLAG)))  # Final state flag
+DEFINE: TD_INI(A,B) (*(FST_ITYPE*)(CData_XAddr(AS(CData,A->td),B,IC_TD_INI )))  # Initial state of transition
+DEFINE: TD_TER(A,B) (*(FST_ITYPE*)(CData_XAddr(AS(CData,A->td),B,IC_TD_TER )))  # Terminal state of transition
+DEFINE: IS_XXS(A)   (FST_ITYPE)CData_GetNComps(AS(CData,A->is))                 # Number of input symbol records
+DEFINE: OS_XXS(A)   (FST_ITYPE)CData_GetNComps(AS(CData,A->os))                 # Number of output symbol records
+
+## Additional files
+INCLUDE: "dlp_data.h"                                                           # Uses data (CData)
+FILE:    fst_aux.c                                                              # Auxilary methods
+FILE:    fst_cps.c                                                              # Transducer composition
+FILE:    fst_edt.c                                                              # Basic editing
+FILE:    fst_erm.c                                                              # Epsilon removal
+FILE:    fst_det.c                                                              # Determinization and minimization
+FILE:    fst_hmm.c                                                              # HMM topology methods
+FILE:    fst_ite.c                                                              # Iterators
+FILE:    fst_ixp.c                                                              # Import and export
+FILE:    fst_nmg.c                                                              # n-multigrams
+FILE:    fst_ord.c                                                              # (Topological) ordering
+FILE:    fst_pth.c                                                              # Paths
+FILE:    fst_sdp.c                                                              # Synchroneous dynamic programming
+FILE:    fst_stp.c                                                              # Synchroneous token passing search
+FILE:    fst_str.c                                                              # String (de)compilation
+FILE:    fst_wir.c                                                              # Unit wiring
+FILE:    fst_xsr.c                                                              # String and weight semirings
+FILE:    fst_regex.c                                                            # Regular expressions
+FILE:    fst_bsn.c                                                              # Best-N
+FILE:    fst_xxx.c                                                              # Experimental routines
+
+## Errors
+ERROR:   FST_INTERNAL
+COMMENT: Internal error at %s(%ld)
+
+ERROR:   FST_BADID
+COMMENT: Invalid %s index %ld
+
+ERROR:   FST_BADID2
+COMMENT: Invalid %s index %ld
+LEVEL:   EL_WARNING2
+
+ERROR:   FST_BADCTYPE
+COMMENT: Invalid type of %s table component %ld
+
+ERROR:   FST_MISS
+COMMENT: Missing %s %s in %s
+
+ERROR:   FST_BIGRAM
+COMMENT: Data instance '%s' is not a valid %s bigram. See manual of '-wire'
+
+ERROR:   FST_EMPTY
+COMMENT: %s is empty.
+LEVEL:   EL_WARNING
+
+ERROR:   FST_UNITEMPTY
+COMMENT: Unit %ld is empty
+LEVEL:   EL_WARNING
+
+ERROR:   FST_PATHTOOLONG
+COMMENT: Path too long %s unit %ld
+LEVEL:   EL_WARNING
+
+ERROR:   FST_PATHNOTUNIQUE
+COMMENT: Path not unique in unit %ld at state %ld (%s traversal)
+
+ERROR:   FST_PATHBROKEN
+COMMENT: Broken path in unit %ld at state %ld (%s traversal)
+
+ERROR:   FST_BADTYPE
+COMMENT: fst instance is not %s.
+
+ERROR:   FST_INCOMPATIBLE
+COMMENT: Incompatibe %s in %s.
+
+ERROR:   FST_SYMBOLNOTFOUND
+COMMENT: Symbol '%s' not found.
+
+ERROR:   FST_NOSDPW
+COMMENT: No synchroneous weights for %s %ld.
+LEVEL:   EL_WARNING
+
+ERROR:   FST_DELETE
+COMMENT: Deleting %s %s from %s.
+LEVEL:   EL_WARNING
+
+ERROR:   FST_CHANGE
+COMMENT: Changing %s to %s.
+LEVEL:   EL_WARNING
+
+ERROR:   FST_UNWEIGHTED
+COMMENT: Automaton is unweighted.
+
+ERROR:   FST_INVALID
+COMMENT: Invalid %s.
+
+ERROR:   FST_EPSINWORD
+COMMENT: Internal epsilon transition in phoneme model.
+
+ERROR:   FST_INTERNALW
+COMMENT: %s at %s(%ld).
+LEVEL:   EL_WARNING
+
+ERROR:   FST_SYMBOLCRASH
+COMMENT: Symbol crash.
+
+ERROR:   FST_NOSYMBOL
+COMMENT: Final state reached without collecting output symbol.
+
+
+## Fields
+FIELD:   ud
+CNAME:   ud
+COMMENT: Unit description table
+TYPE:    INSTANCE(data)
+
+FIELD:   sd
+CNAME:   sd
+COMMENT: State description table
+TYPE:    INSTANCE(data)
+
+FIELD:   td
+CNAME:   td
+COMMENT: Transition description table
+TYPE:    INSTANCE(data)
+
+FIELD:   is
+CNAME:   is
+COMMENT: Input symbol table
+TYPE:    INSTANCE(data)
+
+FIELD:   os
+CNAME:   os
+COMMENT: Output symbol table
+TYPE:    INSTANCE(data)
+
+FIELD:   climit
+COMMENT: Limit of cycle passes when traversing graphs
+TYPE:    int
+INIT:    1
+
+FIELD:   max_len
+COMMENT: Maximal path length when traversing graphs or building multigrams
+TYPE:    int
+INIT:    1000000
+
+FIELD:   grany
+COMMENT: Granularity of data table (re)allocations
+TYPE:    int
+INIT:    1000
+
+FIELD:   wceil
+COMMENT: Maximal log. or tropical weight; minimal probability is exp(-wceil)
+TYPE:    double
+INIT:    T_DOUBLE_MAX
+
+FIELD:   rcfloor
+COMMENT: Reference counter floor for Jeffrey smoothing of deterministic acceptors
+TYPE:    double
+INIT:    0.
+
+FIELD:   ftol
+COMMENT: Tolerance of floating point comparison
+TYPE:    double
+INIT:    1E-10
+
+FIELD:   symbols
+COMMENT: Number of symbols in input alphabet
+TYPE:    int
+INIT:    -1L
+
+FIELD:   gw
+COMMENT: Global path weight (-sdp)
+TYPE:    double
+
+FIELD:   mapexp
+COMMENT: Exponent for MAP transition probability smoothing
+TYPE:    double
+INIT:    0.
+/html MAN:
+  <p>Used by the {@link -probs} method in connection with the {@link /usemap}
+  option for MAP (maximum a-posteriori) smoothing of the transition
+  probabilities.</p>
+  <p>Typical values</p>
+  <table class="indent">
+    <tr><th>Value</th><th>Function</th></tr>
+    <tr><td>0    </td><td>off</td></tr>
+    <tr><td>-1   </td><td>minimize entropy</td></tr>
+    <tr><td>1    </td><td>maximize entropy</td></tr>
+  </table>
+  @see -probs
+  @see /usemap
+END_MAN
+
+FIELD:   prn_const
+COMMENT: Pruning constant
+TYPE:    double
+INIT:    0.15
+/html MAN:
+  Controls path pruning of search algorithms. Pruning paths is quicker but may
+  result in suboptimal search results. 
+  @see /prune
+  @see -sdp
+END_MAN
+
+## Hidden fields
+FIELD:    WLRs
+COMMENT: Internal use: keep track of memory used by WLRs (to be deleted after finishing -stp) (Thomas Hutschenreuther)
+TYPE:    int
+INIT:   0
+FLAGS:   /hidden
+
+FIELD:   fts
+COMMENT: Internal use: Transition sorting index
+TYPE:    FST_ITYPE*
+FLAGS:   /hidden /noset /nosave
+
+FIELD:   x_fts
+COMMENT: Internal use: Transition sorting index size
+TYPE:    int
+FLAGS:   /hidden /noset /nosave
+
+FIELD:   ic_tis
+TYPE:    int
+COMMENT: Internal use: Input symbol component of td
+INIT:    -1L
+FLAGS:   /hidden /noset /nosave
+
+FIELD:   ic_tos
+TYPE:    int
+COMMENT: Internal use: Output symbol component of td
+INIT:    -1L
+FLAGS:   /hidden /noset /nosave
+
+FIELD:   ic_w
+TYPE:    int
+COMMENT: Internal use: Weight component of td
+INIT:    -1L
+FLAGS:   /hidden /noset /nosave
+
+FIELD:   wsr
+TYPE:    short
+COMMENT: Internal use: Weight semiring type
+INIT:    -1
+FLAGS:   /hidden /noset /nosave
+
+FIELD:   ic_sd_aux
+TYPE:    int
+COMMENT: Internal use: First component of auxilary state data
+INIT:    -1L
+FLAGS:   /hidden /noset /nosave
+
+FIELD:   ic_td_aux
+TYPE:    int
+COMMENT: Internal use: First component of auxilary transition data
+INIT:    -1L
+FLAGS:   /hidden /noset /nosave
+
+FIELD:   printstop
+TYPE:    int
+COMMENT: Internal use: Break listings in verbose mode
+INIT:    0
+FLAGS:   /hidden /noset /nosave
+
+## Hidden fields - composition
+FIELD:   cps_hash
+TYPE:    void*
+COMMENT: Composition: Composed state hash map
+FLAGS:   /hidden /noset /nosave /nonautomatic
+
+FIELD:   cps_hnpool
+TYPE:    void**
+COMMENT: Composition: Hash node pool table
+FLAGS:   /hidden /noset /nosave /nonautomatic
+
+FIELD:   cps_hnpool_size
+TYPE:    int
+COMMENT: Composition: Hash node pool size
+FLAGS:   /hidden /noset /nosave /nonautomatic
+
+FIELD:   cps_keybuf
+TYPE:    (FST_ITYPE)[3]
+CNAME:   m_lpCpsKeybuf
+COMMENT: Composition: Temporary hash key buffer
+FLAGS:   /hidden /noset /nosave /nonautomatic
+
+## Hidden fields - determinization
+FIELD:   det_rt
+TYPE:    INSTANCE(data)
+COMMENT: Determinization: Residual table
+FLAGS:   /hidden /noset /nosave /nonautomatic
+
+FIELD:   det_st
+TYPE:    FST_SST_TYPE*
+COMMENT: Determinization: String table
+FLAGS:   /hidden /noset /nosave /nonautomatic
+
+## Hidden fields - n-mltigrams
+FIELD:   nmg_t
+TYPE:    FST_ITYPE*
+COMMENT: Multigram calculations: Transition sequence buffer
+FLAGS:   /hidden /noset /nosave
+
+FIELD:   nmg_w
+TYPE:    FST_WTYPE*
+COMMENT: Multigram calculations: Interpolation weigth buffer
+FLAGS:   /hidden /noset /nosave
+
+## Constants - Component indices
+FIELD:   IC_UD_NAME
+COMMENT: Component of <ud> containing unit names
+TYPE:    int
+INIT:    IC_UD_NAME
+FLAGS:   /noset /nosave
+
+FIELD:   IC_UD_XS
+COMMENT: Component of <ud> containing state count of unit
+TYPE:    int
+INIT:    IC_UD_XS
+FLAGS:   /noset /nosave
+
+FIELD:   IC_UD_XT
+COMMENT: Component of <ud> containing transition count of unit
+TYPE:    int
+INIT:    IC_UD_XT
+FLAGS:   /noset /nosave
+
+FIELD:   IC_UD_FS
+COMMENT: Component of <ud> containing index of first state of unit
+TYPE:    int
+INIT:    IC_UD_FS
+FLAGS:   /noset /nosave
+
+FIELD:   IC_UD_FT
+COMMENT: Component of <ud> containing index of first transition of unit
+TYPE:    int
+INIT:    IC_UD_FT
+FLAGS:   /noset /nosave
+
+FIELD:   IC_UD_DATA
+COMMENT: First component of <ud> containing additional data
+TYPE:    int
+INIT:    IC_UD_DATA
+FLAGS:   /noset /nosave
+
+FIELD:   IC_SD_FLAG
+COMMENT: Component of <sd> containing final state flag
+TYPE:    int
+INIT:    IC_SD_FLAG
+FLAGS:   /noset /nosave
+
+FIELD:   IC_SD_DATA
+COMMENT: First component of <sd> containing additional data
+TYPE:    int
+INIT:    IC_SD_DATA
+FLAGS:   /noset /nosave
+
+FIELD:   IC_TD_TER
+COMMENT: Component of <td> containing terminal state of transition
+TYPE:    int
+INIT:    IC_TD_TER
+FLAGS:   /noset /nosave
+
+FIELD:   IC_TD_INI
+COMMENT: Component of <td> containing initial state of transition
+TYPE:    int
+INIT:    IC_TD_INI
+FLAGS:   /noset /nosave
+
+FIELD:   IC_TD_DATA
+COMMENT: First component of <td> containing additional data
+TYPE:    int
+INIT:    IC_TD_DATA
+FLAGS:   /noset /nosave
+
+## Constants - Component names
+FIELD:   NC_SD_RC
+COMMENT: Component of <sd> containing state reference counter
+TYPE:    5
+INIT:    "~RC"
+FLAGS:   /noset /nosave
+
+FIELD:   NC_SD_POT
+COMMENT: Component of <sd> containing state potential
+TYPE:    5
+INIT:    "~POT"
+FLAGS:   /noset /nosave
+
+FIELD:   NC_SD_RNK
+COMMENT: Component of <sd> containing state rank (topological order)
+TYPE:    5
+INIT:    "~RNK"
+FLAGS:   /noset /nosave
+
+FIELD:   NC_TD_RC
+COMMENT: Component of <td> containing transition reference counter
+TYPE:    5
+INIT:    "~RC"
+FLAGS:   /noset /nosave
+
+FIELD:   NC_TD_PSR
+COMMENT: Component of <td> containing transition probability (prob. semiring)
+TYPE:    5
+INIT:    "~PSR"
+FLAGS:   /noset /nosave
+
+FIELD:   NC_TD_LSR
+COMMENT: Component of <td> containing negative log. trans. prob. (log semiring)
+TYPE:    5
+INIT:    "~LSR"
+FLAGS:   /noset /nosave
+
+FIELD:   NC_TD_TSR
+COMMENT: Component of <td> containing transition weight (tropical semiring)
+TYPE:    5
+INIT:    "~TSR"
+FLAGS:   /noset /nosave
+
+FIELD:   NC_TD_TIS
+COMMENT: Component of <sd> containing transducer input symbol
+TYPE:    5
+INIT:    "~TIS"
+FLAGS:   /noset /nosave
+
+FIELD:   NC_TD_TOS
+COMMENT: Component of <sd> containing transducer output symbol
+TYPE:    5
+INIT:    "~TOS"
+FLAGS:   /noset /nosave
+
+## Options
+OPTION:  /climit
+COMMENT: Limits passes through cycles
+
+OPTION:  /epsremove
+COMMENT: Removes epsilon transitions
+/html MAN:
+  <h4>{@link -sdp}</h4>
+  <p>Removes epsilon/epsilon transitions (input <em>and</em> output symbol is
+    epsilon!) from resulting chain.</p>
+END_MAN
+
+OPTION:  /final
+COMMENT: Make final state(s).
+/html MAN:
+  <h4>{@link -addstates}</h4>
+  <p>Added states will be final (default is: non-final).</p>
+
+  <h4>{@link -addtrans}</h4>
+  <p>Terminal state of transition will be made final (default is: do not change).</p>
+END_MAN
+
+OPTION:  /index
+COMMENT: Append or use index
+
+OPTION:  /implicit
+COMMENT: Wire units implicitely
+
+OPTION:   /greedy
+OBSOLETE: /lmatch
+COMMENT:  Greedy match (use longest matching sequence).
+
+OPTION:  /local
+COMMENT: Local (instead of global) operation
+
+OPTION:  /noloops
+COMMENT: Disregard trivial cycles (self loops)
+
+OPTION:  /multigram
+COMMENT: Multigram mode (instead of sequence mode)
+
+OPTION:  /push
+COMMENT: Push weights/output symbols towards final states (instead of leave them)
+
+OPTION:  /segment
+COMMENT: Segmentation mode (instead of sequence mode)
+
+OPTION:  /trans
+COMMENT: Use transitions (instead of states)
+
+OPTION:  /usemap
+COMMENT: Use MAP approximation
+/html MAN:
+  <h4>{@link -probs}</h4>
+  <p>Do MAP (maximum a-posteriori) smoothing of the transition probabilities
+  (default is no smoothing).</p>
+  @see mapexp
+END_MAN
+
+OPTION:  /prune
+COMMENT: Constant pruning
+/html MAN:
+  <h4>{@link -sdp}</h4>
+  <p>Prune search paths with great weights.</p>
+  @see prn_const
+END_MAN
+
+OPTION:  /noeps
+COMMENT: Epsilon loops must be explicitly given for -compose
+/html MAN:
+  <h4>{@link -compose}</h4>
+  <p>No epsilon loops are implicitly supposed.</p>
+  <span class="warning">Warning:</span> If too many or too few epsilon loops are in the transducers the result may be wrong.
+END_MAN
+
+OPTION:  /noint
+COMMENT: Discard intermediate symbols
+/html MAN:
+  <h4>{@link -compose}</h4>
+  <p>Remove intermediate symbols (transition component "~TMS") from composition
+  result.</p>
+END_MAN
+
+OPTION:  /markx
+COMMENT: Mark composition result in left operator
+/html MAN:
+  <h4>{@link -compose}</h4>
+  <p>This option will add a component named ~CPS to the transition table of the left
+  left composition operand. This component will contain TRUE for transtions used in
+  composition result.</p>
+END_MAN
+
+OPTION:  /marky
+COMMENT: Mark composition result in right operator
+/html MAN:
+  <h4>{@link -compose}</h4>
+  <p>This option will add a component named ~CPS to the transition table of the right
+  left composition operand. This component will contain TRUE for transtions used in
+  composition result.</p>
+END_MAN
+
+## Options - Automata modes
+OPTION:  /fst
+COMMENT: Transducer
+
+OPTION:  /fsa
+COMMENT: Acceptor
+
+OPTION:  /psr
+COMMENT: Weighted (probability semiring)
+/html MAN:
+  <h4>{@link -addunit}</h4>
+  <p>Create/switch to the probability weight semiring. Note: the weigth semiring
+  will only be switched. Present weights will <em>not</em> be converted. To
+  convert to another weight semiring use {@link -wsr_convert}.</p>
+  <h4>{@link -wsr_convert}</h4>
+  <p>Convert weights to the probability semiring</p>
+  <h4>{@link -reverse}</h4>
+  <p>Create a probabilistic automaton.</p>
+END_MAN
+
+OPTION:  /lsr
+COMMENT: Weighted (logarithmic semiring)
+/html MAN:
+  <h4>{@link -addunit}</h4>
+  <p>Create/switch to the log weight semiring. Note: the weigth semiring
+  will only be switched. Present weights will <em>not</em> be converted. To
+  convert to another weight semiring use {@link -wsr_convert}.</p>
+  <h4>{@link -wsr_convert}</h4>
+  <p>Convert weights to the log semiring</p>
+END_MAN
+
+OPTION:  /tsr
+COMMENT: Weighted (tropical semiring)
+/html MAN:
+  <h4>{@link -addunit}</h4>
+  <p>Create/switch to the tropical weight semiring. Note: the weigth semiring
+  will only be switched. Present weights will <em>not</em> be converted. To
+  convert to another weight semiring use {@link -wsr_convert}.</p>
+  <h4>{@link -wsr_convert}</h4>
+  <p>Convert weights to the tropical semiring</p>
+END_MAN
+
+OPTION:  /different_os
+COMMENT: Output only paths with different output symbols
+/html MAN:
+  <h4>{@link -rndwalk}</h4>
+  <p>Every resulting path will have a different output symbols.
+  If there are no more paths in the source transducer with
+  unseen output symbol sequences it will try forever to find one.</p>
+END_MAN
+
+OPTION:  /different_is
+COMMENT: Output only paths with different input symbols
+/html MAN:
+  <h4>{@link -rndwalk}</h4>
+  <p>Every resulting path will have a different input symbols.
+  If there are no more paths in the source transducer with
+  unseen input symbol sequences it will try forever to find one.</p>
+END_MAN
+
+OPTION:  /lazy
+COMMENT: Lazy minimization
+/html MAN:
+  <p>This implementation only finds states with only one ingoing or
+  only one outgoing transition. Such transition are eliminated if
+  the symbols (input, output, phonem, stack) and weight can be shifted
+  to the outgoing respectively the ingoing transitions of the
+  the prospected state. The followning two graphs show a example
+  who this minimization works.</p>
+  <object data="../resources/fst/fst_lazymin1.svg" type="image/svg+xml" width="609" height="312"
+     alt="UASR system concept" viewastext="viewastext">
+  <img src="../resources/fst/fst_lazymin1.gif" alt="UASR system concept" width="608" height="311">
+  </object>
+  <object data="../resources/fst/fst_lazymin2.svg" type="image/svg+xml" width="609" height="312"
+     alt="UASR system concept" viewastext="viewastext">
+  <img src="../resources/fst/fst_lazymin2.gif" alt="UASR system concept" width="608" height="311">
+  </object>
+END_MAN
+
+OPTION:  /fwd
+COMMENT: Do forward algorithm instead of sdp
+/html MAN:
+  @cgen:TODO: Remove this option and add method <code>-fwd</code> instead!
+  <p>Use with {@link -sdp}. Does forward algorithm instead
+  of synchron dp algorithm. The forward variables are placed in the 
+  weigth array (idWeights). So the synchron weights will be lost.
+  The destination fst is not created. For backward algorithm reverse
+  the source fst, the weight array and afterwards the backward
+  variables in time.</p>
+END_MAN
+
+OPTION:  /forward
+COMMENT: Process forward (left to right).
+/html MAN:
+  <h4>{@link -excerpt}</h4>
+  <p>Forward traversal of automaton</p>
+  @see /backward
+END_MAN
+
+OPTION:  /backward
+COMMENT: Process backward (right to left).
+/html MAN:
+  <h4>{@link -excerpt}</h4>
+  <p>Backward traversal of automaton</p>
+  @see /forward
+END_MAN
+
+## Methods - Low level editing
+METHOD:  -addunit
+CNAME:   AddunitIam
+SYNTAX:  (string sName)
+POSTSYN: { ... }
+COMMENT: Adds one new unit
+/html MAN:
+  Adds one unit (= one finite state automaton graph) to the instance.
+
+  @param       lpsName Name of the unit
+  @see         -delunit
+  @see         -addstates
+  @see         -addtrans
+  @cgen:option /fsa Create input symbol components in <a
+               href="#fld_td">transition table</a>
+  @cgen:option /fst Create input and output symbol components in <a
+               href="#fld_td">transition table</a>
+  @cgen:option /psr Create weight component (probability semiring) in <a
+               href="#fld_td">transition table</a>
+  @cgen:option /lsr Create weight component (logarithmic semiring) in <a
+               href="#fld_td">transition table</a>
+  @cgen:option /tsr Create weight component (tropical semiring) in <a
+               href="#fld_td">transition table</a>
+END_MAN
+
+METHOD:  -addstates
+CNAME:   AddstatesIam
+SYNTAX:  (int nUnit, int nCount)
+POSTSYN: { ... }
+COMMENT: Adds new states
+
+METHOD:  -addtrans
+CNAME:   AddtransIam
+SYNTAX:  (int nUnit, int nIni, int nTer)
+POSTSYN: { ... }
+COMMENT: Adds one transition
+
+METHOD:  -delunit
+SYNTAX:  (int nUnit)
+COMMENT: Deletes unit <nUnit>
+
+METHOD:  -delstate
+SYNTAX:  (int nUnit, int nState)
+COMMENT: Deletes state <nState> from unit <nUnit>
+
+METHOD:  -deltrans
+SYNTAX:  (int nUnit, int nTrans)
+COMMENT: Deletes transition <nTrans> from unit <nUnit>
+
+METHOD:  -reverse
+SYNTAX:  (int nUnit)
+COMMENT: Reverses a (weighted) automaton
+
+METHOD:  -trim
+SYNTAX:  (int nUnit, double nWlim)
+COMMENT: Removes heavy weighted transitions and unconnected states
+/html MAN:
+  <p>Removes unconnected states, their adjacent transitions and transitions
+  whose weight/probability is greater/less than <code>nWlim</code>.
+  If option {@link /local} is set, it will not recalc transitions probabilities
+  for probability semiring.</p>
+  @param nUnit The unit to process or -1 for all units
+  @param nWlim The maximal weight (log. and tropical weight semirings) or the
+               minimal probability (probability weight semiring) of
+               transitions, the value 0 indicates that <em>no</em> transitions
+               will be pruned for their weight
+END_MAN
+
+METHOD:  -chain
+SYNTAX:  (int nUnit)
+POSTSYN: {...}
+COMMENT: Chains all states
+/html MAN:
+  <p>Chains all states of unit <code>nUnit</code> of this instance.</p>
+  @param nUnit Index of unit to process or -1 for all units
+  @param {...} Constant initializer for qualifications of newly added transitions
+END_MAN
+
+METHOD:  -loops
+SYNTAX:  (int nUnit)
+POSTSYN: {...}
+COMMENT: Add self loops to all states
+/html MAN:
+  <p>Adds loops to all states of unit <code>nUnit</code> of this instance.</p>
+  @param nUnit Index of unit to process or -1 for all units
+  @param {...} Constant initializer for qualifications of newly added transitions
+END_MAN
+
+METHOD:  -wsr_convert
+SYNTAX:  ()
+CNAME:   CFst_WsrConvert_Iam
+COMMENT: Converts the weights to another semiring
+CODE:
+  if (_this->m_bPsr) return CFst_Wsr_Convert(_this,FST_WSR_PROB);
+  if (_this->m_bLsr) return CFst_Wsr_Convert(_this,FST_WSR_LOG );
+  if (_this->m_bTsr) return CFst_Wsr_Convert(_this,FST_WSR_TROP);
+  return O_K;
+END_CODE
+/html MAN:
+  The method requires one of the options listed below. If no option is
+  specified the method does nothing. If this instance is unweighted an error
+  will occur.
+  @cgen:option /psr Convert to the probability semiring
+  @cgen:option /lsr Convert to the log semiring
+  @cgen:option /tsr Convert to the tropical semiring
+END_MAN
+
+METHOD:  -typerepair
+SYNTAX:  ()
+COMMENT: Converts the typs of all data instances inside the fst into dlabpro compile settings
+/html MAN:
+  This method is useful to read fsts which are saved for example by the
+  recognizer. This programm uses 32-Bit types therefore the saved fsts
+  are not readable by dlabpro. <code>-typerepair</code> converts all wrong
+  types so that the fst can be used.
+END_MAN
+
+## Methods - transducer algorithms
+METHOD:  -union                                                                 # AOP_UNION   "A+B"
+SYNTAX:  (fst iSrc)
+COMMENT: Union
+
+METHOD:  -intersect                                                             # AOP_INTERS  "A/B"
+SYNTAX:  (fst itSrc1, fst itSrc2, int nUnit1, int nUnit2)
+COMMENT: Calculates the intersection of weighted automata
+
+METHOD:  -close                                                                 # AOP_CLOSE   "A'"
+SYNTAX:  (fst itSrc, int nUnit)
+COMMENT: Kleene closure
+
+METHOD:  -invert                                                                # AOP_INV     "inv(A)"
+SYNTAX:  (int nUnit)
+COMMENT: Swap input and output symbols
+
+METHOD:  -project                                                               # AOP_PROJ    "proj(A)"
+SYNTAX:  ()
+COMMENT: Remove output symbols
+
+METHOD:  -unweight                                                              # AOP_WRM     "wrm(A)"
+SYNTAX:  ()
+COMMENT: Remove transition weights
+
+METHOD:  -product                                                               # AOP_PROD    "A*B"
+SYNTAX:  (fst itSrc1, fst itSrc2, int nUnit1, int nUnit2)
+COMMENT: Calculates the cartesian product of two graphs
+
+METHOD:  -compose                                                               # AOP_CMPS    "A�B"
+SYNTAX:  (fst itSrc1, fst itSrc2, int nUnit1, int nUnit2)
+COMMENT: Composes weighted transducers
+
+METHOD:  -determinize                                                           # AOP_DET     "det(A)"
+SYNTAX:  (fst itSrc, int nUnit)
+COMMENT: Determinizes a (weighted) acceptor or transducer
+
+METHOD:  -minimize                                                              # AOP_MIN     "min(A)"
+SYNTAX:  (fst itSrc, int nUnit)
+COMMENT: Minimizes a (weighted) acceptor or transducer
+/html MAN:
+  @see /lazy
+END_MAN
+
+METHOD:  -epsremove                                                             # AOP_EPSRM   "erm(A)"
+SYNTAX:  (fst itSrc, int nUnit)
+COMMENT: Removes epsilon transitions from automata
+
+METHOD:  -hmm                                                                   # AOP_HMM     "hmm(A)"
+SYNTAX:  (fst itSrc, int nUnit)
+COMMENT: Convert to HMM-style (weighted) acceptor or transducer
+/html MAN:
+  Splits states such that each state can be assigned a unique input symbol.
+  That means all transitions ending in a particular state carry the same
+  symbol. The resulting FSM resembles a classic HMM (where symbols are
+  attached to states instead of transitions).
+  @param itSrc Source transducer(s)
+  @param nUnit Index of unit to be processed (-1 for all units)
+END_MAN
+
+METHOD:  -tree                                                                  # AOP_TREE    "tree(A)"
+SYNTAX:  (fst itSrc, int nUnit)
+COMMENT: Expands automaton graphs into trees
+
+METHOD:  -best_n                                                                # AOP_BESTN   "bestn(A,n)"
+SYNTAX:  (fst itSrc, int nUnit, int nPaths, int nPathlength)
+COMMENT: Creates a tree with the best N paths taken from the source Fsm
+
+METHOD:  -push_weights
+SYNTAX:  (fst itSrc, int nUnit)
+COMMENT: Pushes weights towards initial states
+
+## Methods - (Topological) ordering
+METHOD:  -rank
+SYNTAX:  (int nUnit, data idDst)
+COMMENT: Determines the rank of all states.
+/html MAN:
+  <p>Determines the rank (or topological order) of an automaton's states and
+  stores the result in <code>idDst</code>. The rank of a state is the shortest
+  distance from the start state to that state.</p>
+  @param nUnit Unit to be processed (-1 for all units).
+  @param idDst Destination instance. The instance will contain one component of
+               type int. The values <code>idDst[nS,0]</code> contain the ranks
+               of states <code>nS</code>.
+END_MAN
+
+METHOD:  -order
+SYNTAX:  (fst itSrc, data idMap, int nComp, int nUnit)
+COMMENT: Orders the automaton (topologically)
+
+## Methods - Auxilary
+METHOD:   -status
+OBSOLETE: -descr
+SYNTAX:   ()
+COMMENT:  Prints status information of the FST instance.
+
+METHOD:  -print
+SYNTAX:  ()
+COMMENT: Prints automaton data content at stdout
+
+METHOD:  -get_type
+SYNTAX:  int (int nMask)
+COMMENT: Determines the automaton type
+
+METHOD:  -analyze
+SYNTAX:  int (int nUnit, int nMask)
+COMMENT: Analyze automaton for specified properties
+
+## Methods - Copying, import, export
+METHOD:  -cat
+SYNTAX:  (fst itSrc)
+COMMENT: Concatenates automata
+
+METHOD:  -copy_ui
+SYNTAX:  (fst itSrc, data idIndex, int nPar)
+COMMENT: Copies units according to a copying index.
+/html MAN:     
+  <p>Copies units from <code>itSrc</code> to this instance according to the unit index sequence given by component
+  <code>nPar</code> of <code>idIndex</code>. After finishing the operation this instance will contain
+  <code>idIndex.nrec</code> units. Multiple unit references result in copies of the respective units. The order of
+  units in the destination index is given by <code>idIndex</code>.</p>
+  <p><code>idIndex</code> may be <code>NULL</code>. In this case <code>nPar</code> is interpreted as a unit index and
+  the one unit denoted by <code>nPar</code> will be copied.</p>
+  <p><code>itSrc</code> may be this instance.</p>
+  @param itSrc   Automaton instance to copy units from (may be this instance)
+  @param idIndex A list of unit indices (in <code>itSrc</code>), order or reoccourences do not matter (may be
+                 <code>NULL</code>).
+  @param nPar    If <code>idIndex</code> is <i>not</i> <code>NULL</code>: Component index in <code>idIndex</code>
+                 containing the indices of units to be copied. If negative the first numeric component will be
+                 considered as index.<br>If <code>idIndex</code> is <code>NULL</code>: Index of unit to be copied.
+  @see "-replace_ui"
+END_MAN
+
+## Methods - n-multigrams
+METHOD:  -analyze_multigram
+SYNTAX:  (data idCtrs, int nUnit)
+COMMENT: Checks a multigram tree and counts the contained n-grams
+
+METHOD:  -addseq
+SYNTAX:  int (data idSrc, int nIcTis, int nIcTer, int nIcRci, int nUnit)
+COMMENT: Adds a symbol sequence to an acceptor
+/html MAN:
+  <p>Adds a sequence of <code>idSrc.nrec</code> transitions qualified with the
+  (input) symbol indices contained in component <code>nIcTis</code> of
+  <code>idSrc</code> to unit <code>nUnit</code>. The procedure of adding the
+  sequence depends on the value of parameter <code>nIcTer</code>:</p>
+  <ul>
+    <li>If <code>nIcTer</code> is -1 the method will re-use existing
+      transitions and states as long as unit <code>nUnit</code> contains a path
+      starting at state 0 which matches the sequence. The method will branch
+      the automaton graph (i.e. start adding new states and transitions) at the
+      point of the first mismatch.</li>
+    <li>If <code>nIcTer</code> is non-negative it denotes a component index in
+      <code>idSrc</code>. The value <code>idSrc[n,nIcTer]</code> is interpreted
+      as terminal state index of the transition to be added for the 
+      <code>n</code>th symbol <code>idSrc[n,nIcTis]</code> in the sequence. If
+      <code>idSrc[n,nIcTer]</code> denotes a non-existing state, a new state
+      will be added. Multiple equal references to non-existing states will be
+      handled correctly. If the specified terminal state <i>and</i> a
+      transition with a matching input symbol to that state exist, the method
+      will re-use that transition.</li>
+  </ul>
+  <p>If there is a reference counter component in the
+  {@link td transition table}, the method will increment the counters of
+  re-used transitions by the values found in component <code>nIcRci</code> of
+  <code>idSrc</code>. If <code>nIcRci</code> is -1, the reference counters will
+  be incremented by one.</p>
+
+  <h4>Remarks</h4>
+  <ul>
+    <li>This instance must be a finite state acceptor or a finite state
+      transducer.</li>
+  </ul>
+
+  @param idSrc  The symbol sequence
+  @param nIcTis Component index in <code>idSrc</code> containing the symbol
+                indices
+  @param nIcTer Component index in <code>idSrc</code> containing a terminal
+                state for each symbol (may be -1)
+  @param nIcRci Component index in <code>idSrc</code> containing an state and
+                transition reference counter increment for each symbol (may be
+                -1)
+  @param nUnit  The unit to add the sequence to
+  @return The final state of the update sequence in unit <code>nUnit</code> of
+  <code>this</code> instance or -1 in case of errors
+
+  @cgen:option /multigram Also add sub-sequences starting at 2nd, 3rd, 4th,
+     etc. symbol (default: add exactly the sequence). In this mode all states
+     of the automaton will be final, otherwise only states corresponding with
+     sequence ends will be final.
+END_MAN
+
+METHOD:  -discount
+SYNTAX:  (int nDiscount, int nUnit)
+COMMENT: Discounts transitions by nDiscount and removes open paths.
+
+METHOD:  -multigram
+SYNTAX:  (data idSeq, int nComp, data idWeights, fst itDst, int nUnit)
+COMMENT: Creates a weighted segment acceptor for a symbol sequence from a multigram tree
+
+## Methods - wiring
+METHOD:  -wire
+SYNTAX:  (fst iSrc, data idBigram)
+POSTSYN: { ... }
+COMMENT: Connects units using a wiring table / bigram
+
+## Methods - String compilation/decompilation
+METHOD:  -compile
+SYNTAX:  (data idSrc, int nIcStr, int nIcName, data idAlp)
+COMMENT: Compiles strings into FSA/FST
+/html MAN:
+  <p>Compiles a list of symbol strings (contained in component <code>nIcStr</code> of data instance <code>idSrc</code>)
+  into graphs. Each string in <code>idSrc</code> will be compiled into one unit in this automaton instance. The name of
+  the units is taken from component <code>nIcName</code> of the source instance <code>idSrc</code>. If
+  <code>nIcName</code> is -1, the units will be named "idSrcName_X", where "idSrcName" stands for the instance name of
+  <code>idSrc</code> and "X" stands for the record index in <code>idSrc</code>.</p>
+
+  <p>The resulting graph will contain one transition for each symbol in the string. The symbol alphabet is the first
+  symbolic component of data instance <code>idAlp</code>. The input symbols of the automaton's transitions will be the
+  numeric index (record index in <code>idAlp</code>) of the string symbols. If the option {@link /index} is set, the
+  transitions will additionally be qualified with the unit number as output symbol. If the representation of the string
+  by the symbols of the alphabet is unique the resulting graph will be a chain, otherwise, unless the {@link /greedy}
+  option is set, it may contain more than one path. If the string cannot be entirely expressed by the symbols of the
+  alphabet the resulting graph will be <em>empty</em>.</p>
+
+  <p>Strings in <code>idSrc</code> may contain alternatives. They are written in the following form:
+  &quot;prefix(alternative1|alternative2|)suffix&quot;. An empty alternative means that the whole
+  block can be skipped. Alternatives may contain other alternatives, but the number of opened brackets
+  should always match the number of closed ones. Therefore no symbol should contain any of the characters
+  &quot;(&quot;, &quot;)&quot; or &quot;|&quot;.</p>
+
+  <p>If <code>idSrc</code> contains a component named <code>W</code>, the graphs will contain a weight
+  component of type <code>LSR</code> with that weigth once per string.</p>
+
+  <p>The resulting graph is either connnected or emtpy.</p>
+
+  <h3>Example</h3>
+<pre class="code">
+
+  <a href="data.html">data</a> idLexicon
+  "prth" 32 idLexicon <a href="data.html#mth_-addcomp">-addcomp</a>
+  "phon" 32 idLexicon <a href="data.html#mth_-addcomp">-addcomp</a>
+  1 idLexicon <a href="data.html#mth_-allocate">-allocate</a>
+  idLexicon <a href="data.html#mth_{">{</a> Mai maI }
+
+  <a href="data.html">data</a> idPhonemeTable
+  "symb" 4 idPhonemeTable <a href="data.html#mth_-addcomp">-addcomp</a>
+  4 idPhonemeTable <a href="data.html#mth_-allocate">-allocate</a>
+  idPhonemeTable <a href="data.html#mth_{">{</a> a aI I m }
+
+  <span class="c-key">fst</span> itLexicon
+  idLexicon 1 0 idPhonemeTable itLexicon <span class="c-key">-compile</span>
+
+  <span class="c-cmt"># The result is the following structure
+  #
+  #              ---> (2) ---
+  #             / 0        2 \\
+  # (0) ---> (1)-------------->(0)
+  #      3             1</span>
+
+  <span class="c-cmt"># When executing in longest-match-mode ...</span>
+  idLexicon 1 0 idPhonemeTable itLexicon {@link /greedy} <span class="c-key">-compile</span>
+
+  <span class="c-cmt"># ... this structure will be created instead
+  #
+  # (0) ---> (1)--->(0)
+  #      3       1</span>
+
+</pre>
+
+  @param idSrc   List of strings (and, optionally, associated names)
+  @param nIcStr  Component index of strings in <code>idSrc</code>
+  @param nIcName Component index of names in <code>idSrc</code> (may be -1)
+  @param idAlp   Symbol alphabet
+
+  @cgen:option /index  Qualify with input and output symbols (default: only input symbols)
+  @cgen:option /greedy Use longest match only (default: any match), result will be a chain or empty
+  @cgen:option /push   Only valid together with {@link /index}: place output symbols at final transitions
+                       (default: place at start transitions)
+END_MAN
+
+## Methods - Weight semiring operations
+METHOD:  -probs
+SYNTAX:  (int nUnit)
+COMMENT: (Re-)Estimates transition probabilities
+/html MAN:
+  <p>(Re-)estimatea transition probabilities. If there is no probability component in the {@link td transition table}
+  one will be added. If there is another weight component the method will converted the weigths to probabilities,
+  perform the normal operation as described for probabilities and, finally, convert the re-estimated probabilities
+  back to the original semiring. If there is a reference counter component in the {@link td transition table} the
+  transition probabilities will be estimated using the Jeffrey smoothing algorithm (see below) from the reference
+  counters. If there are no reference counters but non-zero probabilities the method will normalize the sum of the
+  probabilities of all transitions leaving each state to 1. If there are only zero-probabilities the method will
+  generate an equal probability distribution of the transitions leaving each state.</p>
+
+  <h4>Jeffrey Smooothing of Transition Probabilities</h4>
+  <p>The Jeffrey smoothing increments all reference counters of transitions leaving a particular state by {@link rcfloor}
+  and assigns every "unseen" input symbol the reference counter {@link rcfloor}. An input symbol is "unseen" at a state
+  if there is no transition qualified with this symbol leaving that state. The probability of a transition
+  <i>e<sub>n</sub></i> leaving state <i>v</i> is calculated as follows:</p>
+  <table class="indent">
+    <tr>
+      <td rowspan="2" style="vertical-align:middle; border:none"><i>P</i>(<i>e<sub>n</sub></i>|<i>v</i>) = &nbsp;</td>
+      <td style="border:none; border-bottom:1px solid black; text-align:center;"><i>c<sub>n</sub></i> + {@link rcfloor}</td>
+    </tr>
+    <tr><td style="border:none; text-align:center;"><font size="+1">&sum;</font><i>c<sub>i</sub></i> +
+      {@link symbols}&middot;{@link rcfloor}</td></tr>
+  </table>
+  <p>where <i>c<sub>i</sub></i> stands for the reference counter of transition <i>v<sub>i</sub></i> leaving state
+  <i>v</i>.</p>
+  <p><b style="color:red">Note:</b> The Jeffrey smoothing is only applied if the field {@link rcfloor} is positive. It
+  only works correctly if the field {@link symbols} is properly set to the number of symbols in the acceptor input
+  alphabet and if the automaton is deterministic. The latter is tacitly assumed but will not be <i>checked</i>!</p>
+
+  <h4>MAP - Maximum a posteriori approximation</h4>
+  <p>If enabled by {@link /usemap} this approximation minimizes or maximizes the entropy of transition probabilities.
+  It is controlled by {@link mapexp}: 0 - setting MAP off, 1 - setting MAP to minimize the entropy, -1 - setting MAP to
+  maximize the entropy. The new probability of a transition <i>e<sub>n</sub></i> leaving state <i>v</i> is calculated as follows:</p>
+  <table class="indent">
+    <tr>
+      <td rowspan="2" style="vertical-align:middle; border:none"><i>P</i>(<i>e<sub>n</sub></i>|<i>v</i>) = &nbsp;</td>
+      <td style="border:none; border-bottom:1px solid black; text-align:center;">
+        <i>c<sub>n</sub></i> + {@link mapexp} <i>P</i>(<i>e<sub>n</sub></i>|<i>v</i>) ln <i>P</i>(<i>e<sub>n</sub></i>|<i>v</i>)
+      </td>
+    </tr>
+    <tr><td style="border:none; text-align:center;"><font size="+1">&sum;</font>
+      (<i>c<sub>i</sub></i> + {@link mapexp} <i>P</i>(<i>e<sub>i</sub></i>|<i>v</i>) ln <i>P</i>(<i>e<sub>i</sub></i>|<i>v</i>))
+    </td></tr>
+  </table>
+  <p>where <i>c<sub>i</sub></i> stands for the reference counter of transition <i>v<sub>i</sub></i> leaving state <i>v</i>.</p>
+  
+  @param nUnit The unit to process or -1 for all units. Please note that an eventual conversion of the weight type will
+               affect all units and that in this case the weights of <i>all</i> units will be destroyed and reset to 1.
+  @see -rcs
+  @see rcfloor
+  @see symbols
+  @see /usemap
+  @see mapexp
+END_MAN
+
+METHOD:  -rcs
+SYNTAX:  (int nUnit, double nSeed)
+COMMENT: Calculates reference counters from transition probabilities
+
+METHOD:  -potential
+SYNTAX:  (int nUnit)
+COMMENT: Computes the minimal distance from each state to the final state
+
+## Methods - Paths
+METHOD:  -fslist
+SYNTAX:  (int nUnit, data idDst)
+COMMENT: Lists final states
+
+METHOD:  -fsunify
+SYNTAX:  (int nUnit)
+COMMENT: Unifies final states
+
+METHOD:  -epsdist
+SYNTAX:  (fst itSrc, int nUnit)
+COMMENT: Computes the epsilon distance between any two states
+
+METHOD:  -rndwalk
+SYNTAX:  (fst itSrc, int nUnit, int nPaths, double nWInfluence)
+COMMENT: Extracts random paths from the source unit.
+/html MAN:
+  Walks randomly through the source unit and outputs the way.
+  It produces nPaths number of paths. nWInfluence represents
+  the influence of the weight component. If started with
+  {@link /different_os} / {@link /different_is} only paths with
+  different output / input symbols are generated.
+  <ul>
+  <li> nWInfluence = INF: use always the best transition
+  <li> nWInfluence = 1: use exactly transition probabilities of itSrc
+  <li> nWInfluence = 0: equal probabilty for every next transition
+  <li> nWInfluence = -1: use inverted transition probabilites
+  <li> nWInfluence = -INF: use always the worst transition
+  </ul>
+  @param itSrc Source finite state transducer
+  @param nUnit Unit number of source finite transition to use
+  @param nPaths Number of paths to extract
+  @param nWInfluence Influence of weight component
+  @see /different_os
+  @see /different_is
+END_MAN
+
+METHOD:  -excerpt
+SYNTAX:  (fst itSrc, int nUnit, data idStates, int nIcSates, data idIs, int nParam)
+COMMENT: Extracts partial automata containing specified states.
+
+## Methods - Dynamic programming
+METHOD:  -sdp
+SYNTAX:  (fst itSrc, int nUnit, data idWeights)
+COMMENT: Synchroneous dynamic programming
+/html MAN:
+  Determines the best path (greatest probability or smallest weight) using time (=search step) dependent transition
+  weights <em>and</em> the standard (time invariant) transition weights. The two weights are aggregated by the
+  multiplication operation of the source transducer's weight semiring (i.e. they are assumed to be "independent" of
+  each other).
+
+  <h4>Pruning (option {@link /prune})</h4>
+  <p>The dynamic programming algorithm determines the shortest (or most probable) path to <em>every</em> state at
+  <em>every</em> time (=search step). This guarantees finding the optimal path from start to end. Pruning means to
+  abort search paths with high weight (low probability). This implementation prunes all paths with</p>
+  <p class="indent">
+    <i>W</i><sub><i>t</i></sub> &gt; <i>W</i><sub><i>t</i>,max</sub> - {@link prn_const} &middot; 
+    (<i>W</i><sub><i>t</i>,max</sub>-<i>W</i><sub><i>t</i>,min</sub>)
+  </p>
+  <p>or</p>
+  <p class="indent">
+    <i>P</i><sub><i>t</i></sub> &lt; <i>P</i><sub><i>t</i>,max</sub> - {@link prn_const} &middot; 
+    (<i>P</i><sub><i>t</i>,max</sub>-<i>P</i><sub><i>t</i>,min</sub>)
+  </p>
+  <p>respectively. <i>W</i><sub><i>t</i></sub> denotes a particular path's weight at time (=search step) <i>t</i>,
+  <i>W</i><sub><i>t</i>,max</sub> and <i>W</i><sub><i>t</i>,min</sub> denote the maximal and minimal path weights
+  at this time.</p>
+  <p> Pruning may result in aborting <em>all</em> useful paths. To make this unlikely, the implementation</p>
+  <ul>
+    <li>keeps at least <code>FST_SDP_KEEPA</code> search paths <em>and</em> at least
+      <code>FST_SDP_KEEPR</code>&middot;<code>XS</code> paths (<code>XS</code>: number of states in source unit),
+      and</li>
+    <li>does not prune any paths at least <code>FST_SDP_DMZ</code> search steps after the start and
+      <code>FST_SDP_DMZ</code> search steps before the end of the search.</li>
+  </ul>
+  <p><i>Note:</i> According to Schukat-Talamazzini <i>P</i><sub><i>t</i></sub> &lt; {@link prn_const} &middot;
+  <i>P</i><sub><i>t</i>,max</sub> is the "generally accepted" pruning criterion. Check this out!</p> 
+
+  @param itSrc Source acceptor or transducer, must be weighted
+  @param nUnit Zero-based unit index in <code>itSrc</code>
+  @param idWeights Synchroneous weight array. Supplies a weight for each input symbol (components) and search step
+    (records). The search result is a chain with exactly <code>idWeights.nrec</code> non-epsilon input symbols. Heading
+    non-numeric components will be ignored, missing weights are assumed to be the multiplicative neutral element of
+    the source transducers weight semiring.
+  @cgen:option /epsremove Removes epsilon/epsilon transitions (input <em>and</em> output symbol is epsilon!) from
+    resulting chain.<br>Please note: epsilon transitions whose output symbol is <em>not</em> epsilon will not be
+    removed. To get rid of those, use {@link -epsremove}. Using the {@link /epsremove}-option speeds up a subsequent
+    call to {@link -epsremove}.
+  @cgen:option /prune Prune search paths with high weight.<br>Please note: Pruning paths is quicker but may result in
+    suboptimal search results.
+  @see -best_n
+  @see prn_const
+  @cgen:TODO: Replace epsilon layer traversal by epsilon distance transducer
+END_MAN
+
+## Methods - Token Passing
+METHOD: -stp
+SYNTAX: (fst itSrc, int nUnit, int nPaths, data idWeights)
+COMMENT: find best n paths via tokenpassing
+/html MAN:
+  Finds the n best paths in <code>itSrc</code> using token passing search.
+  @param       itSrc      Source acceptor or transducer, must be weighted
+    @param       nUnit      Zero-based unit index in <code>itSrc</code>
+    @param     nPath    Number of paths to be found
+  @param       idWeights  Synchroneous weight array. Supplies a weight for each
+                          input symbol (components) and search step (records).
+                          The search result is a chain with exactly
+                          <code>idWeights.nrec</code> non-epsilon input symbols.
+                          Heading non-numeric components will be ignored,
+                          missing weights are assumed to be the multiplicative
+                          neutral element of the source transducers weight
+                            semiring.
+  #@cgen:experimental THIS METHOD IS EXPERIMENTAL! DO NOT USE
+END_MAN
+
+## Methods - regular expressions
+METHOD:  -regex_compile
+SYNTAX:  (string sRgx)
+COMMENT: Generate a regular expression fst
+/html MAN:
+  <p>This function compiles a regular expression string (sRgx) into a FST (this).
+  For syntax is here a list of supported examples:</p>
+  <table class="indent">
+    <tr><th>Regex</th><th>String</th><th>Start</th><th>Length</th></tr>
+    <tr><td>&quot;a*b&quot;</td><td>&quot;aaaabx&quot;</td><td>0</td><td>5</td></tr>
+    <tr><td>&quot;a*b&quot;</td><td>&quot;bx&quot;</td><td>0</td><td>1</td></tr>
+    <tr><td>&quot;a+b&quot;</td><td>&quot;aaaabx&quot;</td><td>0</td><td>5</td></tr>
+    <tr><td>&quot;a?b&quot;</td><td>&quot;abx&quot;</td><td>0</td><td>2</td></tr>
+    <tr><td>&quot;a?b&quot;</td><td>&quot;bx&quot;</td><td>0</td><td>1</td></tr>
+    <tr><td>&quot;(ab)+c&quot;</td><td>&quot;ababcd&quot;</td><td>0</td><td>5</td></tr>
+    <tr><td>&quot;(ab)+c&quot;</td><td>&quot;xyzababc&quot;</td><td>3</td><td>5</td></tr>
+    <tr><td>&quot;a\\*c&quot;</td><td>&quot;za*c&quot;</td><td>1</td><td>3</td></tr>
+    <tr><td>&quot;f..k&quot;</td><td>&quot;zfolky&quot;</td><td>1</td><td>4</td></tr>
+    <tr><td>&quot;z.*b&quot;</td><td>&quot;xyzababc&quot;</td><td>2</td><td>5</td></tr>
+    <tr><td>&quot;a?b&quot;</td><td>&quot;aaab&quot;</td><td>2</td><td>2</td></tr>
+    <tr><td>&quot;a?a&quot;</td><td>&quot;aa&quot;</td><td>0</td><td>2</td></tr>
+    <tr><td>&quot;a?&quot;</td><td>&quot;a&quot;</td><td>0</td><td>1</td></tr>
+    <tr><td>&quot;.*b&quot;</td><td>&quot;bc&quot;</td><td>0</td><td>1</td></tr>
+    <tr><td>&quot;a*&quot;</td><td>&quot;zb&quot;</td><td>0</td><td>0</td></tr>
+    <tr><td>&quot;[abc]&quot;</td><td>&quot;zab&quot;</td><td>1</td><td>1</td></tr>
+    <tr><td>&quot;[^xyz]&quot;</td><td>&quot;zab&quot;</td><td>1</td><td>1</td></tr>
+    <tr><td>&quot;[0-9]&quot;</td><td>&quot;z8t&quot;</td><td>1</td><td>1</td></tr>
+    <tr><td>&quot;[0-9]+&quot;</td><td>&quot;abc337xyz&quot;</td><td>3</td><td>3</td></tr>
+    <tr><td>&quot;[^a-z]&quot;</td><td>&quot;123xyz&quot;</td><td>0</td><td>1</td></tr>
+    <tr><td>&quot;a\\d+b&quot;</td><td>&quot;za789b&quot;</td><td>1</td><td>5</td></tr>
+    <tr><td>&quot;c\\A*&quot;</td><td>&quot;abc12..&quot;</td><td>2</td><td>5</td></tr>
+    <tr><td>&quot;^ab&quot;</td><td>&quot;abc12..&quot;</td><td>0</td><td>2</td></tr>
+    <tr><td>&quot;^ab&quot;</td><td>&quot;axc12..&quot;</td><td>-1</td><td>-2</td></tr>
+    <tr><td>&quot;3a\$&quot;</td><td>&quot;abc123a&quot;</td><td>5</td><td>2</td></tr>
+    <tr><td>&quot;4a\$&quot;</td><td>&quot;axc123a&quot;</td><td>-1</td><td>-2</td></tr>
+  </table>
+  <p>Here is a list of supported magics:</p>
+  <table class="indent">
+    <tr><th>Symbol</th><th>Meaning</th><th>Description</th></tr>
+    <tr><td><code>\d</code></td><td><code>[0-9]</code></td><td>digit</td></tr>
+    <tr><td><code>\D</code></td><td><code>[^0-9]</code></td><td>non-digit</td></tr>
+    <tr><td><code>\x</code></td><td><code>[0-9A-Fa-f]</code></td><td>hex digit</td></tr>
+    <tr><td><code>\X</code></td><td><code>[^0-9A-Fa-f]</code></td><td></td></tr>
+    <tr><td><code>\o</code></td><td><code>[0-7]</code></td><td>octal digit</td></tr>
+    <tr><td><code>\O</code></td><td><code>[^0-7]</code></td><td></td></tr>
+    <tr><td><code>\w</code></td><td><code>[0-9A-Za-z_]</code></td><td>word character</td></tr>
+    <tr><td><code>\W</code></td><td><code>[^0-9A-Za-z_]</code></td><td></td></tr>
+    <tr><td><code>\h</code></td><td><code>[0-9A-Za-z]</code></td><td>head of word character</td></tr>
+    <tr><td><code>\H</code></td><td><code>[^0-9A-Za-z]</code></td><td></td></tr>
+    <tr><td><code>\a</code></td><td><code>[A-Za-z]</code></td><td>alphabetic character</td></tr>
+    <tr><td><code>\A</code></td><td><code>[^A-Za-z]</code></td><td></td></tr>
+    <tr><td><code>\l</code></td><td><code>[a-z]</code></td><td>lowercase character</td></tr>
+    <tr><td><code>\L</code></td><td><code>[^a-z]</code></td><td></td></tr>
+    <tr><td><code>\u</code></td><td><code>[A-Z]</code></td><td>uppercase character</td></tr>
+    <tr><td><code>\U</code></td><td><code>[^A-Z]</code></td><td></td></tr>
+  </table>
+END_MAN
+
+METHOD:  -regex_match
+SYNTAX:  (string sStr)
+COMMENT: Match a string against a regular expression fst
+/html MAN:
+  <p>This function matches a string (sStr) against a regular expression FST (this).
+  As result the number of first character and the length of the first match are put on the stack.
+  If no match was found the numbers <code>-1</code> and <code>-1</code> are put on the stack.
+  For example see the following script:</p>
+  <pre class="code">fst itF;
+var nS;
+var nL;
+&quot;z.*b&quot;     itF -regex_compile;
+&quot;xyzababc&quot; itF -regex_match nS = nL =;
+&quot;match: s=\$[nS] l=\$[nL]\n&quot; -echo;</pre>
+END_MAN
+
+## Methods - experimental and debugging
+
+METHOD:  -x1
+SYNTAX:  (fst itSrc, int nUnit)
+COMMENT: EXPERIMENTAL - DO NOT USE!
+
+METHOD:  -x2
+SYNTAX:  (int nUnit)
+COMMENT: EXPERIMENTAL - DO NOT USE!
+CODE:
+  CFst_MarkConnected(_this,nUnit);
+END_CODE
+
+METHOD:  -debug
+SYNTAX:  (double nParam, string sOp)
+COMMENT: Debugging method, opcode ? displays a list of options
+
+## dLabPro interface code
+HEADERCODE:
+
+#ifdef __cplusplus
+  #define FST_CTYPE class
+#else
+  #define FST_CTYPE struct
+#endif
+
+  FST_CTYPE CFst;
+  typedef struct tag_FST_TID_PT_TYPE
+  {
+    struct tag_FST_TID_PT_TYPE *lpFN,*lpBN;
+    BYTE *lpT;
+  } FST_TID_PT_TYPE;
+
+  typedef struct tag_FST_TID_TYPE
+  {
+    FST_CTYPE CFst* iFst;              /* Pointer to CFst instance to iterate                            */
+    INT64           nOfTIni;           /* Offset of initial state from transition pointer                */
+    INT64           nOfTTer;           /* Offset of terminal state from transition pointer               */
+    INT64           nOfTTis;           /* Offset of transducer input symbol from transition pointer      */
+    INT64           nOfTTos;           /* Offset of transducer output symbol from transition pointer     */
+    INT64           nOfTW;             /* Offset of transition weight from transition pointer            */
+    INT64           nOfTRc;            /* Offset of transition reference counter from transition pointer */
+    INT64           nOfTData;          /* Offset of custom transition data from transition pointer       */
+    INT32           nUnit;             /* Unit processed by iterator                                     */
+    FST_ITYPE       nFS;               /* First state of unit                                            */
+    FST_ITYPE       nXS;               /* Number of states of unit                                       */
+    FST_ITYPE       nFT;               /* First transition of unit                                       */
+    FST_ITYPE       nXT;               /* Number of transitions of unit                                  */
+    INT32           nRls;              /* Record length of state table                                   */
+    INT32           nRlt;              /* Record length of transition table                              */
+    BYTE*           lpFT;              /* Pointer to first transition of unit                            */
+    BYTE*           lpFTunsrtd;        /* Pointer to last sorted transition of unit                      */
+    INT32           nMode;             /* Operation mode, combination of the FSTI_XXX constants          */
+    INT32           nDepth;            /* Recursion depth                                                */
+    BOOL            bPathsClipped;     /* Paths were clipped for exceeding iFst->m_nMaxLen               */
+    FST_TID_PT_TYPE **lpPTFwd;
+    FST_TID_PT_TYPE **lpPTBwd;
+    FST_TID_PT_TYPE *lpPTMem;
+  } FST_TID_TYPE;
+
+  typedef struct tag_FST_SST_TYPE
+  {
+    CDlpTable*      iST;               /* Pointer to string (pointer) table                              */
+    INT32           nGrany;            /* Granularity of table (re)allocations                           */
+    FST_STYPE*      lpBuf;             /* Auxiliary buffer (e.g. for copying)                            */
+  } FST_SST_TYPE;
+
+  typedef struct tag_FST_SEQ_TYPE
+  {
+    BYTE*           lpItm;             /* Pointer to first item of sequence                              */
+    INT32           nOfs;              /* Offset between items in sequence                               */
+    INT32           nCnt;              /* Number of items in sequence                                    */
+  } FST_SEQ_TYPE;
+
+  typedef struct tag_FST_LB_TYPE
+  {
+    BYTE*           lpT;               /* Transition pointer                                             */
+    FST_WTYPE       nD;                /* Distance from start state                                      */
+  } FST_LB_TYPE;
+
+  typedef struct tag_FST_BT_TYPE
+  {
+    FST_TID_TYPE*   lpTI;              /* Pointer to automaton iterator data struct                      */
+    INT32           nGrany;            /* Allocation granularity                                         */
+    INT32           nLen;              /* Length of tree (no. of transitions)                            */
+    BYTE***         lpVec;             /* Transition vector buffer                                       */
+  } FST_BT_TYPE;
+
+  typedef struct tag_FST_WLR_TYPE FST_WLR_TYPE;
+
+  struct tag_FST_WLR_TYPE
+  {
+  FST_WTYPE         nWeight;           /* Accumulated weight up to this point                            */
+  FST_WLR_TYPE*     lpNext;            /* Pointer to next WordLinkRecord                                 */
+  INT32             t;                 /* Current timeindex                                              */
+  FST_STYPE         sTerminal;         /* Terminal Symbol                                                */
+  FST_ITYPE         nTState;           /* Unit relative index the terminal state of the transition, where the WLR was created*/
+  FST_ITYPE         nIState;           /* Unit relative index the initial state of the transition, where the WLR was created*/
+  INT32             nPointers;         /* Number of entities pointing to this WLR (needed for memory management)*/
+  };
+
+  typedef struct tag_FST_TOK_TYPE
+  {
+    FST_WTYPE       nWeight;           /* Accumulated weight up to this point                            */
+    FST_STYPE       sTerminal;         /* Terminal Symbol collected while passing                        */
+    BOOL            bChanged;          /* Needed while passing over epsilon transitions                  */
+    FST_WLR_TYPE*   lpWLR;             /* Pointer to word link record                                    */
+  } FST_TOK_TYPE;
+
+  typedef struct tag_FST_EXCR_TYPE     /* Data struct unsed in CFst_Excerpt                              */
+  {
+    FST_STYPE*      lpIs;              /* Input symbol sequence to match (may be NULL)                   */
+    INT32           nXIs;              /* Length of input symbol sequence                                */
+    BOOL            bBwd;              /* Backward mode                                                  */
+    INT32           nMaxLen;           /* Maximum number of transitions to walk                          */
+  } FST_EXCR_TYPE;
+
+  /* Automaton walking callback function (CFst_STI_Walk) */
+  typedef BOOL (FST_WALKFUNC_TYPE)(FST_TID_TYPE*,BYTE*,void*);
+
+  /* Inline functions */
+/*
+  static inline BYTE* CFst_STI_GetTransPtr(FST_TID_TYPE* lpTI, INT32 nTrans)
+  {
+    if (nTrans< lpTI->nFT          ) return NULL;
+    if (nTrans>=lpTI->nFT+lpTI->nXT) return NULL;
+    return lpTI->lpFT + nTrans*lpTI->nRlt;
+  }
+
+  static inline FST_ITYPE CFst_STI_GetTransId(FST_TID_TYPE* lpTI, BYTE* lpTrans)
+  {
+    if (lpTrans<lpTI->lpFT || lpTrans>lpTI->lpFT+lpTI->nRlt*(lpTI->nXT-1))
+      return -1;
+    return lpTI->nFT + (FST_ITYPE)((lpTrans-lpTI->lpFT)/lpTI->nRlt);
+  }
+
+  static inline FST_ITYPE* CFst_STI_TIni(FST_TID_TYPE* lpTI, BYTE* lpTrans)
+  {
+    return (FST_ITYPE*)(lpTrans+lpTI->nOfTIni);
+  }
+
+  static inline FST_ITYPE* CFst_STI_TTer(FST_TID_TYPE* lpTI, BYTE* lpTrans)
+  {
+    return (FST_ITYPE*)(lpTrans+lpTI->nOfTTer);
+  }
+
+  static inline FST_STYPE* CFst_STI_TTis(FST_TID_TYPE* lpTI, BYTE* lpTrans)
+  {
+    DLPASSERT(lpTI->nOfTTis>0);
+    return (FST_STYPE*)(lpTrans+lpTI->nOfTTis);
+  }
+
+  static inline FST_STYPE* CFst_STI_TTos(FST_TID_TYPE* lpTI, BYTE* lpTrans)
+  {
+    DLPASSERT(lpTI->nOfTTos>0);
+    return (FST_STYPE*)(lpTrans+lpTI->nOfTTos);
+  }
+
+  static inline FST_ITYPE* CFst_STI_TRc(FST_TID_TYPE* lpTI, BYTE* lpTrans)
+  {
+    DLPASSERT(lpTI->nOfTRc>0);
+    return (FST_ITYPE*)(lpTrans+lpTI->nOfTRc);
+  }
+
+  FST_WTYPE* CGEN_EXPORT CFst_STI_TW(FST_TID_TYPE* lpTI, BYTE* lpTrans)
+  {
+    DLPASSERT(lpTI->nOfTW>0);
+    return (FST_WTYPE*)(lpTrans+lpTI->nOfTW);
+  }
+*/
+END_CODE
+
+RESETCODE:
+
+#ifndef __NORTTI
+  RESET;
+
+  IFIELD_RESET(CData,"ud");
+  IFIELD_RESET(CData,"sd");
+  IFIELD_RESET(CData,"td");
+  IFIELD_RESET(CData,"is");
+  IFIELD_RESET(CData,"os");
+#else
+  CDlpTable_Reset(AS(CData,_this->ud)->m_lpTable);
+  CDlpTable_Reset(AS(CData,_this->td)->m_lpTable);
+  CDlpTable_Reset(AS(CData,_this->sd)->m_lpTable);
+  CDlpTable_Reset(AS(CData,_this->is)->m_lpTable);
+  CDlpTable_Reset(AS(CData,_this->os)->m_lpTable);
+#endif
+
+  CData_AddComp(AS(CData,_this->ud),"~NAM",32                 );
+  CData_AddComp(AS(CData,_this->ud),"~XS" ,DLP_TYPE(FST_ITYPE));
+  CData_AddComp(AS(CData,_this->ud),"~XT" ,DLP_TYPE(FST_ITYPE));
+  CData_AddComp(AS(CData,_this->ud),"~FS" ,DLP_TYPE(FST_ITYPE));
+  CData_AddComp(AS(CData,_this->ud),"~FT" ,DLP_TYPE(FST_ITYPE));
+  CData_AddComp(AS(CData,_this->sd),"~FLG",T_BYTE             );
+  CData_AddComp(AS(CData,_this->td),"~TER",DLP_TYPE(FST_ITYPE));
+  CData_AddComp(AS(CData,_this->td),"~INI",DLP_TYPE(FST_ITYPE));
+
+  if (_this->m_idDetRt) CData_Reset(_this->m_idDetRt,TRUE);
+  if (_this->m_lpDetSt) { CFst_Ssr_Done(_this->m_lpDetSt); _this->m_lpDetSt=CFst_Ssr_Init(_this->m_nGrany); }
+
+END_CODE
+
+RESTORECODE:
+  RESTORE;
+  CFst_Typerepair(_this);
+END_CODE
+
+DONECODE:
+
+  if (_this->m_idDetRt) { IDESTROY(_this->m_idDetRt); _this->m_idDetRt=NULL; }
+  if (_this->m_lpDetSt) { CFst_Ssr_Done(_this->m_lpDetSt); _this->m_lpDetSt=NULL; }
+
+  DONE;
+
+END_CODE
+
+## Load manual, generate and quit
+"fst_man.def" include
+"fst_rn.def"  include
+-cgen
+quit
+
+## EOF

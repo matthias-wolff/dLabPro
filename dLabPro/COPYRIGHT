@@ -1,0 +1,45 @@
+dLabPro - A Signal Processing and Pattern Recognition Toolbox
+
+Copyright 2013-2015
+Chair of System Theory and Speech Technology, TU Dresden, Germany, and
+Chair of Communications Engineering, BTU Cottbus, Germany
+
+dLabPro is free software: you can redistribute it and/or modify it under the
+terms of the GNU Lesser General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+dLabPro is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with dLabPro. If not, see <http://www.gnu.org/licenses/>.
+
+dLabPro contains the following third-party software:
+kazlib by Kaz Kylheku
+libsbdfile by Erik de Castro Lopo
+libsvm by Chih-Chung Chang and Chih-Jen Lin
+zlib by Jean-loup Gailly and Mark Adler
+xpat by Thai Open Source Software Center Ltd
+
+dLabPro contributors:
+Christian-Michael Westendorf
+Frank Duckhorn
+Guntram Strecha
+Hussein Hussein
+Matthias Eichner
+Matthias Wolff
+Maximiliano Cuevas
+Mike Lorenz
+Rainer Schaffer
+Rico Petrick
+Robert Schubert
+Roland Dörschel
+Sören Wittenberg
+Steffen Kürbis
+Steffen Werner
+Stephan Hübler
+Thomas Hutschenreuther
+Torsten Rudolph

@@ -1,0 +1,478 @@
+## dLabPro class CMatrix (matrix)
+## - Definition file
+##
+## AUTHOR : Christian-M. Westendorf, Matthias Wolff
+## PACKAGE: dLabPro/classes
+## 
+## Copyright 2013 dLabPro contributors and others (see COPYRIGHT file) 
+## - Chair of System Theory and Speech Technology, TU Dresden
+## - Chair of Communications Engineering, BTU Cottbus
+## 
+## This file is part of dLabPro.
+## 
+## dLabPro is free software: you can redistribute it and/or modify it under the
+## terms of the GNU Lesser General Public License as published by the Free
+## Software Foundation, either version 3 of the License, or (at your option)
+## any later version.
+## 
+## dLabPro is distributed in the hope that it will be useful, but WITHOUT ANY
+## WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+## FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+## details.
+## 
+## You should have received a copy of the GNU Lesser General Public License
+## along with dLabPro. If not, see <http://www.gnu.org/licenses/>.
+
+PLATFORM: GNUC++
+COMPILER: gcc
+AR:       ar
+CFLAGS:   -Wno-trigraphs
+
+PROJECT: matrix
+AUTHOR:  Christian-M. Westendorf, Matthias Wolff
+COMMENT: Matrix operations
+VERSION: 1.1.0
+
+CLASS:   matrix
+FLAGS:   /singleton /noautoactivate
+/cProject
+/html MAN:
+  <p>This class supplies matrix operations on <a href="data.html"
+  class="code">data</code></a> instances. Most of the matrix
+  operations are encapsulated in the {@link -op} method. These operations
+  may also be accessed directly through the <a
+  href="function.html">interpreter</a>. For example, the following
+  commands are equivalent:</p>
+  <pre class="code">
+
+  <span class="c-cmt"># Simple matrix multiplication</span>
+  A B Z "*" matrix {@link -op};
+  
+  <span class="c-cmt"># -- or (RPN) --</span>
+  A B * Z =;
+  
+  <span class="c-cmt"># -- or (Formula) --</span>
+  :Z=A*B;
+
+
+  <span class="c-cmt"># Evaluation of a formula</span>
+  A B Z "*" matrix {@link -op};
+  A NULL A "inv" matrix {@link -op};
+  Z A Z "*" matrix {@link -op};
+  0.0001 Z Z ".<" matrix {@link -op};
+  
+  <span class="c-cmt"># -- or (RPN) --</span>
+  0.0001 A B * A inv * .< Z =;
+  
+  <span class="c-cmt"># -- or (Formula) --</span>
+  :Z=0.0001.<(A*B*inv(A));
+  </pre>
+
+  <p>A list of matrix operations which have interpreter equivalents can be
+  found in the <a href="../quickref/index.html">quick reference section</a>
+  under <a href="../quickref/operators.html">"Table of Operators"</a>.</p>
+
+  <p>The matrix class also supplies methods which have no interpreter
+  equivalent (e.g. {@link -eigen}, {@link -submat}) or which support extented
+  functionality (e.g. {@link -invert} vs. <code>"inv" </code>{@link -op}).</p>
+
+  <h4>Matrices and <a href="data.html"><code class="link">data</code></a>
+  instances</h4>
+  <p>All operations process a single matrix or a set of matrices, each
+  stored in a block of a <a href="data.html" class="code">data</code></a>
+  instance. Data instances are interpreted as matrices as follows:</p>
+  <table class="indent" cellpadding="3">
+    <tr>
+      <th><a href="data.html"><code class="link">data</code></a> term</th>
+      <th>Matrix term</th>
+      <th>Remark</th>
+    </tr>
+    <tr>
+      <td>(numeric) component</td>
+      <td>row</td>
+      <td><i>n</i> = number of numeric components</td>
+    </tr>
+    <tr>
+      <td>record</td>
+      <td>column</td>
+      <td><i>m</i> = number of records per block</td>
+    </tr>
+    <tr>
+      <td>block</td>
+      <td>matrix</td>
+      <td>one block = one <i>n</i> x <i>m</i> matrix</td>
+    </tr>
+  </table>
+  <p>Symbolic components in <a href="data.html" class="code">data</code></a> instances
+  are ignored by matrix methods. However, they will preserved whenever possible. This
+  may require a somewhat special behaviour as for instance for the matrix product (see
+  method {@link -op}.</p>
+
+  <h4>Remarks</h4>
+  <ul>
+    <li>Class <code>matrix</code> does not contain aggregation operations.
+    These are supplied by method <a href="data.html"
+    class="code">data</code></a> <a href="data.html#mth_-aggregate"
+    class="code">-aggregate</code></a>.</li>
+    <li>The class has undergone a major recfactoring. Many of its methods have
+    been deprecated and are only supported for backward compatibility. Please
+    make sure you do not use deprecated methods.</li>
+  </ul>
+
+  @cgen:TODO: <span class="warning">Bug:</span> fix formula operator precedence in function class
+  @cgen:TODO: Compute eigenvalues/-vectors of asymmetric matrices
+END_MAN
+
+## C/C++ files
+INCLUDE: "dlp_data.h"
+INCLUDE: "dlp_math.h"
+FILE:    mat_iam.c                                                              # Interactive methods
+FILE:    mat_work.c                                                             # Worker methods
+
+## Options
+OPTION:  /inv
+COMMENT: Inverse operation
+/html MAN:
+  <h4>{@link /inv} {@link -eigen}</h4>
+  <p>Compute the inverse transform</p>
+END_MAN
+
+OPTION:  /norm
+COMMENT: Normalize
+/html MAN:
+  <h4>{@link /norm} {@link -eigen}</h4>
+  <p>Normalize eigenvectors squareroot of their eigenvalues (default is no
+  normalization).</p>
+END_MAN
+
+## Methods
+METHOD:  -op
+COMMENT: Matrix operation
+SYNTAX:  "<par1> <par2> <data idDst> <string sOpname> <matrix this>"
+/html MAN:
+  <p>Wrapper method for all numeric matrix/matrix and matrix/scalar
+  operations.</p>
+
+  <h4>Remarks</h4>
+  <ul>
+    <li>One of <code>par1</code> (<code>lpPar1</code>) and <code>par2</code>
+      (<code>lpPar2</code>) may be a scalar</li>
+    <li>If both operands are data instances, the matrix operation is carried
+      out for each pair of equally indexed blocks. If the operands have
+      differnent numbers of blocks, the number of blocks in the result instance
+      is the greater of the two block numbers. A missing block is replaced by
+      the identity matrix.</li>
+    <li>If both operands are data instances and one of them has only one block,
+      the matrix operation is carried out for this block against <em>all</em>
+      blocks of the other operand. The number of blocks in the result will be
+      equal to the number of blocks in the other operand</li>
+    <li>Data instances with one numeric component and one record per block
+      will be treated like scalars or, if they contain more than one block, as
+      a set of scalars.</li>
+    <li><code>nOpcode</code> may be a scalar operation. In this case the
+      operation is carried out elementwise replacing missing values by 0.</li>
+  </ul>
+
+  <h4>Structure of result and handling symbolic information</h4>
+  <p>The method will try to preserve the component structure including symbolic
+  components when possible. It applies the first matching of the following
+  rules:</p>
+  <table>
+    <tr>
+      <th>No.</th>
+      <th>Condition</th>
+      <th>Component structure of destination</th>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>Matrix multiplication (<code>nOpcode=OP_MULT</code>),<br>
+        <code>par1</code> and <code>par2</code> are 
+        <a href="data.html"><code class="link">data</code></a> instances</td>
+      <td><ul style="margin-bottom:0px; margin-left:16px;">
+        <li>Copy numeric component structure from <code>par1</code></li>
+        <li>Copy symbolic component structure and symbolic data from
+          <code>par2</code></li>
+        </ul></td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td><code>par1</code> is a <a href="data.html"><code
+        class="link">data</code></a> instance <em>and</em><br>
+        result dimensions match structure of <code>par1</code></td>
+      <td>Copy component structure of <code>par1</code></td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td><code>par2</code> is a <a href="data.html"><code
+        class="link">data</code></a> instance <em>and</em><br>
+        result dimensions match structure of <code>par2</code></td>
+      <td>Copy component structure of <code>par2</code></td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>None of the above</td>
+      <td><ul style="margin-bottom:0px; margin-left:16px;">
+        <li>Create components of type double as required by result dimensions</li>
+        <li>If <code>par1</code> is a <a href="data.html"><code class="link"
+          >data</code></a> instance, copy symbolic data from <code>par1</code></li>
+        <li>Else if <code>par2</code> is a <a href="data.html"><code class="link"
+          >data</code></a> instance, copy symbolic data from <code>par2</code></li>
+        <li>Else discard labels</li>
+        </ul></td>
+    </tr>
+  </table>
+
+  @param par1/lpPar1 Parameter 1 (<a href="data.html"><code
+                     class="link">data</code></a>, double number or
+                     <code>NULL</code>)
+  @param par2/lpPar1 Parameter 2 (<a href="data.html"><code
+                     class="link">data</code></a>, double number or
+                     <code>NULL</code>)
+  @param idDst       Result instance (may be identical with <code>par1</code>
+                     or <code>par2</code>
+  @param sOpname     <b>dLabPro-Version only!</b> Operator name (use <a
+                     href="function.html#mth_-list"><code
+                     class="link">-list</code></a> <code>matrops</code> and <a
+                     href="function.html#mth_-list"><code
+                     class="link">-list</code></a> <code>scalops</code> to get
+                     lists of valid operation names)
+  @param nOpcode     <b>C-Version only!</b> Operation code (<a
+                     href="dlpmath.html"><code class="link"
+                     >dlpm_matrop_code</code></a><code>(sOpname)</code> or <a
+                     href="dlpbase.html"><code class="link"
+                     >dlp_scalop_code</code></a><code>(sOpname)</code>)
+  @param nType1      <b>C-Version only!</b> Type code (<code>T_INSTANCE</code>
+                     or <code>T_DOUBLE</code>) specifying pointer type of
+                     <code>lpPar1</code>
+  @param nType2      <b>C-Version only!</b> Type code (<code>T_INSTANCE</code>
+                     or <code>T_DOUBLE</code>) specifying pointer type of
+                     <code>lpPar2</code>
+END_MAN
+/primary CODE:
+  GET_THIS_VIRTUAL_RV(CMatrix,NOT_EXEC);
+  MIC_CHECK;
+  return CMatrix_OnOp_Impl(_this);
+END_CODE
+
+METHOD:  -invert
+CNAME:   InvertIam
+COMMENT: Inverts square matrices and computes ranks or determinants.
+SYNTAX:  (data A, data Z, data Y)
+CODE:
+  return CMatrix_Invert(A,Z,Y);
+END_CODE;
+/html MAN:
+  <p>Computes the inverse <b>Z</b> = <b>A</b><sup>-1</sup> of matrices
+  <b>A</b> such that</p>
+  <p class="indent"><b>A</b>&middot<b>A</b><sup>-1</sup> = <b>E</b>,</p>
+  <p>where <b>E</b> stands for the unit matrix.</p>
+  <p>The inverse matrices <b>A</b><sup>-1</sup> will be stored in
+  <code>Z</code>.</p>
+  <p>The inverse is computed by the Gaussian elimination algorithm. The
+  second result instance <code>Y</code> is filled with the determinants
+  of the matrices in <code>A</code>. The second result contains exactly
+  one component of type double and <code>A</code>.
+  <a href="data.html#fld_nblock"><code class="link">nblock</code></a>
+  records and blocks.</p>
+
+  <h4>Conditions</h4>
+  <ul>
+    <li><b>A</b> have to be square.</li>
+    <li><b>A</b> have to be regular: det(<b>A</b>) &ne; 0.</li>
+  </ul>
+
+  @param A Source matrix/matrices
+  @param Z Destination data instance
+  @param Y  Second result (may be <code>NULL</code>); otherwise filled 
+            with the determinants of the matrices contained in <code>A</code>.
+END_MAN
+
+METHOD:  -eigen
+CNAME:   EigenIam
+COMMENT: Eigenvector transform of square matrices.
+SYNTAX:  (data A, data V, data L)
+CODE:
+  return CMatrix_Eigen(A,V,L,_this->m_bInv,_this->m_bNorm);
+END_CODE
+/html MAN:
+  <p>Computes eigenvectors and eigenvalues of square matrices or restores the
+  original matrices from the eigenvectors and eigenvalues.</p>
+
+  <h4>[{@link /norm}] {@link -eigen}</h4>
+  <p>Determines the eigenvector matrix <b><i>V</i></b> = (<i><b>v</b><sub>i</sub></i>)
+  and the eigenvalue matrix <b><i>&Lambda;</i></b> =
+  diag(<i>&lambda;<sub>i</sub></i>) of square matrices <b><i>A</i></b> such
+  that</p>
+  <p class="indent">(<b><i>A</i></b> -
+  <i>&lambda;<sub>i</sub></i><b><i>I</i></b>)&middot;<i><b>v</b><sub>i</sub></i> =
+  <i><b>0</b></i>,</p>
+  <p>where <b><i>I</i></b> stands for the identity matrix and <i><b>0</b></i> for
+  the zero-vector.</p>
+  <p>The eigenvectors <i><b>v</b><sub>i</sub></i> will be stored as columns (records)
+  into <code>V</code> and the eigenvalues <i>&lambda;<sub>i</sub></i> will be
+  stored as diagonal matrices into <code>L</code>. Eigenvectors and eigenvalues
+  will be stored in the same order (sorted by descending
+  <i>&lambda;<sub>i</sub></i>).</p>
+
+  <h4>Conditions</h4>
+  <ul>
+    <li><b><i>A</i></b> have to be square</li>
+    <li><b><i>A</i></b> have to be symmetric:
+      <i>a<sub>ij</sub></i> = <i>a<sub>ji</sub></i></li>
+    <li>There must be one non-negative value in <b><i>A</i></b></li>
+  </ul>
+
+  <h4>Properties</h4>
+  <ul>
+    <li><b><i>V</i></b>&middot;<b><i>A</i></b>&middot;<b><i>V</i></b><sup>-1</sup>
+     = <b><i>L</i></b></li>
+  </ul>
+
+  <h4>Application to Feature Transformation</h4>
+  <table cellpadding="3" class="indent" style="margin-top:12pt;">
+    <tr>
+      <td class="hidden">PCA</td>
+      <td class="hidden"><b><i>y</i></b> = <b><i>V</i></b>&prime; &middot; <b><i>x</i></b></td>
+    </tr>
+    <tr>
+      <td class="hidden">Whitening (Eigenspace)</td>
+      <td class="hidden"><b><i>y</i></b> = <b><i>&Lambda;</i></b><sup>-&frac12;</sup> &middot;
+                                           <b><i>V</i></b>&prime; &middot; <b><i>x</i></b></td>
+    </tr>
+    <tr>
+      <td class="hidden">Whitening (original space)</td>
+      <td class="hidden"><b><i>y</i></b> = <b><i>V</i></b> &middot;
+                                           <b><i>&Lambda;</i></b><sup>-&frac12;</sup> &middot;
+                                           <b><i>V</i></b>&prime; &middot; <b><i>x</i></b></td>
+    </tr>
+  </table>
+  <p class="indent"><b><i>x</i></b> stands for a feature vector and <b><i>y</i></b> stands
+  for the transformed feature vector.</p>
+
+  <h4>[{@link /norm}] {@link /inv} {@link -eigen}</h4>
+  <p>Determines matrices <b><i>A</i></b> such that the eigenvector analysis of
+  <b><i>A</i></b> yields to the diagonal matrices of eigenvalues <code>L</code> and
+  the eigenvector matrices <code>V</code>. This is the inverse operation
+  according to the eigenvector calculation as performed by {@link -eigen},  but
+  the result is not nessecary unique.</p>
+
+  @param A Original matrices
+  @param V Eigenvector matrices, may be identical with <code>A</code>. May be
+           <code>NULL</code> if option {@link /inv} is <em>not</em> set.
+  @param L Diagonal matrices of eigenvalues, must <em>not</em> be identical with
+           <code>V</code> but may be identical with <code>A</code>. May be
+           <code>NULL</code> if option {@link /inv} is <em>not</em> set.
+  @cgen:option /inv  Inverse transform
+  @cgen:option /norm Normalize eigenvectors squareroot of their eigenvalues
+               (default is no normalization). The result is <code>V</code> =
+               <i><b>V</b></i>&middot;<i><b>&Lambda;</b></i><sup>-&frac12;</sup>
+               (default is <code>V</code> = <i><b>V</b></i>)
+END_MAN
+
+METHOD:  -submat
+CNAME:   SubmatIam
+SYNTAX:  (data A, int i, int k, int n, int m, data Z)
+COMMENT: Get submatrices
+CODE:
+  return CMatrix_Submat(A,i,k,n,m,Z);
+END_CODE
+/html MAN:
+  <p>Selects <code>n</code> x <code>m</code> submatrices from <code>A</code>
+  and stores the result in <code>Z</code>.</p>
+
+  <h4>Remarks</h4>
+  <ul>
+    <li>If <code>idSrc</code> contains symbolic components they all will be
+    copied to the submatrices. However, they will be moved to the end of the
+    data records (columns).</li>
+    <li>If a selected row (<code>i</code> ... <code>i</code>+<code>n</code>)
+    is a symbolic data component it will be skipped. The result matrix will
+    contain one or several rows less than <code>n</code>.</li>
+  </ul>
+  @param A Source matrices
+  @param i Zero-based index of first row to select
+  @param k Zero-based index of first column to select
+  @param n Number of rows to select
+  @param m Number of columns to select
+  @param Z Destination matrices
+END_MAN
+
+METHOD:  -fact_ldl
+SYNTAX:  (data A,data L,data D)
+COMMENT: Factorisize matrix A to lower triangular matrix L and diagonal matrix D (A=LDL^T)
+CODE:
+  return CMatrix_FactLDL(A,L,D);
+END_CODE
+
+METHOD:  -expand
+SYNTAX:  (data idSrc, int nIcR, int nIcC, int nIcV, int nRecs, int nComps, string sOp, data idDst)
+COMMENT: Expands a list representation of a sparse matrix
+/html MAN:
+  <h4>Example</h4>
+  <p>The script</p>
+  <pre class="code">
+
+  <a href="data.html" class="c-key">data</a> x;
+  <a href="data.html" class="c-key">data</a> y;
+
+  { { 1 2 1 }
+    { 2 1 2 }
+    { 1 2 2 }
+    { 3 3 4 } } x =;
+
+  x 0 1 2 5 5 "add" y matrix -expand;
+  y <a href="data.html#mth_-print" class="c-key">-print</a>;
+  </pre>
+  <p>produces the following result:</p>
+  <pre class="code">
+
+   data y
+  ---------------------------
+       0 1 2 3 4 
+       . . . . . 
+   0 : 0 0 0 0 0 
+   1 : 0 0 2 0 0 
+   2 : 0 3 0 0 0 
+   3 : 0 0 0 4 0 
+   4 : 0 0 0 0 0 
+   5 : 0 0 0 0 0 
+  ---------------------------
+  </pre>
+  <p>Note the double reference to cell [2,1]. The expanded matrix contains the
+  sum of the respective values.</p>
+  @param idSrc  list representation of a sparse matrix
+  @param nIcR   component in <code>idSrc</code> containing the record indices
+  @param nIcC   component in <code>idSrc</code> containing the component indices
+  @param nIcV   component in <code>idSrc</code> containing the value, if -1 a
+                value of 1 will be assumed
+  @param nRecs  number of records in destination instance
+  @param nComps number of components in destination instance
+  @param sOp    A scalar operation identifier (see <a href="dlpbase.html#scalops">
+                list of scalar operators</a>). This operation is used to aggregate
+                the values of multiply referenced cells. If <code>NULL</code>,
+                only the value of last reference to any cell is used.
+  @param idDst  the destination instance to be filled with the expanded matrix
+END_MAN
+
+INITCODE:
+
+  INIT;
+  
+  /* Register operators */
+  INT16 i = 0;
+  while(dlp_scalop_entry(i)->opc >= 0) {
+    REGISTER_OPERATOR(dlp_scalop_entry(i)->sym,&CMatrix_Op,dlp_scalop_entry(i)->opc,dlp_scalop_entry(i)->res,dlp_scalop_entry(i)->ops,dlp_scalop_entry(i)->sig,dlp_scalop_entry(i)->nam);
+    i++;
+  }
+  i = 0;
+  while(dlm_matrop_entry(i)->opc >= 0) {
+    REGISTER_OPERATOR(dlm_matrop_entry(i)->sym,&CMatrix_Op,dlm_matrop_entry(i)->opc,dlm_matrop_entry(i)->res,dlm_matrop_entry(i)->ops,dlm_matrop_entry(i)->sig,dlm_matrop_entry(i)->nam);
+    i++;
+  }
+  
+END_CODE
+
+-cgen
+quit
+
+## EOF

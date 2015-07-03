@@ -1,0 +1,1273 @@
+## dLabPro class CStatistics (statistics)
+## - Definition file
+##
+## AUTHOR : Matthias Wolff, Christian-M. Westendorf
+## PACKAGE: dLabPro/classes
+## 
+## Copyright 2013 dLabPro contributors and others (see COPYRIGHT file) 
+## - Chair of System Theory and Speech Technology, TU Dresden
+## - Chair of Communications Engineering, BTU Cottbus
+## 
+## This file is part of dLabPro.
+## 
+## dLabPro is free software: you can redistribute it and/or modify it under the
+## terms of the GNU Lesser General Public License as published by the Free
+## Software Foundation, either version 3 of the License, or (at your option)
+## any later version.
+## 
+## dLabPro is distributed in the hope that it will be useful, but WITHOUT ANY
+## WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+## FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+## details.
+## 
+## You should have received a copy of the GNU Lesser General Public License
+## along with dLabPro. If not, see <http://www.gnu.org/licenses/>.
+
+PLATFORM: GNUC++
+COMPILER: gcc
+AR:       ar
+CFLAGS:   -Wno-trigraphs
+
+PROJECT: statistics
+AUTHOR:  Matthias Wolff, Christian-M. Westendorf
+COMMENT: Multivariate multiclass statistics
+VERSION: 1.0.0
+/html MAN:
+  <p>Instances of class <code>statistics</code> contain, collect and process multivariate multiclass statistics
+  data.</p>
+  <p>The typical workflow of the statistics class is as follows</p>
+  <table cellpadding="3">
+    <tr>
+      <td class="hidden"> </td>
+      <td>1 - Initialize statistics ({@link -setup})</td>
+      <td class="hidden"> </td>
+    </tr>
+    <tr>
+      <td class="hidden"> </td>
+      <td>2 - Gather raw statistics data ({@link -update})</td>
+      <td class="hidden">&nbsp;&rarr; 2.a - Save statistics to a file (<a href="function.html#mth_-save"
+      class="code">-save</a>)</td>
+    </tr>
+    <tr>
+      <td class="hidden">3.a - Read statistics from file (<a href="function.html#mth_-restore"
+      class="code">-restore</a>) &rarr;&nbsp;</td>
+      <td>3 - Estimate statistic parameters (see <a href="#mth">method list</a>)</td>
+      <td class="hidden"> </td>
+    </tr>
+  </table>
+
+  <h4>Raw Statistics Data</h4>
+  <p>The statistics stores the following data (see field {@link dat}):</p>
+  <table cellpadding="3">
+    <tr>
+      <th>Description</th>
+      <th>Collection function (see {@link -update})</th>
+    </tr>
+    <tr>
+      <td>Sample size<br>(number of training vectors)</td>
+      <td style="vertical-align:middle"><img src="../resources/statistics/0001.gif" width="8" height="11" border="0"
+        align="absmiddle" alt="I"> </td>
+    </tr>
+    <tr>
+      <td style="vertical-align:middle">Minimum vector</td>
+      <td><img src="../resources/statistics/0002.gif" width="148" height="29" border="0" align="absmiddle"
+        alt="\mathrm{min}^{(n)} = \argmin\limits_{0\leq i<I}x_i^{(n)}"> </td>
+    </tr>
+    <tr>
+      <td style="vertical-align:middle">Maximum vector</td>
+      <td><img src="../resources/statistics/0003.gif" width="151" height="29" border="0" align="absmiddle"
+        alt="\mathrm{max}^{(n)} = \argmax\limits_{0\leq i<I}x_i^{(n)}"> </td>
+    </tr>
+    <tr>
+      <td style="vertical-align:middle">Sum vector</td>
+      <td><img src="../resources/statistics/0004.gif" width="122" height="43" border="0" align="absmiddle"
+        alt="\mathrm{sum}_1^{(n)} = \sum\limits_{i=0}^{I-1}x_i^{(n)}"> </td>
+    </tr>
+    <tr>
+      <td style="vertical-align:middle">Mixed sum matrix</td>
+      <td><img src="../resources/statistics/0005.gif" width="151" height="42" border="0" align="absmiddle"
+        alt="\mathrm{sum}_2^{(nm)} = \sum\limits_{i=0}^{I-1}x_i^{(n)}x_i^{(m)}"> </td>
+    </tr>
+    <tr>
+      <td style="vertical-align:middle"><i>k</i>-th order sum vector(s)</td>
+      <td><img src="../resources/statistics/0006.gif" width="147" height="42" border="0" align="absmiddle"
+        alt="\mathrm{sum}_k^{(n)} = \sum\limits_{i=0}^{I-1}\left(x_i^{(n)}\right)^k"> </td>
+    </tr>
+  </table>
+  <p>All vectors have <i>N</i> components indexed &middot;<sup>(<i>n</i>)</sup> where <i>N</i> denotes the
+  dimensionality of the statistics. The mixed sum
+  matrices have <i>N</i> x <i>N</i> elements. The data shown in the table above describe one out of <i>C</i>
+  <em>classes</em> of statistics data. A class may be thought of as distinct statistics for one label in a labelled
+  data set. We index the class with <i>c</i> and define 0 &le; <i>c</i> &lt; <i>C</i>.</p>
+  <p>See description of field {@link dat} for details on the structure of the raw statistics data in memory.</p>
+
+  <h4>Statistic Parameter Estimation</h4>
+  <p>From the raw statistic data described above a variety of statistic parameters can be estimated, among others:</p>
+  <ul>
+    <li><b>Sample properties</b><br>
+      class <a href="#mth_-freq">frequency</a> and <a href="#mth_-prob">a-priori probability</a><br>&nbsp;</li>
+    <li><b>General</b><br>
+      <a href="#mth_-min">minimum</a>, <a href="#mth_-min">maximum</a>, <a href="#mth_-span">span width</a>
+      <br>&nbsp;</li>
+    <li><b>Moments and Variance</b><br>
+      <a href="#mth_-mean">arithmetic mean</a>, <a href="#mth_-sdev">standard deviation</a>,
+      <a href="#mth_-var">variance</a>, <a href="#mth_-kmoment">k-th (central) moment</a><br>&nbsp;</li>
+    <li><b>Corrlation and Covariance</b><br>
+      <a href="#mth_-scat">scatter</a>, <a href="#mth_-corc">correlation coefficent</a>,
+      <a href="#mth_-cov">covariance</a> matrices<br>&nbsp;</li>
+    <li><b>Higher Order Parameters</b><br>
+      <a href="#mth_-skew">skewness</a>, <a href="#mth_-excs">excess (kurtosis)</a></li>
+  </ul>
+  <p>See the <a href="#mth">methods section</a> for the complete list of statistics functions.</p>
+
+  <h4>Mathematic Symbol Table</h4>
+  <p class="indent"><table>
+    <tr>
+      <th>Symbol</th>
+      <th>Description</th>
+      <th>Defined by / Remarks</th>
+    </tr>
+    <tr>
+      <td><i>C</i></td>
+      <td>Number of statistics classes</td>
+      <td>Number of blocks in the statistics data (field {@link dat})<br>
+          - If present, the symbolic label table (field {@link ltb}) must contain exactly <i>C</i> records</td>
+    </tr>
+    <tr>
+      <td><i>K</i></td>
+      <td>(Maximal) order of statistics</td>
+      <td>Number of records per blocks in the statistics data (field {@link dat}) minus <i>N</i> minus 2</td>
+    </tr>
+    <tr>
+      <td><i>N</i></td>
+      <td>Dimensionality</td>
+      <td>Number of components in the statistics data(field {@link dat})</td>
+    </tr>
+    <tr>
+      <td><b>E</b>(<i>X</i>)</td>
+      <td>Expectation of random variable <i>X</i></td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Var(<i>X</i>)</td>
+      <td>Variance of random variables <i>X</i> and <i>Y</i></td>
+      <td>see {@link -var}</td>
+    </tr>
+    <tr>
+      <td>Cov(<i>X</i>,<i>Y</i>)</td>
+      <td>Covariance of random variables <i>X</i> and <i>Y</i></td>
+      <td>see {@link -cov}</td>
+    </tr>
+    <tr>
+      <td>Cor(<i>X</i>,<i>Y</i>)</td>
+      <td>Correlation coefficients of random variables <i>X</i> and <i>Y</i></td>
+      <td>see {@link -corc}</td>
+    </tr>
+    <tr>
+      <td><i>m<sub>k</sub></i></td>
+      <td><i>k</i>-th order ordinary (absolute, initial) moment</td>
+      <td>see {@link -kmoment}, {@link -mean}</td>
+    </tr>
+    <tr>
+      <td><i>&mu;<sub>k</sub></i></td>
+      <td><i>k</i>-th order central moment</td>
+      <td>see {@link -kmoment}</td>
+    </tr>
+    <tr>
+      <td><i>&mu;'<sub>k</sub></i></td>
+      <td><i>k</i>-th order cumulant</td>
+      <td> </td>
+    </tr>
+  </table></p>
+
+  <h3 style="color:red">TODO:</h3>
+  <table class="indent" cellpadding="3">
+    <tr><th>Method</th><th>Author</th><th>Status</th><th>Source file</th><th>Remarks</th></tr>
+    <tr>
+      <td style="line-height:16px;">
+        <code>idHi idLo nEps iThis <b>-mean_ci</b></code><br>
+        <code>idHi idLo nEps iThis <b>-var_ci</b></code><br>
+      </td>
+      <td style="line-height:16px;">n.n.<br>n.n.</td>
+      <td style="line-height:16px;" nowrap>
+        <img src="../resources/warning_obj.gif"><br>
+        <img src="../resources/warning_obj.gif"><br>
+      </td>
+      <td style="line-height:16px;"><code>sta_cnf.c</code></td>
+      <td style="line-height:16px;" nowrap>
+        Mean confidence interval<br>
+        Variance confidence interval<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="line-height:16px;">
+        <code>k idDst iThis <b>-cumulant</b></code><br>
+      </td>
+      <td style="line-height:16px;">MW</td>
+      <td style="line-height:16px;" nowrap>
+        <img src="../resources/warning_obj.gif"><br>
+      </td>
+      <td style="line-height:16px;"><code>sta_cum.c</code></td>
+      <td style="line-height:16px;" nowrap> </td>
+    </tr>
+    <tr>
+      <td style="line-height:16px;">
+        <code>iSrc idMap iThis <b>{@link -pool}</b></code><br>
+        <code>iSrc idKeep iThis <b>-reorg</b></code><br>
+      </td>
+      <td style="line-height:16px;">MW<br>n.n.</td>
+      <td style="line-height:16px;" nowrap>
+        <img src="../resources/checkmark.gif"> 2006-06-16<br>
+        <b>&nbsp;?</b><br>
+      </td>
+      <td style="line-height:16px;"><code>sta_reo.c</code></td>
+      <td style="line-height:16px;" nowrap>
+        &nbsp;<br>
+        Who needs this?<br>
+      </td>
+    </tr>
+  </table>
+END_MAN
+
+CLASS:   statistics
+/cProject                                                                      # Generate ANSI C compatible code
+/cxx_nconv                                                                     # Use strict C++ naming conventions
+
+## C/C++ files                                                                 # --------------------------------------
+INCLUDE: "dlp_data.h"                                                          # Include data class' header
+FILE:    sta_aux.c                                                             # Auxilary methods
+FILE:    sta_cor.c                                                             # Correlation estimation methods
+FILE:    sta_mom.c                                                             # Moment estimation methods
+FILE:    sta_reo.c                                                             # Statistics reorganization
+FILE:    sta_upd.c                                                             # Setup and update methods
+
+## Defines - Protocol macros
+DEFINE:  STA_PROTOCOL_FOOTER(LVL,MSG) \
+  IFCHECKEX(LVL) \
+  { \
+    printf("\n   %s \n",MSG); \
+    dlp_fprint_x_line(stdout,'-',dlp_maxprintcols()); \
+    printf("\n"); \
+  }
+
+## Defines - Data array indentifiers                                            # --------------------------------------
+DEFINE:  STA_DAI_SSIZE 0                                                        # Sample size
+DEFINE:  STA_DAI_MIN   1                                                        # Componentwise minimum
+DEFINE:  STA_DAI_MAX   2                                                        # Componentwise maximum
+DEFINE:  STA_DAI_SUM   3                                                        # Componentwise sum
+DEFINE:  STA_DAI_MSUM  4                                                        # Mixed sums x[i]*x[j]
+DEFINE:  STA_DAI_KSUM  5                                                        # k-th order sums from k=3 up
+
+## Defines - k-th moment modes                                                  # --------------------------------------
+DEFINE:  STA_KMA_CENT  0x1000                                                   # Central (for k-th moments with k>1)
+DEFINE:  STA_KMA_MIN   0x0001                                                   # Minimum (for 0th "moment")
+DEFINE:  STA_KMA_MAX   0x0002                                                   # Maximum (for 0th "moment")
+DEFINE:  STA_KMA_SPAN  0x0003                                                   # Span    (for 0th "moment")
+DEFINE:  STA_KMA_N1    0x0001                                                   # \sigma^2_{n-1}          (for 2nd mom.)
+DEFINE:  STA_KMA_SDEV  0x0002                                                   # Standard deviation      (for 2nd mom.)
+DEFINE:  STA_KMA_COEF  0x0004                                                   # (Co)variance coefficient(for 2nd mom.)
+DEFINE:  STA_KMA_SKEW  0x0001                                                   # Skewness (for 3rd moment)
+DEFINE:  STA_KMA_EXCS  0x0001                                                   # Excess (Kurtosis, for 4th moment)
+
+## Defines - Correlation modes                                                  # --------------------------------------
+DEFINE:  STA_CMA_SCAT  0x0001                                                   # Scatter matrix   
+DEFINE:  STA_CMA_COV   0x0002                                                   # Covariance matrix
+DEFINE:  STA_CMA_CORC  0x0003                                                   # Correlation coefficient
+DEFINE:  STA_CMA_DETC  0x0004                                                   # Coefficient of determination
+
+## Errors
+ERROR:   STA_NOTSETUP
+COMMENT: Model not properly set up%s.
+/html MAN:
+  <p>This error is caused by
+  <ul>
+    <li>computation methods if the fields of an instance are not properly setup for
+    the computation or</li>
+    <li>by setup methods ({@link -setup}) if the data passed are
+    inconsistent or insufficient to setup the statistics.</li>
+  </ul>
+  <p>You may use {@link -status} to have a checkup of the instances setup performed
+  and to get detailled information on the problem.</p>
+  @param 1 Error description or hint to further information
+END_MAN
+
+ERROR:   STA_VECIGNORED
+COMMENT: %ld update vector(s) ignored.
+/html MAN:
+  <p>This error may be caused by the {@link -update}-method if infinite numbers
+  or <code>NaN</code>s stray in the update vectors.
+END_MAN
+
+ERROR:   STA_IGNORE
+COMMENT: Extra %s ignored.
+LEVEL:   EL_WARNING
+/html MAN:
+  <p>This warning occures when unneccessary data are being ignored. This may
+  happen in the following cases:</p>
+  <ul>
+    <li>During statistics {@link -update} if there is a label component index passed but the statistics only has one
+      class (1 = <i>C</i> = {@link dat}.<a href="data.html#fld_nblock" class="code">nblock</a>).</li>
+  </ul>
+  @param 1 Description of ignored data
+END_MAN
+
+ERROR:   STA_DIM
+COMMENT: %s has a wrong number of %s (should be %ld).
+LEVEL:   EL_WARNING
+/html MAN:
+  <p>This warning occurs if a data instance has an unexpected number of components, records or blocks. Supernumerary
+  elements have been ignored, missing elements have been padded by zeros.</p>
+  @param 1 Data instance name
+  @param 2 components/records/blocks
+  @param 3 The expected number of elements
+END_MAN
+
+ERROR:   STA_BADCOMP
+COMMENT: %s component of %s not found or of bad type (should be %s).
+/html MAN:
+  <p>This error occurs if a component of a data instance was not found or has an unexpected variable type.</p>
+  @param 1 Zero-based index if the component
+  @param 2 Data instance name
+END_MAN
+
+ERROR:   STA_SLAB
+COMMENT: Record %ld contains a bad label ('%s').
+LEVEL:   EL_WARNING
+/html MAN:
+  <p>This error occures when a method processing a labelled vector sequence encounters an unknown symbolic label. The
+  record has been ignored. A symbolic label is unknown if it is not contained in the label table (field {@link ltb}).
+  </p>
+  @param 1 Index of record containing the unknown label
+  @param 2 The label name
+END_MAN
+
+ERROR:   STA_NLAB
+COMMENT: Record %ld contains a bad label (%ld).
+LEVEL:   EL_WARNING
+/html MAN:
+  <p>This error occurs when a method processing a labelled vector sequence encounters an unknown numeric label. The
+  record has been ignored. A numeric label is unknown if it is less than zero or greater or equal the number of
+  statistics classes <i>C</i>
+  = {@link dat}.<a class="data.html#fld_nblock" class="code">nblock</a>.</p>
+  @param 1 Index of record containing the unknown label
+  @param 2 The label
+END_MAN
+
+ERROR:   STA_INCOMPAT
+COMMENT: Incompatible statistics.
+/html MAN:
+  <p>This error occurs when attempting to <a href="#mth_-merge">merge</a> incompatible statistics instances. Two
+  statistics instances are incompatible if their numbers of classes, their dimensions or the orders are different.</p>  
+END_MAN
+
+## Fields
+FIELD:   min_var
+TYPE:    double
+COMMENT: Minimum value for (co)variances.
+INIT:    0.
+/html MAN:
+  The value of this field is used as lower limit for variance an covariance estimations. No estimated (co)variances
+  will be smaller than {@link min_var}.
+END_MAN
+
+## Protected fields
+FIELD:   dat
+TYPE:    INSTANCE(data)
+COMMENT: Statistic data.
+FLAGS:   /noset
+/html MAN:
+  <p>This <a href="data.html" class="code">data</a> instance contains the raw statistics data from which all statistic
+  parameters are estimated. The data table contains <i>C</i> = {@link dat}.<a href="data.html#fld_nblock"
+  class="code">nblock</a> <em>statistics blocks</em>, each one containing the raw data for one <em>statistics
+  class</em>.</p>
+  <p>Each statistics block is structured as follows (columns = records, rows = components):</p>
+  <table class="indent">
+    <tr>
+      <td class="hidden">record</td>
+      <td class="hidden" colspan="4" style="text-align:center">component &rarr; <i>N</i></td>
+    </tr>
+    <tr>
+      <td class="hidden" style="text-align:center">0</td>
+      <td style="text-align:center"><i>I</i></td>
+      <td style="text-align:center">0</td>
+      <td>&nbsp;&nbsp;&nbsp;&middot;&middot;&middot;&nbsp;&nbsp;&nbsp;</td>
+      <td style="text-align:center">0</td>
+    </tr>
+    <tr>
+      <td class="hidden" style="text-align:center; vertical-align:middle">1</td>
+      <td style="text-align:center"><code>min</code><sup>(0)</sup></td>
+      <td style="text-align:center"><code>min</code><sup>(1)</sup></td>
+      <td style="vertical-align:middle">&nbsp;&nbsp;&nbsp;&middot;&middot;&middot;&nbsp;&nbsp;&nbsp;</td>
+      <td style="text-align:center"><code>min</code><sup>(<i>N</i>-1)</sup></td>
+    </tr>
+    <tr>
+      <td class="hidden" style="text-align:center; vertical-align:middle">2</td>
+      <td style="text-align:center"><code>max</code><sup>(0)</sup></td>
+      <td style="text-align:center"><code>max</code><sup>(1)</sup></td>
+      <td style="vertical-align:middle">&nbsp;&nbsp;&nbsp;&middot;&middot;&middot;&nbsp;&nbsp;&nbsp;</td>
+      <td style="text-align:center"><code>max</code><sup>(<i>N</i>-1)</sup></td>
+    </tr>
+    <tr>
+      <td class="hidden" style="text-align:center; vertical-align:middle">3</td>
+      <td style="text-align:center"><code>sum<sub>1</sub></code><sup>(0)</sup></td>
+      <td style="text-align:center"><code>sum<sub>1</sub></code><sup>(1)</sup></td>
+      <td style="vertical-align:middle">&nbsp;&nbsp;&nbsp;&middot;&middot;&middot;&nbsp;&nbsp;&nbsp;</td>
+      <td style="text-align:center"><code>sum<sub>1</sub></code><sup>(<i>N</i>-1)</sup></td>
+    </tr>
+    <!-- Mixed sums -->
+    <tr>
+      <td class="hidden" style="text-align:center; vertical-align:middle">4</td>
+      <td style="text-align:center"><code>sum<sub>2</sub></code><sup>(0 0)</sup></td>
+      <td style="text-align:center"><code>sum<sub>2</sub></code><sup>(0 1)</sup></td>
+      <td style="vertical-align:middle">&nbsp;&nbsp;&nbsp;&middot;&middot;&middot;&nbsp;&nbsp;&nbsp;</td>
+      <td style="text-align:center"><code>sum<sub>2</sub></code><sup>(0 <i>N</i>-1)</sup></td>
+    </tr>
+    <tr>
+      <td class="hidden" style="text-align:center; vertical-align:middle">5</td>
+      <td style="text-align:center"><code>sum<sub>2</sub></code><sup>(1 0)</sup></td>
+      <td style="text-align:center"><code>sum<sub>2</sub></code><sup>(1 1)</sup></td>
+      <td style="vertical-align:middle">&nbsp;&nbsp;&nbsp;&middot;&middot;&middot;&nbsp;&nbsp;&nbsp;</td>
+      <td style="text-align:center"><code>sum<sub>2</sub></code><sup>(1 <i>N</i>-1)</sup></td>
+    </tr>
+    <tr>
+      <td class="hidden" style="text-align:center; line-height:4pt;">&nbsp;<br>&middot;<br>&middot;<br>&middot;<br>&nbsp;</td>
+      <td style="text-align:center; line-height:4pt;">&nbsp;<br>&middot;<br>&middot;<br>&middot;<br>&nbsp;</td>
+      <td style="text-align:center; line-height:4pt;">&nbsp;<br>&middot;<br>&middot;<br>&middot;<br>&nbsp;</td>
+      <td style="vertical-align:middle">&nbsp;&nbsp;&nbsp;&middot;&middot;&middot;&nbsp;&nbsp;&nbsp;</td>
+      <td style="text-align:center; line-height:4pt;">&nbsp;<br>&middot;<br>&middot;<br>&middot;<br>&nbsp;</td>
+    </tr>
+    <tr>
+      <td class="hidden" style="text-align:center; vertical-align:middle"><i>N</i>+4</td>
+      <td style="text-align:center"><code>sum<sub>2</sub></code><sup>(<i>N</i>-1 0)</sup></td>
+      <td style="text-align:center"><code>sum<sub>2</sub></code><sup>(<i>N</i>-1 1)</sup></td>
+      <td style="vertical-align:middle">&nbsp;&nbsp;&nbsp;&middot;&middot;&middot;&nbsp;&nbsp;&nbsp;</td>
+      <td style="text-align:center"><code>sum<sub>2</sub></code><sup>(<i>N</i>-1 <i>N</i>-1)</sup></td>
+    </tr>
+    <!-- k-th order sum -->
+    <tr>
+      <td class="hidden" style="text-align:center; vertical-align:middle"><i>N</i>+5</td>
+      <td style="text-align:center"><code>sum<sub>3</sub></code><sup>(0)</sup></td>
+      <td style="text-align:center"><code>sum<sub>3</sub></code><sup>(1)</sup></td>
+      <td style="vertical-align:middle">&nbsp;&nbsp;&nbsp;&middot;&middot;&middot;&nbsp;&nbsp;&nbsp;</td>
+      <td style="text-align:center"><code>sum<sub>3</sub></code><sup>(<i>N</i>-1)</sup></td>
+    </tr>
+    <tr>
+      <td class="hidden" style="text-align:center; line-height:4pt;">&nbsp;<br>&middot;<br>&middot;<br>&middot;<br>&nbsp;</td>
+      <td style="text-align:center; line-height:4pt;">&nbsp;<br>&middot;<br>&middot;<br>&middot;<br>&nbsp;</td>
+      <td style="text-align:center; line-height:4pt;">&nbsp;<br>&middot;<br>&middot;<br>&middot;<br>&nbsp;</td>
+      <td style="vertical-align:middle">&nbsp;&nbsp;&nbsp;&middot;&middot;&middot;&nbsp;&nbsp;&nbsp;</td>
+      <td style="text-align:center; line-height:4pt;">&nbsp;<br>&middot;<br>&middot;<br>&middot;<br>&nbsp;</td>
+    </tr>
+    <tr>
+      <td class="hidden" style="text-align:center; vertical-align:middle"><i>N</i>+<i>K</i>+4</td>
+      <td style="text-align:center"><code>sum<sub><i>K</i></sub></code><sup>(0)</sup></td>
+      <td style="text-align:center"><code>sum<sub><i>K</i></sub></code><sup>(1)</sup></td>
+      <td style="vertical-align:middle">&nbsp;&nbsp;&nbsp;&middot;&middot;&middot;&nbsp;&nbsp;&nbsp;</td>
+      <td style="text-align:center"><code>sum<sub><i>K</i></sub></code><sup>(<i>N</i>-1)</sup></td>
+    </tr>
+  </table>
+  <p>with</p>
+  <table class="indent">
+    <tr>
+      <td class="hidden" style="vertical-align:middle"><i>I</i></td>
+      <td class="hidden">&nbsp;</td>
+      <td class="hidden">Sample size of class <i>c</i></td>
+    </tr>
+    <tr>
+      <td class="hidden" style="vertical-align:middle"><code>min</code><sup>(<i>n</i>)</sup></td>
+      <td class="hidden">&nbsp;</td>
+      <td class="hidden">Minimum value of component <i>n</i> for class <i>c</i></td>
+    </tr>
+    <tr>
+      <td class="hidden" style="vertical-align:middle"><code>max</code><sup>(<i>n</i>)</sup></td>
+      <td class="hidden">&nbsp;</td>
+      <td class="hidden">Maximum value of component <i>n</i> for class <i>c</i></td>
+    </tr>
+    <tr>
+      <td class="hidden" style="vertical-align:middle"><code>sum</code><sub>1</sub><sup>(<i>n</i>)</sup></td>
+      <td class="hidden">&nbsp;</td>
+      <td class="hidden">Sum of component <i>n</i> for class <i>c</i></td>
+    </tr>
+    <tr>
+      <td class="hidden" style="vertical-align:middle"><code>sum</code><sub>2</sub><sup>(<i>n</i> <i>m</i>)</sup></td>
+      <td class="hidden">&nbsp;</td>
+      <td class="hidden">Sum of components <i>n</i> and <i>m</i> (
+        <i>x</i><sup>(<i>n</i>)</sup>&middot;<i>x</i><sup>(<i>M</i>)</sup>) for class <i>c</i></td>
+    </tr>
+    <tr>
+      <td class="hidden" style="vertical-align:middle"><code>sum</code><sub><i>k</i></sub><sup>(<i>n</i>)</sup></td>
+      <td class="hidden">&nbsp;</td>
+      <td class="hidden"><i>k</i>-th order sum of component <i>n</i> 
+        ( (<i>x</i><sup>(<i>n</i>)</sup>)<sup><i>k</i></sup> ) for class <i>c</i></td>
+    </tr>
+  </table>
+  <p>See <a href="#">class description</a> above.</p>
+
+  <h4>Remarks</h4>
+  <ul>
+    <li>This field is write protected and can only be modified through the {@link -setup} method.</li>
+  </ul>
+END_MAN
+
+FIELD:   ltb
+TYPE:    INSTANCE(data)
+COMMENT: Symbolic label table.
+FLAGS:   /noset
+/html MAN:
+  <p>This <a href="data.html" class="code">data</a> table assigns each statistics class a
+  symbolic (string) label which is used by the {@link -update} method to look up class indexes <i>c</i> from
+  a symbolic label component of the input vectors. The table contains exactly one symbolic component and <i>C</i> =
+  {@link dat}.<a href="data.html#fld_nblock" class="code">nblock</a> records.</p>
+  <h4>Remarks</h4>
+  <ul>
+    <li>This field is write protected and can only be modified through the {@link -setup} method.</li>
+  </ul>
+END_MAN
+
+FIELD:   weighted
+TYPE:    bool
+COMMENT: Weighted statistics
+INIT:    FALSE
+FLAGS:   /noset
+/html MAN:
+  <p>If true, there had been an update with weigthed data.
+  In that case computation of estimation of unbiassed values is disabeld,
+  meaning flag {@link /sn} is always set.</p>
+END_MAN
+
+## Options
+OPTION:  /central
+COMMENT: Estimate central moments.
+/html MAN:
+  <h4>{@link -kmoment}</h4>
+  <p>Estimates the k-th <em>central</em> moment (default is the k-th ordinary moment).</p>
+END_MAN
+
+OPTION:  /sn
+COMMENT: For backward compatibility of (co)variance estimation.
+/html MAN:
+  <h4>{@link -var}, {@link -cov}</h4>
+  <p>Computes the &sigma;<sub><i>n</i></sub> (co)variance estimation (default is the &sigma;<sub><i>n</i>-1</sub>
+  estimation).</p>
+  <h4>{@link -corc}, {@link -detc}, {@link -skew}, {@link -excs}</h4>
+  <p>Estimation basing on the &sigma;<sub><i>n</i></sub> (co)variance estimation (default is the
+  &sigma;<sub><i>n</i>-1</sub> estimation).</p>
+  <h4><b>Warning:</b></h4>
+  <p>This option is always enabled if there had been a weighted update (see {@link weighted}).</p>
+END_MAN
+
+OPTION:  /label
+COMMENT: Ignore label indices if there some.
+/html MAN:
+  <p>If {@link -update} is used with this option,
+  all label indices are ignored. Meaning all strings
+  are cutted by "[NUMBER]" if there is such at the
+  end of the string.</p>
+  <p>See note Label component format in the UASR manual for util/lab.itp.</p>
+END_MAN
+
+## Methods - Setup, update and reorganization
+METHOD:  -setup
+SYNTAX:  (int nOrder, int nDim, int nCls, data idLtb, int nIcLtb)
+COMMENT: Setup statistics.
+/html MAN:
+  <p>(Re-)initializes the raw statistics data (see <a href="#">class description</a> above) of the statistics instance.
+  This methods defines</p>
+  <ul>
+    <li>the order <i>K</i> of the statistics,</li>
+    <li>the dimensionality <i>N</i> of the statistics (number of vector components of the training data set),</li>
+    <li>the number <i>C</i> of statistics classes (labelled partitions of the training data set) and</li>
+    <li>the symbolic label names of the statistics classes (optional)</li>
+  </ul>
+  <p>for the life time of this statistics instance (or until the next call to {@link -setup}, respectively).
+
+  @see -update
+  @see -status
+  @see dat
+  @see ltb
+  @param nOrder Order of the statistics (must be &ge; 2)
+  @param nDim   Dimensionality of statistics (number of vector components)
+  @param nCls   Number of classes
+  @param idLtb  Symbolic label table for multiclass statistics of labelled vectors, ignored if <code>nCls</code> is 1,
+                may be <code>NULL</code>
+  @param nIcLtb Component index in <code>idLtab</code> containing the symbolic labels, ignored id <code>idLtb</code> is
+                <code>NULL</code>, may be -1 for using the first symbolic component in <code>idLtb</code>
+END_MAN
+
+METHOD:  -update
+SYNTAX:  (data idVec, int nIcLab, data idW)
+COMMENT: Update statistics with set of (labelled) vectors.
+/html MAN:
+  <p>Updates the statistic data with the (labelled) vectors contained in <code>idVec</code>. The vectors must contain
+  <i>N</i>-dimensional vectors plus a numeric or symbolic label component (if <i>C</i>&gt;1), where <i>N</i> = 
+  {@link dat}.<a href="data.html#fld_dim" class="code">dim</a> stands for the statistics' dimensionality and <i>C</i> =
+  {@link dat}.<a href="data.html#fld_nblock" class="code">nblock</a> for the number of classes. The following table
+  summarizes the expected component structures of <code>idVec</code>:</p>
+  <table>
+    <tr><th><i>C</i></th><th>{@link ltb}</th><th>Component structure</th></tr>
+    <tr><td>= 1   </td><td>-</td>
+      <td><i>N</i> numeric + an arbitrary number of symbolic components (all ignored)</td></tr>
+    <tr><td>&gt; 1</td><td>= <code>NULL</code></td>
+      <td><i>N</i>+1 numeric (numeric labels in component <code>nIcLab</code>) + an arbitrary number of symbolic
+      components (all ignored)</td></tr>
+    <tr><td>&gt; 1</td><td>= <code>NULL</code></td>
+      <td><i>N</i> numeric (<code>nIcLab</code>=-1) + an arbitrary number of symbolic
+      components (all ignored) - idW must conation weights for all classes (<code>C</code>
+      numeric components and <code>idVec.</code><a href="data.html#fld_nrec">nrec</a> records.)</td></tr>
+    <tr><td>&gt; 1</td><td>!= <code>NULL</code></td>
+      <td><i>N</i> numeric + an arbitrary number of symbolic components (symbolic labels in component
+      <code>nIcLab</code>, if <code>nIcLab</code>=-1 the first symbolic component is used as label; all other symbolic
+      components will be ignored)</td></tr>
+  </table>
+  <p>Additionally a weight (usually 0 &le; <i>w</i> &le; 1) for each vector may be passed through parameter
+  <code>idW</code>. If <code>idW</code> != <code>NULL</code> it must contain exactly one numeric component and
+  <code>idVec.</code><a href="data.html#fld_nrec">nrec</a> records.</p>
+  <p>To update all classes with the same vectors and class specific weights use <code>nIcLab=-1</code> and
+  <code>idW</code> with <code>C</code> numberic components and <code>idVec.</code><a href="data.html#fld_nrec">nrec</a> records.</p>
+
+  <h4>Remarks</h4>
+  <ul>
+    <li>Before gathering statistics data you must call {@link -setup} in order to initialize the statistics
+    instance.</li>
+  </ul>
+
+  @see -setup
+  @see -status
+  @see dat
+  @see ltb
+  @param idVec  Set of vectors
+  @param nIcLab Component index in <code>idVec</code> containing numeric or symbolic labels
+  @param idW    Vector weights, may be <code>NULL</code> for using a weight of 1 for all vectors
+END_MAN
+
+METHOD:  -pool
+SYNTAX:  (statistics iSrc, data idMap)
+COMMENT: Pools statistics classes.
+/html MAN:
+  <p>The method pools statistics classes contained in <code>iSrc</code>
+  according to a map and stores the resulting pooled statistics into this
+  instance. Pooling two statistics classes means adding their raw statistics
+  data (see field {@link dat}). Pooling all statstics classes yields the same
+  result as learning the statistics (see method {@link -update}) without any
+  class labels.</p>
+  <p>The pooling is controlled by a map <a href="data.html"
+  class="code">data</a> instance <code>idMap</code>. The map is expected to
+  contain one numeric component. Each record assigns one pooled class index
+  <i>c<sub>P</sub></i> to a source class index <i>c</i> as follows:</p>
+  <p class="indent"><i>c<sub>P</sub></i> = <code>idMap</code>[<i>c</i>,0].</p>
+  <p>Additional components of <code>idMap</code> will be ignored. If the 0-th
+  component is not numeric the method will use the first numeric component. If
+  the map contains fewer records than there are statistics classes in
+  <code>iSrc</code> the method will remove the classes which are not assigned
+  a pooled class. If the map contains more records than there are classes in
+  <code>iSrc</code> the method will ignore the supernumerary records.</p>
+  <h3>Remarks</h3>
+  <ul>
+    <li>The method will <em>not</em> preserve the label table (field
+      {@link ltb})</li>
+  </ul>
+  @param iSrc  Source statistics instance.
+  @param idMap Pooling map, may be <code>NULL</code> for pooling <em>all</em>
+               statistics classes in <code>idSrc</code> into <em>one</em>
+               class.
+END_MAN
+
+METHOD:  -merge
+SYNTAX:  (statistics iSrc)
+COMMENT: Merges two statistics
+/html MAN:
+  Merges the statistics data contained in <code>iSrc</code> into this instance.
+  @param iSrc  Source statistics instance
+END_MAN
+
+## Sample info
+METHOD:  -freq
+SYNTAX:  (data idDst)
+COMMENT: Get sample size for all classes.
+CODE:
+  return CStatistics_FreqEx(_this,idDst,FALSE);
+END_CODE
+/html MAN:
+  The method fills <code>idDst</code> with the numbers of samples recorded for each class. <code>idDst</code> will
+  contain one component of type int and <i>C</i> = {@link dat}.<a href="data.html#fld_nblock" class="code">nblock</a>
+  records.
+  @see -prob
+  @see -update
+END_MAN
+
+METHOD:  -prob
+SYNTAX:  (data idDst)
+COMMENT: Estimate a-priori class probabilities.
+CODE:
+  return CStatistics_FreqEx(_this,idDst,TRUE);
+END_CODE
+/html MAN:
+  The method fills <code>idDst</code> with the a-priori class probabilities estimated from the numbers of samples
+  recorded for each class. <code>idDst</code> will contain one component of type double and <i>C</i> = {@link dat}.<a
+  href="data.html#fld_nblock" class="code">nblock</a> records.
+  @see -freq
+  @see -update
+END_MAN
+
+## Methods - Extents alias "0-th order moments"
+METHOD:  -min
+SYNTAX:  (data idDst)
+COMMENT: Get minimum vectors.
+CODE:
+  return CStatistics_MomentEx(_this,idDst,0,STA_KMA_MIN);
+END_CODE
+/html MAN:
+  <p>Estimates the minimum vectors of all classes of the statistics and stores the result in
+  <code>idDst</code>. The output instance will contain <i>N</i> = {@link dat}.<a href="data.html#fld_dim"
+  class="code">dim</a> components of type double and <i>C</i> = {@link dat}.<a href="data.html#fld_nblock"
+  class="code">nblock</a> records. Each record</p>
+  <p class="indent"><i>y<sub>c</sub></i> = (<i>y</i><sup>(0)</sup>, ..., <i>y</i><sup>(<i>N</i>-1)</sup>)</p>
+  <p>represents the componentwise minimum vector with:</td>
+  <p class="indent"><img src="../resources/statistics/0018.gif" width="85" height="18" border="0" align="absmiddle"
+  alt=""> (1)</p>
+  <p>of one class.</p>
+
+  <h4>Remarks</h4>
+  <ul>
+    <li>See <a href="#">class description above</a> for a definition of the raw statistics data (<i>I</i>,
+      <code>min</code><sup>(<i>n</i>)</sup>, <code>max</code><sup>(<i>n</i>)</sup>,
+      <code>sum</code><sub><i>k</i></sub><sup>(<i>n</i> &middot;)</sup>).
+  </ul>
+
+  @param idDst The destination data instance
+  @see -max
+  @see -span
+END_MAN
+
+METHOD:  -max
+SYNTAX:  (data idDst)
+COMMENT: Get maximum vectors.
+CODE:
+  return CStatistics_MomentEx(_this,idDst,0,STA_KMA_MAX);
+END_CODE
+/html MAN:
+  <p>Estimates the maximum vectors of all classes of the statistics and stores the result in
+  <code>idDst</code>. The output instance will contain <i>N</i> = {@link dat}.<a href="data.html#fld_dim"
+  class="code">dim</a> components of type double and <i>C</i> = {@link dat}.<a href="data.html#fld_nblock"
+  class="code">nblock</a> records. Each record</p>
+  <p class="indent"><i>y<sub>c</sub></i> = (<i>y</i><sup>(0)</sup>, ..., <i>y</i><sup>(<i>N</i>-1)</sup>)</p>
+  <p>represents the componentwise maximum vector with:</td>
+  <p class="indent"><img src="../resources/statistics/0019.gif" width="88" height="18" border="0" align="absmiddle"
+  alt=""> (1)</p>
+  <p>of one class.</p>
+
+  <h4>Remarks</h4>
+  <ul>
+    <li>See <a href="#">class description above</a> for a definition of the raw statistics data (<i>I</i>,
+      <code>min</code><sup>(<i>n</i>)</sup>, <code>max</code><sup>(<i>n</i>)</sup>,
+      <code>sum</code><sub><i>k</i></sub><sup>(<i>n</i> &middot;)</sup>).
+  </ul>
+
+  @param idDst The destination data instance
+  @see -min
+  @see -span
+END_MAN
+
+METHOD:  -span
+SYNTAX:  (data idDst)
+COMMENT: Get sample spanwidth vectors.
+CODE:
+  return CStatistics_MomentEx(_this,idDst,0,STA_KMA_SPAN);
+END_CODE
+/html MAN:
+  <p>Estimates the spanwidth vectors of all classes of the statistics and stores the result in
+  <code>idDst</code>. The output instance will contain <i>N</i> = {@link dat}.<a href="data.html#fld_dim"
+  class="code">dim</a> components of type double and <i>C</i> = {@link dat}.<a href="data.html#fld_nblock"
+  class="code">nblock</a> records. Each record</p>
+  <p class="indent"><i>y<sub>c</sub></i> = (<i>y</i><sup>(0)</sup>, ..., <i>y</i><sup>(<i>N</i>-1)</sup>)</p>
+  <p>represents the componentwise spanwidth vector with:</td>
+  <p class="indent"><img src="../resources/statistics/0020.gif" width="148" height="18" border="0" align="absmiddle"
+  alt=""> (1)</p>
+  <p>of one class.</p>
+
+  <h4>Remarks</h4>
+  <ul>
+    <li>See <a href="#">class description above</a> for a definition of the raw statistics data (<i>I</i>,
+      <code>min</code><sup>(<i>n</i>)</sup>, <code>max</code><sup>(<i>n</i>)</sup>,
+      <code>sum</code><sub><i>k</i></sub><sup>(<i>n</i> &middot;)</sup>).
+  </ul>
+
+  @param idDst The destination data instance
+  @see -min
+  @see -max
+END_MAN
+
+## Methods - Moment estimations
+METHOD:  -kmoment
+SYNTAX:  (short k, data idDst)
+COMMENT: Estimates k-th order (central) moment vectors.
+CODE:
+  return CStatistics_MomentEx(_this,idDst,k,_this->m_bCentral?STA_KMA_CENT:0);
+END_CODE
+/html MAN:
+  <p>Estimates the <i>k</i>-th order (central) moment vectors of all classes of the statistics and stores the result in
+  <code>idDst</code>. The output instance will contain <i>N</i> = {@link dat}.<a href="data.html#fld_dim"
+  class="code">dim</a> components of type double and <i>C</i> = {@link dat}.<a href="data.html#fld_nblock"
+  class="code">nblock</a> records. Each record</p>
+  <p class="indent"><i>y<sub>c</sub></i> = (<i>y</i><sup>(0)</sup>, ..., <i>y</i><sup>(<i>N</i>-1)</sup>)</p>
+  <p>represents the componentwise <i>k</i>-th ordinary (or absolute or initial) moment vector with:</p>
+  <p class="indent"><img src="../resources/statistics/0007.gif" width="228" height="35" border="0" align="absmiddle"
+    alt="y^{(n)} = m_k^{(n)} = \mathsf{E}\left(X^{(n)}\right)^k \approx \frac{\mathrm{sum}_k^{(n)}}{I}"><img
+    src="../resources/stc_000.gif" width="240" height="10" border="0" alt="(blank)"> (1)</p>
+  <p>or the componentwise <i>k</i>-th central moment vector (option {@link /central} set) with:</p>
+  <p class="indent"><img src="../resources/statistics/0008a.gif" width="468" height="44" border="0" align="absmiddle"
+    alt="y^{(n)} = \mu_k^{(n)} = \mathsf{E}\left(X^{(n)}-\mathsf{E}X^{(n)}\right)^k = \sum\limits_{j=0}^k{(-1)^{k-j} \left(\begin{array}{c}k\\j\end{array}\right) m_j^{(n)} \left(m_1^{(n)}\right)^{k-j}}">
+    (2)<br>where <img src="../resources/statistics/0008b.gif" width="52" height="13" border="0" align="absmiddle" alt="m_0:=1"></p>
+  <p>of one class.</p>
+
+  <h4>Remarks</h4>
+  <ul>
+    <li>See <a href="#">class description above</a> for a definition of the raw statistics data (<i>I</i>,
+      <code>min</code><sup>(<i>n</i>)</sup>, <code>max</code><sup>(<i>n</i>)</sup>,
+      <code>sum</code><sub><i>k</i></sub><sup>(<i>n</i> &middot;)</sup>).
+    <li>The greatest order <i>k</i> must be defined <em>before</em> gathering the statistics through the {@link -setup}
+      method.</li>
+    <li>Equation (2): The <i>k</i>-th order central moment can be computed from the absolute moments of order 0 through
+      <i>k</i> using a generalization of <span style="font-variant:small-caps">Steiner</span>'s shift theorem [1].
+      Important special cases of equation (2) are:<br>
+      <div class="indent" style="margin-top:3pt;"><img src="../resources/statistics/0009.gif" width="357" height="65"
+        border="0" align="absmiddle" alt="\[ \mu_3^{(n)} = m_3^{(n)} - 3m_2^{(n)}m_1^{(n)} + 2\left(m_1^{(n)}\right)^3 \
+        \] \[ \mu_4^{(n)} = m_4^{(n)} - 4m_3^{(n)}m_1^{(n)} + 6m_2^{(n)}\left(m_1^{(n)}\right)^2 - \
+        3\left(m_1^{(n)}\right)^4  \]"></div>
+      </li>
+  </ul>
+  <h4>References</h4>
+  <p class="small">[1] M�ller, P. H. (Hrsg.). <i>Lexikon der Stochastik.</i> Akademie-Verlag Berlin, 1991. ISBN 3-05-500608-9.</p>
+
+  @cgen:option /central Estimate central moment (default is ordinary moment)
+  @param       k        The moment order (<i>k</i> &gt; 0)
+  @param       idDst    The destination data instance
+  @see -mean
+  @see -var
+  @see -skew
+  @see -excs
+END_MAN
+
+METHOD:  -mean
+SYNTAX:  (data idDst)
+COMMENT: Estimates mean vectors.
+CODE:
+  return CStatistics_MomentEx(_this,idDst,1,0);
+END_CODE
+/html MAN:
+  <p>Estimates the mean vectors of all classes of the statistics and stores the result in
+  <code>idDst</code>. The output instance will contain <i>N</i> = {@link dat}.<a href="data.html#fld_dim"
+  class="code">dim</a> components of type double and <i>C</i> = {@link dat}.<a href="data.html#fld_nblock"
+  class="code">nblock</a> records. Each record</p>
+  <p class="indent"><i>y<sub>c</sub></i> = (<i>y</i><sup>(0)</sup>, ..., <i>y</i><sup>(<i>N</i>-1)</sup>)</p>
+  <p>represents the componentwise mean (1st order absolute moment) vector with:</td>
+  <p class="indent"><img src="../resources/statistics/0010.gif" width="220" height="35" border="0" align="absmiddle"
+  alt=" y^{(n)} = m_1^{(n)} = \mathsf{E}\left(X^{(n)}\right) \approx \frac{\mathrm{sum}_1^{(n)}}{I}"> (1)</p>
+  <p>of one class.</p>
+
+  <h4>Remarks</h4>
+  <ul>
+    <li>See <a href="#">class description above</a> for a definition of the raw statistics data (<i>I</i>,
+      <code>min</code><sup>(<i>n</i>)</sup>, <code>max</code><sup>(<i>n</i>)</sup>,
+      <code>sum</code><sub><i>k</i></sub><sup>(<i>n</i> &middot;)</sup>).
+  </ul>
+
+  @param idDst The destination data instance
+  @see -var
+  @see -kmoment
+  @see -skew
+  @see -excs
+END_MAN
+
+METHOD:  -var
+SYNTAX:  (data idDst)
+COMMENT: Estimates variance vectors.
+CODE:
+  return CStatistics_MomentEx(_this,idDst,2,STA_KMA_CENT|STA_KMA_N1);
+END_CODE
+/html MAN:
+  <p>Estimates the variance vectors of all classes of the statistics and stores the result in
+  <code>idDst</code>. The output instance will contain <i>N</i> = {@link dat}.<a href="data.html#fld_dim"
+  class="code">dim</a> components of type double and <i>C</i> = {@link dat}.<a href="data.html#fld_nblock"
+  class="code">nblock</a> records. Each record</p>
+  <p class="indent"><i>y<sub>c</sub></i> = (<i>y</i><sup>(0)</sup>, ..., <i>y</i><sup>(<i>N</i>-1)</sup>)</p>
+  <p>represents the componentwise &sigma;<sub><i>n</i>-1</sub> variance vector with:</p>
+  <p class="indent"><img src="../resources/statistics/0011.gif" width="473" height="62" border="0" align="absmiddle"
+  alt="y^{(n)} = \mathrm{Var}\left(X^{(n)}\right) = \mathrm{Cov}\left(X^{(n)},X^{(n)}\right) \approx \
+  \frac{1}{I-1}\left(\mathrm{sum}_2^{(n n)}-\frac{\left(\mathrm{sum}_1^{(n)}\right)^2}{I}\right)"> (1)</p>
+  <p>or the componentwise &sigma;<sub><i>n</i></sub> variance vector (option {@link /sn} set) with:</p>
+  <p class="indent"><img src="../resources/statistics/0012.gif" width="448" height="62" border="0" align="absmiddle"
+  alt="y^{(n)} = \mathrm{Var}\left(X^{(n)}\right) = \mathrm{Cov}\left(X^{(n)},X^{(n)}\right) \approx \
+  \frac{1}{I}\left(\mathrm{sum}_2^{(n n)}-\frac{\left(\mathrm{sum}_1^{(n)}\right)^2}{I}\right)"> (2)</p>
+  <p>of one class.</p>
+
+  <h4>Remarks</h4>
+  <ul>
+    <li>See <a href="#">class description above</a> for a definition of the raw statistics data (<i>I</i>,
+      <code>min</code><sup>(<i>n</i>)</sup>, <code>max</code><sup>(<i>n</i>)</sup>,
+      <code>sum</code><sub><i>k</i></sub><sup>(<i>n</i> &middot;)</sup>).
+  </ul>
+
+  @param idDst The destination data instance
+  @cgen:option /sn Estimate &sigma;<sub><i>n</i></sub> variance vectors (default is &sigma;<sub><i>n</i>-1</sub>
+               variance vectors)
+  @see -sdev
+  @see -varc
+  @see -cov
+  @see -mean
+  @see -kmoment
+  @see -skew
+  @see -excs
+END_MAN
+
+METHOD:  -sdev
+SYNTAX:  (data idDst)
+COMMENT: Estimates standard deviation vectors.
+CODE:
+  return CStatistics_MomentEx(_this,idDst,2,STA_KMA_CENT|STA_KMA_N1|STA_KMA_SDEV);
+END_CODE
+/html MAN:
+  <p>Estimates the standard deviation vectors of all classes of the statistics and stores the result in
+  <code>idDst</code>. The output instance will contain <i>N</i> = {@link dat}.<a href="data.html#fld_dim"
+  class="code">dim</a> components of type double and <i>C</i> = {@link dat}.<a href="data.html#fld_nblock"
+  class="code">nblock</a> records. Each record</p>
+  <p class="indent"><i>y<sub>c</sub></i> = (<i>y</i><sup>(0)</sup>, ..., <i>y</i><sup>(<i>N</i>-1)</sup>)</p>
+  <p>represents the &sigma;<sub><i>n</i>-1</sub> componentwise standard deviation vector with:</p>
+  <p class="indent"><img src="../resources/statistics/0021.gif" width="174" height="27" border="0" align="absmiddle"
+  alt="y^{(n)} = \sigma^{(n)} = \sqrt{\mathrm{Var}\left(X^{(n)}\right)}"> (1)</p>
+  <p>of one class.</p>
+
+  <h4>Remarks</h4>
+  <ul>
+    <li>See <a href="#">class description above</a> for a definition of the raw statistics data (<i>I</i>,
+      <code>min</code><sup>(<i>n</i>)</sup>, <code>max</code><sup>(<i>n</i>)</sup>,
+      <code>sum</code><sub><i>k</i></sub><sup>(<i>n</i> &middot;)</sup>).
+  </ul>
+
+  @param idDst The destination data instance
+  @cgen:option /sn Estimation basing on &sigma;<sub><i>n</i></sub> variance vectors (default is
+                   &sigma;<sub><i>n</i>-1</sub> variance vectors)
+  @see -var
+  @see -varc
+  @see -cov
+  @see -mean
+  @see -kmoment
+  @see -skew
+  @see -excs
+END_MAN
+
+METHOD:  -varc
+SYNTAX:  (data idDst)
+COMMENT: Estimates variation coefficient vectors.
+CODE:
+  return CStatistics_MomentEx(_this,idDst,2,STA_KMA_CENT|STA_KMA_N1|STA_KMA_COEF);
+END_CODE
+/html MAN:
+  <p>Estimates the variation coefficient vectors of all classes of the statistics and stores the result in
+  <code>idDst</code>. The output instance will contain <i>N</i> = {@link dat}.<a href="data.html#fld_dim"
+  class="code">dim</a> components of type double and <i>C</i> = {@link dat}.<a href="data.html#fld_nblock"
+  class="code">nblock</a> records. Each record</p>
+  <p class="indent"><i>y<sub>c</sub></i> = (<i>y</i><sup>(0)</sup>, ..., <i>y</i><sup>(<i>N</i>-1)</sup>)</p>
+  <p>represents the &sigma;<sub><i>n</i>-1</sub> componentwise variation coefficient vector with:</p>
+  <p class="indent"><img src="../resources/statistics/0022.gif" width="184" height="41" border="0" align="absmiddle"
+  alt="y^{(n)} = \frac{\sigma^{(n)}}{m_1^{(n)}} = \frac{\sqrt{\mathrm{Var}\left(X^{(n)}\right)}} \
+  {\mathsf{E}\left(X^{(n)}\right)}"> (1)</p>
+  <p>of one class.</p>
+
+  <h4>Remarks</h4>
+  <ul>
+    <li>See <a href="#">class description above</a> for a definition of the raw statistics data (<i>I</i>,
+      <code>min</code><sup>(<i>n</i>)</sup>, <code>max</code><sup>(<i>n</i>)</sup>,
+      <code>sum</code><sub><i>k</i></sub><sup>(<i>n</i> &middot;)</sup>).
+  </ul>
+
+  @param idDst The destination data instance
+  @cgen:option /sn Estimation basing on &sigma;<sub><i>n</i></sub> variance vectors (default is
+                   &sigma;<sub><i>n</i>-1</sub> variance vectors)
+  @see -var
+  @see -varc
+  @see -cov
+  @see -mean
+  @see -kmoment
+  @see -skew
+  @see -excs
+END_MAN
+
+## Methods - Correlation estimations
+METHOD:  -scat
+SYNTAX:  (data idDst)
+COMMENT: Estimates scatter matrices.
+CODE:
+  return CStatistics_CorrelationEx(_this,idDst,STA_CMA_SCAT);
+END_CODE
+/html MAN:
+  <p>Estimates the scatter matrices of all classes of the statistics and stores the result in
+  <code>idDst</code>. The output instance will contain <i>N</i> = {@link dat}.<a href="data.html#fld_dim"
+  class="code">dim</a> components of type double and <i>C</i>&middot;<i>N</i> records grouped in <i>C</i> blocks
+  (<i>C</i> = {@link dat}.<a href="data.html#fld_nblock" class="code">nblock</a>). Each block</p>
+  <table class="indent">
+    <tr>
+      <td rowspan="3" class="hidden" style="vertical-align:middle"><b><i>y</i></b> = </td>
+      <td rowspan="3" class="hidden" style="vertical-align:middle; font-size:24pt; font-weight:100">(</td>
+      <td class="hidden" style="text-align:center"><i>y</i><sup>(0 0)</sup></td>
+      <td class="hidden" style="text-align:center">&nbsp;...&nbsp;</td>
+      <td class="hidden" style="text-align:center"><i>y</i><sup>(0 <i>N</i>-1)</sup></td>
+      <td rowspan="3" class="hidden" style="vertical-align:middle; font-size:24pt; font-weight:100">)</td>
+    </tr>
+    <tr>
+      <td class="hidden" style="text-align:center; line-height:4pt">.<br>.<br>.</td>
+      <td class="hidden" style="text-align:center">...</td>
+      <td class="hidden" style="text-align:center; line-height:4pt">.<br>.<br>.</td>
+    </tr>
+    <tr>
+      <td class="hidden" style="text-align:center"><i>y</i><sup>(<i>N</i>-1 0)</sup></td>
+      <td class="hidden" style="text-align:center">...</td>
+      <td class="hidden" style="text-align:center"><i>y</i><sup>(<i>N</i>-1 <i>N</i>-1)</sup></td>
+    </tr>
+  </table>
+  <p>represents the scatter matrix with:</p>
+  <p class="indent"><img src="../resources/statistics/0017.gif" width="112" height="35" border="0" align="absmiddle"
+  alt="y^{(n m)} \approx \frac{\mathrm{sum}_2^{(n m)}}{I}"> (1)</p>
+  <p>of one class.</p>
+
+  <h4>Remarks</h4>
+  <ul>
+    <li>See <a href="#">class description above</a> for a definition of the raw statistics data (<i>I</i>,
+      <code>min</code><sup>(<i>n</i>)</sup>, <code>max</code><sup>(<i>n</i>)</sup>,
+      <code>sum</code><sub><i>k</i></sub><sup>(<i>n</i> &middot;)</sup>).
+  </ul>
+
+  @param idDst The destination data instance
+  @see -cov
+  @see -corc
+  @see -detc
+  @see -mean
+END_MAN
+
+METHOD:  -cov
+SYNTAX:  (data idDst)
+COMMENT: Estimates covariance matrices.
+CODE:
+  return CStatistics_CorrelationEx(_this,idDst,STA_CMA_COV);
+END_CODE
+/html MAN:
+  <p>Estimates the covariance matrices of all classes of the statistics and stores the result in
+  <code>idDst</code>. The output instance will contain <i>N</i> = {@link dat}.<a href="data.html#fld_dim"
+  class="code">dim</a> components of type double and <i>C</i>&middot;<i>N</i> records grouped in <i>C</i> blocks
+  (<i>C</i> = {@link dat}.<a href="data.html#fld_nblock" class="code">nblock</a>). Each block</p>
+  <table class="indent">
+    <tr>
+      <td rowspan="3" class="hidden" style="vertical-align:middle"><b><i>y</i></b> = </td>
+      <td rowspan="3" class="hidden" style="vertical-align:middle; font-size:24pt; font-weight:100">(</td>
+      <td class="hidden" style="text-align:center"><i>y</i><sup>(0 0)</sup></td>
+      <td class="hidden" style="text-align:center">&nbsp;...&nbsp;</td>
+      <td class="hidden" style="text-align:center"><i>y</i><sup>(0 <i>N</i>-1)</sup></td>
+      <td rowspan="3" class="hidden" style="vertical-align:middle; font-size:24pt; font-weight:100">)</td>
+    </tr>
+    <tr>
+      <td class="hidden" style="text-align:center; line-height:4pt">.<br>.<br>.</td>
+      <td class="hidden" style="text-align:center">...</td>
+      <td class="hidden" style="text-align:center; line-height:4pt">.<br>.<br>.</td>
+    </tr>
+    <tr>
+      <td class="hidden" style="text-align:center"><i>y</i><sup>(<i>N</i>-1 0)</sup></td>
+      <td class="hidden" style="text-align:center">...</td>
+      <td class="hidden" style="text-align:center"><i>y</i><sup>(<i>N</i>-1 <i>N</i>-1)</sup></td>
+    </tr>
+  </table>
+  <p>represents the &sigma;<sub><i>n</i>-1</sub> covariance matrix with:</p>
+  <p class="indent"><img src="../resources/statistics/0013.gif" width="417" height="44" border="0" align="absmiddle"
+  alt="y^{(n m)} = \mathrm{Cov}\left(X^{(n)},X^{(m)}\right) \approx \frac{1}{I-1}\left(\mathrm{sum}_2^{(n m)}- \
+  \frac{\mathrm{sum}_1^{(n)} \mathrm{sum}_1^{(m)}}{I}\right)"> (1)</p>
+  <p>or the &sigma;<sub><i>n</i></sub> covariance matrix (option {@link /sn} set) with:</p>
+  <p class="indent"><img src="../resources/statistics/0014.gif" width="392" height="44" border="0" align="absmiddle"
+  alt="y^{(n m)} = \mathrm{Cov}\left(X^{(n)},X^{(m)}\right) \approx \frac{1}{I}\left(\mathrm{sum}_2^{(n m)}- \
+  \frac{\mathrm{sum}_1^{(n)} \mathrm{sum}_1^{(m)}}{I}\right)"> (2)</p>
+  <p>of one class.</p>
+
+  <h4>Remarks</h4>
+  <ul>
+    <li>See <a href="#">class description above</a> for a definition of the raw statistics data (<i>I</i>,
+      <code>min</code><sup>(<i>n</i>)</sup>, <code>max</code><sup>(<i>n</i>)</sup>,
+      <code>sum</code><sub><i>k</i></sub><sup>(<i>n</i> &middot;)</sup>).
+  </ul>
+
+  @param idDst The destination data instance
+  @cgen:option /sn Estimate &sigma;<sub><i>n</i></sub> covariance matrices (default is &sigma;<sub><i>n</i>-1</sub>
+               covariance matrices)
+  @see -scat
+  @see -corc
+  @see -detc
+  @see -var
+END_MAN
+
+METHOD:  -corc
+SYNTAX:  (data idDst)
+COMMENT: Estimates correlation coefficient matrices.
+CODE:
+  return CStatistics_CorrelationEx(_this,idDst,STA_CMA_CORC);
+END_CODE
+/html MAN:
+  <p>Estimates the corrleation coefficient matrices of all classes of the statistics and stores the result in
+  <code>idDst</code>. The output instance will contain <i>N</i> = {@link dat}.<a href="data.html#fld_dim"
+  class="code">dim</a> components of type double and <i>C</i>&middot;<i>N</i> records grouped in <i>C</i> blocks
+  (<i>C</i> = {@link dat}.<a href="data.html#fld_nblock" class="code">nblock</a>). Each block</p>
+  <table class="indent">
+    <tr>
+      <td rowspan="3" class="hidden" style="vertical-align:middle"><b><i>y</i></b> = </td>
+      <td rowspan="3" class="hidden" style="vertical-align:middle; font-size:24pt; font-weight:100">(</td>
+      <td class="hidden" style="text-align:center"><i>y</i><sup>(0 0)</sup></td>
+      <td class="hidden" style="text-align:center">&nbsp;...&nbsp;</td>
+      <td class="hidden" style="text-align:center"><i>y</i><sup>(0 <i>N</i>-1)</sup></td>
+      <td rowspan="3" class="hidden" style="vertical-align:middle; font-size:24pt; font-weight:100">)</td>
+    </tr>
+    <tr>
+      <td class="hidden" style="text-align:center; line-height:4pt">.<br>.<br>.</td>
+      <td class="hidden" style="text-align:center">...</td>
+      <td class="hidden" style="text-align:center; line-height:4pt">.<br>.<br>.</td>
+    </tr>
+    <tr>
+      <td class="hidden" style="text-align:center"><i>y</i><sup>(<i>N</i>-1 0)</sup></td>
+      <td class="hidden" style="text-align:center">...</td>
+      <td class="hidden" style="text-align:center"><i>y</i><sup>(<i>N</i>-1 <i>N</i>-1)</sup></td>
+    </tr>
+  </table>
+  <p>represents the correlation coefficient matrix with:</p>
+  <p class="indent"><img src="../resources/statistics/0015.gif" width="356" height="49" border="0" align="absmiddle"
+  alt="y^{(n m)} = \mathrm{Cor}\left(X^{(n)},X^{(m)}\right) = \frac{\mathrm{Cov}\left(X^{(n)},X^{(m)}\right)} \
+  {\sqrt{\mathrm{Var}\left(X^{(n)}\right)\cdot\mathrm{Var}\left(X^{(m)}\right)}}"> (1)</p>
+  <p>of one class.</p>
+
+  @param idDst The destination data instance
+  @cgen:option /sn Estimation basing on &sigma;<sub><i>n</i></sub> <a href="#mth_-cov">covariance matrices</a> (default
+                   is &sigma;<sub><i>n</i>-1</sub> <a href="#mth_-cov">covariance matrices</a>)
+  @see -scat
+  @see -cov
+  @see -detc
+  @see -var
+END_MAN
+
+METHOD:  -detc
+SYNTAX:  (data idDst)
+COMMENT: Estimates coefficient of determination matrices.
+CODE:
+  return CStatistics_CorrelationEx(_this,idDst,STA_CMA_DETC);
+END_CODE
+/html MAN:
+  <p>Estimates the coefficients of determination matrices of all classes of the statistics and stores the result in
+  <code>idDst</code>. The output instance will contain <i>N</i> = {@link dat}.<a href="data.html#fld_dim"
+  class="code">dim</a> components of type double and <i>C</i>&middot;<i>N</i> records grouped in <i>C</i> blocks
+  (<i>C</i> = {@link dat}.<a href="data.html#fld_nblock" class="code">nblock</a>). Each block</p>
+  <table class="indent">
+    <tr>
+      <td rowspan="3" class="hidden" style="vertical-align:middle"><b><i>y</i></b> = </td>
+      <td rowspan="3" class="hidden" style="vertical-align:middle; font-size:24pt; font-weight:100">(</td>
+      <td class="hidden" style="text-align:center"><i>y</i><sup>(0 0)</sup></td>
+      <td class="hidden" style="text-align:center">&nbsp;...&nbsp;</td>
+      <td class="hidden" style="text-align:center"><i>y</i><sup>(0 <i>N</i>-1)</sup></td>
+      <td rowspan="3" class="hidden" style="vertical-align:middle; font-size:24pt; font-weight:100">)</td>
+    </tr>
+    <tr>
+      <td class="hidden" style="text-align:center; line-height:4pt">.<br>.<br>.</td>
+      <td class="hidden" style="text-align:center">...</td>
+      <td class="hidden" style="text-align:center; line-height:4pt">.<br>.<br>.</td>
+    </tr>
+    <tr>
+      <td class="hidden" style="text-align:center"><i>y</i><sup>(<i>N</i>-1 0)</sup></td>
+      <td class="hidden" style="text-align:center">...</td>
+      <td class="hidden" style="text-align:center"><i>y</i><sup>(<i>N</i>-1 <i>N</i>-1)</sup></td>
+    </tr>
+  </table>
+  <p>represents the coefficients of determination matrix with:</p>
+  <p class="indent"><img src="../resources/statistics/0016.gif" width="348" height="46" border="0" align="absmiddle"
+  alt="y^{(n m)} = \mathrm{Cor}^2\left(X^{(n)},X^{(m)}\right) = \frac{\mathrm{Cov}^2\left(X^{(n)},X^{(m)}\right)} \
+  {\mathrm{Var}\left(X^{(n)}\right)\cdot\mathrm{Var}\left(X^{(m)}\right)}"> (1)</p>
+  <p>of one class.</p>
+
+  @param idDst The destination data instance
+  @cgen:option /sn Estimation basing on &sigma;<sub><i>n</i></sub> <a href="#mth_-cov">covariance matrices</a> (default
+                   is &sigma;<sub><i>n</i>-1</sub> <a href="#mth_-cov">covariance matrices</a>)
+  @see -scat
+  @see -cov
+  @see -corc
+  @see -var
+END_MAN
+
+## Methods - Higher order statistics
+METHOD:  -skew
+SYNTAX:  (data idDst)
+COMMENT: Estimates skewness vectors.
+CODE:
+  return CStatistics_MomentEx(_this,idDst,3,STA_KMA_CENT|STA_KMA_SKEW);
+END_CODE
+/html MAN:
+  <p>Estimates the skewness vectors of all classes of the statistics and stores the result in
+  <code>idDst</code>. The output instance will contain <i>N</i> = {@link dat}.<a href="data.html#fld_dim"
+  class="code">dim</a> components of type double and <i>C</i> = {@link dat}.<a href="data.html#fld_nblock"
+  class="code">nblock</a> records. Each record</p>
+  <p class="indent"><i>y<sub>c</sub></i> = (<i>y</i><sup>(0)</sup>, ..., <i>y</i><sup>(<i>N</i>-1)</sup>)</p>
+  <p>represents the componentwise skewness vector with:</td>
+  <p class="indent"><img src="../resources/statistics/0023.gif" width="260" height="68" border="0" align="absmiddle"
+  alt="y^{(n)} = \frac{\mu_3^{(n)}}{\sqrt{\left(\mu_2^{(n)}\right)^3}} = \frac{\mathsf{E}\left(X^{(n)}- \
+  \mathsf{E}X^{(n)}\right)^3}{\sqrt{\mathrm{Var}\left(X^{(n)}\right)^3}}"> (1)</p>
+  <p>of one class.</p>
+
+  <h4>Remarks</h4>
+  <ul>
+    <li>See <a href="#">class description above</a> for a definition of the raw statistics data (<i>I</i>,
+      <code>min</code><sup>(<i>n</i>)</sup>, <code>max</code><sup>(<i>n</i>)</sup>,
+      <code>sum</code><sub><i>k</i></sub><sup>(<i>n</i> &middot;)</sup>).
+  </ul>
+
+  @param idDst The destination data instance
+  @see -mean
+  @see -var
+  @see -kmoment
+  @see -excs
+END_MAN
+
+METHOD:  -excs
+SYNTAX:  (data idDst)
+COMMENT: Estimates excess vectors.
+CODE:
+  return CStatistics_MomentEx(_this,idDst,4,STA_KMA_CENT|STA_KMA_EXCS);
+END_CODE
+/html MAN:
+  <p>Estimates the excess (kurtosis) vectors of all classes of the statistics and stores the result in
+  <code>idDst</code>. The output instance will contain <i>N</i> = {@link dat}.<a href="data.html#fld_dim"
+  class="code">dim</a> components of type double and <i>C</i> = {@link dat}.<a href="data.html#fld_nblock"
+  class="code">nblock</a> records. Each record</p>
+  <p class="indent"><i>y<sub>c</sub></i> = (<i>y</i><sup>(0)</sup>, ..., <i>y</i><sup>(<i>N</i>-1)</sup>)</p>
+  <p>represents the componentwise excess vector with:</td>
+  <p class="indent"><img src="../resources/statistics/0024.gif" width="297" height="62" border="0" align="absmiddle"
+  alt=" y^{(n)} = \frac{\mu_4^{(n)}}{\left(\mu_2^{(n)}\right)^2}-3 = \frac{\mathsf{E}\left(X^{(n)}- \
+  \mathsf{E}X^{(n)}\right)^4}{\mathrm{Var}^2\left(X^{(n)}\right)}-3"> (1)</p>
+  <p>of one class.</p>
+
+  <h4>Remarks</h4>
+  <ul>
+    <li>See <a href="#">class description above</a> for a definition of the raw statistics data (<i>I</i>,
+      <code>min</code><sup>(<i>n</i>)</sup>, <code>max</code><sup>(<i>n</i>)</sup>,
+      <code>sum</code><sub><i>k</i></sub><sup>(<i>n</i> &middot;)</sup>).
+  </ul>
+
+  @param idDst The destination data instance
+  @see -mean
+  @see -var
+  @see -kmoment
+  @see -skew
+END_MAN
+
+## Methods - Info and auxilary
+METHOD:  -status
+SYNTAX:  ()
+COMMENT: Prints status information of the statistics.
+/html MAN:
+  <p>Prints a report of the <code>statistics</code> setup at the console.</p>
+END_MAN
+
+## Generate and quit
+-cgen
+quit
+
+## EOF

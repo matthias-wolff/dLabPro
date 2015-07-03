@@ -1,0 +1,1040 @@
+## dLabPro class CFst (fst)
+## - Manual pages
+##
+## AUTHOR : Matthias Wolff, Maximiliano Cuevas and Matthias Eichner
+## PACKAGE: dLabPro/classes
+## 
+## Copyright 2013 dLabPro contributors and others (see COPYRIGHT file) 
+## - Chair of System Theory and Speech Technology, TU Dresden
+## - Chair of Communications Engineering, BTU Cottbus
+## 
+## This file is part of dLabPro.
+## 
+## dLabPro is free software: you can redistribute it and/or modify it under the
+## terms of the GNU Lesser General Public License as published by the Free
+## Software Foundation, either version 3 of the License, or (at your option)
+## any later version.
+## 
+## dLabPro is distributed in the hope that it will be useful, but WITHOUT ANY
+## WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+## FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+## details.
+## 
+## You should have received a copy of the GNU Lesser General Public License
+## along with dLabPro. If not, see <http://www.gnu.org/licenses/>.
+
+## Errors
+/append ERROR: FST_BADCTYPE
+/html MAN:
+  The specified component has a wrong variable type.
+  @param 1 The descriptor type (unit, state or transition)
+  @param 2 Index of the component causing the error
+  @see ud
+  @see sd
+  @see td
+END_MAN
+
+/append ERROR: FST_BADID
+/html MAN:
+  There is no element with the specified numeric index. The element may be a component or record number in an internal
+  {@link ud unit}, {@link sd state} or {@link td transition}) or external data table.
+  @param 1 The index type (component, unit, state or transition)
+  @param 2 The value of the invalid index
+  @see ud
+  @see sd
+  @see td
+END_MAN
+
+/append ERROR: FST_BADID2
+/html MAN:
+  There is no element with the specified numeric index. The element may be a component or record number in an internal
+  (@link ud unit}, {@link sd state} or {@link td transition}) or external data table.
+  @param 1 The index type (component, unit, state or transition)
+  @param 2 The value of the invalid index
+  @see ud
+  @see sd
+  @see td
+END_MAN
+
+/append ERROR: FST_INTERNAL
+/html MAN:
+  <p>The execution of a C/C++ function failed. To track these errors run dLabPro in debug mode
+  and insert the following line immediately before the method causing the error:</p>
+<pre class="code">
+
+  "fst1001" <a href="itp.html#mth_root">root</a> <a href="itp.html#mth_set">set</a> <a href="itp.html#fld_trace_error">trace_error</a>
+
+</pre>
+  <p>This will break the dLabPro session and start the C/C++ debugger.</p>
+  @param 1 Error position: filename of C/C++ source file
+  @param 2 Error position: line number in C/C++ source file
+END_MAN
+
+/append ERROR: FST_MISS
+/html MAN:
+  <p>The specified element is missing. This error occurs when:</p>
+  <ul>
+    <li>a required element is missing in a parameter during a method call,</li>
+    <li>methods require certain automaton properties such as input symbols
+    (finite state acceptor), input and output symbols (finite state transducer)
+    or transition weights (weighted automaton).</li>
+  </ul>
+  @param 1 Type of missing element (e.g. "component")
+  @param 2 Name or description of missing element
+  @param 3 Object missing the element (e.g. "transition table")
+END_MAN
+
+/append ERROR: FST_PATHTOOLONG
+/html MAN:
+  <p>The traversal of the automaton was aborted as one or several paths exceeded the maximal length as specified by
+  field {@link max_len}. Paths which did not exceed the maximal path length were processed correctly.</p>
+  @param 1 Operation
+  @param 2 Unit number
+END_MAN
+
+/append ERROR: FST_UNITEMPTY
+/html MAN:
+  <p>The specified unit is empty. This warning may occur if a method produces an empty result.</p>
+  @param 1 Unit number
+END_MAN
+
+## Fields
+/append FIELD: climit
+/html MAN:
+  <p>Defines the limit of the number of passes through cycles during the tree expansion (see {@link -tree}) if the
+  option {@link /climit} is used. Each state can only be used <i>n</i> times in one path, where <i>n</i> is defined as
+  follows:</p>
+  <ul>
+    <li>if the options {@link /climit} <i>and</i> {@link /index} are set <i>n</i> will be looked up individually for
+    each state <i>s</i> from component {@link climit} of the soruce instances's {@link sd state table}:
+    <i>n</i>=<code>itSrc.sd[s,{@link climit}]</code>.</li>
+    <li>if the option {@link /climit} is set and the {@link /index} is <i>not</i> set the value {@link climit} is used
+    as common limit for all states: <i>n</i>={@link climit}.
+  </ul>
+END_MAN
+
+/append FIELD: ftol
+/html MAN:
+  <p>This field is used by the {@link Wsr_Op CFst_Wsr_Op} method to define "equal" floating point numbers (operation
+  <code>OP_EQUAL</code>.</p>
+  @see Wsr_Op CFst_Wsr_Op
+END_MAN
+
+/append FIELD: sd
+/html MAN:
+  <p>The state table contains the qualification of the states of the finite state automata, i.e. supplies space for
+  additional information to the states.</p>
+  <p>The first component of <code>sd</code> has a special meaning. Other (optional) components have special meanings,
+  too:</p>
+  <table cellpadding="2" cellspacing="0" border="0">
+    <tr><th>comp.    </th><th>type        </th><th>name          </th><th>symbol            </th><th>description</th></tr>
+    <tr><td>0<b>*</b></td><td>T_BYTE      </td><td>"~FLG"        </td><td>{@link IC_SD_FLAG}</td><td>Final state flag</td></tr>
+    <tr><td>1        </td><td>user defined</td><td>&nbsp;        </td><td>{@link IC_SD_DATA}</td><td>Arbitrary user defined comps.</td></tr>
+    <tr><td>...      </td><td>...         </td><td>&nbsp;        </td><td>&nbsp;            </td><td>&nbsp;</td></tr>
+    <tr><td>?        </td><td>numeric     </td><td>"~RC"<b>� </b></td><td>{@link NC_SD_RC}  </td><td>Reference counter</td></tr>
+    <tr><td>?        </td><td>numeric     </td><td>"~POT"<b>�</b></td><td>{@link NC_SD_POT} </td><td>State potential</td></tr>
+    <tr><td>?        </td><td>numeric     </td><td>"~RNK"<b>�</b></td><td>{@link NC_SD_RNK} </td><td>State rank (topological order)</td></tr>
+  </table>
+  <p><b>*</b> The component <i>index</i> is significant, names do not matter.<br>
+  <b>�</b> Component <i>name</i> is significant, index does not matter.</p>
+  @see ud
+  @see td
+  @see -addstates
+  @see -delstate
+  @see -- Variable types
+END_MAN
+
+/append FIELD: ud
+/html MAN:
+  <p>The unit table defines a partition of the {@link sd state} and {@link td transition tables} into single finite
+  state automaton graphs ("units"). Each record of the unit table defines exactly one unit. An instance of class 
+  <code>fst</code> contains exactly <code>fst.ud.<a href="data.html#fld_nrec">nrec</a></code> units.</p>
+  <p>The first five components of <code>ud</code> have special meanings:</p>
+  <table cellpadding="2" cellspacing="0" border="0">
+    <tr><th>comp.    </th><th>type        </th><th>name  </th><th>symbol       </th><th>description</th></tr>
+  <tr><td>0<b>*</b></td><td>1..255      </td><td>"~NAM"</td><td>{@link IC_UD_NAME}</td><td>User defined name of unit</td></tr>
+    <tr><td>1<b>*</b></td><td>FST_ITYPE   </td><td>"~XS" </td><td>{@link IC_UD_XS}  </td><td>Number of states in unit</td></tr>
+    <tr><td>2<b>*</b></td><td>FST_ITYPE   </td><td>"~XT" </td><td>{@link IC_UD_XT}  </td><td>Number of edges in unit</td></tr>
+    <tr><td>3<b>*</b></td><td>FST_ITYPE   </td><td>"~FS" </td><td>{@link IC_UD_FS}  </td><td>Index of first state in sd</td></tr>
+    <tr><td>4<b>*</b></td><td>FST_ITYPE   </td><td>"~FT" </td><td>{@link IC_UD_FT}  </td><td>Index of first edge in td</td></tr>
+    <tr><td>5        </td><td>user defined</td><td>&nbsp;</td><td>{@link IC_UD_DATA}</td><td>Arbitrary user defined comps.</td></tr>
+    <tr><td>...      </td><td>...         </td><td>&nbsp;</td><td>&nbsp;            </td><td>&nbsp;</td></tr>
+  </table>
+  <p><b>*</b> The component <i>index</i> is significant, names do not matter.</p>
+  @see sd
+  @see td
+  @see -addunit
+  @see -delunit
+  @see -- Variable types
+END_MAN
+
+/append FIELD: td
+/html MAN:
+  <p>The transition table contains the qualification of the edges of the finite state automata, i.e. supplies space for
+  additional information to the edges.</p>
+  <p>The first two components of <code>td</code> have special meanings. Other (optional) components have special
+  meanings, too:</p>
+  <table cellpadding="2" cellspacing="0" border="0">
+    <tr><th>comp.    </th><th>type        </th><th>name          </th><th>symbol            </th><th>description</th></tr>
+    <tr><td>0<b>*</b></td><td>FST_ITYPE   </td><td>"~TER"        </td><td>{@link IC_TD_TER} </td><td>Terminal state<sup>1)</sup></td></tr>
+    <tr><td>1<b>*</b></td><td>FST_ITYPE   </td><td>"~INI"        </td><td>{@link IC_TD_INI} </td><td>Inital state<sup>1)</sup></td></tr>
+    <tr><td>2        </td><td>user defined</td><td>&nbsp;        </td><td>{@link IC_TD_DATA}</td><td>Arbitrary user defined comps.</td></tr>
+    <tr><td>...      </td><td>...         </td><td>&nbsp;        </td><td>&nbsp;            </td><td>&nbsp;</td></tr>
+    <tr><td>?        </td><td>numeric     </td><td>"~RC"<b>**</b> </td><td>{@link NC_TD_RC}  </td><td>Reference counter</td></tr>
+    <tr><td>?        </td><td>FST_WTYPE   </td><td>"~PSR"<b>**</b></td><td>{@link NC_TD_PSR} </td><td>Transition probability (probability semiring)</td></tr>
+    <tr><td>?        </td><td>FST_WTYPE   </td><td>"~LSR"<b>**</b></td><td>{@link NC_TD_LSR} </td><td>Negative log transition probability (log semiring)</td></tr>
+    <tr><td>?        </td><td>FST_WTYPE   </td><td>"~TSR"<b>**</b></td><td>{@link NC_TD_TSR} </td><td>Transition weight (tropical semiring)</td></tr>
+    <tr><td>?        </td><td>FST_STYPE   </td><td>"~TIS"<b>**</b></td><td>{@link NC_TD_TIS} </td><td>Transducer input symbol<sup>2)</sup></td></tr>
+    <tr><td>?        </td><td>FST_STYPE   </td><td>"~TOS"<b>**</b></td><td>{@link NC_TD_TOS} </td><td>Transducer output symbol<sup>2)</sup></td></tr>
+  </table>
+  <p><b>*</b> Component <i>index</i> is significant, names do not matter.<br>
+  <b>**</b> Component <i>name</i> is significant, index does not matter.<br>
+  <sup>1)</sup> State indices count per unit, starting from 0 for the first state.<br>
+  <sup>2)</sup> Input and output symbols are non-negative indexes in the input and output symbol tables {@link is} and {@link os}. The
+  index -1 denotes the epsilon symbol.</p>
+  @see ud
+  @see td
+  @see -addtrans
+  @see -deltrans
+  @see -- Variable types
+END_MAN
+
+## Hidden fields
+/append FIELD: fts
+/html MAN:
+  <p>Internally used by graph iterators.</p>
+  <p>Correctness and usability are <i>not</i> guaranteed at any time!</p>
+  @see STI_Init CFst_STI_Init
+END_MAN
+
+/append FIELD: det_rt
+/html MAN:
+  <p>Internally used during transducer determinization.</p>
+  <p>Each record holds one residual consisting of</p>
+  <table cellpadding="2" cellspacing="0" border="0">
+    <tr><th>comp.    </th><th>type     </th><th>name     </th><th>description</th></tr>
+    <tr><td>0<b>*</b></td><td>FST_ITYPE</td><td>"nIniSrc"</td><td>State index in soruce transducer</td></tr>
+    <tr><td>1<b>*</b></td><td>FST_ITYPE</td><td>"nResStr"</td><td>Index of residual output symbol string (see {@link det_st}</td></tr>
+    <tr><td>2<b>*</b></td><td>FST_WTYPE</td><td>"nResW"  </td><td>Residual weight</td></tr>
+    <tr><td>3<b>*</b></td><td>long     </td><td>"hash"   </td><td>Hash code for comparison</td></tr>
+  </table>
+  <p><b>*</b> Component <i>index</i> is significant, names do not matter.</p>
+  <p>Correctness and usability are only guaranteed within {@link DeterminizeUnit CFst_DeterminizeUnit}!</p>
+  @see det_st
+  @see ic_sd_aux
+  @see -determinize
+END_MAN
+
+/append FIELD: det_st
+/html MAN:
+  <p>Internally used during transducer determinization.</p>
+  <p>String storage. Each string is identified by a unique index of type <code>FST_ITYPE</code>. See the
+  <code>CFst_Ssr_Xxx</code> methods for more information.</p>
+  <p>Correctness and usability are only guaranteed within {@link DeterminizeUnit CFst_DeterminizeUnit}!</p>
+  @see Ssr_Init CFst_Ssr_Init
+  @see det_rt
+  @see ic_sd_aux
+  @see -determinize
+END_MAN
+
+/append FIELD: ic_sd_aux
+/html MAN:
+  <p>Buffer for index of first component in the state table {@link sd} that carries auxilary data. Auxilary
+  components are typically added at the beginning of an algorithm and removed after the completion.</p>
+  <p>Methods may use this field internally. Correctness is <i>not</i> guaranteed at any time!</p>
+  <h3>Known usages</h3>
+  <ul>
+    <li>{@link DeterminizeUnit CFst_DeterminizeUnit}: Two auxilary components containing the first residual associated
+    with the state and the number of residuals associated with the state. The residual information is stored in the
+    residual table {@link det_rt}.</li>
+    <li>{@link Reverse CFst_Reverse}: One auxilary component holding aggregated state probability
+    for reversal in the probability semiring.</li>
+  </ul>
+  @see sd
+END_MAN
+
+/append FIELD: ic_td_aux
+/html MAN:
+  <p>Buffer for index of first component in the transition table {@link td} that carries auxilary data. Auxilary
+  components are typically added at the beginning of an algorithm and removed after the completion.</p>
+  <p>Methods may use this field internally. Correctness is <i>not</i> guaranteed at any time!</p>
+  <h3>Known usages</h3>
+  <ul>
+    <li>{@link Reverse CFst_Reverse}: One auxilary component holding aggregated transition probability
+    for reversal in the probability semiring.</li>
+  </ul>
+  @see td
+END_MAN
+
+/append FIELD: ic_tis
+/html MAN:
+  <p>Buffer for index of transducer input symbol component in the transition table {@link td}.</p>
+  <p>Methods may use this field internally. Correctness is <i>not</i> guaranteed at any time!</p>
+  @see ic_tos
+  @see ic_w
+  @see wsr
+  @see td
+END_MAN
+
+/append FIELD: ic_tos
+/html MAN:
+  <p>Buffer for index of transducer output symbol component in the transition table {@link td}.</p>
+  <p>Methods may use this field internally. Correctness is <i>not</i> guaranteed at any time!</p>
+  @see ic_tis
+  @see ic_w
+  @see wsr
+  @see td
+END_MAN
+
+/append FIELD: ic_w
+/html MAN:
+  <p>Buffer for index of weight component in the transition table {@link td}.</p>
+  <p>Methods may use this field internally. Correctness is <i>not</i> guaranteed at any time!</p>
+  @see ic_tis
+  @see ic_tos
+  @see wsr
+  @see td
+  @see Wsr_GetType CFst_Wsr_GetType
+END_MAN
+
+/append FIELD: rcfloor
+/html MAN:
+  @see -probs
+END_MAN
+
+/append FIELD: wsr
+/html MAN:
+  <p>Buffer for the current semiring type of the weight component in the transition table {@link td}. One of the
+  <code>FST_WSR_XXX</code> constants or 0 for no weights.</p>
+  <p>Methods may use this field internally. Correctness is <i>not</i> guaranteed at any time!</p>
+  @see ic_tis
+  @see ic_tos
+  @see ic_w
+  @see td
+  @see Wsr_GetType CFst_Wsr_GetType
+END_MAN
+
+## Options
+/append OPTION: /climit
+/html MAN:
+  <h3>{@link -tree}</h3>
+  <p>Limits the number of passes through cycles during the tree expansion. Each state can only be used <i>n</i> times
+  in one path. <i>n</i> may be defined through the field {@link climit} (see there for details).</p>
+
+  @see climit
+  @see /climit
+END_MAN
+
+/append OPTION: /implicit
+/html MAN:
+  <h3>{@link -wire}</h3>
+  <p>If set all units will be collected into one single unit in the destination instance. Linkage from final to start 
+  states is implicitly given.</p>
+END_MAN
+
+/append OPTION: /index
+/html MAN:
+  <h3>{@link -compile}</h3>
+  <p>If set the method will append the current unit index as output symbol at transitions <i>a)</i> leaving from the
+  start state (option {@link /push} <em>not</em> set) <i>b)</i> ending at final states (option {@link /push} set).</p>
+
+  <h3>{@link -tree}</h3>
+  <p>Only valid togther with {@link /climit}. If set the {@link climit} field is interpreted as a component index in
+  the {@link sd state table} of the source instance. The values found in this component are interpreted as the maximal
+  repetition count of the individual states in one path during the tree expansion.</p>
+
+  <h3>{@link -union}</h3>
+  <p>If set the method will append the former unit index as output symbol at transitions <i>a)</i> leaving from the
+  start state (option {@link /push} <em>not</em> set) <i>b)</i> ending at final states (option {@link /push} set).</p>
+
+  <h3>{@link -wire}</h3>
+  <p>If set the original unit id is appended for all exit states and transitions. Exit transitions are transitions that
+  terminate either at a final state or at a state of another (former) unit. Transitions that are not exit transitions
+  get the unit id '-1'.</p>
+
+  @see /climit
+  @see /implicit
+  @see /push
+END_MAN
+
+/append OPTION: /noloops
+/html MAN:
+  <h3>{@link -tree}</h3>
+  <p>Does not expand trivial cycles (self loops) but leaves them by their states.</p>
+END_MAN
+
+/append OPTION: /push
+/html MAN:
+  <h3>{@link -compile}</h3>
+  <p>Only valid togther with {@link /index}. Places output symbols (unit indices) at final transitions.</p>
+
+  <h3>{@link -union}</h3>
+  <p>Only valid togther with {@link /index}. Places output symbols (former unit indices) at final transitions.</p>
+END_MAN
+
+/append OPTION: /segment
+/html MAN:
+  <h3>{@link -multigram}</h3>
+  <p>Creates a weighted segment graph whose transitions carry negative logarithmic segment probabilities (log
+  semiring) and multigram input symbols (i.e. segment indices). The default behaviour creates a weighted chain whose
+  transitions carry conditional probabilities (probability semiring) and single symbol indices as input symbols.</p>
+END_MAN
+
+## Methods
+/append METHOD: -addstates
+/html MAN:
+  Adds <code>nCount</code> states to unit <code>nUnit</code>.
+  @param       nUnit  The unit to add states to
+  @param       nCount The number of states to add
+  @cgen:option /final Create final states (default is normal, non-final states)
+  @see         -delstate
+  @see         -addunit
+  @see         -addtrans
+END_MAN
+
+/append METHOD: -addtrans
+/html MAN:
+  Adds one transition between state <code>nIni</code> and state <code>nTer</code> to unit <code>nUnit</code>.
+  @param nUnit The unit to add transition to.
+  @param nIni  Unit relative index of initial state of new transition.
+  @param bTer  Unit relative index of terminal state of new transition.
+  @cgen:option /final Make the terminal state of the transition final.
+  @see   -deltrans
+  @see   -addunit
+  @see   -addstates
+END_MAN
+
+/append METHOD: -analyze
+/html MAN:
+  <p>Analyzes an automaton for one or a combination of properties as specified in the
+  table below.</p>
+  <table class="indent" cellpadding="3">
+    <tr><th>C Symbol</th><th>Numeric value</th><th>Description</th></tr>
+    <tr><td><code>FST_FWDCONN   </code></td><td><code>0x0001</code></td><td>Automaton graph is forward connected</td></tr>
+    <tr><td><code>FST_BKWCONN   </code></td><td><code>0x0002</code></td><td>Automaton graph is backward connected</td></tr>
+    <tr><td><code>FST_FWDTREE   </code></td><td><code>0x0004</code></td><td>Automaton graph is a forward tree</td></tr>
+    <tr><td><code>FST_BKWTREE   </code></td><td><code>0x0008</code></td><td>Automaton graph is a backward tree</td></tr>
+    <tr><td><code>FST_LOOPS     </code></td><td><code>0x0010</code></td><td>Automaton graph is has loops (trivial cicles)</td></tr>
+    <tr><td><code>FST_WEIGHTED  </code></td><td><code>0x0100</code></td><td>Automaton is weighted</td></tr>
+    <tr><td><code>FST_ACCEPTOR  </code></td><td><code>0x0200</code></td><td>Automaton is an acceptor</td></tr>
+    <tr><td><code>FST_TRANSDUCER</code></td><td><code>0x0600</code></td><td>Automaton is a transducer (implies <code>FST_ACCEPTOR</code>)</td></tr>
+  </table>
+  <h3>Notes</h3>
+  <ul>
+  <li>Set check level to one in order to display additional information.</li>
+<pre class="code">
+
+  <span class="c-key">fst</span> f
+  1 f <a href="itp.html#mth_set"><code class="link">set</code></a> <a href="itp.html#fld_check"><code class="link">check</code></a>
+
+</pre>
+  <li>This method scans the automaton graphs. If you just want to determine the automaton type, use {@link -get_type}</li>
+  </ul>
+
+  @param  nUnit The unit to be analyzed or -1 for all units
+  @param  nMask A combination of property flags to be tested (see table above)
+  @return A combination of property flags (see table above)
+  @see    -get_type
+  @see    -analyze_multigram
+END_MAN
+
+/append METHOD: -analyze_multigram
+/html MAN:
+  <p>Checks whether <code>nUnit</code> contains a valid <i>n</i>-multigram tree and counts the total number and the
+  number of different <i>n</i>-grams in the model. The following properties of <code>_this</code> instance will be
+  checked:</p>
+  <ul>
+    <li>it is a finite state acceptor (i.e. its transitions are qualified with input symbols),</li>
+    <li>it contains transition reference counters which are all positive,</li>
+    <li>it is a connected forward tree,</li>
+    <li>it does not contain loops and</li>
+    <li>none of its paths is longer than {@link max_len}</li>
+  </ul>
+  <p>If the field {@link symbols} is &leq;0, the method also auto-detects the number of elemtary symols.</p>
+
+  <p>The destination table <code>idCtrs</code> will be filled with the following component structure:</p>
+  <table>
+    <tr><th>No.</th><th>Name  </th><th>Description</th></tr>
+    <tr><td>0  </td><td>"ngm" </td><td>Number of different <i>R</i>-grams<sup>1)</sup></td></tr>
+    <tr><td>1  </td><td>"obs" </td><td>Number of observations of <i>R</i>-grams<sup>1)</sup></td></tr>
+    <tr><td>4  </td><td>"Xngm"</td><td>Potential number of <i>R</i>-grams <sup>1,2)</sup></td></tr>
+  </table>
+  <p>1) <i>R</i> stands for the record index in <code>idCtrs</code>.<br>
+     2) The potential number of <i>R</i>-grams is calculated as the number of different elementary symbols
+        (field {@link symbols}) to the power of <i>R</i>.</p>
+  <p>For convenience, the 0th record of <code>idCtrs</code> will be filled with the aggregated counters of the other
+  records.</p>
+
+  @param idCtrs Data table to be filled with <i>n</i>-gram counts (may be <code>NULL</code>)
+  @param nUnit  Unit to be analyzed
+END_MAN
+
+/append METHOD: -best_n
+/html MAN:
+  <p>Creates a tree with the best <code>nPaths</code> paths (minimum cost) taken from <code>itSrc</code>. If the
+  option {@link /local} is used, the best <code>nPaths</code> paths starting at each state will be searched. In the
+  latter case the resulting graph not a tree. If nPathlength > 0 only paths are extracted, with length equal to
+  nPathlength (this doesnt work if /local is set).</p>
+
+  @param itSrc Pointer to source automaton instance
+  @param nUnit Index of unit to process 
+  @param nPaths number of paths to be extracted 
+  @param nPathlength length of paths to be extracted
+  @cgen:option /local Local <code>nPaths</code>-best paths per state
+  @cgen:option /push  Push destination weigths towards final states
+  @cgen:TODO: Method looses state qualifications; to be fixed.
+  @see -potential
+END_MAN
+
+/append METHOD: -cat
+/html MAN:
+  <p>Appends the automaton instance <code>itSrc</code> to this instance.</p>
+  @param itSrc The source instance
+  @see   <a href="itp.html#mth_-copy"><code class="link">-copy</code></a>
+END_MAN
+
+/append METHOD: -delstate
+/html MAN:
+  @param nUnit  The unit to delete state from
+  @param nState The unit relative state index
+END_MAN
+
+/append METHOD: -deltrans
+/html MAN:
+  @param nUnit  The unit to delete state from
+  @param nTrans The absolue transition index
+END_MAN
+
+/append METHOD: -epsdist
+/html MAN:
+  <p>Computes epsilon distances between all states of the automaton <code>itSrc</code> and stores
+  the result in this instance.</p>
+  <h3>Notes</h3>
+  <ul>
+    <li style="color:red">The method modifies <code>SD_FLG_USER1</code>, <code>SD_FLG_USER2</code>
+    and <code>SD_FLG_USER3</code> in the {@link sd state table} of <code>itSrc</code>.</li>
+  </ul>
+  @param itSrc Source automaton instance
+  @param nUnit Unit to process
+END_MAN
+
+/append METHOD: -epsremove
+/html MAN:
+  <p>Creates an equivalent automaton without epsilon transitions.</p>
+  <h3>Notes</h3>
+  <ul>
+    <li>The resulting automaton may be much bigger than the original one.</li>
+    <li>The method will loose all transition qualifications along epsilon paths
+    (except the weight).</li>
+    <li>The method will loose all states and their qualifications whose adjacent
+    transitions are all epsilon transitions and which are not the start state or
+    a final state.
+    <li style="color:red">The method modifies <code>SD_FLG_USER1</code>, <code>SD_FLG_USER2</code>
+    and <code>SD_FLG_USER3</code> in the {@link sd state table} of <code>itSrc</code>.</li>
+  </ul>
+  @param itSrc Source automaton instance
+  @param nUnit Unit to process
+END_MAN
+
+/append METHOD: -fslist
+/html MAN:
+  <p>Fills a data table <code>idDst</code> with a list of final state indices. If <code>nUnit</code> is greater or
+  equal 0, the method will list the unit relative indices of the final states of the specified unit. If
+  <code>nUnit</code> is less than 0, the method will list the absolute indices of the final states of <i>all</i>
+  units.</p>
+  @param nUnit The unit to list final states for (-1 for all units)
+  @param idDst Destination data table
+END_MAN
+
+/append METHOD: -fsunify
+/html MAN:
+  <p>Unifies all final states into one.</p>
+  @param _this Pointer to (this) automaton instance
+  @param nUnit The unit to process or -1 for all units
+END_MAN
+
+/append METHOD: -get_type
+/html MAN:
+  <p>Determines the automaton type as specified in the table below.</p>
+  <table>
+    <tr><th>C Symbol</th><th>Numeric value</th><th>Description</th></tr>
+    <tr><td><code>FST_WEIGHTED</code></td><td><code>0x0100</code></td><td>Automaton is weighted</td></tr>
+    <tr><td><code>FST_ACCEPTOR</code></td><td><code>0x0200</code></td><td>Automaton is an acceptor</td></tr>
+    <tr><td><code>FST_TRANSDUC</code></td><td><code>0x0600</code></td><td>Automaton is a transducer (implies <code>FST_ACCEPTOR</code>)</td></tr>
+  </table>
+
+  @param  nMask A combination of property flags to be tested (see table above)
+  @return A combination of property flags (see table above)
+  @see    -analyze
+END_MAN
+
+/append METHOD: -intersect
+/html MAN:
+  The result of the operation is a (weighted) acceptor which contains all paths present in <em>both</em>
+  operands. The weight of the paths is the semiring sum of the respective path weights in the operands.
+  <h3>Notes</h3>
+  <ul>
+    <li>The method will loose the output symbols of both operands.</li>
+  </ul>
+
+  @param itSrc1 Left operand
+  @param itSrc2 Right operand
+  @param nUnit1 Unit to be processed in left operand
+  @param nUnit2 Unit to be processed in left operand
+END_MAN
+
+/append METHOD: -multigram
+/html MAN:
+  <p>The method has two operation modes depending on the option {@link /segment}.</p>
+
+  <h4>1. Sequence Mode (Option {@link /segment} <i>not</i> set)</h4>
+
+  <p>Creates a chain whose transitions that accept symbols taken from <code>idSeq</code> and are weighted with the
+  (interpolated) conditioned <i>n</i>-(multi)gram probablilies of each symbol in the sequence <code>idSeq</code>.
+  See below for details of the <i>n</i>-multigram interpolation.</p>
+  <p>The output fst instance is a weighted acceptor with <code>idSeq.nrec+1</code> states and <code>idSeq.nrec</code>
+  transitions whose {@link td transition table} has the following components:</p>
+  <table>
+    <tr><th>No.</th><th>Name             </th><th>Description</th></tr>
+    <tr><td>2  </td><td>{@link NC_TD_TIS}</td><td>acceptor input symbol taken from <code>idSeq</code></td></tr>
+    <tr><td>3  </td><td>{@link NC_TD_LSR}</td><td>conditional symbol probability</td></tr>
+    <tr><td>4  </td><td>"hlen"           </td><td>maximal actual <i>n</i>-gram length used for probability calculation</td></tr>
+  </table>
+
+  <h4>2. Segmentation Graph Mode (Option {@link /segment} set)</h4>
+
+  <p>Creates a graph with <code>idSeq.nrec+1</code> states. The states will be connected by transitions spanning
+  1 through {@link max_len} states. The transitions respresent sequences of symbols <i>S</i> =
+  (<i>s</i><sub>1</sub>, ..., <i>s</i><sub><i>N</i></sub>) of length <i>N</i> from the input sequence
+  and will be weighted with negative logarithmic probabilities calculated from the <i>n</i>-multigram tree
+  contained in unit <code>nUnit</code> of <code>this</code> instance: <i>w</i> = &sum;<sub><i>i</i></sub>
+  log <i>P</i>(<i>s</i><sub><i>i</i></sub>|<i>s</i><sub><i>i-O</i></sub>, ..., <i>s</i><sub><i>i</i>-1</sub>),
+  where <i>O</i> stands for the maximal <i>n</i>-gram order <code>nOrder</code>. The transducer input symbols of the
+  destination instance are global transition indices in the <i>n</i>-multigram tree <code>_this</code> uniquely
+  defining a symbol sequence.</p>
+  <p>The output fst instance is a weighted acceptor with <code>idSeq.nrec+1</code> states and at most
+  {@link max_len}&middot;<code>idSeq.nrec</code> transitions whose {@link td transition table} has the following
+  components:</p>
+  <table>
+    <tr><th>No.</th><th>Name             </th><th>Description</th></tr>
+    <tr><td>2  </td><td>{@link NC_TD_TIS}</td><td>global index of last transition of the segment in the
+                                                  <i>n</i>-multigram tree or -1 of that segment does not exist</td></tr>
+    <tr><td>3  </td><td>{@link NC_TD_LSR}</td><td>segment weight (negative logarithmic probability)</td></tr>
+    <tr><td>4  </td><td>"hlen"           </td><td>maximal actual <i>n</i>-gram length used for probability calculation</td></tr>
+    <tr><td>5  </td><td>{@link NC_TD_RC} </td><td>reference counter of segment in <i>n</i>-multigram tree or 0
+                                                  if that segment does not exist</td></tr>
+    <tr><td>6  </td><td>"len"            </td><td>segment length</td></tr>
+  </table>
+
+  <h3>Multigram Interpolation</h3>
+
+  <p>If <code>idWeights</code> is not <code>NULL</code> the method performs an <i>n</i>-multigram interpolation
+  (if <code>idWeights</code> is <code>NULL</code> the method just calculates <i>n</i>-gram probabilities or order
+  {@link max_len}). The interpolated conditioned <i>n</i>-multigram probability of item <i>s<sub>n</sub></i> in the
+  symbol sequence <i>S</i> = (<i>s<sub>1</sub></i>, <i>s<sub>2</sub></i>, ..., <i>s<sub>N</sub></i>) is the weighted
+  mean value of the conditioned <i>n</i>-gram probabilies for this symbol for all history lengths 0 &le; <i>n</i> &le;
+  <i>{@link max_len}</i> covered by the <i>n</i>-multigram model:</p>
+  <table>
+    <tr>
+      <td class="hidden"><i>P</i>(<i>s<sub>n</sub></i>|<i>s</i><sub><i>n</i>-<i>{@link max_len}</i></sub>...<i>s</i><sub><i>n</i>-1</sub>)&nbsp;</td>
+      <td class="hidden">= <i>r</i><sub>0</sub> &middot; 1/<i>{@link symbols}</i></td>
+      <td class="hidden">(Zerogram)</td>
+    </tr>
+    <tr>
+      <td class="hidden"> </td>
+      <td class="hidden">+ <i>r</i><sub>1</sub> &middot; <i>h</i>(<i>s<sub>n</sub></i>)</td>
+      <td class="hidden">(Unigram)</td>
+    </tr>
+    <tr>
+      <td class="hidden"> </td>
+      <td class="hidden">+ <i>r</i><sub>2</sub> &middot; <i>h</i>(<i>s<sub>n</sub></i>|<i>s</i><sub><i>n</i>-1</sub>)</td>
+      <td class="hidden">(Bigram)</td>
+    </tr>
+    <tr>
+      <td class="hidden"> </td>
+      <td class="hidden">+ <i>r</i><sub>3</sub> &middot; <i>h</i>(<i>s<sub>n</sub></i>|<i>s</i><sub><i>n</i>-2</sub>, <i>s</i><sub><i>n</i>-1</sub>)</td>
+      <td class="hidden">(Trigram)</td>
+    </tr>
+    <tr>
+      <td class="hidden"> </td>
+      <td class="hidden">+ ...</td>
+      <td class="hidden"> </td>
+    </tr>
+    <tr>
+      <td class="hidden"> </td>
+      <td class="hidden">+ <i>r</i><sub><i>{@link max_len}</i></sub> &middot; <i>h</i>(<i>s<sub>n</sub></i>|<i>s</i><sub><i>n</i>-<i>{@link max_len}</i></sub>, ..., <i>s</i><sub><i>n</i>-1</sub>)</td>
+      <td class="hidden">(<i>{@link max_len}</i>-gram)</td>
+    </tr>
+  </table>
+  <p>where {@link symbols} is total number of different symbols <i>s<sub>i</sub></i> and <i>R</i> = (<i>r</i><sub>0</sub>,
+  <i>r</i><sub>1</sub>, ..., <i>r</i><sub><i>{@link max_len}</i></sub>) is the <i>n</i>-gram interpolation vector
+  <code>idWeights</code>.</p>
+  <p>If the sum over the vector elements is not equal to one, the vector will be normalized. If the actual available
+  history of a symbol is shorter than {@link max_len} due to its position in <code>idSeq</code> the interpolation is
+  carried out with the longest possible history. The actually used components of the interpolation vector
+  <code>idWeights</code> will be normalized to sum up to 1 in this case. Unseen events in the <i>n</i>-multigram tree
+  are assumed to have the floor probability <code>exp(-{@link wceil})</code>.</p>
+
+  @param idSeq     An index sequence compatible with the transducer input symbols of <code>this</code> instance
+  @param nComp     Component index in <code>idSeq</code> containing the input sequence
+  @param itDst     Destination weighted acceptor (probability semiring)
+  @param idWeights <i>n</i>-gram interpolation vector, may be <code>NULL</code> (= do not interpolate but use longest
+                   possible <i>n</i>-gram)
+  @param nUnit     Unit in <code>this</code> instance containing an <i>n</i>-multigram tree
+  @cgen:option /segment Creates a segmentation graph (default is a chain weighted with conditional probabilities)
+END_MAN
+
+/append METHOD: -order
+/html MAN:
+  <p>Orders the states in unit <code>nUnit</code> of <code>itSrc</code> according to <code>idMap</code> and stores the
+  result into this instance. The record number in <code>idMap</code> defines the old state index, the values found in
+  component <code>nIc</code> of <code>idMap</code> define the new state index. The ordering map must be unique and
+  complete, meaning each old state must be assigned exactly one new state. The start state (state 0) cannot be
+  moved.</p>
+  <p>If <code>Unit</code> is negative all units will be ordered. In this case <code>idMap</code> is expected to contain
+  global state indices (absolute record indices in the {@link sd state table}). If <code>nUnit</code> is non-negative
+  it is expected to contain unit relative node indices (starting from 0 for each unit).</p>
+  <p>If <code>idMap</code> is <code>NULL</code> the states will be ordered topologically. The topological order of a
+  state is the length of the shortest path from the start state (state 0) to that state.</p>
+  <p><code>itSrc</code> may be this instance.</p>
+  @param itSrc Automaton instance to order (may be this instance)
+  @param idMap Ordering map (may be <code>NULL</code>)
+  @param nIc   Component index in <code>idMap</code> containing new state indices (ignored if <code>idMap</code> is
+               <code>NULL</code>)
+  @param nUnit The unit of <code>itSrc</code> to order, or -1 for all units
+END_MAN
+
+/append METHOD: -potential
+/html MAN:
+  Computes the potential of each state, i.e. the minimum cost of reaching a final state from each state.
+  @param nUnit The unit to process or -1 for all units.
+  @see -best_n
+END_MAN
+
+/append METHOD: -rcs
+/html MAN:
+  <p>Reconstructs (fictive) state and transition reference counters from the transition probabilities.</p>
+  <p>The state reference counters are multiples of the stationary state probabilities which may be calculated from the
+  transposed ergodic incidence matrix of the automaton (i.e. for the calculation all final states are connected to the
+  zero state) The reconstruction algorithm seeks for the eigenvectors of the eigenvalue 1 of the transposed incidence
+  matrix (as the incidence matrix is stochastic, one of it eigenvalues is always one). Let <i>P</i> be the transposed
+  incidence matrix and <i>E</i> be the unit matrix. Then the stationary state probabilities <i><u>X</u></i> can be
+  calculated as (<i>P</i>-<i>E</i>)&middot;<i><u>X</u></i>=<u>0</u> with the constraint &sum;<i>x</i><sub>i</sub>=1. To
+  implement this contraint, the algorithm adds a line <u>1</u> to the incidence matrix. To keep the incidence matrix
+  quadratic, the algorithm then adds a column (1,1,1,...,1,0)<sup>T</sup> which adds a dummy variable to the equation
+  system. The constant vector of this modified equation system is <u>1</u>. The equation system is solved by inverting
+  the modified incidence matrix <i>P</i>': <u>X</u>=<i>P</i>'<sup>-1</sup>&middot;<u>1</u></p>
+  <h3>TODO:</h3>
+  <ul>
+    <li>Algorithm may fail for unconnected graphs; to be fixed</li>
+  </ul>
+  @param nUnit Unit to process, -1 for all units
+  @param nSeed Reference counter for zero state, 0 to calculate stationary
+               state and transition probabilities
+  @see -probs
+END_MAN
+
+/append METHOD: -reverse
+/html MAN:
+ <p>Reverses the automation by reversing the direction of the transitions.</p>
+ <p>If the fst is in the probability semiring and the option {@link /psr} is set,
+ the method will create a probabilistic automaton by changing the transition probabilities.</p>
+ @param nUnit The unit to process or -1 for all units
+END_MAN
+
+/append METHOD: -excerpt
+/html MAN:
+  <p>Excerpts partial automaton graphs comprising all states and transitions
+  reachable from anchor states listed in <code>idStates</code>. An automaton
+  excerpt is a subset of the state and transition sets of <code>itSrc</code>
+  including all extra information stored with states and transitions. The
+  function preserves the topology (including cycles) and the original order of
+  states and transitions.</p>
+
+  <p>The excerpt for each anchor state is stored in a separate unit. If a
+  listed anchor state does not exist, an empty unit will be created. If an
+  anchor state is unconnected, a unit containing only that state will be
+  created.</p>
+
+  <p>If <code>idIs</code> non-<code>NULL</code>, only partial automata matching
+  the input string contained therein will be extracted. Please note, that the
+  result is still an excerpt as defined above. That means, that if matching the
+  input requires passing through any cycles, the result will contain these
+  cycles and thus does <em>not</em> list the paths matching on the input string.
+  The input string is always read left-to-right, even if {@link /backward} is
+  set. Epsilon symbols in the input string are ignored. Paths containing epsilon
+  symbols will be correctly expanded.</p>
+
+  <h4>Example</h4>
+  <p>Consider the following acceptor:</p>
+  <table class="indent" cellpadding="10"><tr>
+    <td class="hidden" style="background-color:rgb(210,210,210); width=30em"><pre>
+
+  fst f;
+  { "A" "B" "C" "D" "E" "F" "G" } ' f.is =;
+  ""      f <a href="#opt__fsa">/fsa</a>   <a href="#mth_-addunit">-addunit</a>;
+  0    10 f        <a href="#mth_-addstates">-addstates</a>;
+  0  0  1 f        <a href="#mth_-addtrans">-addtrans</a> { 0 };
+  0  1  2 f        <a href="#mth_-addtrans">-addtrans</a> { 1 };
+  0  2  3 f <a href="#opt__final">/final</a> <a href="#mth_-addtrans">-addtrans</a> { 2 };
+  0  0  4 f        <a href="#mth_-addtrans">-addtrans</a> { 1 };
+  0  4  5 f        <a href="#mth_-addtrans">-addtrans</a> { 2 };
+  0  5  6 f <a href="#opt__final">/final</a> <a href="#mth_-addtrans">-addtrans</a> { 3 };
+  0  5  7 f <a href="#opt__final">/final</a> <a href="#mth_-addtrans">-addtrans</a> { 4 };
+  0  5  8 f <a href="#opt__final">/final</a> <a href="#mth_-addtrans">-addtrans</a> { 5 };
+  0  5  9 f <a href="#opt__final">/final</a> <a href="#mth_-addtrans">-addtrans</a> { 6 };
+  "~NAM" -1 f.sd <a href="data.html#mth_-rindex">-rindex</a>;
+  1 1 f.sd <a href="data.html#mth_-mark">-mark</a>;
+  f.sd 8 f.sd <a href="data.html#opt__mark">/mark</a> <a href="data.html#opt__force">/force</a> <a href="data.html#mth_-tconvert">-tconvert</a>;
+  f.sd <a href="data.html#mth_-unmark">-unmark</a>;
+</pre></td>
+    <td class="hidden" style="background-color:white; width=25em">
+      <img src="../resources/fst/excerpt1.png" alt="fst -excerpt example 1">
+    </td>
+  </tr></table>
+
+  <p>The excerpt from state 3 backward is:</p>
+  <table class="indent" cellpadding="10"><tr>
+    <td class="hidden" style="background-color:rgb(210,210,210); width=30em"><pre>
+
+  fst g;
+  f 0 { 3 } 0 NULL -1 g <a href="#opt__backward">/backward</a> -excerpt;
+</pre></td>
+    <td class="hidden" style="background-color:white; width=25em">
+      <img src="../resources/fst/excerpt2.png" alt="fst -excerpt example 2">
+    </td>
+  </tr></table>
+
+  <p>The excerpt from state 0 forward accepting the string "BC" is:</p>
+  <table class="indent" cellpadding="10"><tr>
+    <td class="hidden" style="background-color:rgb(210,210,210); width=30em"><pre>
+
+  fst g;
+  f 0 { 0 } 0 { 1 2 } ' 0 g <a href="#opt__forward">/forward</a> -excerpt;
+</pre></td>
+    <td class="hidden" style="background-color:white; width=25em">
+      <img src="../resources/fst/excerpt3.png" alt="fst -excerpt example 3">
+    </td>
+  </tr></table>
+
+  <p>The excerpt from state 5 forward with a maximal path length of 1 is:</p>
+  <table class="indent" cellpadding="10"><tr>
+    <td class="hidden" style="background-color:rgb(210,210,210); width=30em"><pre>
+
+  fst g;
+  f 0 { 5 } 0 NULL 1 g <a href="#opt__forward">/forward</a> -excerpt;
+</pre></td>
+    <td class="hidden" style="background-color:white; width=25em">
+      <img src="../resources/fst/excerpt4.png" alt="fst -excerpt example 4">
+    </td>
+  </tr></table>
+
+  <h3>Notes</h3>
+  <ul>
+    <li style="color:red">The method modifies <code>SD_FLG_USER1</code> in the
+    {@link sd state table} of <code>itSrc</code>.</li>
+  </ul>
+
+  @cgen:TODO: The function has not been properly tested!
+
+  @cgen:option    /forward traverse forward only (default is both directions).
+  @cgen:option     /backward traverse backward only (default is both directions).
+  @param itSrc     The source automaton instance.
+  @param nUnit     The source unit.
+  @param idStates  The data instance containing state indices of unit <code>nUnit</code> in <code>itSrc</code>.
+  @param nIcStates The component in <code>idStates</code> containing the indices.
+  @param idIs      The data instance containing a sequence of input symbols to match (can be <code>NULL</code>).
+                   Epsilon symbols contained in the sequence will be ignored.
+  @param nParam    <code>idIs</code> is non-<code>NULL</code>: The component in <code>idIs</code> containing the
+                   input symbol sequence;<br>
+                   <code>idIs</code> is <code>NULL</code>: The maximal number of transitions to expand forward
+                   and/or backward (-1 for infinite).
+  @see -fslist
+  @see -tree
+END_MAN
+
+/append METHOD: -tree
+/html MAN:
+  @param itSrc Source automaton instance
+  @param nUnit Unit to expand or -1 for all units
+  @cgen:option /climit   Limits the number of passes through cycles (default is unlimit cycle passes; see
+                         {@link climit}, {@link /index})
+  @cgen:option /index    Only valid together with {@link /climit}; uses individual cycle limits for states (default is
+                         one common limit; see {@link climit}, {@link /climit})
+  @cgen:option /noloops  Does not expand trivial cycles (self loops) but leaves them by their states (default is
+                         expanding self loops just like normal cycles)
+  @see climit
+END_MAN
+
+/append METHOD: -wire
+/html MAN:
+  <p>All units in <code>isSrc</code> will be collected into one single unit in
+  <code>isDst</code> depending on <code>idBigram</code>. If transition counter
+  and probability components are present, transition probabilities are
+  recalculated. In dLabPro scripts newly added transitions may be initialized
+  with the optional data initializer <code>{ ... }</code>.</p>
+  <p>If the {@link /index} option is set the original unit id is appended for
+  all exit transitions. Exit transitions are transitions that lead either 
+  to the zero node or to a node of another (former) unit. Transitions that 
+  are not exit transitions get the unit id '-1'.</p>
+  <p>If the {@link /implicit} option is set only one common new start and
+  end node is created. (Otherwise there will be two seperate nodes.)</p>
+  <p>The data instance <code>idBigram</code> may be used to control the
+  behavior of <code>-wire</code>. In the following, nodes having a
+  transition to the zero node are refered to as exit nodes. Nodes that have a
+  transition from the zero node are refered as entry nodes. Several cases are
+  distinguished depending on the contents of <code>idBigram</code> and the
+  existance of the transition probability component '~PSR' in the transition 
+  description (<code>isSrc.td</code>):</p>
+  <ol>
+    <li><code>idBigram</code> is <code>NULL</code>: New start node is connceted
+      with every unit's start node and every unit's end node is connected with
+      new end state.</li>
+    <li><code>idBigram</code> contains N+1 records and N+1 components, where N
+      is the number of units in <code>isSrc</code>. No transition probability
+      component '~PSR' exists: In this case <code>idBigram</code> is interpreted
+      as unit wiring table. If the value in <code>idBigram[i,j]</code> is
+      greater zero then transitions are created from all exit nodes of unit
+      <code>i</code> to all entry nodes of unit <code>j</code>.</li>
+    <li><code>idBigram</code> contains N+1 records and N+1 components, where N
+      is the number of units in <code>isSrc</code>. A transition probability
+      component '~PSR' exists: In this case <code>idBigram</code> is interpreted
+      as unit (model) bigram.</li>
+    <li><code>idBigram</code> contains M+1 records and M+1 components, where M
+      is the number of the nodes having a transition to the zero node in all
+      units of <code>isSrc</code>. No transition probability componten '~PSR'
+      exists: In this case <code>idBigram</code> is interpreted as node wiring
+      table. If the value in <code>idBigram[i,j]</code> is greater zero then
+      transitions are created from node i to node j.</li>
+    <li><code>idBigram</code> contains M+1 records and M+1 components, where M
+      is the number of the nodes having a transition to the zero node in all
+      units of <code>isSrc</code>.  A transition probability component '~PSR'
+      exists: In this case <code>idBigram</code> is interpreted as start/stop
+      node (state) bigram.</li>
+  </ol>
+  <p>In all other cases an error message is returned.</p>
+
+  <h3>Notes</h3>
+  <ul>
+    <li>In cases (2) and (3) record/component 0 in <code>idBigram</code> desribe the transition
+    from unit i to new end node resp. the transition from new start node to unit j. In
+    cases (4) and (5) record/component 0 in <code>idBigram</code> desribe the 
+    transition from node i to new end node resp. the transition from new start node to
+    node j. In cases (3) and (5) all transistion reference counters are reset
+    if they exist.</li>
+    <li>Optimized for speed (needs only one run over all transitions).</li>
+    <li>If you use the option {@link /index} <i>and</i> initialize newly added
+    transitions using <code>{ ... }</code>, you must place a wildcard character
+    '*' at the position of the newly added unit index (last component).</li>
+  </ul>
+
+  @param isSrc    The source structure instance
+  @param idBigram The unit / node wiring table / bigram (may be <code>NULL</code>)
+  @param idDst    The destination structure instance
+
+  @cgen:option /index    Add unit index to exit transitions and exit nodes
+  @cgen:option /implicit Implicitly link unit through zero node
+
+  @see /implicit
+  @see /index
+END_MAN
+
+/append METHOD: -compose
+/html MAN:
+  <p>This function composes two finite state transducers.
+  The resulting transducer containts composed weight symbols
+  if the left operand has one. It also contains a new
+  transition compened named "~TMS" which contains intermediate symbols
+  of the composition (output symbol of left and input symbol
+  of right operand). Futhermore the result will contain
+  data components, which are all components of transition table
+  of left and right operand except "~INI", "~TER", "~TOS", "~TIS"
+  and weight symbols.</p>
+  <p>When one of the transducers contains epsilon transitions,
+  these transitions are not composed with any transition of the
+  other transducer. The data components originate form that other
+  transducer would be blank, so they have to be initialized.
+  Defaultly they will be initialized with zero. If you want to
+  change this use an initializer for data components after
+  the function ({ ... }).</p>
+  <p>Here is a short example which demonstrates how the initializer
+  works and what fields it modifies:</p>
+  <pre>  itSrc1.td {
+   "~TER":  1  2  3 (4)
+   "~INI":  0  1  2  3
+   "~TIS": 10 11 12 13
+   "~TOS":  0 -1  1 -1
+   "~DA1":  5 10 15 20
+  }
+  <pre>  itSrc2.td {
+   "~TER":   1   1   1  (2)
+   "~INI":   0   1   1   1
+   "~TIS":  -1   0   1  -1
+   "~TOS":   0   1   2   3
+   "~DA2": 100 110 120 100
+  }
+  <p><code>itSrc1 itSrc2 0 0 itRes -compose { 1000 2000 }</code> will result in:</p>
+  <pre>  itRes.td {
+   "~TER":    1    2    3    4    5
+   "~INI":    0    1    2    3    4
+   "~TIS":   -1   10   11   12   13
+   "~TOS":    0    1   -1    2    3
+   "~TMS":   -1    0   -1    1   -1
+   "~DA1": 1000    5   10   15   20
+   "~DA2":  100  110 2000  120  100
+  }
+  <p>Without initializer the fields containing <code>1000</code> and <code>2000</code>
+  would be zero.</p>
+
+  <h4>Example as code:</h4>
+  <pre>
+fst itSrc1;
+fst itSrc2;
+fst itRes;
+
+"" itSrc1 /fst -addunit;
+"" itSrc2 /fst -addunit;
+"~DA1" -type long itSrc1.td -addcomp;
+"~DA2" -type long itSrc2.td -addcomp;
+
+0 4 itSrc1 -addstates;
+0 1 itSrc1 /final -addstates;
+
+0 0 1 itSrc1 -addtrans { 10  0  5 };
+0 1 2 itSrc1 -addtrans { 11 -1 10 };
+0 2 3 itSrc1 -addtrans { 12  1 15 };
+0 3 4 itSrc1 -addtrans { 13 -1 20 };
+
+0 2 itSrc2 -addstates;
+0 1 itSrc2 /final -addstates;
+0 0 1 itSrc2 -addtrans { -1 0 100 };
+0 1 1 itSrc2 -addtrans {  0 1 110 };
+0 1 1 itSrc2 -addtrans {  1 2 120 };
+0 1 2 itSrc2 -addtrans { -1 3 100 };
+
+itSrc1 itSrc2 0 0 itRes -compose { 1000 2000 };
+
+itSrc1 -print;
+itSrc2 -print;
+itRes -print;
+</pre>
+
+  @param itSrc1   Left operand
+  @param itSrc2   Right operand
+  @param nUnit1   Unit of left operand
+  @param nUnit2   Unit of right operand
+
+  @see /noeps
+  @see /markx
+  @see /marky
+END_MAN
+
+## EOF
+
+
+
+
+
+
+
+

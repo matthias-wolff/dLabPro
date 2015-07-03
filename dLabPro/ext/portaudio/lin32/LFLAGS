@@ -1,0 +1,1 @@
+libportaudio.a -lasound -ljack -lrt

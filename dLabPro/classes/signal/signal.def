@@ -1,0 +1,189 @@
+## dLabPro class CSignal (signal)
+## - Definition file
+##
+## AUTHOR : Guntram Strecha
+## PACKAGE: dLabPro/classes
+## 
+## Copyright 2013 dLabPro contributors and others (see COPYRIGHT file) 
+## - Chair of System Theory and Speech Technology, TU Dresden
+## - Chair of Communications Engineering, BTU Cottbus
+## 
+## This file is part of dLabPro.
+## 
+## dLabPro is free software: you can redistribute it and/or modify it under the
+## terms of the GNU Lesser General Public License as published by the Free
+## Software Foundation, either version 3 of the License, or (at your option)
+## any later version.
+## 
+## dLabPro is distributed in the hope that it will be useful, but WITHOUT ANY
+## WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+## FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+## details.
+## 
+## You should have received a copy of the GNU Lesser General Public License
+## along with dLabPro. If not, see <http://www.gnu.org/licenses/>.
+
+PLATFORM: GNUC++
+COMPILER: gcc
+AR:       ar
+
+PROJECT: signal
+AUTHOR:  Guntram Strecha
+COMMENT: Signal operations
+VERSION: 1.0.0
+
+INCLUDE: "dlp_var.h"
+INCLUDE: "dlp_math.h"
+
+CLASS:   signal
+FLAGS:   /singleton /noautoactivate
+/cProject
+/html MAN:
+  <p>This class supplies signal operations on <a href="data.html" class="code">data</code></a> instances.
+  The number and type of input and output arguments depend on the operation. For a list of operations use
+  <code>signal -help;</code> or <code>-list sigops;</code>.</p>
+  <p>The following operations currently implemented:</p>
+  <p><table>
+    <tr>
+      <th>Operation</th>
+      <th>Signatur</th>
+      <th>Description</th>
+      <th>Detailed description</th>
+      <th>Example</th>
+    </tr>
+    <tr><td>cep2lpc          </td><td>DD:oDn       </td><td>Cepstrum to Linear Predictive Coding transform                        </td><td>see {@link CSignal_Cep2Lpc}      </td><td><code>idC 24 cep2lpc idA = idV =;</code></td></tr>
+    <tr><td>cep2mcep         </td><td>D:oDrn       </td><td>Cepstrum to Mel-Cepstrum transform                                    </td><td>see {@link CSignal_Cep2MCep}     </td><td><code>idC 0.47 24 cep2mcep idC =;</code></td></tr>
+    <tr><td>cep              </td><td>D:oDn        </td><td>Cepstrum                                                              </td><td>see {@link CSignal_Cep}          </td><td><code>idF 24 cep idC =;</code></td</tr>
+    <tr><td>dtw              </td><td>D:oDD        </td><td>Dynamic Time Warping                                                  </td><td>see {@link CSignal_Dtw}          </td><td><code>idS idD dtw idP =;</code></td</tr>
+    <tr><td>deframe          </td><td>D:oDn        </td><td>Signal de-framing                                                     </td><td>see {@link CSignal_DeFrame}      </td><td><code>idF 160 deframe idS =;</code></td</tr>
+    <tr><td>denoise          </td><td>D:oDnrs      </td><td>Denoising                                                             </td><td>see {@link CSignal_Denoise}      </td><td><code>idX 100 0.9 "spectrum" denoise idX =;</code></td</tr>
+    <tr><td>descale          </td><td>D:oD         </td><td>Signal descaling                                                      </td><td>see {@link CSignal_DeScale}      </td><td><code>idS descale idS =;</code></td</tr>
+    <tr><td>distribution     </td><td>C:oDD        </td><td>Amplitude distribution                                                </td><td>see {@link CSignal_Distribution} </td><td><code>idS { -0.5 0 0.5 } distribution idD =;</code></td></tr>
+    <tr><td>f02exc           </td><td>D:oDnns      </td><td>Get excitation from F0 contour                                        </td><td>see {@link CSignal_F02Exc}       </td><td><code>idF idC.nrec nL "randphase" idE =;</code></td</tr>
+    <tr><td>fft              </td><td>C:oD         </td><td>Fourier transform                                                     </td><td>see {@link CSignal_Fft}          </td><td><code>idF fft idP =;</code></td</tr>
+    <tr><td>filter           </td><td>D:oDDDD      </td><td>Infinite Imp. Response filter                                         </td><td>see {@link CSignal_Filter}       </td><td><code>idE idB idA idM filter idF =;</code></td</tr>
+    <tr><td>fir              </td><td>D:oDDD       </td><td>Finite Impulse Response filter                                        </td><td>see {@link CSignal_Fir}          </td><td><code>idE idB NULL fir idF =;</code></td</tr>
+    <tr><td>frame            </td><td>D:oDnn       </td><td>Signal framing                                                        </td><td>see {@link CSignal_Frame}        </td><td><code>idS 400 160 frame idF =;</code></td</tr>
+    <tr><td>gcep             </td><td>D:oDrn       </td><td>Generalized Cesptrum                                                  </td><td>see {@link CSignal_GCep}         </td><td><code>idS -0.5 24 idG =;</code></td></tr>
+    <tr><td>gcep2gcep        </td><td>D:oDrn       </td><td>Generalized Cepstrum transform                                        </td><td>see {@link CSignal_GCep2GCep}    </td><td><code>idG 0.0 idG.dim gcep2gcep idG =;</code></td></tr>
+    <tr><td>gcep2lpc         </td><td>DD:oDn       </td><td>Generalized Cepstrum to Linear Predictive Coding transform            </td><td>see {@link CSignal_GCep2Lpc}     </td><td><code>idG 24 gcep2lpc idA = idV =;</code></td></tr>
+    <tr><td>gcep2mlpc        </td><td>DD:oDrn      </td><td>Generalized Cepstrum to Mel-Linear Predictive Coding transform        </td><td>see {@link CSignal_GCep2MLpc}    </td><td><code>idG 0.47 24 gcep2mlpc idA = idV =;</code></td></tr>
+    <tr><td>gcep_norm        </td><td>DD:oD        </td><td>Generalized Cepstrum normalization                                    </td><td>see {@link CSignal_GCepNorm}     </td><td><code>idG gcep_norm idG = idV =;</code></td></tr>
+    <tr><td>getf0            </td><td>N:onns       </td><td>F<sub>0</sub> Estimation                                              </td><td>see {@link CSignal_GetF0}        </td><td><code>idX 80 400 "cepstrum" getf0 idY =;</code></td></tr>
+    <tr><td>gmult            </td><td>D:oD         </td><td>Multiply by &gamma;                                                   </td><td>see {@link CSignal_GMult}        </td><td><code>idA gmult idA =;</code></td></tr>
+    <tr><td>ifft             </td><td>C:oD         </td><td>Inverse Fourier Transform                                             </td><td>see {@link CSignal_IFft}         </td><td><code>idP ifft idF =;</code></td</tr>
+    <tr><td>igcep_norm       </td><td>D:oDD        </td><td>Inverse Generalized Cepstrum normalization                            </td><td>see {@link CSignal_IGCepNorm}    </td><td><code>idV idG igcep_norm idG =;</code></td></tr>
+    <tr><td>imcep            </td><td>D:oDDr       </td><td>Inverse Mel-Cepstrum                                                  </td><td>see {@link CSignal_IMCep}        </td><td><code>idC idE 0.0 idS =;</code></td></tr>
+    <tr><td>igmult           </td><td>D:oD         </td><td>Divide by &gamma;                                                     </td><td>see {@link CSignal_IGMult}       </td><td><code>idA igmult idA =;</code></td></tr>
+    <tr><td>iir              </td><td>D:oDDD       </td><td>Purely Infinite Impulse Response filter                               </td><td>see {@link CSignal_Iir}          </td><td><code>idE idA idM iir idF =;</code></td</tr>
+    <tr><td>isvq             </td><td>D:oDN        </td><td>Inverse Scalar Vector Quantization                                    </td><td>see {@link CSignal_ISvq}         </td><td><code>idQ idI isvq idY =;</code></td</tr>
+    <tr><td>ivq              </td><td>D:oDN        </td><td>Inverse Vector Quantization                                           </td><td>see {@link CSignal_IVq}          </td><td><code>idQ idI ivq idY =;</code></td</tr>
+    <tr><td>lpc              </td><td>DD:oDns      </td><td>Linear Predictive Coding                                              </td><td>see {@link CSignal_Lpc}          </td><td><code>idF 24 "burg" lpc idA = idV =;</code></td</tr>
+    <tr><td>lpc2cep          </td><td>D:oDDn       </td><td>Linear Predictive Coding to Cepstrum transform                        </td><td>see {@link CSignal_Lpc2Cep}      </td><td><code>idV idA 24 lpc2cep idC =;</code></td</tr>
+    <tr><td>lpc2gcep         </td><td>D:oDDrn      </td><td>Linear Predictive Coding to Generalized Cepstrum transform            </td><td>see {@link CSignal_Lpc2GCep}     </td><td><code>idV idA -0.25 24 lpc2gcep idG =;</code></td</tr>
+    <tr><td>lpc2mgcep        </td><td>D:oDDrrn     </td><td>Linear Predictive Coding to Mel-Generalized Cepstrum transform        </td><td>see {@link CSignal_Lpc2MGCep}    </td><td><code>idV idA -0.25 0.47 24 lpc2mgcep idG =;</code></td</tr>
+    <tr><td>lpc2mlpc         </td><td>DD:oDDrn     </td><td>Linear Predictive Coding to Mel-Linear Predictive Coding transform    </td><td>see {@link CSignal_Lpc2MLpc}     </td><td><code>idV idA 0.47 24 lpc2mlpc idA = idV =;</code></td</tr>
+    <tr><td>mcep2cep         </td><td>D:oDn        </td><td>Mel-Cepstrum to Cepstrum transform                                    </td><td>see {@link CSignal_MCep2Cep}     </td><td><code>idC 24 mcep2cep idC =;</code></td></tr>
+    <tr><td>mcep2mcep        </td><td>D:oDrn       </td><td>Mel-Cepstrum to Mel-Cepstrum transform                                </td><td>see {@link CSignal_MCep2MCep}    </td><td><code>idC 0.47 24 mcep2mcep idC =;</code></td></tr>
+    <tr><td>mcep2mlpc        </td><td>DD:oDrn      </td><td>Mel-Cepstrum to Mel-Linear Predictive Coding transform                </td><td>see {@link CSignal_MCep2MLpc}    </td><td><code>idC 0.47 24 mcep2mlpc idA = idV =;</code></td></tr>
+    <tr><td>mcep             </td><td>D:oDrn       </td><td>Mel-Cepstrum                                                          </td><td>see {@link CSignal_MCep}         </td><td><code>idF 0.47 24 mcep idC =;</code></td</tr>
+    <tr><td>mcep_enhance     </td><td>D:oD         </td><td>Mel-Cepstrum enhancement                                              </td><td>see {@link CSignal_MCepEnhance}  </td><td><code>idC mcep_enhance idC =;</code></td</tr>
+    <tr><td>mfb              </td><td>D:oDrns      </td><td>Mel-Filterbank                                                        </td><td>see {@link CSignal_MFb}          </td><td><code>idF 0.47 30 "MT" mfb idP =;</code></td</tr>
+    <tr><td>mfft             </td><td>C:oDr        </td><td>Mel-Fourier transform                                                 </td><td>see {@link CSignal_Mfft}         </td><td><code>idF 0.47 mfft idP =;</code></td</tr>
+    <tr><td>mfilter          </td><td>D:oDDDrD     </td><td>Mel-Infinite Impulse Response filter                                  </td><td>see {@link CSignal_MFilter}      </td><td><code>idE idB idA 0.47 NULL mfilter idF =;</code></td</tr>
+    <tr><td>mfir             </td><td>D:oDDrD      </td><td>Mel-Finite Impulse Response filter                                    </td><td>see {@link CSignal_MFir}         </td><td><code>idE idB 0.47 NULL mfir idF =;</code></td</tr>
+    <tr><td>mgcep            </td><td>D:oDrrn      </td><td>Mel-Generalized Cesptrum                                              </td><td>see {@link CSignal_MGCep}        </td><td><code>idS -0.5 0.47 24 idG =;</code></td></tr>
+    <tr><td>mgcep2lpc        </td><td>DD:oDn       </td><td>Mel-Generalized Cepstrum to Linear Predictive Coding transform        </td><td>see {@link CSignal_MGCep2Lpc}    </td><td><code>idG 24 mgcep2lpc idA = idV =;</code></td></tr>
+    <tr><td>mgcep2mgcep      </td><td>D:oDrrn      </td><td>Mel-Generalized Cepstrum transform                                    </td><td>see {@link CSignal_MGCep2MGCep}  </td><td><code>idG 0.0 0.47 idG.dim mgcep2mgcep idG =;</code></td></tr>
+    <tr><td>mgcep2mlpc       </td><td>DD:oDrn      </td><td>Mel-Generalized Cepstrum to Mel-Linear Predictive Coding transform    </td><td>see {@link CSignal_MGCep2MLpc}   </td><td><code>idG 0.47 24 mgcep2mlpc idA = idV =;</code></td></tr>
+    <tr><td>mlpc             </td><td>DD:oDrns     </td><td>Mel-Linear Predictive Coding                                          </td><td>see {@link CSignal_MLpc}         </td><td><code>idF 0.47 24 "burg" mlpc idA = idV =;</code></td</tr>
+    <tr><td>mlpc2gcep        </td><td>D:oDrn       </td><td>Mel-Linear Predictive Coding to Generalized Cepstrum transform        </td><td>see {@link CSignal_MLpc2GCep}    </td><td><code>idV idA 0.0 24 mlpc2gcep idG =;</code></td</tr>
+    <tr><td>mlpc2lpc         </td><td>DD:oDDn      </td><td>Mel-Linear Predictive Coding to Linear Predictive Coding transform    </td><td>see {@link CSignal_MLpc2Lpc}     </td><td><code>idV idA 24 mlpc2lpc idA = idV =;</code></td</tr>
+    <tr><td>mlpc2mcep        </td><td>D:oDDrn      </td><td>Mel-Linear Predictive Coding to Mel-Cepstrum transform                </td><td>see {@link CSignal_MLpc2MCep}    </td><td><code>idV idA 0.47 24 mlpc2mcep idC =;</code></td</tr>
+    <tr><td>mlpc2mgcep       </td><td>D:oDrrn      </td><td>Mel-Linear Predictive Coding to Mel-Generalized Cepstrum transform    </td><td>see {@link CSignal_MLpc2MGCep}   </td><td><code>idV idA 0.0 0.47 24 mlpc2mgcep idG =;</code></td</tr>
+    <tr><td>mlpc2mlpc        </td><td>DD:oDDrn     </td><td>Mel-Linear Predictive Coding to Mel-Linear Predictive Coding transform</td><td>see {@link CSignal_MLpc2MLpc}    </td><td><code>idV idA 0.47 24 mlpc2mlpc idA = idV =;</code></td</tr>
+    <tr><td>noisify          </td><td>D:oD         </td><td>Signal noisifying                                                     </td><td>see {@link CSignal_Noisify}      </td><td><code>idF noisify idF =;</code></td></tr>
+    <tr><td>pitchmark        </td><td>D:oDsnnn     </td><td>Pitch marking                                                         </td><td>see {@link CSignal_Pitchmark     </td><td><code>idS "gcida" 50 100 400 idP =;</code></td></tr>
+    <tr><td>rmdc             </td><td>D:oD         </td><td>Remove direct component                                               </td><td>see {@link CSignal_Rmdc}         </td><td><code>idF rmdc idF =;</code></td></tr>
+    <tr><td>roots            </td><td>C:oD         </td><td>Roots of polynomials                                                  </td><td>see {@link CSignal_Roots}        </td><td><code>idP roots idR =;</code></td></tr>
+    <tr><td>scale            </td><td>D:oDd        </td><td>Signal scaling                                                        </td><td>see {@link CSignal_Scale}        </td><td><code>idS 32768 scale idS =;</code></td</tr>
+    <tr><td>svq              </td><td>ND:oDN       </td><td>Scalar Vector Quantization                                            </td><td>see {@link CSignal_Svq}          </td><td><code>idX idB svq idI = idQ =;</code></td</tr>
+    <tr><td>unwrap           </td><td>C:oC         </td><td>Phase unwrapping                                                      </td><td>see {@link CSignal_Rmdc}         </td><td><code>idC unwrap idC =;</code></td></tr>
+    <tr><td>vq               </td><td>ND:oDns      </td><td>Vector Quantization                                                   </td><td>see {@link CSignal_Vq}           </td><td><code>idX 10 "LBG" vq idI = idQ =;</code></td</tr>
+    <tr><td>window           </td><td>D:oDnnsb     </td><td>Windowing                                                             </td><td>see {@link CSignal_Window}       </td><td><code>idF 400 512 "blackman" FALSE window idF =;</code></td</tr>
+    <tr><td>zcr              </td><td>N:oDR        </td><td>Zero-crossing                                                         </td><td>see {@link CSignal_Zcr}          </td><td><code>idS { 0.5 } zcr idZ =;<code></td></tr>
+  </table></p>
+END_MAN
+
+## C/C++ files
+INCLUDE: "dlp_data.h"
+FILE:    sig_op.c                                                               # Operation interface
+FILE:    sig_iam.c                                                              # Operation functions
+FILE:    sig_work.c                                                             # Worker methods
+
+## Defines
+
+DEFINE: FOP_PRECALC(idX,idY,idS,idR,idL)                                            \
+  {                                                                                 \
+    DLPASSERT((idY!=NULL)&&(idX!=NULL));                                            \
+    if(idY==idX) { ICREATE(CData,idR,NULL); }                                       \
+    else           idR = idY;                                                       \
+    if(CData_GetNNumericComps(idX) == CData_GetNComps(idX)) idS = idX;              \
+    else {                                                                          \
+      ICREATEEX(CData, idL, "~lab", NULL);                                          \
+      ICREATEEX(CData, idS, "~src", NULL);                                          \
+      CMatrix_CopyLabels(idL,idX);                                                  \
+      CData_Select(idS,idX,0,CData_GetNNumericComps(idX));                          \
+    }                                                                               \
+  }
+DEFINE: FOP_POSTCALC(idX,idY,idS,idR,idL)                                           \
+  {                                                                                 \
+    if(idR != idY) {                                                                \
+      CData_Copy(BASEINST(idY),BASEINST(idR));                                      \
+      IDESTROY(idR);                                                                \
+    }                                                                               \
+    CData_CopyDescr(idY,idX);                                                       \
+    CDlpObject_CopySelective(BASEINST(idY),BASEINST(idX),WL_TYPE_INSTANCE);         \
+    CData_Join(idY,idL);                                                            \
+    if(idS != idX) IDESTROY(idS);                                                   \
+    IDESTROY(idL);                                                                  \
+  }
+
+## Errors
+
+ERROR:   FOP_ERR_FAIL
+COMMENT: Execution of \\"%s\\" failed.
+LEVEL:   EL_ERROR
+
+ERROR:   FOP_ERR_NOTSUPP
+COMMENT: Operation %s is not implemented yet or not supported.
+LEVEL:   EL_ERROR
+
+ERROR:   FOP_ERR_INVARG
+COMMENT: Argument %s = \\"%s\\" is invalid%s.
+LEVEL:   EL_ERROR
+
+ERROR:   FOP_ERR_INVDESCR
+COMMENT: Value of %s is not valid.
+LEVEL:   EL_ERROR
+
+HEADERCODE:
+#undef  dlp_calloc
+#define dlp_calloc(A,B) __dlp_calloc(A,B,__FILE__,__LINE__,"CSignal_...",NULL)
+END_CODE
+
+INITCODE:
+  INIT;
+  
+  /* Register operators */
+  INT16 i = 0;
+  while(dlp_sigop_entry(i)->opc >= 0) {
+    REGISTER_OPERATOR(dlp_sigop_entry(i)->sym,&CSignal_Op,dlp_sigop_entry(i)->opc,dlp_sigop_entry(i)->res,dlp_sigop_entry(i)->ops,dlp_sigop_entry(i)->sig,dlp_sigop_entry(i)->nam);
+    i++;
+  }
+END_CODE
+
+-cgen
+quit
+
+## EOF

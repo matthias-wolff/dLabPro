@@ -1,0 +1,1149 @@
+## dLabPro SDK class CCgen (cgen)
+## - Manual pages
+##
+## AUTHOR : Matthias Wolff
+## PACKAGE: dLabPro/sdk
+## 
+## Copyright 2013 dLabPro contributors and others (see COPYRIGHT file) 
+## - Chair of System Theory and Speech Technology, TU Dresden
+## - Chair of Communications Engineering, BTU Cottbus
+## 
+## This file is part of dLabPro.
+## 
+## dLabPro is free software: you can redistribute it and/or modify it under the
+## terms of the GNU Lesser General Public License as published by the Free
+## Software Foundation, either version 3 of the License, or (at your option)
+## any later version.
+## 
+## dLabPro is distributed in the hope that it will be useful, but WITHOUT ANY
+## WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+## FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+## details.
+## 
+## You should have received a copy of the GNU Lesser General Public License
+## along with dLabPro. If not, see <http://www.gnu.org/licenses/>.
+
+/append
+PROJECT: cgen
+/html MAN:
+  <span class="TODO">[<b>TODO:</b> Revise (major changes)! ]</span>
+
+  <p>CGen is a major part of the sigmaLab development environment. This version
+  of CGen is customized for dLabPro (which is sigmaLab's successor at the
+  Institue of Acoustics and Speech Communication).</p>
+
+  <p>CGen provides a facility to extent dLabPro by custom classes (in the
+  following abbreviated with CDC for Custom dLabPro Class). CDC's generally
+  consist of exactly one standard library file, exactly one header file and
+  a HTML manual file. SEM's are (usually) coded in ANSI C or ANSI C++.</p>
+
+  <p>As input for the automatic code generation CGen uses a <i>class definition
+  script</i> (extension .def) which describes the CDC and its members (errors,
+  options, fields and methods). Further the definition file may supply custom
+  C/C++ code for the CDC's lifecycle management (instanciation, destruction,
+  reset, etc.) and point to additional C or C++ source files which contain
+  custom implementaions of methods and/or other code.</p>
+
+  <p>From the definition script CGen generates a main implementation file and a
+  header file for the CDC. These file are ANSI C++ compatible by default.
+  However using the option {@link /cProject} you may create a hybrid ANSI C and ANSI
+  C++ code which will compile in both, C++ compilers (using real C++ classes)
+  and C compilers (using a simplified ANSI C "class" implementation; see
+  dLabPro kernel libaray <a href="dlpinst.html"><code
+  class="link">dlpinst</code></a>).</p>
+
+  <p>CGen generates the following files:</p>
+  <ul>
+    <li>C++(C) main implementation file (interface code to dLabPro),</li>
+    <li>project environment files (such as makefiles or project and workspace
+        files for MS Developer Studio),</li>
+    <li>an HTML manual file,</li>
+    <li>browser information files for the SLC Visual Tools IDE.</li>
+  </ul>
+
+  <p>This manual contains a <a href="#rnt">trail of release notes</a>
+  describing:</p>
+  <ul>
+    <li>Custom dLabPro classes (CDC),</li>
+    <li>the Syntax of definitions scripts,</li>
+    <li>binding dLabPro naming conventions,</li>
+    <li>usage of JavaDoc in custom C/C++ source files,</li>
+    <li>other topics,</li>
+  </ul>
+  </p>and a <a href="#cls_members">reference manual</a> describing the
+  <a href="#mth">CGen keywords</a> to be used in definition files and
+  <a href="#err">error messages</a>.</p>
+END_MAN
+
+## Options
+/append OPTION: /append
+/html MAN:
+  <p>Continues an existing section ({@link PROJECT:}, {@link METHOD:},
+  {@link FIELD:}, {@link OPTION:}, {@link ERROR:} or {@link NOTE:}). This option
+  is useful in order to place large manual entries ({@link MAN:}) or code
+  snippets ({@link CODE:}) in separate definition files.</p>
+  <h4>Example</h4>
+  <p>File <code>myclass.def:</code></p>
+<pre class="code">
+
+  {@link METHOD:}  -my_method
+  {@link SYNTAX:}  ()
+  {@link COMMENT:} Short description of my method.
+
+</pre>
+  <p>File <code>myclass_man.def:</code></p>
+<pre class="code">
+
+  {@link /append} {@link METHOD:} -my_method
+  {@link /html} {@link MAN:}
+    &lt;p&gt;
+      Here come fourty-two pages of HTML code
+      ...
+    &lt;/p&gt;
+  <span class="c-key">&#69;ND_MAN</span>
+
+</pre>
+END_MAN
+
+/append OPTION: /cLib
+/html MAN:
+  <p>This option is for dLabPro kernel libraries. It <i>must not</i> be used
+  with ordinary custom dLabPro classes (CDC's).</p>
+END_MAN
+
+/append OPTION: /cProject
+/html MAN:
+  <p>Generates hybrid ANSI C / ANSI C++ interface code (default is ANSI
+  C++). Custom dLabPro classes (CDC's) generated using this feature
+  will compile in both, C++ compilers (using real C++ classes) and C
+  compilers (using a simplified ANSI C "class" implementation).</p>
+  <h3>Important note</h3>
+  <p>Coding ANSI C compatible CDC's requires a special programming
+  technique described in documentation of <a href="dlpinst.html">class 
+  <code>CDlpInstance</code></a>.</p>
+END_MAN
+
+/append OPTION: /cxx_nconv
+/html MAN:
+  <p>Causes CGen to generate indentifiers for C++ member variables using a
+  strict C++ naming convention. A strict C++ naming convention encodes the
+  variable type in the identifier. For detailled information on C++ naming
+  conventions see section {@link --- Naming Conventions II - C++}.</p>
+  <p>Place this option at the very beginning of the definitions script.</p>
+END_MAN
+
+/append OPTION: /no_idcheck
+/html MAN:
+  <p>Causes CGen not to check dLabPro member identifiers for matching the
+  dLabPro naming conventions. dLabPro identifiers must not contain any
+  non-alphanumeric characters except for the underscore '_'. Methods start
+  with a leading hyphen '-' or question mark '?'. Options start with a leading
+  slash '/'. For detailled information on dLabPro naming conventions see
+  section {@link --- Naming Conventions I - dLabPro}.</p>
+  <p>Place this option at the very beginning of the definitions script.</p>
+END_MAN
+
+## Methods
+/append METHOD: PROJECT:
+/html MAN:
+  <table>
+    <tr><td class="rowgroup">Key type</td><td>Section key</td></tr>
+    <tr><td class="rowgroup">Sub keys</td><td>{@link AR:}, {@link AUTHOR:},
+      {@link AUTOINSTANCE:}, {@link GCCFLAGS:}, {@link CLASS:}, {@link CNAME:},
+      {@link COMMENT:}, {@link COMPILER:}, {@link CSTRUCTNAME:},
+      {@link FLAGS:}, {@link IPATH:}, {@link MAN:}, {@link MPATH:},
+      {@link LFILE:}, {@link LPATH:}, {@link OBSOLETE:}, {@link OPATH:},
+      {@link PARENT:}, {@link PLATFORM:}, {@link VERSION:}</td></tr>
+    <tr><td class="rowgroup">Usage</td><td>Once per CDC, required</td></tr>
+  </table>
+  <p>Defines a CDC.</p>
+  <p>The project name is one of two global class identifiers for each dLabPro
+  class. The other one is the dLabPro class name (see sub key {@link CLASS:}).
+  </p>
+  <p>From the project name CGen generates</p>
+  <ul>
+    <li>the C++ class name of the CDC (unless you specify it explicitly through
+    the {@link CNAME:} sub key). See section {@link --- Naming Conventions II - C++}
+    for more information how CGen generates the C++ class names.</li>
+    <li>the file names of the C++ implementation (.c/.cpp) and header (.h)
+    files, the manual file name (.html) and the MS Developer Studio project
+    environment file names (.dsw, .dsp).</li>
+  </ul>
+  @param name The project name
+  @see METHOD:
+  @see FIELD:
+  @see OPTION:
+  @see ERROR:
+  @see NOTE:
+END_MAN
+
+## *** BOWZ ***
+
+/append
+METHOD:  ERROR:
+MAN:
+  KEY TYPE: SECTION KEY
+  SUB KEYS: COMMENT:, MAN:, LEVEL:
+  USAGE   : multiple, optional
+
+  Defines an error member of the SEM. An error member consists
+  of a C++ symbol (<ERROR:>), an error message (<COMMENT:>) and
+  - optionally - an error level (<LEVEL:>). 
+
+  In sigmaLab each error has a unique error code. It is made up
+  by the SEM's sigmaLab class name followed by a number. Error
+  numbers start from 1001 for each SEM.
+
+  EXAMPLE:
+  =======
+  
+     If your SEM's sigmaLab class name is 'MYproc' its first
+     error code would be 'MYproc1001', the second one would be
+     'MYproc1002' and so on.
+
+
+  The <COMMENT:> sub key is required for an error definition. It
+  receives a format string which can contain up to three format 
+  specifications. These specification are exactly the same as 
+  the printf function in C.
+
+  The specification of an error level (<LEVEL:>) is optional. 
+  Default is EL_ERROR.
+
+  
+  Usage of error members in C++ scope
+  -----------------------------------
+
+    In C++ scope each error member is represented by a symbol 
+    defined in the SEM's header file. Each error identifier 
+    (following the <ERROR:> section key in the definition 
+    script) is defined as a negative number.
+
+    EXAMPLE:
+    =======
+
+       The first error definition in your defintion script might
+       be 'ERROR: MYP_ERROR1'. SCLGen would define the error 
+       identifier in C++ scope as follows: 
+       '#define MYP_ERROR1 -1001'
+    
+    In case an error occours while executing a custom C++ func-
+    tion of the SEM you can use one of the following error macroes
+    to indicate the error at the standard error stream of the
+    sigmaLab session.
+
+    -------------------------------------------------------
+     Error Macro         Definition
+    -------------------------------------------------------
+     ERRORMSG(A,B,C,D)   SlcError(A,B,C,D);           1)2)
+     ERRORRET(A,B,C,D,E) SlcError(A,B,C,D); return E; 1)2)
+    -------------------------------------------------------
+     1) Macro parameters:
+        A    : Error symbol (for instance MYP_ERROR1, see example)
+        B,C,D: Arguments to be printed with the error message 
+               format string (<COMMENT:>)
+        E    : Return value for the ERRORRET macro
+
+     2) No matter how many actual format specifications an error 
+        message contains the error macroes always take three ar-
+        guments. Just pad with zeros.
+
+    EXAMPLE:
+    =======
+
+       You may have defined an error member like this:
+       'ERROR  : MYP_ERROR1
+        COMMENT: Error in argument %d of command %s.'
+
+       Release an error message from C++  scope like this:
+       'ERRORRET(MYP_ERROR1,2,"-my_cmd",0,NOT_EXEC)'
+
+       This will print an error message including the script name
+       and position where the error occoured.
+
+       '/myfile.itp(10): Error in argument 2 of command -my_cmd.'
+
+       After printing the error message the C++ function will 
+       return with NOT_EXEC.
+END_MAN
+
+/append
+METHOD:  OPTION:
+MAN:
+  KEY TYPE: SECTION KEY
+  SUB KEYS: CNAME:, CODE:, COMMENT:, FLAGS:, MAN:, OBSOLETE:
+  USAGE   : multiple, optional
+
+  Defines an option member of the SEM. An option influences the
+  behaviour of one command or of a group of commands.
+
+  Options may be assigned to a callback code shred via the <CODE:>
+  sub key. This code shred will be executed when the option iden-
+  tifier is interpreted by sigmaLab. Normally you will not need to
+  implement callback code for options as sigmaLab cares for hand-
+  ling them.
+
+  If you do not want sigmaLab to handle a particular option automa-
+  ticaly (for instance if it is not to be cleared after interpre-
+  ting the next command) you have to set the '/nonautomatic' flag
+  in the <FLAGS:> sub key. In these cases you have to(!) implement
+  callbck code in order to handle the option anyway.
+
+
+  Using options in C++  scope
+  ---------------------------
+
+    In C++ scope an option is represented by a boolean member 
+    variable. It is set to TRUE when the option is set (i.e. when
+    the option identifier is interpreted) and to FALSE when the 
+    option is cleared (i.e. after interpreting the immediately
+    following command). Examine the option's member variable to
+    obtain its state. The member variable identifier is generated
+    according to the C++ naming conventions (see relese note 'Na-
+    ming Conventions II - C++') unless you specify it explicitly
+    through the <CNAME:> subkey.
+END_MAN
+
+/append
+METHOD:  FIELD:
+MAN:
+  KEY TYPE: SECTION KEY
+  SUB KEYS: CNAME:, CODE:, COMMENT:, FLAGS:, INIT:, MAN:,
+            OBSOLETE:, TYPE:
+  USAGE   : multiple, optional
+
+  Defines a parameter member of the SEM. A parameter is a property
+  of the SEM. An instance of a SEM is mainly defined by the values
+  stored in its parameters.
+
+  Besides the identifier you must specify a variable type for each
+  parameter. See release note "Definition Scripts IV - Types" for 
+  a list of possible type identifiers.
+
+  You can specify an initial parameter value (sub key <INIT:>).
+  After initialization and instance reset the parameter will be set
+  to its initial value. Default is 0, "" or NULL.
+
+  In C++ scope each parameter is represented by a member variable
+  of the SEM's C++ class. The C++ identifier is generated according
+  to the C++ naming conventions (as described in release note 'Na-
+  ming Conventions II - C++') unless you specify the identifier ex-
+  plicitly through the <CNANE:> key.
+
+  Parameters can be assigned to a callback code shred (sub key 
+  <CODE:>). This code will be executed during the parameter set
+  procedure. You can perform validation of the new parameter value
+  by examining the parameter's member variable. When the code shred
+  is executed the parameter has been temporarily set to the new
+  value. You can overwrite this value in order to correct the set-
+  ting or you can cancel the set procedure returning NOT_EXEC from
+  the code shred. If you cancel the set procedure the original pa-
+  rameter setting will be restored.
+
+  There are several flags (sub key <FLAGS:>) on parameters. The
+  most important ones are '/noset' to make a parameter write pro-
+  tected and '/hidden' to make it invisible to the sigmaLab user.
+  The last property is particularly useful for parameters that are
+  for internal use of the C++ scope only. You should rather declare
+  a parameter hidden than no-set. See sub key <FLAGS:> for detail-
+  led information on flags.
+END_MAN
+
+/append
+METHOD:  METHOD: 
+MAN:
+  KEY TYPE: SECTION KEY
+  SUB KEYS: CNAME:, CODE:, COMMENT:, FLAGS:, MAN:, OBSOLETE:,
+            POSTSYN:, SYNTAX:
+  USAGE   : multiple, optional
+
+  Defines a command member of the SEM. A command is a method of the
+  SEM. 
+
+  The definition of a command requires the specification of the com-
+  mand syntax, i.e. the command's argument list, through the 
+  <SYNTAX:> sub key (see there). Even if the argument list is emtpy 
+  you have to specify a syntax decription ('()' in this case).
+
+  Usually you will implement a callback code shred (sub key <CODE:>)
+  that will be executed as reaction on interpreting the command 
+  identifier. The code shred will be implemented as a callback func-
+  tion. This function is called secondary command callback function
+  (SCCF) and has the same argument list as specified for the sigma-
+  Lab command. SCCF's facilitate the use of SEM's as C++ class li-
+  brary as they supply a proper C++ member function for each command.
+
+  You do not need to specify a <CODE:> sub key for a command neces-
+  sarily. In these cases you have to define the SCCF "by hand" in an
+  additional C++ source file. This programming technique is described 
+  in release note 'SLCGen Insight II - Implementing Callbacks Effi-
+  ciently'. It is, however, recommended for advanced developers only.
+
+  For detailled information on callback code shreds and callback
+  functions see release note "SLCGen Insight I - Callback functions".
+END_MAN
+
+/append
+METHOD:  NOTE:
+MAN:
+  KEY TYPE: SECTION KEY
+  SUB KEYS: COMMENT:, MAN:
+  USAGE   : multiple, optional
+
+  Defines a release note. A release note is a manual page that is
+  not assigned to a particular member of the SEM. All release notes
+  are numbered subsequently. The title of a release note is given
+  by section key <NOTE:>. It may contain spaces. An overview of the 
+  release notes will be appended to the SEM's documentation home-
+  page.
+END_MAN
+
+/append
+METHOD:  AR:
+MAN:
+  KEY TYPE: SUB KEY
+  SECTIONS: PROJECT:
+  USAGE   : required for the gnu C++ platform
+
+  Sets the path to the archiever executable (fully qualfied). This
+  path can be absolute or relative to the SEM's home directory. The
+  archiever will be called by make or gmake as a part of the </build>
+  or the </make> command.
+
+  This sub key is required for the gnu C++ platform only (see sub key
+  <PLATFORM:>).
+END_MAN
+
+/append
+METHOD:  AUTHOR:
+MAN:
+  KEY TYPE: SUB KEY
+  SECTIONS: PROJECT:
+  USAGE   : usually
+
+  Specifies the name of the SEM's author. The author's name is in-
+  cluded in the copyright notes of the manual pages.
+END_MAN
+
+/append
+METHOD:  AUTOINSTANCE:
+MAN:
+  KEY TYPE: SUB KEY
+  SECTIONS: PROJECT:
+  USAGE   : optional
+
+  Specifies the name for the primary (or "standard") instance of 
+  the SEM. The standard instance is automatically created at the
+  beginning of a sigmaLab session if the class was defined with
+  the '/autoinstance' flag (see sub key <FLAGS:>).
+END_MAN
+
+/append
+METHOD:  GCCFLAGS:
+MAN:
+  KEY TYPE: SUB KEY
+  SECTIONS: PROJECT:
+  USAGE   : optional
+
+  Specifies command line options for the gnu C++ compiler call.
+  These options will be placed in the automatically generated
+  makefile. The typical usage of <CFLAGS:> is setting the opti-
+  zation level of the compiler pass. All objects are compiled
+  with the same compiler options. Default is an empty string,
+  i.e. no compiler options.
+
+  This sub key is required for the gnu C++ platform only (see 
+  sub key <PLATFORM:>).
+END_MAN
+
+/append
+METHOD:  CLASS:
+MAN:
+  KEY TYPE: SUB KEY
+  SECTIONS: PROJECT:
+  USAGE   : optional
+
+  Defines the sigmaLab class name of the SEM. As described in release
+  note "sigmaLab Extension Modules (SEM)" there is a C++ interface and
+  a sigmaLab interface for each SEM. The sigmaLab class name is the
+  identifier of the SEM for the sigmaLab scope. 
+
+  If <CLASS:> is not specified the sigmaLab class identifier will be 
+  equal to the project code <PROJECT:>. To avoid confusion it is not 
+  recommended to specify another sigmaLab class identifier than the 
+  project code. 
+END_MAN
+
+/append
+METHOD:  CNAME:
+MAN:
+  KEY TYPE: SUB KEY
+  SECTIONS: PROJECT:, OPTION:, PARAM:, METHOD: 
+  USAGE   : optional
+
+  Defines the C++ class identifier (section <PROJECT:>) or the C++
+  member identifier (sections <OPTION:>, <PARAM:> and <METHOD: >)
+  for the item defined by the section.
+
+  Unless you specify a class/member identifier through this sub key
+  SLCGen will generate these identifiers automatically accourding 
+  to the C++ naming conventions (see release note 'Naming Conven-
+  tions II - C++').
+
+  Use the <CNAME:> sub key whenever the default identifier is not
+  desired.
+
+  Sections <OPTION:> and <PARAM:>
+  -------------------------------
+
+    <CNAME:> defines the identifier of the member variable generated 
+    for the option/parameter (see section keys <OPTION:>/<PARAM:>). 
+    The identifier of the option/parameter update callback function 
+    (OUCF/PUCF) is NOT affected by setting <CNAME:>.
+    Hence in the option/parameter identifier you must not use any 
+    characters that are invalid in C++ identifiers. Exception is the 
+    leading slash (in option identifiers) which will be trimmed.
+
+  Section <METHOD: >
+  ------------------
+
+    <CNAME:> defines the identifier of the secondary command call-
+    back function (SCCF). The identifier of the primary command
+    callback function is obtained by putting an 'On' before the
+    SCCF identifer. Hence defining <CNAME:> affects both, PCCF and
+    SCCF, identifiers.
+    For more information about the command execution mechanism and
+    about command callback functions see release note 'SLCGen In-
+    sight I - Callback Functions'.
+END_MAN
+
+/append
+METHOD:  CODE:
+MAN:
+  KEY TYPE: SUB KEY
+  SECTIONS: OPTION:, PARAM:, METHOD: 
+  USAGE   : optional - OPTION:, PARAM:
+            required - METHOD: 
+
+  Specifies a C/C++ code shred to be executed as reaction on
+  - <OPTION:>  the interpretation of the option identifier (i.e. when
+               setting the option),
+  - <PARAM:>   assigning a new value (<root.set> command in sigmaLab
+               or CSlCmdTarget::SetParam() in C++),
+  - <METHOD: > the interpretation of the command identifier.
+
+  A code shred definition usually contains several lines of code. It
+  is finished with the 'END_CODE' symbol.
+
+  Each code shred will be placed in a separate C++ callback function. 
+  The callback functions become members of the C++ class generated for 
+  the SEM. Therefore from all code shreds you have normal access to 
+  all class members of the SEM's C++ class. You can use any member va-
+  riables and call any member functions (inherited one included) with-
+  out any restriction in code shreds. For further information on call-
+  back functions see release note 'SLCGen Insight I - Callback Func-
+  tions'.
+
+  Code shreds for <OPTION:> and <PARAM:> members are optional, 
+  <METHOD: > members require code.
+
+
+  Section: <OPTION:>
+  ------------------
+
+     Normally options are handled automatically by sigmaLab. An option
+     is set (i.e. its member variable is set to TRUE) when the option
+     identifier is interpreted and it is cleared (i.e. its member va-
+     riable is set to FALSE) after executing the next command has com-
+     pleted. You may, however, decide not to use this automatism. This
+     can be useful for instance if you want to have options which do 
+     not clear automatically.
+     When implementing code for an option you will normally specify
+     '/nonautomatic' in the <FLAGS:> sub key to disable the automatic
+     handling of this particular option.
+
+
+  Section: <PARAM:>
+  -----------------
+
+    A code shred of a parameter member is executed during the set pro-
+    cedure. You can use this code to validate the new value and/or to
+    perform any actions resulting from the change.
+    
+    Before the code shred is executed the parameter's member variable
+    will be temporarily set to the new value. For validation just check
+    the member variable. If validation fails you can either return
+    NOT_EXEC (which will restore the original parameter value) or you
+    can correct the value just by re-writing the member variable. You
+    do not need to place a return statement in the code shred unless
+    you want to cancel the set procedure.
+
+
+  Section: <METHOD: >
+  -------------------
+
+    Each command member of a SEM is connected to a (secondary) command 
+    callback function which defines the action to be taken when inter-
+    preting the command identifier. 
+
+    Command execution is performed in two stages through a primary 
+    (PCCF) and a secondary command callback function (SCCF). Command 
+    code shreds will be placed in the SCCF. This is a generated C++
+    member function whose prototype equals the syntax description given
+    by the <SYNTAX:> sub key. From within the command code shreds you
+    have access to all variable and function members of the SEM's C++
+    class as well as to the formal command arguments as given in the 
+    <SYNTAX:> description.
+
+    You do not need to place a return statement at the end of a com-
+    mand code shred. SCCF's return O_K by default. To indicate an
+    error you should, however, return the error code or NOT_EXEC.
+    You are strongly recommended to use the sigmaLab error handling
+    mechanism (i.e. the ERRORMSG and ERRORRET C++ macros described at 
+    the <ERROR:> section key's manual chapter) in order to report 
+    errors occouring in command code shreds.
+
+    Command members do not have an explicit return value. The gene-
+    rated SCCF's only return a success or error code. In sigmaLab
+    returning a value means pushing it to one of the stacks. Use the
+    SlcPushXXX C++ functions for this purpose:
+
+    -----------------------------------------------------------------
+     Function         Description
+    -----------------------------------------------------------------
+     SlcPushInstance  Push an instance pointer to the instance stack
+     SlcPushLogic     Push a boolean value to the logic stack
+     SlcPushNumber    Push a double value to the number stack 1)
+     SlcPushString    Push a char pointer to the string stack
+    -----------------------------------------------------------------
+     1) Convert integer types to push them to the number stack
+
+    For detailled information on the command execution procedure see 
+    release notes:
+    - "SLCGen Insight I - Callback Function"
+    - "SLCGen Insight II - Implementing Callbacks Efficiently"
+END_MAN
+
+/append
+METHOD:  COMMENT:
+MAN:
+  KEY TYPE: SUBKEY
+  SECTIONS: PROJECT:, ERROR:, OPTION:, PARAM:, METHOD: 
+  USAGE   : required
+
+  Supply a brief comment on the meaning of the project or member.
+  Comments must not contain line breaks an d should not be longer
+  than 50 characters.
+
+  Comments of <ERROR:> members serve as error message to be dis-
+  played. The can contain format specifications (see <ERROR:>).
+END_MAN
+
+/append
+METHOD:  COMPILER:
+MAN:
+  KEY TYPE: SUBKEY
+  SECTIONS: PROJECT:
+  USAGE   : required on the GNU C++ platform
+
+  Specify the fully qualified path of the gcc (g++) compiler exe-
+  cutable. This specification is necessary to generate the make
+  file.
+END_MAN
+
+/append
+METHOD:  CSTRUCTNAME:
+MAN:
+  KEY TYPE: SUBKEY
+  SECTIONS: PROJECT:
+  USAGE   : for compatibility
+
+  This key defines the idenfier of the SEM's C++ struct generated 
+  by the C/C++ language abstaction layer of sigmaLab. This func-
+  tionality is implemented for compatibility with dataLAB/sigmaLab 
+  1.0 and shall not be used anymore.
+
+  You should rather migrate SEMs from former versions than make use
+  of compatibility work-arounds.
+END_MAN
+
+/append
+METHOD:  FLAGS:
+MAN:
+  KEY TYPE: SUBKEY
+  SECTIONS: PROJECT:, OPTION:, PARAM:, METHOD: 
+  USAGE   : optional
+
+  Flags are properties of a member. You can use multiple flags - 
+  separated by commas - on each member.
+
+  ---------------------------------------------------------------
+                    P        C
+                    R        O
+                    O  O  P  M
+                    J  P  A  M
+                    E  I  R  A
+                    C  O  A  N
+   Flag             T  N  M  D  Description
+  ---------------------------------------------------------------
+   /hidden          -  -  X  -  hidden member (i.e. C++ use only)
+   /singleton       X  -  -  -  singleton class 1)
+   /noautoactivate  X  -  -  -  instanciation does not activate 2)
+   /nonautomatic    -  X  X  -  do not handle automatically
+   /nondistinct     -  -  -  X  
+   /nosave          -  -  X  -  do not save and restore
+   /noset           -  -  X  -  write protection
+   /secondary       X  -  -  -  activate in secnd. cmd. hdlr. 3)
+  ---------------------------------------------------------------
+   1) There will be no class identifier in sigmaLab but exactly
+      one instance of the SEM. This implements function libraries
+      such as STRproc.
+   2) Normally instances will be automatically activated after
+      instanciation. This flag prevents instances from being ac-
+      tivated on instanciation.
+   3) Shall not be used for user classes.
+      See sigmaLab interpreter manual for more information on how
+      sigmaLab handles commands
+END_MAN
+
+/append
+METHOD:  INIT:
+MAN:
+  KEY TYPE: SUBKEY
+  SECTIONS: PARAM:
+  USAGE   : optional
+
+  Specifies an initial value for a parameter member. The parameter
+  will be set to this value on instanciation and on instance reset.
+
+  You cannot specify init values for pointer, instance or array
+  parameters. Specifying an init value has no effect if the para-
+  meter is defined non-automatic (see <FLAGS:>).
+END_MAN
+
+/append
+METHOD:  IPATH:
+MAN:
+  KEY TYPE: SUBKEY
+  SECTIONS: PROJECT:
+  USAGE   : usually
+
+  Specifies the include path for the SEM. You can specify several
+  paths separated by commas (,). The first specified path is called
+  the primary include path. SLCGen generates the SEM's C++ header
+  file in the primary include path. All other paths are interpreted 
+  as C++ compiler include paths.
+
+  The default setting is '../include'.
+
+  Path specifications are relative to the SEM's home directory, 
+  i.e. to the directory containing the SEM's definition script.
+END_MAN
+
+/append
+METHOD:  MAN:
+MAN:
+  KEY TYPE: SUBKEY
+  SECTIONS: PROJECT:, ERROR:, OPTION:, PARAM:, METHOD: , NOTE:
+  USAGE   : usually  - PROJECT:, ERROR:, OPTION:, PARAM:, METHOD: 
+            required - NOTE:
+
+  Begins the specification of a project's/member's manual page.
+  Specification of a manual page is finished by the <END_MAN> mark.
+
+  User defined manual text is displayed as a part of the ASCII
+  manual (to be viewed with the <-manual> command) and as a part
+  of the HTML online documentation generated by SLCGen. SLCGen
+  provides all formal information (such as member/project name, 
+  syntax description and project/member comment) automatically.
+  Your additional manual text shall focus on a detailled des-
+  cription on the use of the SEM or the member.
+
+  The manual page you read in the moment was generated the same
+  way your SEM's pages will be generated by SLCGen. If you watch
+  this page in an HTML browser you will see one part rendered in
+  a fixed pitch font and others rendered in variable pitch font.
+  The fixed pitch section was implemented with <MAN: ...END_MAN>
+  in an definition script. SLCGen cared for all the rest of the
+  page, navigation facilities included. You do neither have to 
+  worry about the structure of your SEM's online documentation 
+  nor about naviation problems. Besides a page for each member
+  SLCGen will also create index pages (errors, options, para-
+  meters and commands) and the SEM's homepage (including the
+  manual text of the <PROJECT:> section).
+
+  In the HTML online documentation user defined manual text is
+  displayed as pre-formatted text. Indents and formatted tables
+  will display as in the text editor. You must, however, not use
+  tab stops to format your page as HTML browsers will not handle
+  them.
+END_MAN
+
+/append
+METHOD:  MPATH:
+MAN:
+  KEY TYPE: SUBKEY
+  SECTIONS: PROJECT:
+  USAGE   : optional
+
+  Specifies the manual path of the SEM. SLCGen will generate the
+  HTML and ASCII manual files for the SEM in this directory.
+
+  The default setting is '../manual'.
+
+  Path specifications are relative to the SEM's home directory, 
+  i.e. to the directory containing the SEM's definition script.
+END_MAN
+
+/append
+METHOD:  LEVEL:
+MAN:
+  KEY TYPE: SUBKEY
+  SECTIONS: ERROR:
+  USAGE   : optional
+
+  Specifies the error/warning level of an error member. The fol-
+  lowing error levels are defined:
+
+   -----------------------------------------------------
+                   Numeric
+    Error Level    Value     Meaning
+   -----------------------------------------------------
+    EL_FATAL       0         Fatal error  1)
+    EL_ERROR       1         Default; Normal error 2)
+    EL_WARNING     2         High priority warning 3)
+    EL_WARNING2    3         Medium priority warning 3)
+    EL_WARNING3    4         Low priority warning 3)
+   -----------------------------------------------------
+    1) Use only if the error will terminate the sigmaLab session
+       or may cause an indeterminate state.
+    2) Error state can be handled trough the <?error> statement.
+    3) Default print level for warnings is EL_WARNING2.
+END_MAN
+
+/append
+METHOD:  LFILE:
+MAN:
+  KEY TYPE: SUBKEY
+  SECTIONS: PROJECT:
+  USAGE   : optional
+
+  Specifies the name of the library file of the SEM which is 
+  generated by the C++ compiler. Default is <projectname>.lib
+  (Windows platform) or <projectname>.a (Unix platforms) where
+  <projectname> is the project code defined by the <PROJECT:>
+  section keyword (all characters converted to small latters).
+
+  The library generated for the SEM will be stored in the li-
+  brary path (see <LPATH:>).
+END_MAN
+
+/append
+METHOD:  LPATH:
+MAN:
+  KEY TYPE: SUBKEY
+  SECTIONS: PROJECT:
+  USAGE   : optional
+
+  Specifies the library path of the SEM. SLCGen will cause the
+  C++ compiler to create the SEM's library in this directory.
+
+  The default setting is '../lib'.
+
+  NOTE:
+  ====
+    sigmaLab supports several processor platforms. Libraries
+    are stored in separate directories for each platform. For
+    this SLCGen automatically appends processor codes (such as
+    '.intel' or '.sparc' to the library path. This allows si-
+    multaneous work on different platforms.
+
+  Path specifications are relative to the SEM's home directory, 
+  i.e. to the directory containing the SEM's definition script.
+END_MAN
+
+/append
+METHOD:  OBSOLETE:
+MAN:
+  KEY TYPE: SUBKEY
+  SECTIONS: PROJECT:, METHOD: , PARAM:, OPTION:
+  USAGE   : optional
+
+  Defines an obsolete identifier for the respective section.
+  This facility can be used if an identifier had to be renamed
+  for some reason. You can provide the obsolete identifier
+  through <OBSOLETE:> then. The obsolete identifier will still 
+  be interpreted correctly. The user will be warned about the 
+  change.
+
+  The recommended procedure renaming identifiers takes two
+  SEM version updates:
+  1. Rename the identifier and provide the obsolete one through
+     <OBSOLETE:>.
+  2. Remove the obsolete identifier definition.
+  There should be enough time between the SEM version updates
+  so that the users can realize the change.
+END_MAN
+
+/append
+METHOD:  OPATH:
+MAN:
+  KEY TYPE: SUBKEY
+  SECTIONS: PROJECT:
+  USAGE   : optional
+
+  Specifies the obkect path of the SEM. SLCGen will cause the
+  C++ compiler to create temporary compiler files and object
+  file in this directory.
+
+  The default setting is '../obj'.
+
+  NOTE:
+  ====
+    sigmaLab supports several processor platforms. Object files
+    are stored in separate directories for each platform. For
+    this SLCGen automatically appends processor codes (such as
+    '.intel' or '.sparc' to the object path. This allows simul-
+    taneous work on different platforms.
+
+  Path specifications are relative to the SEM's home directory, 
+  i.e. to the directory containing the SEM's definition script.
+END_MAN
+
+/append
+METHOD:  PARENT:
+MAN:
+  KEY TYPE: SUBKEY
+  SECTIONS: PROJECT:
+  USAGE   : optional
+
+  Specifies one or more C++  base classes the SEM shall be derived
+  from. The base class list has the following syntax:
+
+   C( {public|protected|private} <cxxclass>[, ...] )
+
+   where <cxxclass> stands forn the C++ class name(s) of the base 
+   class(es).
+
+  If a base SEM is specified (<SUPERCLASS:>) its respective C++ 
+  class is always primary C++ base class. The access privilege to 
+  the base SEM is public. The access privileges to the other C++ 
+  base classes (<cxxclass>) can be explicitly defined.
+
+  EXAMPLE:
+  =======
+    You may create a SEM derived from sigmaLab's data class and,
+    additionally, derived from the C++ class CSocket like this:
+
+  SUPERCLASS: ../data/data.def
+    PARENT: C( public CSocket )
+
+  See also: <SUPERCLASS:>
+END_MAN
+
+/append
+METHOD:  PLATFORM:
+MAN:
+  KEY TYPE: SUBKEY
+  SECTIONS: PROJECT:
+  USAGE   : required
+
+  Defines the C++ compiler platform SLCGen is to create files for.
+  Possible values are:
+
+   ----------------------------------------------------
+    Code     Meaning                     Files created
+   ----------------------------------------------------
+    GNUC++   Gnu C++                     1) 2)
+    MSDEV4   Microsoft Visual C++ 4.x    1) 3)
+    MSDEV5   Microsoft Visual C++ 5.0    1) 4)
+    MSDEV6   Microsoft Visual C++ 6.0    1) 5)
+   ----------------------------------------------------
+    1) - SEM header file (*.h in <IPATH:>)
+       - SEM implementation file (in SEM home directory)
+       - ASCII manual file (*.man in <MPATH:>)
+       - HTML manual pages (*.html in <HTMLPATH:>)
+    2) - makefile (in SEM home directory)
+    3) - NMake file (*.mak in SEM home directory)
+    4) - Project environment files (*.dsw,*.dsp in SEM
+         home directory)
+    5) - ?
+
+  You can design SEM definition scripts for use with different 
+  compiler platforms, typically depending on the target processor 
+  platform. The following example shows a configuration that uses
+  Gnu C++ on all platforms except for Windows:
+
+    "_WINDOWS" ?platform if  
+        PLATFORM: MSDEV5
+    else
+        PLATFORM: GNUC++
+        COMPILER: gcc
+        AR:       ar
+        CFLAGS:   -O2
+    end
+
+  NOTE:
+  ====
+    Please mind that the Gnu C++ compiler platform requires two
+    additional subkeys (<COMPLILER:> and <AR:>) in the <PROJECT:> 
+    section.
+
+  See also: <COMPILER:>, <AR:>, <CFLAGS:>
+END_MAN
+
+/append
+METHOD:  POSTSYN:
+MAN:
+  KEY TYPE: SUBKEY
+  SECTIONS: METHOD: 
+  USAGE   : optional
+
+  The standard syntax model of sigmaLab is stack notation (UPN).
+  UPN style expressions are always interpreted by sigmaLab.
+  In rare cases, however, it can be necessary for a SEM to inter-
+  prete parts of the input stream itself. This possibility is pro-
+  vided by <POSTSYN:>. "Post syntax" in a command means that the
+  respective C++ command handler of the SEM reads and processes 
+  one or more tokens immediately following the command identifier.
+
+  An example for the usage of post syntax is the <see> command of
+  the sigmaLab interpreter defined as:
+
+    METHOD:  see
+    SYNTAX : ()
+    POSTSYN: <param>|*|*/all
+
+  The command handler of <see> reads one additional token from the
+  input stream and interpretes it as a parameter identifier or a
+  wildcard. The expression 'x see myparam' will for instance dis-
+  play the contents of paramter <myparam> of instance x.
+
+  The expression given through the <POSTSYN:> subkey is not eva-
+  luated by SLCGen. It will be displayed in the SEM help table and
+  in the manual to indicate that the command performs interpreta-
+  tion of additional tokens. You are recommended to specify a re-
+  gular expression explaining the usage of <POSTSYN:>.
+
+  IMPORTANT NOTE:
+  ==============
+    Except for some special cases there is no need for post syntax.
+    Thus you are not recommended to use this feature. Please con-
+    sider that user interpretation of parts of the input stream can
+    cause syntactic ambiguities.
+END_MAN
+
+/append
+METHOD:  TYPE:
+MAN:
+  KEY TYPE: SUBKEY
+  SECTIONS: PARAM:
+  USAGE   : required
+
+  Specifies the variable type of a parameter member. Possible type
+  codes are:
+
+  -------------------------------------------------------------------
+   Type                C++ Type       Explanation
+  -------------------------------------------------------------------
+   char                INT8         1)
+   unsigned char       UINT8        1)
+   short               INT16        1)
+   unsigned short      UINT16       1)
+   int                 INT32        1)
+   unsigned int        UINT32       1)
+   long                INT64        1)
+   unsigned long       UINT64       1)
+   float               FLOAT32      1)
+   double              FLOAT64      1)
+   string              char*
+   1,2,...,255         char[n]
+   INSTANCE()          CSlCmdTarget*  No runtime type validation
+   INSTANCE(<class>)   <class>*       RTT valid. as kind of <class>
+   data                data*          Class data instance
+   structure           structure*     Class structure instance
+
+   - pointers and arrays
+   <type>*             <type>*        2);     Simple pointer
+   <type>[n]           <type>[n]      3);     Array
+   <type>*[n]          <type>*[n]     2); 3); Pointer array
+
+   - unknown identifiers
+   <unknown>           <unknown>      4); Pointer type assumed
+   (<unknown>)         <unknown>      5); Type will be "ignored"
+
+   - obsolete identifiers
+   text                               replace by 'string'
+   INSTANCE                           replace by 'INSTANCE()'
+   INSTANCE("<class>")                replace by 'INSTANCE(<class>)'
+   DATA                               replace by 'data'
+   STRUCTURE                          replace by 'structure'
+  -------------------------------------------------------------------
+   1) Actual length in bytes depends NOT on the machine.
+   2) Everything is accepted as <type>; there may be several *'s, however, 
+      the save/restore machanism of sigmaLab processes simple pointers only.
+   3) Everything is accepted as <type>; you may specify multi-dimensional
+      arrays, however, the save/restore mechanism of sigmaLab processes
+      one-dimensional arrays only.
+   4) In case of unknown identifiers SLCGen prints a warning. 
+      To avoid these warnings use <type>* for pointer types.
+   5) This is the only way to define parameters with unknown non-pointer
+      types (such as C++ structures or classes). sigmaLab will "ignore" 
+      such parameters, i.e. they will not be automatically handled, reset, 
+      saved and restored.
+      It is NOT recommended to use "ignore" parameters!
+END_MAN
+
+/append
+METHOD:  SYNTAX:
+MAN:
+  KEY TYPE: SUBKEY
+  SECTIONS: COMMAND
+  USAGE   : required
+
+  This key describes the syntax of a SEM command member by a regular expres-
+  sion. Syntax definition expressions have the following form:
+
+    ( <type> <name> [, <type> <name>[, ...]] )
+
+  Where <type>  stands for an  argument type  identifier and  <name> for the
+  formal argument name. See release note "Definition Scripts IV - Types" for
+  a list of valid argument type identifiers.
+
+  The  syntax description given by the  <SYNTAX:> key is C style  and equals
+  the argument list  of the secondary command  callback function  (SCCF) at-
+  tached  to the command (see <CODE:> subkey). The sigmaLab  standard syntax
+  is stack notation (UPN) however.  The sigmaLab  interpreter uses a respec-
+  tive syntax  description which is automatically derived  from the  C style
+  expression defined  by <SYNTAX:>.  The formal sigmaLab syntax  description
+  for command member execution is:
+
+    <type> <name> [<type> <name> [...]] [<option> [...]] <this> <command>
+
+  where  <option> stands for  option member idenfiers,  <this> for the  name
+  of the instance  executing the command  and <command> for the command mem-
+  ber identifier.
+  
+     ARGUMENTS IN THE SIGMALAB STACK SYNTAX APPEAR IN THE ORDER GIVEN BY
+                     <SYNTAX:> (and not reverse!).
+
+  EXAMPLE:
+  =======
+     The command  "-my_cmd" of  a SEM "MYproc"  may have the  following syn-
+     tax description:
+
+       SYNTAX: (long i1, long i2, data dest)
+
+     The respective secondary command callback function's prototype is then:
+ 
+       INT32 CMYproc::MyCmd(long i1, long i2, data dest)
+
+     The sigmaLab syntax for the command is:
+
+       <long i1> <long i2> <data dest> <MYproc this> -my_cmd
+
+     NOTE: <MYproc this> is the  instance executing the command. It must be 
+           specified as the last item of the command's argument list.
+END_MAN
+
+## EOF

@@ -1,0 +1,1010 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+<!-- UASR: Unified Approach to Speech Synthesis and Recognition
+<    - Documentation home page
+<   
+<    AUTHOR : Matthias Wolff
+<    PACKAGE: n/a
+<   
+<    Copyright 2013-2014 UASR contributors (see COPYRIGHT file)
+<    - Chair of System Theory and Speech Technology, TU Dresden
+<    - Chair of Communications Engineering, BTU Cottbus
+<   
+<    This file is part of UASR.
+<   
+<    UASR is free software: you can redistribute it and/or modify it under the
+<    terms of the GNU Lesser General Public License as published by the Free
+<    Software Foundation, either version 3 of the License, or (at your option)
+<    any later version.
+<   
+<    UASR is distributed in the hope that it will be useful, but WITHOUT ANY
+<    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<    FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for 
+<    more details.
+<   
+<    You should have received a copy of the GNU Lesser General Public License
+<    along with UASR. If not, see [http://www.gnu.org/licenses/].
+  -->
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title>dLabPro Basics</title>
+  <link rel=stylesheet type="text/css" href="../default.css">
+</head>
+<script type="text/javascript">
+if (top==self)
+{
+  var sLocation = "../index.html?tutorials/t001.html";
+  if (location.hash.length>0)
+    sLocation += ";"+location.hash.substr(1);
+  top.location = sLocation;
+}
+</script>
+<script type="text/javascript" src="../default.js"></script>
+<body>
+  <a name="top"></a>
+  <div id="clp_top">
+    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+      <tr>
+        <td nowrap width="25%" class="navbar">
+          dLabPro Basics
+        </td>
+        <td nowrap width="75%" class="navbar" style="text-align:right;">
+          <a class="navbar" href="javascript:__PrintSection('clp_top','dLabPro Basics','..');"
+          ><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle;" 
+          alt="Print"></a>
+          <a class="navbar" href="../home.html">Home</a>
+          <a class="navbar" href="index.html">Tutorials</a>
+        </td>
+      </tr>
+    </table>
+    <div class="mframe">
+      <table width="100%" cellSpacing="0" cellPadding="6" border="0">
+        <tr>
+          <td width="50%">
+            <h3 style="margin-top:2pt; margin-bottom:2pt">Contents</h3>
+            <ul class="linklist">
+              <li class="linklist"><a class="Linklist" href="#session">Running a dLabPro Session</a></li>
+              <li class="linklist"><a class="Linklist" href="#syntax" >The Syntax</a></li>
+              <li class="linklist"><a class="Linklist" href="#stack"  >The Stack</a></li>
+              <li class="linklist"><a class="Linklist" href="#numbers">Numbers and Constants</a></li>
+              <li class="linklist"><a class="Linklist" href="#Classes">Working with Classes</a></li>
+            </ul>
+          </td>
+          <td width="50%">
+            <h3 style="margin-top:2pt; margin-bottom:2pt">Related Topics</h3>
+            <ul class="linklist">
+              <li class="linklist"><a class="Linklist" href="t002.html">Tutorial 2 - Variables and Data Containers</a></li>
+              <li class="linklist"><a class="Linklist" href="t003.html">Tutorial 3 - Writing Scripts</a></li>
+            </ul>
+          </td>
+        </tr>
+      </table>
+    </div>
+    
+    <div class="mframe2">
+      <h3>Synopsis</h3>
+      <p>Gives a brief introduction to dLabPro and explains some basic concepts like RPN syntax, stack, classes and
+        instances. It also contains information how to run a dLabPro session and how to get help.</p>
+
+      <h3>Introduction</h3>
+    <p>This tutorial is written to give a short introduction to dLabPro.
+    It shows how dLabPro works and introduces the basic concepts. For
+    detailed information see the <a href="../home.html">reference manual</a>.</p>
+    <p>dLabPro is an object oriented language which means you will work
+    with instances of classes.</p>
+    <p><em>You should be familiar with these two concepts before going on
+    reading this tutorial.</em></p>
+    <p>dLabPro classes may have the following types of members:</p>
+    <table>
+      <tr>
+        <td>Methods</td>
+        <td>Procedures belonging to the class, e.g. <code>-status</code>
+        which may print status information on the instance. In dLabPro
+        method identifiers usually start with the character '-'.</td>
+      </tr>
+      <tr>
+        <td>Fields</td>
+        <td>Variables of various data types (including class types)
+        belonging the class. The actual values stored in the fields define
+        the internal state of an instance of a class.</td>
+      </tr>
+      <tr>
+        <td>Options</td>
+        <td>Options are on/off switches which influence the behaviour of
+        methods. Option identifiers usually start with the character '/'.</td>
+      </tr>
+      <tr>
+        <td>Errors</td>
+        <td>Class specific error messages. Error identifiers are four digit
+        numbers starting from 1001.</td>
+      </tr>
+    </table>
+    <p>The first two member types are common to object oriented languages.
+    The latter two are special to dLabPro. You may think of options as
+    command line switches of console programs. Errors just belong to their
+    respective class, meaning for instance there is an <a
+      href="../automatic/data.html#err_DATA_INTERNAL"><code class="link">error1001</code></a>
+    in the class <a href="../automatic/data.html"><code class="link">data</code></a>
+    and an <a href="../automatic/fst.html#err_FST_INTERNAL"><code
+      class="link">error1001</code></a> in the class <a
+      href="../automatic/fst.html"><code class="link">fst</code></a> and
+    these two are different errors.</p>
+    <p>dLabPro is a scripting language which is executed by a command
+    interpreter (so there is no need of compiling and linking code when
+    developing dLabPro programs). The basic interpretation unit is a <em>command</em>
+    which you may simply imagine as one line consisting of interpretable
+    items (called <em>tokens</em>) like identifiers of methods, fields or
+    options, numeric or string constants etc. dLabPro commands end with a
+    semicolon.</p>
+
+    </div>
+
+  <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->  
+  <a name="session"></a>
+  <div id="clp_session">
+    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+      <tr>
+        <td nowrap width="25%" class="navbar">
+          Running a dLabPro Session
+        </td>
+        <td nowrap width="75%" class="navbar" style="text-align:right;">
+          <a class="navbar" href="javascript:__PrintSection('clp_session','Running a dLabPro Session','..');"
+          ><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle;" alt="Print"></a> 
+          <a class="navbar" href="../home.html">Home</a>
+          <a class="navbar" href="index.html">Tutorials</a>
+          <a class="navbar" href="#top">Top</a>
+        </td>
+      </tr>
+    </table>
+    <div class="mframe2">
+    <p>To start dLabPro open a command shell or terminal and type <code>dlabpro</code>
+    (it is provided that your PATH environment variable includes the
+    location of the dLabPro executable; the command line option <code>--logo</code> makes
+    dLabPro display a version information at start-up)</p>
+    <pre class="code">&gt;dlabpro --logo
+      
+// dLabPro version 2.5.3 build 1266 win32(ix86,32bit)release PID:3292
+dLabPro&gt;_</pre>
+
+    <p>You are now in the interactive mode and may enter commands. The
+    command prompt consists of the session name (usually "dLabPro")
+    followed by a period and the identifier of the so called active
+    instance. An instance is activated by dLabPro when interpreting its
+    instance name. As nothing has been interpreted in our session so far,
+    the active instance is the dLabPro interpreter itself.</p>
+    <p>Now you may call a method on the active instance (that is the
+    interpreter). Try <a href="../automatic/function.html#mth_-help"><code
+      class="link">-help</code></a><code>;</code> and you will get a list
+    of methods of the active instance (that is still the interpreter),
+    classes, options and fields with a short explanation. Try <a
+      href="../automatic/function.html#mth_-explain"><code class="link">-explain</code></a><code>;</code>
+    and you will get brief information on the usage of the active
+    instances class members. After creating an instance of a class (see
+    section <a href="#classes">working with classes</a>) you can
+    type <a href="../automatic/function.html#mth_-help"><code class="link">-help</code></a><code>;</code>
+    again and you will get the help table of the current class. If you
+    want to get a description of an identifier (e.g. a method name) use <a
+      href="../automatic/function.html#mth_-explain"><code class="link">-explain</code></a>
+    <code>&lt;identifier&gt;</code>:</p>
+
+    <pre class="code">dLabPro&gt; <a
+      href="../automatic/function.html#mth_-explain"><code class="link">-explain</code></a> <a
+      href="../automatic/function.html#mth_-status"><code class="link">-status</code></a>;
+
+----------------------------------------------------------------------
+   Explanation of method
+   function -status
+----------------------------------------------------------------------
+
+   Syntax: &lt;function this&gt; -status
+
+   Prints status information of the function.
+
+----------------------------------------------------------------------
+
+dLabPro&gt;_</pre>
+    <p>So the explanation of <code>-status</code> is: <code>-status</code>
+    is the identifier of a method which belongs to the class <a
+      href="../automatic/function.html"><code class="link">function</code></a>
+    and has the given usage (syntax).</p>
+    <p>You may end a dLabPro session using the method <a
+      href="../automatic/function.html#mth_quit"><code class="link">quit</code></a>.
+    </p>
+    <pre class="code">dLabPro&gt; <a
+      href="../automatic/function.html#mth_quit"><code class="link">quit</code></a>;
+
+// Exiting dLabPro...
+&gt;_</pre>
+
+  <p>dLabPro has some command line options. Type</p>
+  <pre class="code">&gt;dlabpro --help
+</pre>
+  <p>to get a list.</p>
+</div>
+  </div>
+
+  <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+  <a name="syntax"></a>
+  <div id="clp_syntax">
+    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+      <tr>
+        <td nowrap width="25%" class="navbar">
+          The Syntax
+        </td>
+        <td nowrap width="75%" class="navbar" style="text-align:right;">
+          <a class="navbar" href="javascript:__PrintSection('clp_syntax','The Syntax','..');"
+          ><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle;" alt="Print"></a> 
+          <a class="navbar" href="../home.html">Home</a>
+          <a class="navbar" href="index.html">Tutorials</a>
+          <a class="navbar" href="#top">Top</a>
+        </td>
+      </tr>
+    </table>
+    <div class="mframe2">
+    <p>The syntax of dLabPro commands is based on the "reverse polish
+    notation" (RPN), which means that method identifiers/operators have to
+    stand behind the arguments/operands (postfix notation). The following
+    example will clearify what is meant. The expression</p>
+    <p>2/(3-8)</p>
+    <p>looks in reverse polish notation like this</p>
+    <p>2 3 8 - / </p>
+    <p>This kind of notation is reverse of a prefix notation developed by
+    the Polish mathematician Jan Lukasiewicz in the 1920's. With a few <a
+      href="#rpnx">exceptions</a> dLabPro uses this notation.</p>
+    <p>You can try the simple math example above on the dLabPro command
+    prompt:</p>
+    <pre class="code">dLabPro&gt; 2 3 8 - / <a
+      href="../automatic/function.html#mth_-echo"><code class="link">-echo</code></a>;
+-0.4dLabPro&gt;_
+</pre>
+    <p>So the result of the computation is -0.4. Let's now use the method <a
+      href="../automatic/function.html#mth_-echo"><code class="link">-echo</code></a>
+    to display the word "hello" in the following way:</p>
+    <pre class="code">dLabPro&gt; "hello\n" <a
+      href="../automatic/function.html#mth_-echo"><code class="link">-echo</code></a>; <span
+      class="c-cmt"># Push "hello\n" onto the stack and display it</span>
+hello
+dLabPro&gt;_</pre>
+    <p>As you can see, the argument stands before the method. It is
+    committed to the method through a <a href="#stac">stack</a>. With "<code>#</code>"
+    you mark the beginning of an inline comment. Block comments are not
+    supported. Whitespaces are not significant. Commands should end with a
+    semicolon and be written in one line (however, line breaks are not
+    significant).</p>
+    <p>The general syntax of a dLabPro command is:</p>
+    <pre class="code">[&lt;arguments&gt;] &lt;instance&gt; [&lt;options&gt;] &lt;method&gt; [&lt;postfix_arguments&gt;];</pre>
+    <p><code>&lt;method&gt;</code> stands for the method to be invoked, <code>&lt;instance&gt;</code>
+    stands for the instance which <code>&lt;method&gt;</code> is member
+    of, <code>&lt;arguments&gt;</code> stands for a white space
+    separated list of arguments to <code>&lt;method&gt;</code>, <code>&lt;options&gt;</code>
+    stands for a white space separated list of options to <code>&lt;method&gt;</code>
+    and <code>&lt;postfix_arguments&gt;</code> stands for a white space
+    separated list of postfix arguments to <code>&lt;method&gt;</code>.
+    The command ends with a semicolon. <code>&lt;instance&gt;</code>
+    becomes the active instance when its name is interpreted. It remains
+    active until another instance name is interpreted. So as long as
+    methods have no instance arguments (whose interpretation would let
+    them become the active instance) you may omit <code>&lt;instance&gt;</code>.</p>
+    <p>While most methods require regular prefix arguments, there are a
+    few methods using postfix arguments (most of them members of the
+    classes <a href="../automatic/function.html"><code class="link">function</code></a>
+    and <a href="../automatic/data.html"><code class="link">data</code></a>).
+    There are also some other exceptions to the RPN syntax in dLabPro. The
+    following table shows an overview:</p>
+    <a name="rpnx"></a><table BORDER=0 CELLSPACING=0 CELLPADDING=4>
+    <caption>RPN exceptions</caption>
+      <tr>
+        <td class="rowgroup">Exception</td>
+        <td class="rowgroup">Syntax</td>
+        <td class="rowgroup">Example</td>
+        <td class="rowgroup">Remark</td>
+      </tr>
+      <tr>
+        <td><a href="#classes">Creating instances</a></td>
+        <td><code>&lt;class&gt; instancename;</code></td>
+        <td><a href="../automatic/var.html"><code class="link">var</code></a>
+        <code>i;</code></td>
+        <td></td>
+      </tr>
+      <!--
+      <tr>
+        <td><a
+          href="/erk/home/arnold/dlabpro/manual/automatic/function.html#mth_!">OS
+        shell commands with <code>!</code></a></td>
+        <td><code>! &lt;shell_command&gt;</code></td>
+        <td><a href="../automatic/function.html#mth_!"><code class="link">!</code></a>
+        dir</td>
+        <td>Shell command ends at next line break!</td>
+      </tr> -->
+      <tr>
+        <td>Postfix arguments</td>
+        <td><code>&lt;method&gt; argument;</code></td>
+        <td><a href="../automatic/function.html#mth_-list"><code
+          class="link">-list</code></a> <code>scalops;</code></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Formulas</td>
+        <td><code>:&lt;expression&gt;;</code></td>
+        <td><code>:i=i+1;</code></td>
+        <td>See <a href="t003.html#formulas">Tutorial III - Writing Scripts,
+          section "Formulas"</a> for details</td>
+      </tr>
+    </table>
+    </div>
+  </div>
+
+  <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+  <a name="stack"></a>
+  <div id="clp_stack">
+    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+      <tr>
+        <td nowrap width="25%" class="navbar">
+          The Stack
+        </td>
+        <td nowrap width="75%" class="navbar" style="text-align:right;">
+          <a class="navbar" href="javascript:__PrintSection('clp_stack','The Stack','..');"
+          ><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle;" alt="Print"></a> 
+          <a class="navbar" href="../home.html">Home</a>
+          <a class="navbar" href="index.html">Tutorials</a>
+          <a class="navbar" href="#top">Top</a>
+        </td>
+      </tr>
+    </table>
+    <div class="mframe2">
+    <p>Arguments are passed to methods or mathematical operations through a stack.
+    There are four types of stack items:</p>
+    <ul>
+      <li>boolean values,</li>
+      <li>numbers,</li>
+      <li>strings and</li>
+      <li>instances.</li>
+    </ul>
+    <p>You can display the current stack contents using the method <a
+      href="../automatic/function.html#mth_-list"><code class="link">-list</code></a>:
+    </p>
+    <pre class="code">dLabPro&gt; 42 "world\n"           <span
+      class="c-cmt"># Push 42 and "world\n" onto the stack</span>
+dLabPro&gt; <a href="../automatic/function.html#mth_-list"><code
+      class="link">-list</code></a> stack;           <span
+      class="c-cmt"># ... and dump <a href="#stac">stack</a></span>
+
+--------------------------------------------------------------------------------
+   Status of instance
+   function dLabPro
+--------------------------------------------------------------------------------
+   (no arguments)
+   Program pointer: 0
+   Execution mode : 19
+--------------------------------------------------------------------------------
+             STACK DUMP 00: S "world\n"
+                        01: N 42
+                 ACTIVE 00: -
+                        01: -
+                        02: dLabPro
+--------------------------------------------------------------------------------
+For more information type <code class="link"><a href="../automatic/function.html#mth_-list">-list</a></code> help;
+dLabPro&gt;_</pre>
+    <p>The <a href="../automatic/function.html#mth_-list"><code
+      class="link">-list</code></a> method is one example for <a
+      href="#rpnx">non-RPN syntax</a> in dLabPro. It accepts one postfix
+    argument to identify the type of list which shall be displayed. The
+    stack dump shows the two items we pushed on the stack. The most recent
+    item is on top of the stack. The semicolon concluding a command causes
+    dLabPro to clear the stack. Try these two commands:
+    <pre class="code">dLabPro&gt; 42 "world\n" <a
+      href="../automatic/function.html#mth_-list"><code class="link">-list</code></a> <code>stack</code>; <a
+      href="../automatic/function.html#mth_-list"><code class="link">-list</code></a> <code>stack</code>;
+
+--------------------------------------------------------------------------------
+   Status of instance
+   function dLabPro
+--------------------------------------------------------------------------------
+   (no arguments)
+   Program pointer: 0
+   Execution mode : 19
+--------------------------------------------------------------------------------
+             STACK DUMP 00: S "world\n"
+                        01: N 42
+                 ACTIVE 00: -
+                        01: -
+                        02: dLabPro
+--------------------------------------------------------------------------------
+   For more information type <code class="link"><a href="../automatic/function.html#mth_-list">-list</a></code> help;
+
+--------------------------------------------------------------------------------
+   Status of instance
+   function dLabPro
+--------------------------------------------------------------------------------
+   (no arguments)
+   Program pointer: 0
+   Execution mode : 19
+--------------------------------------------------------------------------------
+             STACK DUMP --: EMPTY
+                 ACTIVE 00: -
+                        01: -
+                        02: dLabPro
+--------------------------------------------------------------------------------
+   For more information type <code class="link"><a href="../automatic/function.html#mth_-list">-list</a></code> help;
+dLabPro&gt;_</pre>
+    <p>The first semicolon clears the stack. When <a
+      href="../automatic/function.html#mth_-list"><code class="link">-list</code></a>
+    is called for the second time the stack is empty. Now retype the
+    command omitting the first semicolon. Now the items will remain on the
+    stack:</p>
+    <pre class="code">dLabPro&gt; 42 "world\n" <a
+      href="../automatic/function.html#mth_-list"><code class="link">-list</code></a> <code>stack</code> <a
+      href="../automatic/function.html#mth_-list"><code class="link">-list</code></a> <code>stack</code>;
+
+--------------------------------------------------------------------------------
+   Status of instance
+   function dLabPro
+--------------------------------------------------------------------------------
+   (no arguments)
+   Program pointer: 0
+   Execution mode : 19
+--------------------------------------------------------------------------------
+             STACK DUMP 00: S "world\n"
+                        01: N 42
+                 ACTIVE 00: -
+                        01: -
+                        02: dLabPro
+--------------------------------------------------------------------------------
+   For more information type -list help;
+
+--------------------------------------------------------------------------------
+   Status of instance
+   function dLabPro
+--------------------------------------------------------------------------------
+   (no arguments)
+   Program pointer: 0
+   Execution mode : 19
+--------------------------------------------------------------------------------
+             STACK DUMP 00: S "world\n"
+                        01: N 42
+                 ACTIVE 00: -
+                        01: -
+                        02: dLabPro
+--------------------------------------------------------------------------------
+   For more information type <code class="link"><a href="../automatic/function.html#mth_-list">-list</a></code> help;
+dLabPro&gt;_</pre>
+    <p>Now let's push all kinds of values:</p>
+    <pre class="code">dLabPro&gt; data x;                   <span class="c-cmt"># Create data instance named x</span>
+dLabPro&gt; data y;                   <span class="c-cmt"># Create another one named y</span>
+dLabPro&gt; 1 x 2 3 "x" "y" y TRUE PI <span class="c-cmt"># Push some values, do NOT finish the line with a semicolon!</span>
+dLabPro.y&gt; <a href="../automatic/function.html#mth_-list"><code
+      class="link">-list</code></a> stack;            <span
+      class="c-cmt"># Show stack contents, y is "active" instance</span>
+
+--------------------------------------------------------------------------------
+   Status of instance
+   function dLabPro
+--------------------------------------------------------------------------------
+   (no arguments)
+   Program pointer: 0
+   Execution mode : 19
+--------------------------------------------------------------------------------
+             STACK DUMP 00: N 3.141592653589793
+                        01: B TRUE
+                        02: I y
+                        03: S "y"
+                        04: S "x"
+                        05: N 3
+                        06: N 2
+                        07: I x
+                        08: N 1
+                 ACTIVE 00: y
+                        01: -
+                        02: dLabPro
+--------------------------------------------------------------------------------
+   For more information type <code class="link"><a href="../automatic/function.html#mth_-list">-list</a></code> help;
+dLabPro&gt;_        <span class="c-cmt"># no "active" instance after semicolon</span></pre>
+    <p>As we can see, dLabPro tracks the type of values pushed to the
+    stack: "B" stands for boolean, "N" for number, "S" for string and "I"
+    for instance.</p>
+    <p>After a semicolon the stack is cleared and also the active instance is cleared.
+    So if you want to do something with the active instance after this command, you should omit the semicolon.</p>
+    <p>Let's now take a closer look on how dLabPro passes arguments to
+    methods through the stacks:</p>
+    <pre class="code">dLabPro&gt; <a href="../automatic/data.html"><code
+      class="link">data</code></a> z        <span
+      class="c-cmt"># Create an instance named z of class data</span>
+dLabPro.z&gt;"C1" 255 z   <span class="c-cmt"># Push some arguments to the stacks and</span>
+                       <span class="c-cmt"># activate instance z (NO semicolon!)</span>
+dLabPro.z&gt; <a href="../automatic/function.html#mth_-list"><code
+      class="link">-list</code></a> stack <span
+      class="c-cmt"># Show stack contents (NO semicolon!) NOTE 1)</span>
+
+--------------------------------------------------------------------------------
+   Status of instance
+   function dLabPro
+--------------------------------------------------------------------------------
+   (no arguments)
+   Program pointer: 0
+   Execution mode : 19
+--------------------------------------------------------------------------------
+             STACK DUMP 00: I z
+                        01: N 255
+                        02: S "C1"
+                 ACTIVE 00: z
+                        01: -
+                        02: dLabPro
+--------------------------------------------------------------------------------
+   For more information type <code class="link"><a href="../automatic/function.html#mth_-list">-list</a></code> help;
+dLabPro.z&gt; <a href="../automatic/data.html#mth_-addcomp"><code
+      class="link">-addcomp</code></a>   <span
+      class="c-cmt"># Call a method (of active instance z)</span>
+dLabPro.z&gt; <a href="../automatic/data.html#mth_-status"><code
+      class="link">-status</code></a>    <span
+      class="c-cmt"># See what we've got</span>
+--------------------------------------------------------------------------------
+   Status of instance
+   data z
+--------------------------------------------------------------------------------
+   Components     :      1 (Capacity         : 20)
+   Records        :      0 (Capacity         : 0)
+   Blocks         :      1 (Records per block: 0)
+   Records
+   - Length       :    255 bytes
+   - Width        :      0 ms
+   - Increment    :      0 ms
+   - Offset of 1st:      0 ms
+   User descriptions
+   - 0            :      0
+   - 1            :      0
+   - 2            :      0
+   - 3            :      0
+   - 4            :      0
+   - File text    : -none-
+   - Realization  : -none-
+   - Description  : -none-
+--------------------------------------------------------------------------------
+   Component structure
+                        Name  Offset   Bytes   Type
+                 0:       C1       0     255    255 char[255]
+--------------------------------------------------------------------------------
+   To view the data content type z <a href="../automatic/data.html#mth_-print"><code class="link">-print</code></a>;
+dLabPro.z&gt;_</pre>
+    <p>Notes:</p>
+    <ul>
+      <li><sup>1)</sup> Why can we call the interpreter method <a
+        href="../automatic/function.html#mth_-list"><code class="link">-list</code></a>
+      when instance z is active? Look at the "ACTIVE" list. There are
+      actually three active instances. <code>z</code> is the one with the
+      highest priority. However, if an identifier (as <a
+        href="../automatic/function.html#mth_-list"><code class="link">-list</code></a>)
+      is not member of the first active instance, dLabPro seeks in the
+      second and in the third one. In this case <a
+        href="../automatic/function.html#mth_-list"><code class="link">-list</code></a>
+      is found in the third active instance (the one with the lowest
+      priority). The second active instance position is reserved for <a
+        href="../automatic/var.html">variables</a> (see there for details).</li>
+      <li>dLabPro performs reasonable type conversions committing arguments
+      to methods. For instance you could type <code>"C1" "255" z <a
+        href="../automatic/data.html#mth_-addcomp"><code class="link">-addcomp;</code></a>
+      </code> instead of the example above. In this case the second
+      argument will be converted from a string to a number (as required by
+      the method <a href="../automatic/data.html"><code class="link">data</code></a>
+      <a href="../automatic/data.html#mth_-addcomp"><code class="link">-addcomp</code></a>).</li>
+      <li>dLabPro removes the arguments committed through the stack when
+      invoking a method. Type <a
+        href="../automatic/function.html#mth_-list"><code class="link">-list</code></a>
+      <code>stack</code> after the example above and you'll find the stack empty.</li>
+      <li>Some methods or mathematical operations return one or several values.
+      These appear on top of the stack after invoking the method or operation.</li>
+      <li><a href="#rpnx">Postfix arguments</a> do not appear on the
+      stacks.</li>
+    </ul>
+    </div>
+  </div>
+
+  <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+  <a name="numbers"></a>
+  <div id="clp_numbers">
+    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+      <tr>
+        <td nowrap width="25%" class="navbar">
+          Numbers and Constants
+        </td>
+        <td nowrap width="75%" class="navbar" style="text-align:right;">
+          <a class="navbar" href="javascript:__PrintSection('clp_numbers','Numbers','..');"
+          ><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle;" alt="Print"></a> 
+          <a class="navbar" href="../home.html">Home</a>
+          <a class="navbar" href="index.html">Tutorials</a>
+          <a class="navbar" href="#top">Top</a>
+        </td>
+      </tr>
+    </table>
+    <div class="mframe2">
+      <p>
+        dLabPro supports complex numbers. The format of complex number literals
+        is <code>&lt;re&gt;+&lt;im&gt;i</code> where the real part <code
+        >&lt;re&gt;</code> and the imaginary part <code>&lt;im&gt;</code> are
+        real number literals including the symbols <code>inf</code> and <code
+        >nan</code>.
+      </p>
+      <p>Examples:</p>
+      <pre class="code">dLabPro&gt; 1.1 -echo;                <span class="c-cmt"># 1.1</span>
+dLabPro&gt; -inf -echo;               <span class="c-cmt"># -1.7976931348623157081453e+308</span>
+dLabPro&gt; i -echo;                  <span class="c-cmt"># i</span>
+dLabPro&gt; -2.2i -echo;              <span class="c-cmt"># -2.2i</span>
+dLabPro&gt; infi -echo;               <span class="c-cmt"># 1.7976931348623157081453e+308i</span>
+dLabPro&gt; 42+0i -echo;              <span class="c-cmt"># 42</span>
+dLabPro&gt; 1.1+2.2i -echo;           <span class="c-cmt"># 1.1+2.2i</span>
+dLabPro&gt; -inf+nani -echo;          <span class="c-cmt"># -1.7976931348623157081453e+308+nani</span>
+dLabPro&gt; -nan -echo;               <span class="c-cmt"># nan</span></pre>
+      <p>
+        Note: On some platforms <code>inf</code> will be represented by the
+        greatest floating point number. 
+      </p>
+    </div>
+  </div>
+
+  <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+  <a name="classes"></a>
+  <div id="clp_classes">
+    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+      <tr>
+        <td nowrap width="25%" class="navbar">
+          Working with Classes
+        </td>
+        <td nowrap width="75%" class="navbar" style="text-align:right;">
+          <a class="navbar" href="javascript:__PrintSection('clp_classes','Working with Classes','..');"
+          ><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle;" alt="Print"></a> 
+          <a class="navbar" href="../home.html">Home</a>
+          <a class="navbar" href="index.html">Tutorials</a>
+          <a class="navbar" href="#top">Top</a>
+        </td>
+      </tr>
+    </table>
+    <div class="mframe2">
+    <p>All functionality of dLabPro, including the command interpreter intself, is
+    encapsulated in classes. When starting up dLabPro creates an instance
+    named "dLabPro" of class <a href="../automatic/function.html"><code
+      class="link">function</code></a>. Now you may either call interpreter
+    methods (as explained above) or create instances of other classes. In
+    order to instanciate a class you need to know its class identifier.
+    Start a new dLabPro session and enter <a
+    href="../automatic/function.html#mth_-help"><code
+      class="link">-help</code></a><code>;</code></p>
+    <pre class="code">dLabPro&gt; <a
+      href="../automatic/function.html#mth_-help"><code class="link">-help</code></a>;
+--------------------------------------------------------------------------------------------
+   Help for instance
+   function dLabPro
+--------------------------------------------------------------------------------------------
+   dLabPro
+   |
+   |-- METHODS
+   |   |-- (                 Ignored, to be used for better legibility of UPN code
+   |   |-- )                 Ignored, to be used for better legibility of UPN code
+   |   |-- -argv             Gets a command line argument.
+   |   |-- -cd               Change directory.
+   |   |-- -check            Self check of session.
+   |   |-- -copy             Copies an instance.
+   |   |-- -destroy          Destroys an instance
+   |   |-- -dup              Duplicates the top stack element.
+   |   |-- -echo             Prints a message.
+   |   |-- -explain          Prints detailled description of an instance or identifier.
+   |   |-- -get              Reads a field of an instance.
+   |   |-- -help             Prints help table of an instance.
+   |   |-- -internalize      Makes instance field(s) internal.
+   |   |-- -list             Lists operation, token sequence, labes, etc.
+   |   |-- -load             Loads source code from a file.
+   |   |-- -pid              Returns the process ID.
+   |   |-- -prompt           Prompt for user input.
+   |   |-- -reset            Resets (fields of) an instance.
+   |   |-- -restore          Restores an instance from a file.
+   |   |-- -rot              Rotates the stack upwards one element.
+   |   |-- -save             Saves an instance to a file.
+   |   |-- -see              Prints field(s) of an instance.
+   |   |-- -set              Writes a field of an instance.
+   |   |-- -status           Prints status information of the function.
+   |   |-- -swap             Exchanges the two top stack elements.
+   |   |-- -system           Executes a shell command.
+   |   |-- -trace_error      Stops dLabPro when the specified error occurs
+   |   |-- -type             Select elementary data type.
+   |   |-- -version          Returns the dLabPro build identifier.
+   |   |-- ?error            Check error state.
+   |   |-- ?instance         Check instance existence and class.
+   |   |-- ?platform         Tests if dLabPro is running on specified platform.
+   |   |-- break             Break while loop
+   |   |-- brk               Break point.
+   |   |-- cont              Resume after break point.
+   |   |-- continue          Continue while loop
+   |   |-- else              Conditional jump (negative control path).
+   |   |-- end               Conditional jump or while loop (end of control paths).
+   |   |-- goto              Unconditional jump to a jump label.
+   |   |-- if                Conditional jump (positive control path).
+   |   |-- include           Includes a source file.
+   |   |-- label             == Preprocessor directive ==; defines a jump label.
+   |   |-- leave             Leaves the function.
+   |   |-- parent            Implicit identifier of parent instance.
+   |   |-- quit              Exits dLabPro session.
+   |   |-- return            Leaves the function returning a value.
+   |   |-- step              Execute one instruction after a break point.
+   |   |-- this              Implicit identifier of the current function.
+   |   |-- while             Loop
+   |   '-- {                 Defines the function body.
+   |
+   |-- OPERATORS
+   |   |-- !                 d:od           Factorial
+   |   |-- !=                d:dod          Not equal
+   |   |-- %                 d:dod          Modulus
+   |   |-- &amp;                 d:dod          Bitwise and
+   |   |-- &amp;&amp;                d:dod          Logical and
+   |   |-- *                 d:dod          Multiplication
+   |   |-- +                 d:dod          Addition
+   |   |-- ++                d:od           Increment (+1)
+   |   |-- -                 d:dod          Subtraction
+   |   |-- --                d:od           Decrement (-1)
+   |   |-- /                 d:dod          Division
+   |   |-- &lt;                 d:dod          Less than
+   |   |-- &lt;=                d:dod          Less or equal
+   |   |-- =                 d:dod          Assignment
+   |   |-- ==                d:dod          Equal
+   |   |-- &gt;                 d:dod          Greater than
+   |   |-- &gt;=                d:dod          Greater or equal
+   |   |-- ^                 d:odd          Power
+   |   |-- abs               r:od           Absolute value
+   |   |-- absdiff           r:dod          Absolute difference
+   |   |-- acos              d:od           Arc cosine
+   |   |-- acosh             d:od           Arc hyperbolic cosine
+   |   |-- add               d:dod          Addition
+   |   |-- amax              d:odd          Absolute maximum
+   |   |-- amin              d:odd          Absolute minimum
+   |   |-- and               d:dod          Logical and
+   |   |-- angle             r:od           Angle of value
+   |   |-- asin              d:od           Arc sine
+   |   |-- asinh             d:od           Arc hyperbolic sine
+   |   |-- atan              d:od           Arc tangent
+   |   |-- atanh             d:od           Arc hyperbolic tangent
+   |   |-- bitand            d:dod          Bitwise and
+   |   |-- bitor             d:dod          Bitwise or
+   |   |-- ceil              d:od           Ceil value
+   |   |-- conj              d:od           Complex conjugate
+   |   |-- cos               d:od           Cosine
+   |   |-- cosh              d:od           Hyperbolic cosine
+   |   |-- dec               d:od           Decrement (-1)
+   |   |-- diff              d:dod          Subtraction
+   |   |-- div               d:dod          Division
+   |   |-- ent               d:od           Entire value
+   |   |-- eq                d:dod          Equal
+   |   |-- erf               d:od           Error function
+   |   |-- erfc              d:od           Complementary error fnc.
+   |   |-- exp               d:od           Exponential function
+   |   |-- expadd            d:dod          Exponential addition
+   |   |-- factorial         d:od           Factorial
+   |   |-- floor             d:od           Floor value
+   |   |-- gamma             d:od           Gamma function
+   |   |-- gauss             d:odd          Gaussian function
+   |   |-- geq               d:dod          Greater or equal
+   |   |-- greater           d:dod          Greater than
+   |   |-- imag              r:od           Imaginary part
+   |   |-- inc               d:od           Increment (+1)
+   |   |-- inv               d:od           Inversion
+   |   |-- leq               d:dod          Less or equal
+   |   |-- less              d:dod          Less than
+   |   |-- ln                d:od           Natural logarithm
+   |   |-- lnl               d:odd          Natural logarithm, limited
+   |   |-- log               d:od           Decadic logarithm
+   |   |-- log2              d:od           Binary logarithm
+   |   |-- lsadd             d:dod          Log semiring addition
+   |   |-- max               d:odd          Maximum
+   |   |-- min               d:odd          Minimum
+   |   |-- mod               d:dod          Modulus
+   |   |-- mult              d:dod          Multiplication
+   |   |-- neg               d:od           Negation
+   |   |-- neq               d:dod          Not equal
+   |   |-- noop              No operation
+   |   |-- not               d:od           Logical not
+   |   |-- or                d:dod          Logical or
+   |   |-- over              n:onn          n over k
+   |   |-- pow               d:odd          Power
+   |   |-- qabsdiff          r:dod          Absolute difference
+   |   |-- qdiff             d:dod          Quadratic difference
+   |   |-- real              r:od           Real part
+   |   |-- round             d:od           Round
+   |   |-- set               d:dod          Assignment
+   |   |-- sigmoid           d:odd          Sigmoid function
+   |   |-- sign              d:od           Sign
+   |   |-- sin               d:od           Sine
+   |   |-- sinc              d:od           Sinc function
+   |   |-- sinh              d:od           Hyperbolic sine
+   |   |-- smax              d:odd          Signed absolute maximum
+   |   |-- smin              d:odd          Signed absolute minimum
+   |   |-- sqr               d:od           Square
+   |   |-- sqrt              d:od           Square root
+   |   |-- studt             d:odn          Student's t-dens. (k-dim.)
+   |   |-- tan               d:od           Tangent
+   |   |-- tanh              d:od           Hyperbolic tangent
+   |   |-- |                 d:dod          Bitwise or
+   |   '-- ||                d:dod          Logical or
+   |
+   |-- OPTIONS
+   |   |-- /disarm           Do not call classproc for next interpreted instance.
+   |   |-- /dn3              (De)serialize from/to DN3 file.
+   |   |-- /inline           Define an inline function.
+   |   |-- /noerror          Suppress error messages.
+   |   |-- /nonstop          Never stop running.
+   |   |-- /stop             Stop at break points and long listings.
+   |   |-- /time             Measures and outputs elapsed time to process one line of input.
+   |   |-- /xml              (De)serialize from/to XML file.
+   |   '-- /zip              Compress file during serialization.
+   |
+   |-- FIELDS
+   |   |-- check             Verbose level
+   |   '-- last_fml          Interpreter code translated and queued from last formula token.
+   |
+   |-- CLASSES
+   |   |-- CPproc            Cepstrum class based on FBAproc
+   |   |-- DGen              Document parser and generator
+   |   |-- FBAproc           Base class for frame based analysis classes.
+   |   |-- FFTproc           FFT class based on FBAproc
+   |   |-- FTTproc           Fourier-t-transform
+   |   |-- FWTproc           Base class for fast discrete wavelet transformation.
+   |   |-- HFAproc           Harmonicity based feature analysis
+   |   |-- Helloworld        Simple example for a dLabPro class
+   |   |-- LCQproc           Line cepstral quefrencies (LCQ) analysis and synthesis
+   |   |-- LPCproc           Linear prediction coding (LPC) analysis and synthesis
+   |   |-- LSFproc           Line spectral frequencies (LSF) analysis and synthesis
+   |   |-- MELproc           Mel-scaled filter bank
+   |   |-- PMproc            Base class for pitch calculation.
+   |   |-- Prosody           Prosody class
+   |   |-- VADproc           VAD implementation
+   |   |-- data              Generic data container
+   |   |-- file              File list processor and import/export filters
+   |   |-- fst               Finite state transducers
+   |   |-- fstsearch         Search algorithms for FSTs
+   |   |-- fsttools          Tools for FST modification
+   |   |-- function          dLabPro script container and executer
+   |   |-- gmm               Multivariate multiclass Gaussian mixture models
+   |   |-- histogram         Vector histogram
+   |   |-- hmm               Multiclass hidden Markov model
+   |   |-- object            Generic object
+   |   |-- process           Parallel computing processor
+   |   |-- profile           Profiler and debugging tools.
+   |   |-- statistics        Multivariate multiclass statistics
+   |   |-- svm               Support vector machine classifier (wraps dLabPro/ext/libsvm).
+   |   |-- var               Variable
+   |   '-- vmap              Vector mapping operator
+   |
+   '-- INSTANCES
+       |-- matrix            Class matrix
+       |-- signal            Class signal
+       |-- stdfile           Class file
+       '-- stdprof           Class profile
+
+--------------------------------------------------------------------------------------------
+dLabPro&gt;_</pre>
+    <p>Along with the list of members of the class <a
+      href="../automatic/function.html"><code class="link">function</code></a>
+    (see <a href="#intro">above</a>) you'll find a list of classes and a
+    list of existing instances. As you can see, dLabPro automatically
+    creates some instances at startup.</p>
+    <p>Now let's create an instance of the <a
+      href="../automatic/helloworld.html"><code class="link">Helloworld</code></a>-class.
+    The general syntax for instanciating a class is:</p>
+    <pre class="code">&lt;classname&gt; instancename;</pre>
+    <p>So creating a new instance of class <a
+      href="../automatic/helloworld.html"><code class="link">Helloworld</code></a>
+    looks like this:</p>
+    <pre class="code">dLabPro&gt; Helloworld iHello;   <span
+      class="c-cmt"># Create an instance named iHello of class Helloworld</span></pre>
+    <p>By convention instance names should begin with 'i' followed by a
+    capital letter. The usual exceptions apply: simple names like <code>i</code>,
+    <code>j</code>, <code>k</code> for <a href="../automatic/var.html">variables</a>
+    and <code>x</code>, <code>y</code>, <code>z</code> for <a
+      href="../automatic/data.html">data tables</a> are acceptable.</p>
+    <p>Now let's get help for the newly created <a
+      href="../automatic/helloworld.html"><code class="link">Helloworld</code></a>-instance:
+    </p>
+    <pre class="code">dLabPro&gt; iHello -help;        <span class="c-cmt"># Get help</span>
+
+----------------------------------------------------------------------
+   Help for instance
+   Helloworld iHello
+----------------------------------------------------------------------
+   iHello
+   |
+   |-- METHODS
+   |   '-- -sayhello         Says hello to the user.
+   |
+   |-- OPTIONS
+   |   '-- /german           switch to german
+   |
+   |-- FIELDS
+   |   |-- greeting_english  English greeting text.
+   |   |-- field_long        Just a field of type long.
+   |   |-- field_ulong       Just a field of type unsigned long.
+   |   |-- field_float       Just a field of type float.
+   |   |-- field_char        Just a field of type char.
+   |   |-- field_uchar       Just a field of type unsigned char.
+   |   |-- field_short       Just a field of type short.
+   |   |-- field_bool        Just a field of type bool.
+   |   |-- field_data        Just a field of type data.
+   |   |-- greeting_german   German greeting text.
+   |   |-- check             Verbose level
+   |   |-- field_double      Just a field of type double.
+   |   '-- field_ushort      Just a field of type unsigned short.
+   |
+   |-- CLASSES
+   |
+   '-- INSTANCES
+
+----------------------------------------------------------------------</pre>
+    <p>This help table shows the members of the <a
+      href="../automatic/helloworld.html"><code class="link">Helloworld</code></a>-class.
+    Remember that method identifiers usually start with '-' and option
+    identifiers with '/'. As you can see <a
+      href="../automatic/helloworld.html"><code class="link">Helloworld</code></a>
+    has got one method (<a
+      href="../automatic/helloworld.html#mth_-sayhello"><code class="link">-sayhello</code></a>)
+    which we'll use now:</p>
+    <pre class="code">dLabPro&gt; iHello -sayhello;  <span class="c-cmt"># Invoke method -sayhello</span>
+
+
+Hello World!
+
+dLabPro&gt; iHello /german -sayhello <span class="c-cmt"># Invoke the same method nut using the option /german</span>
+
+Switch to German...        <span class="c-cmt"># Printed by /german</span>
+
+Hallo Welt!                <span class="c-cmt"># Printed by -sayhello</span>
+</pre>
+    <p>To manipulate the displayed text you can change the content of the
+    field <a href="../automatic/helloworld.html#fld_greeting_english"><code
+      class="link">greeting_english</code></a> with the method <a
+      href="../automatic/function.html#mth_-set"><code class="link">-set</code></a>
+    (of the interpreter) like this:</p>
+    <pre class="code">dLabPro&gt; "hi!" iHello <a
+      href="../automatic/function.html#mth_-set"><code class="link">-set</code></a> greeting_english;
+dLabPro&gt; iHello -sayhello
+
+
+hi!</pre>
+    <p>Remember the basic structure of dLabPro commands (see section "<a
+      href="#synt">The syntax</a>" above):</p>
+    <pre class="code">[&lt;arguments&gt;] &lt;instance&gt; [&lt;options&gt;] &lt;method&gt; [&lt;postfix_arguments&gt;];</pre>
+    <p>The first token ("hi!") is an argument to the <a
+      href="../automatic/function.html#mth_-set"><code class="link">-set</code></a>-method.
+    It will replace the content of the field <a
+      href="../automatic/helloworld.html#fld_greeting_english"><code
+      class="link">greeting_english</code></a>. The second token specifies
+    the instance for which <a href="../automatic/function.html#mth_-set"><code
+      class="link">-set</code></a> shall be invoked. Behind the arguments
+    follows the method identifier (<a
+      href="../automatic/function.html#mth_-set"><code class="link">-set</code></a>)
+    followed by the identifier of the field which is a postfix argument to
+    <a href="../automatic/function.html#mth_-set"><code class="link">-set</code></a>.
+    Remeber that even though the instance <code>iHello</code> is active, <a
+      href="../automatic/function.html#mth_-set"><code class="link">-set</code></a>
+    (which is a method of the <a href="../automatic/function.html">function</a>-class)
+    may be called (for details see <a href="#stac">above</a>).</p>
+    <p>Let's, finally, have a look at the end of an instances life cycle:
+    its destruction. To destroy an instance, use the <a
+      href="../automatic/function.html#mth_-destroy"><code class="link">-destroy</code></a>
+    method of the <a href="../automatic/function.html">function</a>-class:</p>
+    <pre class="code">dLabPro.iHello&gt; iHello <a
+      href="../automatic/function.html#mth_-destroy"><code class="link">-destroy</code></a>;        <span
+      class="c-cmt"># Delete instance iHello</span>
+dLabPro&gt; iHello                         <span
+      class="c-cmt"># What happened to iHello?</span>
+error function1010: 'iHello' undefined.
+dLabPro&gt;_                               <span
+      class="c-cmt"># iHello doesn't exist anymore</span></pre>
+    <p>Please note that instances have a global scope in dLabPro. They
+    will be visible at any place and at any time from instanciation to
+    destruction. However, instanciation takes place locally on function
+    level. Local instance identifiers shadow global ones. For details see
+    <a href="t003.html">tutorial III "Writing Scripts"</a>.</p>
+    </div>
+  </div>
+  
+  </div>
+  <div class="footer">End of page</div>
+
+</body>
+</html>

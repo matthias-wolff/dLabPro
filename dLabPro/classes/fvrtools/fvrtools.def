@@ -1,0 +1,165 @@
+## dLabPro class CFvrtools (fvrtools)
+## - Definition script
+##
+## AUTHOR : Matthias Wolff, Werner Meyer
+## PACKAGE: dLabPro/classes
+## 
+## Copyright 2013-2015 dLabPro contributors and others (see COPYRIGHT file) 
+## - Chair of System Theory and Speech Technology, TU Dresden
+## - Chair of Communications Engineering, BTU Cottbus
+## 
+## This file is part of dLabPro.
+## 
+## dLabPro is free software: you can redistribute it and/or modify it under the
+## terms of the GNU Lesser General Public License as published by the Free
+## Software Foundation, either version 3 of the License, or (at your option)
+## any later version.
+## 
+## dLabPro is distributed in the hope that it will be useful, but WITHOUT ANY
+## WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+## FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+## details.
+## 
+## You should have received a copy of the GNU Lesser General Public License
+## along with dLabPro. If not, see <http://www.gnu.org/licenses/>.
+
+PLATFORM: GNUC++
+COMPILER: gcc
+AR:       ar
+
+PROJECT:  fvrtools
+COMMENT:  FST-based feature-value relation processing tools
+AUTHOR:   Matthias Wolff, Werner Meyer
+VERSION:  1.0.0
+
+CLASS:    fvrtools
+FLAGS:    /singleton /noautoactivate
+/cProject                                                                       # Generate ANSI C compatible code
+/cxx_nconv                                                                      # Use strict C++ naming conventions
+/html MAN:
+  <p>Weighted feature-value relations (wFVRs)<a href="#WW14">[WW14]</a> are a means of representing and processing the 
+  meaning of signals. This experimental class handles wFVRs through an FST approximation in the form of trees. Ultimately,
+  wFVR processing is to be realized by weighted Petri net transducers.</p>
+
+  <h4>Example</h4>
+  <p>Consider the phrase "ein Meter zwanzig" (<i>"one meter twenty"</i>). The meaning represented as a FVR string <a 
+  href="#WW14">[WW14]</a> is: <pre>    FVR[
+      LDIM:0.61[
+        val:1[
+          DIG:1[
+            o:1[
+              (ein)1:1
+      ] ] ] ][
+        val:NaN[
+          komma:NaN
+      ] ][
+        unit:0.7[
+          (m)m:0.7
+      ] ][
+        val:0.36[
+          CN2:0.36[
+            t:0.36[
+              (zwan)2(-zig):0.36
+    ] ] ] ] ]</pre>
+  where the weights were assigned by ASR. The graphical representation of this meaning&mdash;with the weights 
+  dropped&mdash;would be</p>
+  <p class="indent"><img src="../resources/fvrtools/fvrexmpl.png"></p>
+
+  <h3>References</h3>
+  <table>
+    <tr><td class="hidden"><a name="WW14"></a>[WW14]</td><td class="hidden"><a target="_blank"
+      href="https://www.researchgate.net/profile/Matthias_Wolff3/publication/277309488_Semantische_Dekodierung_von_Sprachsignalen_am_Beispiel_einer_Mikrofonfeldsteuerung/links/556ac3af08aeab7772212d74.pdf"
+      >G. Wirsching, M. Wolff: Semantische Dekodierung von Sprachsignalen am Beispiel einer Mikrofonfeldsteuerung. 
+      In proc. 25. Konferenz Elektronische Sprachsignalverarbeitung 2014 (ESSV 2014), At Dresden, Volume: 71, 
+      pages 104-109</a></td>
+  </table>
+END_MAN
+
+## -- Files and locations --
+
+FILE:    fvrt_iam.c
+FILE:    fvrt_compile.c
+
+INCLUDE: "dlp_data.h"
+INCLUDE: "dlp_fst.h"
+
+## -- Defines --
+
+DEFINE: FVRT_EXCEPTION(ERR,A,B,C) { IERROR(_this,ERR,A,B,C); nRet=ERR; goto L_EXCEPTION; }
+DEFINE: FVRT_STIS(FST,TIS) (const char*)CData_XAddr(AS(CData,FST->is),TIS,0)
+
+## -- Errors --
+
+ERROR:   FVRT_SEQSYNTAX
+COMMENT: FVR string or sequence syntax error (%s)
+/html MAN:
+  <p>An FST string or sequence contained a syntax error. Details are given in 
+  parentheses.</p>
+END_MAN
+
+ERROR:   FVRT_EXTRATIS
+COMMENT: Ignored extra input symbol '%s' at transition %ld
+LEVEL:   EL_WARNING
+/html MAN:
+  <p>An FST string or sequence contained more than one input symbol for a FVR 
+  transition. For example, the instruction</p>
+  <pre class="code">
+  "FVR[A[B]EXTRA[C]]" itFvr fvrtools <a href="#mth_-from_string">-from_string</a>;</pre>
+  <p>will produce this warning for the symbol "EXTRA".</p> 
+END_MAN
+
+ERROR:   FVRT_NOTIS
+COMMENT: No input symbol at transition %ld
+LEVEL:   EL_WARNING
+/html MAN:
+  <p>An FST string or sequence contained no input symbol for a FVR transition. 
+  For example, the instruction</p>
+  <pre class="code">
+  "FVR[[B][C]]" itFvr fvrtools <a href="#mth_-from_string">-from_string</a>;</pre>
+  <p>will produce this warning.</p> 
+END_MAN
+
+## -- Methods --
+
+METHOD:  -is_fvr
+SYNTAX:  BOOL (int nU, INSTANCE(fst) itFvr)
+COMMENT: Determines if the argument is an FVR
+/html MAN:
+  <p>An <a href="fst.html" class="code">fst</a> is a feature-value relation iff</p>
+  <ol>
+    <li>it is not empty <em>and</em></li>
+    <li>it is a tree <em>and</em></li>
+    <li>the only transition starting a the root state is labelled "FVR".</li>
+  </ol>
+
+  @param nU    The unit of <code>itFvr</code> to test.
+  @param itFvr The <a href="fst.html" class="code">fst</a> to test.
+  @return <code>TRUE</code> if the unit is a FVR, <code>FALSE</code> otherwise.
+END_MAN
+
+METHOD:  -from_string
+SYNTAX:  (string src, INSTANCE(fst) itFvr)
+COMMENT: Creates a (weighted) FVR from a string representation
+/html MAN:
+  <p>The eBNF syntax of wFVR strings is <a href="#WW14">[WW14]</a>:<pre>
+    FVR      = "FVR" state
+    state    = "[" states statedef states "]"
+    states   = [ [ states ] state ]
+    statedef = comments label comments [ ":" weight ] comments
+    comments = [ [ comments ] comment ]
+    comment  = "(" &lt;alpha&gt; ")"
+    label    = &lt;alpha&gt;
+    weight   = &lt;numeric&gt; | "NaN"</pre>
+  where <tt>&lt;alpha&gt;</tt> denotes an arbitrary string without white spaces and special characters and 
+  <tt>&lt;numeric&gt;</tt> denotes a floating point number in the English locale.</p>
+
+  @param src The source string.
+  @param itFvr The target FST, must not be <code>NULL</code>.
+  @return void
+END_MAN
+
+## -- Generate files --
+-cgen
+quit
+
+## EOF
