@@ -178,7 +178,7 @@ INT32 dlmx_mul3216(INT32 a,INT16 b){
  * @param b  Imaginary part
  * @return   Absolute value
  */
-INT32 dlmx_cabINT32(INT32 a,INT32 b){
+INT32 dlmx_cabs32(INT32 a,INT32 b){
   return (INT32)round(sqrt((double)a*(double)a+(double)b*(double)b));          /* Calc using floating point conversion  */
 }
 

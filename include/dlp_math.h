@@ -434,7 +434,7 @@ INT32 dlmx_mul16_32(INT16 a,INT16 b);
 INT16 dlmx_mul16(INT16 a,INT16 b);
 INT32 dlmx_mul32(INT32 a,INT32 b);
 INT32 dlmx_mul3216(INT32 a,INT16 b);
-INT32 dlmx_cabINT32(INT32 a,INT32 b);
+INT32 dlmx_cabs32(INT32 a,INT32 b);
 void dlmx_matmul16(UINT16 m,UINT16 n,INT16 *a,INT16 *b,INT16 *c);
 INT16 dlmx_vecmul16(UINT16 n,INT16 *a,INT16 *b,INT8 shf);
 void dlmx_vecadd16(UINT16 n,INT16 *a,INT16 *bc);
