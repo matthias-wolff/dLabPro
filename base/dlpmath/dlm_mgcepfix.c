@@ -24,6 +24,11 @@
  * along with dLabPro. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * modified by Arnulf Becker 2015
+ * See the bachelor thesis: Festkommaportierung des generalisierten Mel-Cepstrum
+ */
+
 #include "dlp_kernel.h"
 #include "dlp_base.h"
 #include "dlp_math.h"
