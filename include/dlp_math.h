@@ -438,6 +438,9 @@ INT32 dlmx_cabs32(INT32 a,INT32 b);
 void dlmx_matmul16(UINT16 m,UINT16 n,INT16 *a,INT16 *b,INT16 *c);
 INT16 dlmx_vecmul16(UINT16 n,INT16 *a,INT16 *b,INT8 shf);
 void dlmx_vecadd16(UINT16 n,INT16 *a,INT16 *bc);
+struct dlmx_fft *dlmx_fft_init(UINT16 len,INT8 inv);
+void dlmx_fft_free(struct dlmx_fft *fp);
+void dlmx_fft(struct dlmx_fft *fp,INT16 *re,INT16 *im,INT8 shr);
 
 /* Undocumented functions */                                                    /* --------------------------------- */
 INT16 dlm_constant(FLOAT64* Z, INT32 nXRz, INT32 nXCz, INT16 nOpcode);          /* in dlm_arith.c                    */
