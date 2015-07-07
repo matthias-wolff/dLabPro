@@ -90,7 +90,6 @@ FLOAT64 __dlm_pow_fi(FLOAT64 x, INT64 y) {
  */
 FLOAT64 dlm_pow(FLOAT64 x, FLOAT64 y)
 {
-  INT64 x_i;
   INT64 y_i;
 
   y_i = (INT64)(y + EPS);

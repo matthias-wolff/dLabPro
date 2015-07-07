@@ -167,7 +167,7 @@ INT32 dlmx_mul32(INT32 a,INT32 b){
 INT32 dlmx_mul3216(INT32 a,INT16 b){
   return dlmx_add32(                                                           /* Sum over pratial products:            */
     dlmx_mul16_32(dlmx_rnd32(a),b),                                            /*  - High part of a and b               */
-    dlmx_mul16_32(a,b)                                                         /*  - Low part of a and b                */
+    dlmx_mul16(a,b)                                                            /*  - Low part of a and b                */
   );                                                                           /*                                       */
 }
 
@@ -223,4 +223,129 @@ INT16 dlmx_vecmul16(UINT16 n,INT16 *a,INT16 *b,INT8 shf){
 void dlmx_vecadd16(UINT16 n,INT16 *a,INT16 *bc){
   for(;n;n--,a++,bc++) *bc=dlmx_add16(*a,*bc);                                 /* Add vector components                 */
 }
+
+
+/* Fixed FFT parameters */
+struct dlmx_fft {
+  UINT8  xe;    /* Oder of transformation */
+  INT8   inv;   /* Invertation flag       */
+  INT16 *id;    /* Resorting id's         */
+  INT16 *arg;   /* Tranformation factors  */
+  INT32 *buf;   /* Tranformation buffer   */
+};
+
+/* Fixed FFT initialization
+ *
+ * @param len  Tranformation dimension (should be a power of 2)
+ * @param inv  Invertation flag
+ * @return     Parameter structure
+ */
+struct dlmx_fft *dlmx_fft_init(UINT16 len,INT8 inv){
+  UINT16 i;                                                                    /* Loop index                            */
+  UINT8 e;                                                                     /* Order index                           */
+  INT16 *arg;                                                                  /* Current factor pointer                */
+  struct dlmx_fft *fp=dlp_malloc(sizeof(struct dlmx_fft));                     /* Alloc parameter structure             */
+  for(fp->xe=0;len>1;len>>=1) fp->xe++;                                        /* Get Order from dimension              */
+  len=1<<fp->xe;                                                               /* Update dimension to a power of 2      */
+  fp->inv=inv;                                                                 /* Copy invertation flag                 */
+  fp->id=dlp_malloc(len*sizeof(INT16));                                        /* Alloc sort id buffer                  */
+  arg=fp->arg=dlp_malloc((len-2)*2*sizeof(INT16));                             /* Alloc factor buffer                   */
+  fp->buf=dlp_malloc(len*2*sizeof(INT32));                                     /* Alloc temporary buffer                */
+  for(i=0;i<len;i++){                                                          /* Loop over dimension >>                */
+    INT16 ix,j=0,jx=1<<(fp->xe-1);                                             /*   Init sort id calculation            */
+    for(ix=i;ix;ix>>=1,jx>>=1) if(ix&1) j|=jx;                                 /*   Calc sort id by bit reversal        */
+    fp->id[i]=j;                                                               /*   Save sort id                        */
+  }                                                                            /* <<                                    */
+  for(e=2;e<fp->xe;e++){                                                       /* Loop over FFT order >>                */
+    for(i=1;i<1<<e;i++,arg+=2){                                                /*   Loop over order dimension           */
+      arg[0]=(INT16)round(cos(M_PI*(double)i/(double)(1<<e))*INT16_MAX);       /*     Calc real part of factor          */
+      arg[1]=(INT16)round(sin(M_PI*(double)i/(double)(1<<e))*INT16_MAX         /*     Calc imaginary part of factor     */
+        *(fp->inv?1.:-1.));                                                    /*     |                                 */
+    }                                                                          /*   <<                                  */
+  }                                                                            /* <<                                    */
+  return fp;                                                                   /* Return parameter structure            */
+}
+
+/* Fixed FFT free parameter function
+ *
+ * @param fp   Parameter structure
+ */
+void dlmx_fft_free(struct dlmx_fft *fp){
+  dlp_free(fp->id);                                                            /* Free sort id buffer                   */
+  dlp_free(fp->arg);                                                           /* Free factor buffer                    */
+  dlp_free(fp->buf);                                                           /* Free temporary buffer                 */
+  dlp_free(fp);                                                                /* Free parameter structure              */
+}
+
+/* Fixed FFT free parameter function
+ *
+ * @param fp   Parameter structure
+ * @param re   Array containing real part of input and output data
+ * @param im   Array containing imaginary part of input and output data
+ * @param shr  Right shift offset (applied within transformation)
+ */
+void dlmx_fft(struct dlmx_fft *fp,INT16 *re,INT16 *im,INT8 shr){
+  const UINT16 len=1<<fp->xe;                                                  /* Get FFT dimension                     */
+  UINT16 e,a,i;                                                                /* Loop indizies                         */
+  INT16 *arg=fp->arg;                                                          /* Current factor pointer                */
+  INT32 *buf=fp->buf;                                                          /* Current buffer position               */
+  INT8 shfi=16-shr-(fp->inv?fp->xe:0);                                         /* Initial shift offset                  */
+  INT8 shfo=shfi/3; shfi-=shfo;                                                /* 1/3 shift at output ; 2/3 at input    */
+  /* Resorting + first two interations */
+  for(i=0;i<len;i+=4,buf+=8){                                                  /* Loop over blocks of 4 cmplx. values   */
+    INT32 x1=dlmx_shl32(re[fp->id[i+0]],shfi);                                 /*   Get 1. real part                    */
+    INT32 x2=dlmx_shl32(re[fp->id[i+1]],shfi);                                 /*   Get 2. real part                    */
+    INT32 x3=dlmx_shl32(re[fp->id[i+2]],shfi);                                 /*   Get 3. real part                    */
+    INT32 x4=dlmx_shl32(re[fp->id[i+3]],shfi);                                 /*   Get 4. real part                    */
+    INT32 y1=dlmx_shl32(im[fp->id[i+0]],shfi);                                 /*   Get 1. imaginary part               */
+    INT32 y2=dlmx_shl32(im[fp->id[i+1]],shfi);                                 /*   Get 2. imaginary part               */
+    INT32 y3=dlmx_shl32(im[fp->id[i+2]],shfi);                                 /*   Get 3. imaginary part               */
+    INT32 y4=dlmx_shl32(im[fp->id[i+3]],shfi);                                 /*   Get 4. imaginary part               */
+    INT32 v1=dlmx_add32(x1,x2);                                                /*   Temporary value                     */
+    INT32 v2=dlmx_add32(x3,x4);                                                /*   Temporary value                     */
+    buf[0]=dlmx_add32(v1,v2);                                                  /*   Calc 1. real part                   */
+    buf[4]=dlmx_sub32(v1,v2);                                                  /*   Calc 3. real part                   */
+    v1=dlmx_add32(y1,y2);                                                      /*   Temporary value                     */
+    v2=dlmx_add32(y3,y4);                                                      /*   Temporary value                     */
+    buf[1]=dlmx_add32(v1,v2);                                                  /*   Calc 1. imaginary part              */
+    buf[5]=dlmx_sub32(v1,v2);                                                  /*   Calc 3. imaginary part              */
+    v1=dlmx_sub32(x1,x2);                                                      /*   Temporary value                     */
+    v2=dlmx_sub32(y3,y4);                                                      /*   Temporary value                     */
+    buf[fp->inv?6:2]=dlmx_add32(v1,v2);                                        /*   Calc 2./4. real part                */
+    buf[fp->inv?2:6]=dlmx_sub32(v1,v2);                                        /*   Calc 4./2. real part                */
+    v1=dlmx_sub32(y1,y2);                                                      /*   Temporary value                     */
+    v2=dlmx_sub32(x3,x4);                                                      /*   Temporary value                     */
+    buf[fp->inv?7:3]=dlmx_sub32(v1,v2);                                        /*   Calc 2./4. imaginary part           */
+    buf[fp->inv?3:7]=dlmx_add32(v1,v2);                                        /*   Calc 4./2. imaginary part           */
+  }                                                                            /* <<                                    */
+  /* Remaining interations */
+  for(e=2;e<fp->xe;arg+=((1<<(e++))-1)*2){                                     /* Loop over remaining interations >>    */
+    for(a=0;a<1<<(fp->xe-e-1);a++){                                            /*   Loop over blocks >>                 */
+      INT32 *x=fp->buf+(1<<(e+2))*a, *y=x+(1<<(e+1));                          /*     Get 1. and 2. block position      */
+      INT16 *z=arg;                                                            /*     Get factor iterator               */
+      /* First butterfly */
+      INT32 yzr=y[0];                                                          /*     Copy 2. real part                 */
+      INT32 yzi=y[1];                                                          /*     Copy 2. imaginary part            */
+      y[0]=dlmx_sub32(x[0],yzr);                                               /*     Update 2. real part               */
+      y[1]=dlmx_sub32(x[1],yzi);                                               /*     Update 2. imaginary part          */
+      x[0]=dlmx_add32(x[0],yzr);                                               /*     Update 1. real part               */
+      x[1]=dlmx_add32(x[1],yzi);                                               /*     Update 1. imaginary part          */
+      /* Remaining butterfly's */
+      for(i=1,x+=2,y+=2;i<1<<e;i++,x+=2,y+=2,z+=2){                            /*     Loop over remaining butterfly's >>*/
+        INT32 yzr=dlmx_sub32(dlmx_mul3216(y[0],z[0]),dlmx_mul3216(y[1],z[1])); /*       Calc 1. argument                */
+        INT32 yzi=dlmx_add32(dlmx_mul3216(y[0],z[1]),dlmx_mul3216(y[1],z[0])); /*       Calc 2. argument                */
+        y[0]=dlmx_sub32(x[0],yzr);                                             /*       Update 2. real part             */
+        y[1]=dlmx_sub32(x[1],yzi);                                             /*       Update 2. imaginary part        */
+        x[0]=dlmx_add32(x[0],yzr);                                             /*       Update 1. real part             */
+        x[1]=dlmx_add32(x[1],yzi);                                             /*       Update 1. imaginary part        */
+      }                                                                        /*     <<                                */
+    }                                                                          /*   <<                                  */
+  }                                                                            /* <<                                    */
+  /* Convert output values */
+  for(i=0,buf=fp->buf;i<len;i++,buf+=2){                                       /* Loop over dimension >>                */
+    re[i]=dlmx_rnd32(dlmx_shl32(buf[0],shfo));                                 /*   Calc real output                    */
+    im[i]=dlmx_rnd32(dlmx_shl32(buf[1],shfo));                                 /*   Calc imaginary output               */
+  }                                                                            /* <<                                    */
+}
+
 
