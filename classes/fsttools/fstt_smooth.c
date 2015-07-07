@@ -240,8 +240,6 @@ INT16 CGEN_PUBLIC CFsttools_Smooth(CFsttools *_this, INT16 nKGt, FLOAT64 nDelta,
 {
   INT32          nU     = 0;                                     /* Current unit                      */
   FST_ITYPE     nS     = 0;                                     /* Current state                     */
-  INT32          nIcRct = -1;                                    /* Reference counter component in td */
-  INT32          nIcSRC = -1;                                    /* smoothed RC comp.                 */
   INT32          nIcPsr = -1;                                    /* prob semiring comp.               */
   INT32          nIcUni = -1;                                    /* # of unigrams in unit comp.       */
   INT32          nIcBig = -1;                                    /* # of bigrams in unit comp.        */
@@ -256,7 +254,6 @@ INT16 CGEN_PUBLIC CFsttools_Smooth(CFsttools *_this, INT16 nKGt, FLOAT64 nDelta,
   FST_TID_TYPE* lpTI_1 = NULL;                                  /* Automaton iterator data structure */
   FST_TID_TYPE* lpTI_2 = NULL;                                  /* Automaton iterator data structure */
   FST_TID_TYPE* lpTI_3 = NULL;                                  /* Automaton iterator data structure */
-  FST_TID_TYPE* lpTI_4 = NULL;                                  /* Automaton iterator data structure */
   FST_TID_TYPE* lpTI_5 = NULL;                                  /* Automaton iterator data structure */
   FST_TID_TYPE* lpTI_6 = NULL;                                  /* Automaton iterator data structure */
   BYTE*         lpT_1  = NULL;                                  /* Current transition (iteration)    */
@@ -325,7 +322,6 @@ INT16 CGEN_PUBLIC CFsttools_Smooth(CFsttools *_this, INT16 nKGt, FLOAT64 nDelta,
   
   /* Initialize */                                              /* --------------------------------- */
   idTd   = AS(CData,itFst->td);                                 /* Get pointer to transition table   */
-  nIcRct = CData_FindComp(AS(CData,itFst->td),NC_TD_RC);        /* Find reference counters           */
 
   /* Add components to tables to store auxilary stuff... */     /* --------------------------------- */
   CData_AddComp(AS(CData,itFst->sd),"~TOK",DLP_TYPE(INT32));      /* # of tokens @ state               */
@@ -340,7 +336,6 @@ INT16 CGEN_PUBLIC CFsttools_Smooth(CFsttools *_this, INT16 nKGt, FLOAT64 nDelta,
   /* ...find those components */                                /* --------------------------------- */
   nIcTok = CData_FindComp(AS(CData,itFst->sd),"~TOK");          /* ...                               */
   nIcTyp = CData_FindComp(AS(CData,itFst->sd),"~TYP");          /* ...                               */
-  nIcSRC = CData_FindComp(AS(CData,itFst->td),"~SRC");          /* ...                               */
   nIcPsr = CData_FindComp(AS(CData,itFst->td),NC_TD_PSR);       /* ...                               */
   nIcUni = CData_FindComp(AS(CData,itFst->ud),"~UNI");          /* ...                               */
   nIcBig = CData_FindComp(AS(CData,itFst->ud),"~BIG");          /* ...                               */
@@ -496,7 +491,6 @@ INT16 CGEN_PUBLIC CFsttools_Smooth(CFsttools *_this, INT16 nKGt, FLOAT64 nDelta,
     lpTI_1 = CFst_STI_Init(itFst,nU,FSTI_SORTINI);                /*   Get sorted transition iterator  */
     lpTI_2 = CFst_STI_Init(itFst,nU,FSTI_SORTINI);                /*   Get sorted trns. iterator       */
     lpTI_3 = CFst_STI_Init(itFst,nU,FSTI_SORTINI);                /*   Get sorted trns. iterator       */
-    lpTI_4 = CFst_STI_Init(itFst,nU,FSTI_SORTINI);                /*   Get sorted trns. iterator       */
     lpTI_5 = CFst_STI_Init(itFst,nU,FSTI_SORTINI);                /*   Get sorted trns. iterator       */
     lpTI_6 = CFst_STI_Init(itFst,nU,FSTI_SORTINI);                /*   Get sorted trns. iterator       */
   

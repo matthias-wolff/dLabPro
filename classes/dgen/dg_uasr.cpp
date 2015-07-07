@@ -178,7 +178,7 @@ void CGEN_PROTECTED CDgen::UasrParser(CFst* itDeps, INT32 nFtok, INT32 nLtok)
   INT32  nTokJS  = -1;
   INT32  nTokJE  = -1;
   INT32  nRec    = 0;
-  INT32  nOwnN   = -1;                                                          // - for call dependency graph -
+//  INT32  nOwnN   = -1;                                                          // - for call dependency graph -
   INT32  nNjvd   = 0;                                                           // No. of JavaDoc recs. fo cur. item
   INT32  i       = 0;
   BOOL  bNewArg = FALSE;
@@ -261,7 +261,7 @@ void CGEN_PROTECTED CDgen::UasrParser(CFst* itDeps, INT32 nFtok, INT32 nLtok)
     {
       for (INT32 i=1; i<itDeps->sd->GetNRecs(); i++)
         if (strcmp((char*)itDeps->sd->XAddr(i,IC_SD_DATA+1),lpName)==0)
-        { nOwnN = i; break; }
+        { /*nOwnN = i;*/ break; }
     }
   }
   strcpy(lpSnam,lpName);
