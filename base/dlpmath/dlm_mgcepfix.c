@@ -33,7 +33,12 @@
 #include "dlp_base.h"
 #include "dlp_math.h"
 
-#define old_function_calls 0
+#include "measurement/measurement.h"
+
+#define INT16_MAX_FLOAT 32767.
+#define OLD_FUNCTION_CALLS 0
+
+const char* measure_name = "measurement_1.csv";
 
 /* functions from floating-point implementation */
 void matinv_float(FLOAT64 *A, INT32 n);
@@ -54,9 +59,15 @@ FLOAT64 *lpPsiRx, *lpPsiPx, *lpPsiQx;
 FLOAT64 *lpPsiRy, *lpPsiPy, *lpPsiQy;
 FLOAT64 *lpH;
 
+/* objects for data and evaluation */
+
+
 /* Normierungsfaktoren */
 #define SIG_NRM	1.
 #define RES_NRM	2.
+
+
+/*---------------------------------------------------------------------------*/
 
 /* Generalized Mel-Cepstral analysis init buffers
  *
@@ -65,7 +76,7 @@ FLOAT64 *lpH;
  * @param lambda  Lambda parameter for analysis
  */
 void dlm_mgcepfix_init(INT32 n, INT16 order, INT16 lambda) {
-#if old_function_calls
+#if OLD_FUNCTION_CALLS
 	dlm_mgcep_init(n, order, (FLOAT64) lambda / 32767.);
 #else
 	/* old floating-point implementation */
@@ -91,12 +102,14 @@ void dlm_mgcepfix_init(INT32 n, INT16 order, INT16 lambda) {
 	lpPsiQy = dlp_malloc(n * sizeof(double));
 
 	lpH = (FLOAT64*) dlp_malloc(m * m * sizeof(FLOAT64));
+
+	data_evaluation_init(measure_name);
 #endif
 }
 
 /* Generalized Mel-Cepstral analysis free buffers */
 void dlm_mgcepfix_free() {
-#if old_function_calls
+#if OLD_FUNCTION_CALLS
 	dlm_mgcep_free();
 #else
 	dlp_free(lpZo);
@@ -112,6 +125,8 @@ void dlm_mgcepfix_free() {
 	dlp_free(lpPsiQx);
 	dlp_free(lpPsiQy);
 	dlp_free(lpH);
+
+	data_evaluation_free();
 #endif
 }
 
@@ -171,7 +186,7 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order,
 
 	/*-----------------------------------------------------------------------*/
 
-#if old_function_calls
+#if OLD_FUNCTION_CALLS
 	ret = dlm_mgcep(in, n, out, order, (FLOAT64) gamma / 32767.,
 			(FLOAT64) lambda / 32767., 32768.);
 #else
@@ -188,6 +203,9 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order,
 		lpSx[i] = in_float[i];
 		lpSy[i] = 0.;
 	}
+
+	data_evaluation_FLOAT64("in_float", in_float, n); /* DEBUG */
+
 	dlm_fft(lpSx, lpSy, n, FALSE); /* TODO: input real, output n/2+1 */
 	for (i = 0; i <= n / 2; i++)
 		lpSx[i] = lpSx[i] * lpSx[i] + lpSy[i] * lpSy[i];
