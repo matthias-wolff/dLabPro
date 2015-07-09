@@ -378,8 +378,11 @@ UINT64 dlp_rand()
     }
     for (i=0; i<16; i++)
       dlp_rand_seed[i]
-        = ((UINT64)rand())<<48 | ((UINT64)rand())<<32 | ((UINT64)rand())<<16
-        | ((UINT64)rand());
+        =
+        #ifndef __MAX_TYPE_32BIT
+        ((UINT64)rand())<<48 | ((UINT64)rand())<<32 |
+        #endif
+        ((UINT64)rand())<<16 | ((UINT64)rand());
     dlp_rand_init = 3;
   }
 

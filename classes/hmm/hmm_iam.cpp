@@ -813,7 +813,7 @@ INT16 CGEN_PUBLIC CHmm::Bwupdate
 )
 {
   INT32 nK,nTG;
-  INT32 nNK,nNT,nNTG,nNM,nNG;
+  INT32 nNK,nNTG,nNM,nNG;
   INT32 nFT;
   INT16 nWsr;
   FST_WTYPE nNeuAdd;
@@ -832,7 +832,6 @@ INT16 CGEN_PUBLIC CHmm::Bwupdate
   nNTG=idAlpha->GetNComps();
   nNM=m_iGm->GetNMix();
   nNG=m_iGm->GetNGauss();
-  nNT=UD_XT(this,nUnit);
   nFT=UD_FT(this,nUnit);
   nWsr=this->Wsr_GetType(NULL);
   nNeuAdd=this->Wsr_NeAdd(nWsr);
