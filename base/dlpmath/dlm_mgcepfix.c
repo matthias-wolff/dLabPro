@@ -38,8 +38,7 @@
 #define INT16_MAX_FLOAT 32767.
 #define OLD_FUNCTION_CALLS 0
 
-//const char* measure_name = "measurement_1.csv";
-static dataLog logger_1 = {.file_path = "meas_1.csv"};
+static dataLog logger_1 = {.file_path = "measurement_1.csv"};
 
 
 /* functions from floating-point implementation */
@@ -105,7 +104,7 @@ void dlm_mgcepfix_init(INT32 n, INT16 order, INT16 lambda) {
 
 	lpH = (FLOAT64*) dlp_malloc(m * m * sizeof(FLOAT64));
 
-	data_evaluation_init(logger_1);
+	data2csv_init(&logger_1);
 #endif
 }
 
@@ -128,7 +127,7 @@ void dlm_mgcepfix_free() {
 	dlp_free(lpPsiQy);
 	dlp_free(lpH);
 
-	data_evaluation_free(logger_1);
+	data2csv_free(&logger_1);
 #endif
 }
 
@@ -206,7 +205,7 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order,
 		lpSy[i] = 0.;
 	}
 
-	data_evaluation_FLOAT64(logger_1, "in_float", in_float, n); /* DEBUG */
+	data2csv_FLOAT64(&logger_1, "in_float", in_float, n); /* DEBUG */
 
 	dlm_fft(lpSx, lpSy, n, FALSE); /* TODO: input real, output n/2+1 */
 	for (i = 0; i <= n / 2; i++)
