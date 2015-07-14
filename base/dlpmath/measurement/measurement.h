@@ -42,7 +42,6 @@ void data2csv_INT32(dataLog* log, const char* id, INT32* input, INT32 dim) {
 
 void data2csv_FLOAT64(dataLog*log, const char* id, FLOAT64* input, INT32 dim) {
 	INT32 i;
-	printf("evaluate");
 	static INT32 local_cnt = 0;
 	fprintf(log->file, "#<---F64_%s_%d--->\n", id, local_cnt++);
 	for (i = 0; i < dim; i++) {
@@ -58,7 +57,7 @@ void data2csv_init(dataLog* log) {
 	}
 	log->line = 0;
 //	fprintf(file, "sep=,\n");
-	fprintf(log->file, "line,data\n");
+//	fprintf(log->file, "line,data\n");
 }
 
 void data2csv_free(dataLog* log) {
