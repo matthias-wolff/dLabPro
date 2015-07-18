@@ -33,25 +33,23 @@
 #include "dlp_base.h"
 #include "dlp_math.h"
 
-#include "measurement/measurement.h"
-
 #define INT16_MAX_FLOAT 32767.
 #define OLD_FUNCTION_CALLS 0
 
-static dataLog logger_1 = {.file_path = "measurement_1.csv"};
-
+/* saves data for bachelor thesis evaluation */
+static DataLog logger_1 = { .file_path = "fixed_1.csv" };
 
 /* functions from floating-point implementation */
 void matinv_float(FLOAT64 *A, INT32 n);
 FLOAT64 sum2x_float(FLOAT64* vek1, FLOAT64* vek2, INT32 len);
-char lpc_mburg_float(FLOAT64* samples, INT32 n, FLOAT64* a, INT16 p, FLOAT64 lambda, FLOAT64 scale);
+char lpc_mburg_float(FLOAT64* samples, INT32 n, FLOAT64* a, INT16 p,
+		FLOAT64 lambda, FLOAT64 scale);
 void gc2gc_float(FLOAT64 *c, const INT32 m, const FLOAT64 g1, const FLOAT64 g2);
 void ignorm_float(FLOAT64 *c, INT32 m, const FLOAT64 g);
-void filter_freqt_fir_init_float(INT32 n_in, INT32 n_out, FLOAT64 lambda, FLOAT64 *z,
-		FLOAT64 norm);
+void filter_freqt_fir_init_float(INT32 n_in, INT32 n_out, FLOAT64 lambda,
+		FLOAT64 *z, FLOAT64 norm);
 void filter_freqt_fir_float(FLOAT64* in, INT32 n_in, FLOAT64* out, INT32 n_out,
 		FLOAT64 *z);
-
 
 /* buffers from old floating point implementation - to be replaced incrementally */
 FLOAT64 *lpZo, *lpZn;
@@ -62,11 +60,9 @@ FLOAT64 *lpH;
 
 /* objects for data and evaluation */
 
-
 /* Normierungsfaktoren */
 #define SIG_NRM	1.
 #define RES_NRM	2.
-
 
 /*---------------------------------------------------------------------------*/
 
@@ -80,15 +76,19 @@ void dlm_mgcepfix_init(INT32 n, INT16 order, INT16 lambda) {
 #if OLD_FUNCTION_CALLS
 	dlm_mgcep_init(n, order, (FLOAT64) lambda / 32767.);
 #else
+
 	/* old floating-point implementation */
 	FLOAT64 lambda_float = (FLOAT64) lambda / 32767.;
+
+//	dlm_mgcep_init(n, order, lambda_float); // serious DEBUG!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 	INT16 m = order - 1;
 
 	lpZo = (FLOAT64*) dlp_malloc((order - 1) * n * sizeof(FLOAT64));
 	lpZn = (FLOAT64*) dlp_malloc((n/2-1)*MIN(n,2*m+1)*sizeof(FLOAT64));
 	filter_freqt_fir_init_float(order, n, -lambda_float, lpZo, 1.);
-	filter_freqt_fir_init_float(n / 2, MIN(n, 2 * m + 1), lambda_float, lpZn, 2.);
+	filter_freqt_fir_init_float(n / 2, MIN(n, 2 * m + 1), lambda_float, lpZn,
+			2.);
 
 	lpSx = dlp_malloc(n * sizeof(double));
 	lpSy = dlp_malloc(n * sizeof(double));
@@ -171,7 +171,7 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order,
 	INT16 itr1 = 2;
 	INT16 itr2 = 30;
 	INT16 m = order - 1;
-//	INT32 i;
+	//	INT32 i;
 	INT32 j;
 	INT32 k;
 	INT16 flag = 0;
@@ -205,7 +205,7 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order,
 		lpSy[i] = 0.;
 	}
 
-	data2csv_FLOAT64(&logger_1, "in_float", in_float, n); /* DEBUG */
+	data2csv_FLOAT64(&logger_1, "in_float", in_float, n); /* <------------ */
 
 	dlm_fft(lpSx, lpSy, n, FALSE); /* TODO: input real, output n/2+1 */
 	for (i = 0; i <= n / 2; i++)
@@ -256,9 +256,11 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order,
 
 		/* Inverse Mel-transform of psi-signals */
 		if (lambda_float != 0.0) {
-			filter_freqt_fir_float(lpPsiRx, n / 2, lpPsiRy, MIN(n, m + 1), lpZn);
+			filter_freqt_fir_float(lpPsiRx, n / 2, lpPsiRy, MIN(n, m + 1),
+					lpZn);
 			filter_freqt_fir_float(lpPsiPx, n / 2, lpPsiPy, MIN(n, m), lpZn);
-			filter_freqt_fir_float(lpPsiQx, n / 2, lpPsiQy, MIN(n, 2 * m + 1), lpZn);
+			filter_freqt_fir_float(lpPsiQx, n / 2, lpPsiQy, MIN(n, 2 * m + 1),
+					lpZn);
 			for (i = 1; i <= m; i++)
 				lpPsiRy[i] *= .5;
 			for (i = 1; i < m; i++)
@@ -442,8 +444,8 @@ FLOAT64 sum2x_float(FLOAT64* vek1, FLOAT64* vek2, INT32 len) {
  *
  * a_0 = sqrt(a_0)*scale
  */
-char lpc_mburg_float(FLOAT64* samples, INT32 n, FLOAT64* a, INT16 p, FLOAT64 lambda,
-		FLOAT64 scale) {
+char lpc_mburg_float(FLOAT64* samples, INT32 n, FLOAT64* a, INT16 p,
+		FLOAT64 lambda, FLOAT64 scale) {
 	register INT32 i;
 	INT16 m;
 	FLOAT64* aa;
@@ -553,8 +555,8 @@ void ignorm_float(FLOAT64 *c, INT32 m, const FLOAT64 g) {
  * @param z       Filter coefficients
  * @param norm    Output normalization factor
  */
-void filter_freqt_fir_init_float(INT32 n_in, INT32 n_out, FLOAT64 lambda, FLOAT64 *z,
-		FLOAT64 norm) {
+void filter_freqt_fir_init_float(INT32 n_in, INT32 n_out, FLOAT64 lambda,
+		FLOAT64 *z, FLOAT64 norm) {
 	INT32 k, l;
 	FLOAT64 *za = z, *zb = z;
 	zb[0] = lambda;
