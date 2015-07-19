@@ -28,8 +28,20 @@
 #include "dlp_base.h"
 #include "dlp_math.h"
 
+//#define I16_LOG
+//#define I32_LOG
+//#define F64_LOG
+
 /* saves data for bachelor thesis evaluation */
-static DataLog logger_1 = {.file_path = "floating_1.csv"};
+#ifdef I16_LOG
+DataLog logger_I16 = { .file_path = "mgcepfix_I16.csv" };
+#endif
+#ifdef I32_LOG
+DataLog logger_I32 = { .file_path = "mgcepfix_I32.csv" };
+#endif
+#ifdef F64_LOG
+DataLog logger_F64 = { .file_path = "mgcepfix_F64.csv" };
+#endif
 
 FLOAT64      *lpZo,*lpZn;
 FLOAT64      *lpSx,*lpSy,*lpGx,*lpGy;
@@ -301,7 +313,15 @@ void filter_freqt_fir(FLOAT64* in,INT32 n_in,FLOAT64* out,INT32 n_out,FLOAT64 *z
 void dlm_mgcep_init(INT32 n, INT16 order, FLOAT64 lambda){
   INT16   m = order - 1;
 
-  data2csv_init(&logger_1);
+#ifdef I16_LOG
+	data2csv_init(&logger_I16);
+#endif
+#ifdef I32_LOG
+	data2csv_init(&logger_I32);
+#endif
+#ifdef F64_LOG
+	data2csv_init(&logger_F64);
+#endif
 
   lpZo=(FLOAT64*)dlp_malloc((order-1)*n*sizeof(FLOAT64));
   lpZn=(FLOAT64*)dlp_malloc((n/2-1)*MIN(n,2*m+1)*sizeof(FLOAT64));
@@ -325,7 +345,15 @@ void dlm_mgcep_init(INT32 n, INT16 order, FLOAT64 lambda){
 
 /* Generalized Mel-Cepstral analysis free buffers */
 void dlm_mgcep_free(){
-  data2csv_free(&logger_1);
+#ifdef I16_LOG
+	data2csv_free(&logger_I16);
+#endif
+#ifdef I32_LOG
+	data2csv_free(&logger_I32);
+#endif
+#ifdef F64_LOG
+	data2csv_free(&logger_F64);
+#endif
   dlp_free(lpZo); dlp_free(lpZn);
   dlp_free(lpSx); dlp_free(lpSy);
   dlp_free(lpGx); dlp_free(lpGy);
@@ -378,7 +406,9 @@ INT16 dlm_mgcep(FLOAT64* input, INT32 n, FLOAT64* output, INT16 order, FLOAT64 g
   FLOAT64 dd = 0.000001;
   FLOAT64 ep = 0.;
 
-  data2csv_FLOAT64(&logger_1, "input", input, n); /* <---------------- */
+#ifdef F64_LOG
+  data2csv_FLOAT64(&logger_F64, "input", input, n); /*<<<<<<<<<<<<<<<<<<<<<*/
+#endif
 
   /* Get input spectrum */
   for(i=n-1;i>=0;i--){ lpSx[i]=input[i]; lpSy[i]=0.; }

@@ -32,7 +32,7 @@ void data2csv_INT16(DataLog* log, const char* id, INT16* input, INT32 dim) {
 	INT32 i;
 	fprintf(log->file, "#<---I16---%s--->\n", id);
 	for (i = 0; i < dim; i++) {
-		fprintf(log->file, "%d,%5d\n", log->line++, input[i]);
+		fprintf(log->file, "%d,%08x,%d,\n", log->line++, input[i], input[i]);
 	}
 }
 
@@ -44,7 +44,7 @@ void data2csv_INT32(DataLog* log, const char* id, INT32* input, INT32 dim) {
 	INT32 i;
 	fprintf(log->file, "#<---I32---%s--->\n", id);
 	for (i = 0; i < dim; i++) {
-		fprintf(log->file, "%d,%10d\n", log->line++, input[i]);
+		fprintf(log->file, "%d,%08x,%d\n", log->line++, input[i], input[i]);
 	}
 }
 
@@ -52,7 +52,7 @@ void data2csv_FLOAT64(DataLog*log, const char* id, FLOAT64* input, INT32 dim) {
 	INT32 i;
 	fprintf(log->file, "#<---F64---%s--->\n", id);
 	for (i = 0; i < dim; i++) {
-		fprintf(log->file, "%d,%.20E\n", log->line++, input[i]);
+		fprintf(log->file, "%d,%016llx,%g\n", log->line++, input[i], input[i]);
 	}
 }
 
@@ -73,7 +73,7 @@ void data2csv_init(DataLog* log) {
 		printf("Error opening hash file!\n");
 	} else {
 		fscanf(hashFile,"%s", hashString);
-		fprintf(log->file, "#<---HASH=%s---FILE_PATH=%s--->\n", hashString, log->file_path);
+		fprintf(log->file, "### HASH=%s, FILE_PATH=%s ###\n", hashString, log->file_path);
 		fclose(hashFile);
 	}
 

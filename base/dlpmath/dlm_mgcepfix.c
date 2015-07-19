@@ -36,8 +36,21 @@
 #define INT16_MAX_FLOAT 32767.
 #define OLD_FUNCTION_CALLS 0
 
+#define I16_LOG
+//#define I32_LOG
+#define F64_LOG
+
 /* saves data for bachelor thesis evaluation */
-static DataLog logger_1 = { .file_path = "fixed_1.csv" };
+#ifdef I16_LOG
+DataLog logger_I16 = { .file_path = "mgcepfix_I16.csv" };
+#endif
+#ifdef I32_LOG
+DataLog logger_I32 = { .file_path = "mgcepfix_I32.csv" };
+#endif
+#ifdef F64_LOG
+DataLog logger_F64 = { .file_path = "mgcepfix_F64.csv" };
+#endif
+
 
 /* functions from floating-point implementation */
 void matinv_float(FLOAT64 *A, INT32 n);
@@ -80,8 +93,6 @@ void dlm_mgcepfix_init(INT32 n, INT16 order, INT16 lambda) {
 	/* old floating-point implementation */
 	FLOAT64 lambda_float = (FLOAT64) lambda / 32767.;
 
-//	dlm_mgcep_init(n, order, lambda_float); // serious DEBUG!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
 	INT16 m = order - 1;
 
 	lpZo = (FLOAT64*) dlp_malloc((order - 1) * n * sizeof(FLOAT64));
@@ -104,7 +115,16 @@ void dlm_mgcepfix_init(INT32 n, INT16 order, INT16 lambda) {
 
 	lpH = (FLOAT64*) dlp_malloc(m * m * sizeof(FLOAT64));
 
-	data2csv_init(&logger_1);
+#ifdef I16_LOG
+	data2csv_init(&logger_I16);
+#endif
+#ifdef I32_LOG
+	data2csv_init(&logger_I32);
+#endif
+#ifdef F64_LOG
+	data2csv_init(&logger_F64);
+#endif
+
 #endif
 }
 
@@ -127,7 +147,16 @@ void dlm_mgcepfix_free() {
 	dlp_free(lpPsiQy);
 	dlp_free(lpH);
 
-	data2csv_free(&logger_1);
+#ifdef I16_LOG
+	data2csv_free(&logger_I16);
+#endif
+#ifdef I32_LOG
+	data2csv_free(&logger_I32);
+#endif
+#ifdef F64_LOG
+	data2csv_free(&logger_F64);
+#endif
+
 #endif
 }
 
@@ -182,15 +211,13 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order,
 	FLOAT64 *in_float = dlp_malloc(n * sizeof(FLOAT64));
 	FLOAT64 *out_float = dlp_malloc(order * sizeof(FLOAT64));
 
+	data2csv_INT16(&logger_I16, "input", input, n); /*<<<<<<<<<<<<<<<<<<<<<*/
+
 	for (i = 0; i < n; i++)
 		in_float[i] = (FLOAT64) input[i] / 32767. * SIG_NRM;
 
-	/*-----------------------------------------------------------------------*/
+	data2csv_FLOAT64(&logger_F64, "in_float", in_float, n); /*<<<<<<<<<<<<<*/
 
-#if OLD_FUNCTION_CALLS
-	ret = dlm_mgcep(in, n, out, order, (FLOAT64) gamma / 32767.,
-			(FLOAT64) lambda / 32767., 32768.);
-#else
 	/*-----------------------------------------------------------------------*/
 	/* old floating-point implementation */
 	/* INT16 dlm_mgcep(FLOAT64* input, INT32 n, FLOAT64* output, INT16 order, FLOAT64 gamma, FLOAT64 lambda, FLOAT64 scale) */
@@ -204,8 +231,6 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order,
 		lpSx[i] = in_float[i];
 		lpSy[i] = 0.;
 	}
-
-	data2csv_FLOAT64(&logger_1, "in_float", in_float, n); /* <------------ */
 
 	dlm_fft(lpSx, lpSy, n, FALSE); /* TODO: input real, output n/2+1 */
 	for (i = 0; i <= n / 2; i++)
@@ -308,7 +333,6 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order,
 	/* end - old floating-point implementation */
 	ret = flag;
 	/*-----------------------------------------------------------------------*/
-#endif
 
 	for (i = 0; i < order; i++)
 		output[i] = (INT16) round(out_float[i] * 32767. / RES_NRM);
