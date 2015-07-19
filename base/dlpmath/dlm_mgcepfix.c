@@ -118,8 +118,8 @@ void dlm_mgcepfix_init(INT32 n, INT16 order, INT16 lambda) {
 	lpH = (FLOAT64*) dlp_malloc(m * m * sizeof(FLOAT64));
 
 	/* fixed point buffer init */
-	lpSxI = dlp_malloc(n * sizeof(*lpSxI));
-	lpSyI = dlp_malloc(n * sizeof(*lpSyI));
+	lpSxI = dlp_malloc(n * sizeof(INT16));
+	lpSyI = dlp_malloc(n * sizeof(INT16));
 
 	/* init fixed point fft */
 	fft_fwd_plan = dlmx_fft_init(n, FALSE);
@@ -226,8 +226,6 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order,
 	FLOAT64 *in_float = dlp_malloc(n * sizeof(FLOAT64));
 	FLOAT64 *out_float = dlp_malloc(order * sizeof(FLOAT64));
 
-	data2csv_INT16(&logger_I16, "input", input, n); /*<<<<<<<<<<<<<<<<<<<<<*/
-
 	/*-----------------------------------------------------------------------*/
 	/* old floating-point implementation */
 	/* INT16 dlm_mgcep(FLOAT64* input, INT32 n, FLOAT64* output, INT16 order, FLOAT64 gamma, FLOAT64 lambda, FLOAT64 scale) */
@@ -237,26 +235,28 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order,
 	FLOAT64 scale = 32768.;
 
 	for (i = 0; i < n; i++)
-			in_float[i] = (FLOAT64) input[i] / 32767. * SIG_NRM;
+		in_float[i] = (FLOAT64) input[i] / 32767. * SIG_NRM;
 
 	/* Get input spectrum */
 	for (i = n - 1; i >= 0; i--) {
 		lpSx[i] = in_float[i];
 		lpSy[i] = 0.;
-//		lpSxI[i] = input[i];
-//		lpSyI[i] = 0;
+		lpSxI[i] = input[i];
+		lpSyI[i] = 0;
 	}
 
-	dlm_fft(lpSx, lpSy, n, FALSE); /* TODO: input real, output n/2+1 */
-//	dlmx_fft(&fft_fwd_plan, lpSxI, lpSyI, 0);
+//	dlm_fft(lpSx, lpSy, n, FALSE); /* TODO: input real, output n/2+1 */
+	dlmx_fft(fft_fwd_plan, lpSxI, lpSyI, 0);
 
 	/*=====================================================================*/
 	/* conversion from INT16 to FLOAT64 */
-//	data2csv_INT16(&logger_I16, "lpSxI", lpSxI, n); /*<<<<<<<<<<<<<<<<<<<<<*/
+	data2csv_INT16(&logger_I16, "lpSxI", lpSxI, n); /*<<<<<<<<<<<<<<<<<<<<<*/
+	data2csv_INT16(&logger_I16, "lpSyI", lpSyI, n); /*<<<<<<<<<<<<<<<<<<<<<*/
 
-//	for (i = n; i > 0; i--) {
-//		lpSx[i] = (FLOAT64) lpSxI[i] / 32767.;
-//	}
+	for (i = n - 1; i >= 0; i--) {
+		lpSx[i] = (FLOAT64) lpSxI[i] / 32767.;
+		lpSy[i] = (FLOAT64) lpSyI[i] / 32767.;
+	}
 
 	/*=====================================================================*/
 
