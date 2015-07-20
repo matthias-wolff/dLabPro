@@ -34,13 +34,13 @@
 
 /* saves data for bachelor thesis evaluation */
 #ifdef I16_LOG
-DataLog logger_I16 = { .file_path = "mgcepfix_I16.csv" };
+DataLog log_I16 = { .file_path = "mgcep_I16.csv" };
 #endif
 #ifdef I32_LOG
-DataLog logger_I32 = { .file_path = "mgcepfix_I32.csv" };
+DataLog log_I32 = { .file_path = "mgcep_I32.csv" };
 #endif
 #ifdef F64_LOG
-DataLog logger_F64 = { .file_path = "mgcepfix_F64.csv" };
+DataLog log_F64 = { .file_path = "mgcep_F64.csv" };
 #endif
 
 FLOAT64      *lpZo,*lpZn;
@@ -314,13 +314,13 @@ void dlm_mgcep_init(INT32 n, INT16 order, FLOAT64 lambda){
   INT16   m = order - 1;
 
 #ifdef I16_LOG
-	data2csv_init(&logger_I16);
+	data2csv_init(&log_I16);
 #endif
 #ifdef I32_LOG
-	data2csv_init(&logger_I32);
+	data2csv_init(&log_I32);
 #endif
 #ifdef F64_LOG
-	data2csv_init(&logger_F64);
+	data2csv_init(&log_F64);
 #endif
 
   lpZo=(FLOAT64*)dlp_malloc((order-1)*n*sizeof(FLOAT64));
@@ -346,13 +346,13 @@ void dlm_mgcep_init(INT32 n, INT16 order, FLOAT64 lambda){
 /* Generalized Mel-Cepstral analysis free buffers */
 void dlm_mgcep_free(){
 #ifdef I16_LOG
-	data2csv_free(&logger_I16);
+	data2csv_free(&log_I16);
 #endif
 #ifdef I32_LOG
-	data2csv_free(&logger_I32);
+	data2csv_free(&log_I32);
 #endif
 #ifdef F64_LOG
-	data2csv_free(&logger_F64);
+	data2csv_free(&log_F64);
 #endif
   dlp_free(lpZo); dlp_free(lpZn);
   dlp_free(lpSx); dlp_free(lpSy);
@@ -405,10 +405,6 @@ INT16 dlm_mgcep(FLOAT64* input, INT32 n, FLOAT64* output, INT16 order, FLOAT64 g
   INT16   flag=0;
   FLOAT64 dd = 0.000001;
   FLOAT64 ep = 0.;
-
-#ifdef F64_LOG
-  data2csv_FLOAT64(&logger_F64, "input", input, n); /*<<<<<<<<<<<<<<<<<<<<<*/
-#endif
 
   /* Get input spectrum */
   for(i=n-1;i>=0;i--){ lpSx[i]=input[i]; lpSy[i]=0.; }
@@ -489,6 +485,10 @@ INT16 dlm_mgcep(FLOAT64* input, INT32 n, FLOAT64* output, INT16 order, FLOAT64 g
 
   /* Denormalize coefficients */
   ignorm(output,m,gamma);
+
+#ifdef F64_LOG
+  data2csv_FLOAT64(&log_F64, "output", output, order); /*<<<<<<<<<<<<<<<<<<<<<*/
+#endif
 
   return flag;
 }

@@ -36,8 +36,8 @@
 #define INT16_MAX_FLOAT 32767.
 #define OLD_FUNCTION_CALLS 0
 
-#define I16_LOG
-//#define I32_LOG
+//#define I16_LOG
+#define I32_LOG
 #define F64_LOG
 
 /* saves data for bachelor thesis evaluation */
@@ -71,7 +71,8 @@ FLOAT64 *lpPsiRy, *lpPsiPy, *lpPsiQy;
 FLOAT64 *lpH;
 
 /* new integer buffers */
-INT16	*lpSxI, *lpSyI;
+INT16 *lpSxI16, *lpSyI16;
+INT32 *lpSxI32, *lpSyI32;
 
 struct dlmx_fft *fft_fwd_plan;
 
@@ -118,8 +119,10 @@ void dlm_mgcepfix_init(INT32 n, INT16 order, INT16 lambda) {
 	lpH = (FLOAT64*) dlp_malloc(m * m * sizeof(FLOAT64));
 
 	/* fixed point buffer init */
-	lpSxI = dlp_malloc(n * sizeof(INT16));
-	lpSyI = dlp_malloc(n * sizeof(INT16));
+	lpSxI16 = dlp_malloc(n * sizeof(INT16));
+	lpSyI16 = dlp_malloc(n * sizeof(INT16));
+	lpSxI32 = dlp_malloc(n * sizeof(INT32));
+	lpSyI32 = dlp_malloc(n * sizeof(INT32));
 
 	/* init fixed point fft */
 	fft_fwd_plan = dlmx_fft_init(n, FALSE);
@@ -157,8 +160,10 @@ void dlm_mgcepfix_free() {
 	dlp_free(lpH);
 
 	/* free fixed point buffers */
-	dlp_free(lpSxI);
-	dlp_free(lpSyI);
+	dlp_free(lpSxI16);
+	dlp_free(lpSyI16);
+	dlp_free(lpSxI32);
+	dlp_free(lpSyI32);
 
 	dlmx_fft_free(fft_fwd_plan);
 
@@ -241,27 +246,31 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order,
 	for (i = n - 1; i >= 0; i--) {
 		lpSx[i] = in_float[i];
 		lpSy[i] = 0.;
-		lpSxI[i] = input[i];
-		lpSyI[i] = 0;
+		lpSxI16[i] = input[i];
+		lpSyI16[i] = 0;
 	}
 
 //	dlm_fft(lpSx, lpSy, n, FALSE); /* TODO: input real, output n/2+1 */
-	dlmx_fft(fft_fwd_plan, lpSxI, lpSyI, 0);
+	dlmx_fft(fft_fwd_plan, lpSxI16, lpSyI16, 0);
 
-	/*=====================================================================*/
-	/* conversion from INT16 to FLOAT64 */
-	data2csv_INT16(&logger_I16, "lpSxI", lpSxI, n); /*<<<<<<<<<<<<<<<<<<<<<*/
-	data2csv_INT16(&logger_I16, "lpSyI", lpSyI, n); /*<<<<<<<<<<<<<<<<<<<<<*/
-
-	for (i = n - 1; i >= 0; i--) {
-		lpSx[i] = (FLOAT64) lpSxI[i] / 32767.;
-		lpSy[i] = (FLOAT64) lpSyI[i] / 32767.;
+	for (i = 0; i <= n / 2; i++) {
+//		lpSx[i] = lpSx[i] * lpSx[i] + lpSy[i] * lpSy[i];
+		lpSxI32[i] = dlmx_mul16_32(lpSxI16[i], lpSxI16[i]);
+		lpSyI32[i] = dlmx_mul16_32(lpSyI16[i], lpSyI16[i]);
+		lpSxI32[i] = dlmx_add32(lpSxI32[i], lpSyI32[i]);
 	}
 
 	/*=====================================================================*/
+	/* conversion from INT16 to FLOAT64 */
+	data2csv_INT32(&logger_I32, "lpSxI32", lpSxI32, n); /*<<<<<<<<<<<<<<<<<<<<<*/
+//	data2csv_INT16(&logger_I16, "lpSyI16", lpSyI16, n); /*<<<<<<<<<<<<<<<<<<<<<*/
 
-	for (i = 0; i <= n / 2; i++)
-		lpSx[i] = lpSx[i] * lpSx[i] + lpSy[i] * lpSy[i];
+	for (i = n - 1; i >= 0; i--) {
+		lpSx[i] = (FLOAT64) lpSxI32[i] / 2147483647.;
+		lpSy[i] = (FLOAT64) lpSyI16[i] / 32767.;
+	}
+
+	/*=====================================================================*/
 
 	/* Init coefficients from input signal */
 	lpc_mburg_float(in_float, n, out_float, order, lambda_float, scale);
