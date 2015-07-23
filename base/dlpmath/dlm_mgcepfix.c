@@ -36,8 +36,8 @@
 #define INT16_MAX_FLOAT 32767.
 #define OLD_FUNCTION_CALLS 0
 
-#define I16_LOG
-//#define I32_LOG
+//#define I16_LOG
+#define I32_LOG
 #define F64_LOG
 
 /* saves data for bachelor thesis evaluation */
@@ -256,32 +256,22 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order,
 //	dlm_fft(lpSx, lpSy, n, FALSE); /* TODO: input real, output n/2+1 */
 	dlmx_fft(fft_fwd_plan, lpSxI16, lpSyI16, FFT_SHR);
 
-	/*=========================================================================*/
-	/* new evaluation of fft output data */
-	data2csv_INT16(&logger_I16, "lpSxI16", lpSxI16, n); /*<<<<<<<<<<<<<<<<<<<<<*/
-	data2csv_INT16(&logger_I16, "lpSyI16", lpSyI16, n); /*<<<<<<<<<<<<<<<<<<<<<*/
-
-	for (i = n - 1; i >= 0; i--) {
-		lpSx[i] = (FLOAT64) lpSxI16[i] / 32767.;
-		lpSy[i] = (FLOAT64) lpSyI16[i] / 32767.;
-	}
-	/*=========================================================================*/
 
 	for (i = 0; i <= n / 2; i++) {
-		lpSx[i] = lpSx[i] * lpSx[i] + lpSy[i] * lpSy[i];
-//		lpSxI32[i] = dlmx_mul16_32(lpSxI16[i], lpSxI16[i]);
-//		lpSyI32[i] = dlmx_mul16_32(lpSyI16[i], lpSyI16[i]);
-//		lpSxI32[i] = dlmx_add32(lpSxI32[i], lpSyI32[i]);
+//		lpSx[i] = lpSx[i] * lpSx[i] + lpSy[i] * lpSy[i];
+		lpSxI32[i] = dlmx_mul16_32(lpSxI16[i], lpSxI16[i]);
+		lpSyI32[i] = dlmx_mul16_32(lpSyI16[i], lpSyI16[i]);
+		lpSxI32[i] = dlmx_add32(lpSxI32[i], lpSyI32[i]);
 	}
 
 	/*=====================================================================*/
 	/* conversion from INT32 to FLOAT64 */
-//	data2csv_INT32(&logger_I32, "lpSxI32", lpSxI32, n); /*<<<<<<<<<<<<<<<<<<<<<*/
-//
-//	for (i = n - 1; i >= 0; i--) {
-//		lpSx[i] = (FLOAT64) lpSxI32[i] / 2147483647.;
-//		lpSy[i] = (FLOAT64) lpSyI16[i] / 32767.;
-//	}
+	data2csv_INT32(&logger_I32, "lpSxI32", lpSxI32, n); /*<<<<<<<<<<<<<<<<<<<<<*/
+
+	for (i = n - 1; i >= 0; i--) {
+		lpSx[i] = (FLOAT64) lpSxI32[i] / 2147483647.;
+		lpSy[i] = (FLOAT64) lpSyI16[i] / 32767.;
+	}
 	/*=====================================================================*/
 
 	/* Init coefficients from input signal */
