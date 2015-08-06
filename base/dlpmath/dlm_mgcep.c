@@ -28,19 +28,12 @@
 #include "dlp_base.h"
 #include "dlp_math.h"
 
-//#define I16_LOG
-//#define I32_LOG
-//#define F64_LOG
+
+#define LOG_ACTIVATED 0
 
 /* saves data for bachelor thesis evaluation */
-#ifdef I16_LOG
-DataLog log_I16 = { .file_path = "mgcep_I16.csv" };
-#endif
-#ifdef I32_LOG
-DataLog log_I32 = { .file_path = "mgcep_I32.csv" };
-#endif
-#ifdef F64_LOG
-DataLog log_F64 = { .file_path = "mgcep_F64.csv" };
+#if LOG_ACTIVATED
+DataLog log = { .file_path = "mgcep_log.csv" };
 #endif
 
 FLOAT64      *lpZo,*lpZn;
@@ -147,8 +140,7 @@ FLOAT64 sum2x(FLOAT64* vek1,FLOAT64* vek2,INT32 len){
  * @param lambda  Warping factor.
  * @param scale   Signal scaling factor.
  * @return        0 on error, 1 on success
- */
-/*
+ * ----------------------------------------------------
  * eb = ef = samples
  * a_0 = ef*ef
  *
@@ -313,13 +305,7 @@ void filter_freqt_fir(FLOAT64* in,INT32 n_in,FLOAT64* out,INT32 n_out,FLOAT64 *z
 void dlm_mgcep_init(INT32 n, INT16 order, FLOAT64 lambda){
   INT16   m = order - 1;
 
-#ifdef I16_LOG
-	data2csv_init(&log_I16);
-#endif
-#ifdef I32_LOG
-	data2csv_init(&log_I32);
-#endif
-#ifdef F64_LOG
+#if LOG_ACTIVATED
 	data2csv_init(&log_F64);
 #endif
 
@@ -345,13 +331,8 @@ void dlm_mgcep_init(INT32 n, INT16 order, FLOAT64 lambda){
 
 /* Generalized Mel-Cepstral analysis free buffers */
 void dlm_mgcep_free(){
-#ifdef I16_LOG
-	data2csv_free(&log_I16);
-#endif
-#ifdef I32_LOG
-	data2csv_free(&log_I32);
-#endif
-#ifdef F64_LOG
+
+#if LOG_ACTIVATED
 	data2csv_free(&log_F64);
 #endif
   dlp_free(lpZo); dlp_free(lpZn);
@@ -486,7 +467,7 @@ INT16 dlm_mgcep(FLOAT64* input, INT32 n, FLOAT64* output, INT16 order, FLOAT64 g
   /* Denormalize coefficients */
   ignorm(output,m,gamma);
 
-#ifdef F64_LOG
+#if LOG_ACTIVATED
   data2csv_FLOAT64(&log_F64, "output", output, order); /*<<<<<<<<<<<<<<<<<<<<<*/
 #endif
 
