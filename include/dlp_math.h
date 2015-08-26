@@ -436,6 +436,7 @@ INT16 dlm_ivq(FLOAT64*,INT32,FLOAT64*,INT32,INT32,INT32*);                      
 /* Functions - dlm_fix.c */
 INT16 dlmx_rnd32(INT32 a);
 INT16 dlmx_abs16(INT16 a);
+INT16 dlmx_shl16(INT16 a,INT8 shf);
 INT32 dlmx_shl32(INT32 a,INT8 shf);
 INT16 dlmx_neg16(INT16 a);
 INT16 dlmx_add16(INT16 a,INT16 b);
@@ -446,6 +447,7 @@ INT32 dlmx_mul16_32(INT16 a,INT16 b);
 INT16 dlmx_mul16(INT16 a,INT16 b);
 INT32 dlmx_mul32(INT32 a,INT32 b);
 INT32 dlmx_mul3216(INT32 a,INT16 b);
+INT32 dlmx_div32(INT32 a,INT32 b,INT8 shf);
 INT32 dlmx_cabs32(INT32 a,INT32 b);
 void dlmx_matmul16(UINT16 m,UINT16 n,INT16 *a,INT16 *b,INT16 *c);
 INT16 dlmx_vecmul16(UINT16 n,INT16 *a,INT16 *b,INT8 shf);
