@@ -48,6 +48,20 @@ INT16 dlmx_abs16(INT16 a){
   return -a;
 }
 
+/* Left/Right shift for INT16
+ *
+ * @param a    Number to shift
+ * @param shf  Shift width (pos -> left)
+ * @return     Shifted number
+ */
+INT16 dlmx_shl16(INT16 a,INT8 shf){
+  if(shf>0){                                                                   /* Left shift ? >>                       */
+    if(a>0 &&    a&(INT16_MIN>>shf)) return INT16_MAX;                         /*   Saturate positive numbers           */
+    if(a<0 && (~a)&(INT16_MIN>>shf)) return INT16_MIN;                         /*   Saturate negaitve numbers           */
+    return a<<shf;                                                             /*   Apply left shift                    */
+  }else return a>>-shf;                                                        /* << Else: apply right shift            */
+}
+
 /* Left/Right shift for INT32
  *
  * @param a    Number to shift
@@ -169,6 +183,22 @@ INT32 dlmx_mul3216(INT32 a,INT16 b){
     dlmx_mul16_32(dlmx_rnd32(a),b),                                            /*  - High part of a and b               */
     dlmx_mul16(a,b)                                                            /*  - Low part of a and b                */
   );                                                                           /*                                       */
+}
+
+/* Divide (INT32/INT32)>>shf -> INT32
+ *
+ * @param a   Numerator
+ * @param b   Denominator
+ * @param shf Left shift within division
+ * @return    Result
+ */
+INT32 dlmx_div32(INT32 a,INT32 b,INT8 shf){
+  INT8 ls = shf>0 ?  shf : 0;
+  INT8 rs = shf<0 ? -shf : 0;
+  INT64 r=(((INT64)a<<(31-rs))/(INT64)b)<<ls;
+  if(r>INT32_MAX) return INT32_MAX;
+  if(r<INT32_MIN) return INT32_MIN;
+  return (INT32)r;
 }
 
 /* Absolute value of complex INT32 number: sqrt(a^2+b^2)
