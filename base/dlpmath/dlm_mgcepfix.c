@@ -38,7 +38,7 @@
 #define FUNCTION_TEST 0
 
 #define LOG_ACTIVE 1
-#define FIXED_POINT 0
+#define FIXED_POINT 1
 
 /* saves data for bachelor thesis evaluation */
 #if LOG_ACTIVE
@@ -79,7 +79,8 @@ INT16 *lpGxI16, *lpGyI16;
 //INT16 *lpZoI16, *lpZnI16;
 INT16 *lpPsiRxI16, *lpPsiPxI16, *lpPsiQxI16;
 INT16 *lpPsiRyI16, *lpPsiPyI16, *lpPsiQyI16;
-INT16 *lpHI16;
+INT32 *lpHI32;
+INT32 *outI32;
 
 /* structures/plans for the fixed point FFTs */
 struct dlmx_fft *fft_n_fwd_plan, *fft_freqt_plan, *fft_n_inv_plan;
@@ -93,9 +94,9 @@ struct dlmx_fft *fft_n_fwd_plan, *fft_freqt_plan, *fft_n_inv_plan;
 /* Normierungsfaktoren */
 #define SIG_NRM	1.
 #define RES_NRM	8.
-#define FREQT_NRM 10000. /* for all int! */
-#define OUT_NRM 5000.	/* First component overflows! */
-#define OUT_FIRST_NRM 1.	/* -> seperate norm for first coefficient */
+#define FREQT_NRM 0.3 /* for all int! */
+#define OUT_NRM 0.00004	/* First component overflows! */
+#define OUT_FIRST_NRM 0.00004	/* -> seperate norm for first coefficient */
 #define FFT_NRM 10.
 #define GAMMA_INV_NRM 2048. /* --> Gamma min=0.0625 @ 16-Bit */
 
@@ -103,13 +104,13 @@ struct dlmx_fft *fft_n_fwd_plan, *fft_freqt_plan, *fft_n_inv_plan;
 #define A_INV_NRM 0.005
 #define TMP1_FACTOR_NRM 1000.	/* these two norms can be combined in one factor */
 #define TMP1_NRM 1000.			/*	.......... */
-#define PSIRX_NRM 1.
+//#define PSIRX_NRM 1.
 #define PSIRY_NRM 1.
-#define PSIPX_NRM 1.
+//#define PSIPX_NRM 1.
 #define PSIPY_NRM 1.
-#define PSIQX_NRM 1.
+//#define PSIQX_NRM 1.
 #define PSIQY_NRM 1.
-#define MAT_INV_NRM 0.0000011
+#define MAT_INV_NRM 0.0000012
 
 /* Shifts */
 #define DD_INV_SHL 6
@@ -117,6 +118,8 @@ struct dlmx_fft *fft_n_fwd_plan, *fft_freqt_plan, *fft_n_inv_plan;
 #define FFT_SHR 4
 #define FFT_G_SHR 1
 #define GAMMA_ADD_SHR 1
+#define GAMMA_INV_SHL -4 /* --> Gamma min=0.0625 @ 16-Bit */
+#define A_INV_SHL -8
 #define TMP1_FACTOR_SHL -5
 //#define TMP1_POW_SHR 1
 #define SHL16TO32 16
@@ -157,6 +160,23 @@ INT16 pow_16(INT16 base, INT16 exp, INT8 shf) {
 INT32 pow_32(INT32 base, INT32 exp, INT8 shf) {
 	return round32((FLOAT64) pow(((FLOAT64) base/CON32), ((FLOAT64)exp/CON32)) * CON32 * pow(2, shf)); /* TODO: fixed point */
 }
+
+INT32 sqrt_32(INT32 x) {
+	return round32((FLOAT64) sqrt((FLOAT64) x / CON32) * CON32);
+}
+
+void matinv_32(INT32 *A, INT32 n) {
+	return matinv_float((FLOAT64*) A, n);
+}
+// TODO: Implement!
+char lpc_mburg_32(INT32* samples, INT32 n, INT32* a, INT16 p,
+		INT32 lambda, INT32 scale);
+void gc2gc_32(INT32 *c, const INT32 m, const INT32 g1, const INT32 g2);
+void ignorm_32(INT32 *c, INT32 m, const INT32 g);
+void filter_freqt_fir_init_32(INT32 n_in, INT32 n_out, INT16 lambda,
+		INT32 *z, INT16 norm);
+void filter_freqt_fir_32(INT32* in, INT32 n_in, INT32* out, INT32 n_out,
+		INT32 *z);
 
 /*---------------------------------------------------------------------------*/
 
@@ -209,7 +229,9 @@ void dlm_mgcepfix_init(INT32 n, INT16 order, INT16 lambda) {
 	lpPsiQxI16 = dlp_malloc(n * sizeof(INT16));
 	lpPsiQyI16 = dlp_malloc(n * sizeof(INT16));
 
-	lpHI16 = (INT16*) dlp_malloc(m * m * sizeof(INT16));
+	lpHI32 = (INT32*) dlp_malloc(m * m * sizeof(INT32));
+
+	outI32 = (INT32*) dlp_malloc(order * sizeof(INT32));
 
 	lpSxI32 = dlp_malloc(n * sizeof(INT32));
 	lpSyI32 = dlp_malloc(n * sizeof(INT32));
@@ -255,6 +277,7 @@ void dlm_mgcepfix_free() {
 	dlp_free(lpPsiQx);
 	dlp_free(lpPsiQy);
 	dlp_free(lpH);
+	dlp_free(outI32);
 
 	/* free conversion buffers */
 	dlp_free(in_float);
@@ -281,7 +304,7 @@ void dlm_mgcepfix_free() {
 	dlp_free(lpPsiPyI16);
 	dlp_free(lpPsiQxI16);
 	dlp_free(lpPsiQyI16);
-	dlp_free(lpHI16);
+	dlp_free(lpHI32);
 
 	/* delete the FFT plans */
 	dlmx_fft_free(fft_n_fwd_plan);
@@ -346,11 +369,12 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order,
 	FLOAT64 scale = 32768.; //<<
 
 	/* ... and the new fixed point equivalents */
-	INT16 dd_inv = 15625; /* Inverted Value of dd */
-	INT16 ep = 0;
+	INT32 dd = (dd_float * CON32);
+	INT32 ep = 0;
 
 	/* new variables */
-	INT16 gamma_inv = round16(1 / gamma_float * GAMMA_INV_NRM);
+//	INT16 gamma_inv = round16(1 / gamma_float * GAMMA_INV_NRM);
+	INT16 gamma_inv = dlmx_rnd32(dlmx_div32(INT32_MAX, dlmx_shl32(gamma, SHL16TO32), GAMMA_INV_SHL));
 	INT16 tmp1_pow_exp = dlmx_add16(round16(GAMMA_INV_NRM), /* represents 1 (mult. identity element)*/
 											gamma_inv); /* 1 + 1/gamma */
 
@@ -371,7 +395,7 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order,
 	for (i = n - 1; i >= 0; i--) {
 		lpSx[i] = in_float[i]; //<<
 		lpSy[i] = 0.; //<<
-		lpSxI16[i] = input[i] >> IN_SHR;
+		lpSxI16[i] = dlmx_shl16(input[i], -IN_SHR);
 		lpSyI16[i] = 0;
 	}
 
@@ -386,12 +410,12 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order,
 		lpSxI16[i] = dlmx_rnd32(lpSxI32[i]);
 	}
 
-#if LOG_ACTIVE
+//#if LOG_ACTIVE
 //	data2csv_FLOAT64(&logger, "lpSx_before", lpSx, n/2); /*<<<<<<<<<<<<<<<<<<<<<*/
 //	data2csv_FLOAT64(&logger, "lpSy_before", lpSy, n/2); /*<<<<<<<<<<<<<<<<<<<<<*/
 //	data2csv_FLOAT64(&logger, "lpSx", lpSx, n/2);
 //	data2csv_INT16(&logger, "lpSxI16", lpSxI16, n/2);
-#endif
+//#endif
 
 	/* FLOATING POINT -------------------------------------------------------*/
 	/* conversion from INT to FLOAT */
@@ -407,20 +431,20 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order,
 //	data2csv_FLOAT64(&logger, "lpSx_after", lpSx, n/2); /*<<<<<<<<<<<<<<<<<<<<<*/
 //	data2csv_FLOAT64(&logger, "lpSy_after", lpSy, n/2); /*<<<<<<<<<<<<<<<<<<<<<*/
 //#endif
+
 	/* Init coefficients from input signal */
 	lpc_mburg_float(in_float, n, out_float, order, lambda_float, scale);
 	gc2gc_float(out_float, m, -1, gamma_float); /* cepstral transformation from -1 (pure LPC) to gamma */
 
-	output[0] = round16(out_float[0] * OUT_FIRST_NRM); /* use different scaling for first coefficient */
+	output[0] = round16(out_float[0] * CON16 * OUT_FIRST_NRM); /* use different scaling for first coefficient */
+	outI32[0] = round32(out_float[0] * CON32 * OUT_FIRST_NRM); /* use different scaling for first coefficient */
 	for (i = order - 1; i >= 1; i--) {
-		output[i] = round16(out_float[i] * OUT_NRM);
+		output[i] = round16(out_float[i] * CON16 * OUT_NRM);
+		outI32[i] = round32(out_float[i] * CON32 * OUT_NRM);
 	}
 
 //#if LOG_ACTIVE
 //	data2csv_FLOAT64(&logger, "out_float after gc2gc", out_float, order); /*<<<<<<<<<<<<<<<<<<<<<*/
-//#endif
-//
-//#if LOG_ACTIVE
 //	data2csv_INT16(&logger, "output after gc2gc", output, order); /*<<<<<<<<<<<<<<<<<<<<<*/
 //#endif
 	/*-----------------------------------------------------------------------*/
@@ -429,7 +453,7 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order,
 	for (j = 0; j < itr2 && !flag; j++) {
 
 		ep_float = out_float[0]; //<<
-		ep = output[0];
+		ep = outI32[0];
 		out_float[0] = 1.; //<<
 		output[0] = INT16_MAX; //TODO: Find out if this is really working
 		for (i = 1; i < order; i++) {
@@ -455,7 +479,7 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order,
 		/* Mel- + spectral transform of coefficients */
 		filter_freqt_fir_float(out_float, order, lpGx, n, lpZo);
 		for (i = n - 1; i >= 0; i--) {
-			lpGxI16[i] = round16(lpGx[i] * FREQT_NRM);
+			lpGxI16[i] = round16(lpGx[i] * CON16 * FREQT_NRM);
 		}
 		/*-----------------------------------------------------------------------*/
 
@@ -492,7 +516,7 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order,
 			FLOAT64 a = lpGx[i] * lpGx[i] + lpGy[i] * lpGy[i]; //<< max ~1000, min ~0
 			INT32 aI32 = dlmx_add32(dlmx_mul16_32(lpGxI16[i], lpGxI16[i]),
 					dlmx_mul16_32(lpGyI16[i], lpGyI16[i]));
-			INT32 aInvI32 = round32(CON32 / (FLOAT64) aI32 * CON32 * A_INV_NRM); // TODO: replace by fixed-point division
+			INT32 aInvI32 = dlmx_div32(INT32_MAX, aI32, A_INV_SHL);
 //#if LOG_ACTIVE
 //			data2csv_FLOAT64(&logger, "a", &a, 1); /*<<<<<<<<<<<<<<<<<<<<<*/
 //			data2csv_INT32(&logger, "aI32", &aI32, 1); /*<<<<<<<<<<<<<<<<<<<<<*/
@@ -609,6 +633,13 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order,
 		/* Inverse Mel-transform of psi-signals */
 		if (lambda != 0) {
 			/* FLOATING POINT ---------------------------------------------------*/
+#if FIXED_POINT
+		for (i = 0; i < n/2; i++) {
+			lpPsiRx[i] = (FLOAT64) lpPsiRxI16[i] / CON16;
+			lpPsiPx[i] = (FLOAT64) lpPsiPxI16[i] / CON16;
+			lpPsiQx[i] = (FLOAT64) lpPsiQxI16[i] / CON16;
+		}
+#endif
 			filter_freqt_fir_float(lpPsiRx, n / 2, lpPsiRy, MIN(n, m + 1),
 					lpZn);
 			filter_freqt_fir_float(lpPsiPx, n / 2, lpPsiPy, MIN(n, m), lpZn);
@@ -617,13 +648,13 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order,
 					lpZn);
 			/* get fixed point values */
 			for (i = MIN(n, m + 1) - 1; i >= 0; i--) {
-				lpPsiRyI16[i] = round16(lpPsiRy[i] * PSIRY_NRM);
+				lpPsiRyI16[i] = round16(lpPsiRy[i] * CON16 * PSIRY_NRM);
 			}
 			for (i = MIN(n, m) - 1; i >= 0; i--) {
-				lpPsiPyI16[i] = round16(lpPsiPy[i] * PSIPY_NRM);
+				lpPsiPyI16[i] = round16(lpPsiPy[i] * CON16 * PSIPY_NRM);
 			}
 			for (i = MIN(n, 2 * m + 1) - 1; i >= 0; i--) {
-				lpPsiQyI16[i] = round16(lpPsiQy[i] * PSIQY_NRM);
+				lpPsiQyI16[i] = round16(lpPsiQy[i] * CON16 * PSIQY_NRM);
 			}
 			/*-------------------------------------------------------------------*/
 //#if LOG_ACTIVE
@@ -634,11 +665,11 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order,
 
 			for (i = 1; i <= m; i++) {
 				lpPsiRy[i] *= .5; //<<
-				lpPsiRyI16[i] >>= 1;
+				lpPsiRyI16[i] = dlmx_shl16(lpPsiRyI16[i], -1); /* divide by 2 */
 			}
 			for (i = 1; i < m; i++) {
 				lpPsiPy[i] *= .5; //<<
-				lpPsiPyI16[i] >>= 1;
+				lpPsiPyI16[i] = dlmx_shl16(lpPsiPyI16[i], -1); /* divide by 2 */
 			}
 			for (i = 1; i <= 2 * m; i++) {
 				lpPsiQy[i] *= .5 * (1. + gamma_float); //<<
@@ -656,38 +687,49 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order,
 			}
 			for (i = 1; i < m; i++) {
 				lpPsiPy[i] = lpPsiPx[i] / (FLOAT64) n; //<<
-				lpPsiPyI16[i] = dlmx_shl16(lpPsiPxI16[i], -log2_16(n)); /*TODO: implement log fixed point method */
+				lpPsiPyI16[i] = dlmx_shl16(lpPsiPxI16[i], -log2_16(n));
 			}
 			for (i = 1; i <= 2 * m; i++) {
 				lpPsiQy[i] = lpPsiQx[i] * (1. + gamma_float) / (FLOAT64) n; //<<
 				lpPsiQyI16[i] = dlmx_mul16(lpPsiQxI16[i],
-						dlmx_add16(INT16_MAX >> GAMMA_ADD_SHR,
-								gamma >> GAMMA_ADD_SHR)); /* FIXME: Scale! very small numbers in the following line! */
+						dlmx_add16(dlmx_shl16(INT16_MAX, -GAMMA_ADD_SHR),
+								dlmx_shl16(gamma, -GAMMA_ADD_SHR))); /* FIXME: Scale! very small numbers in the following line! */
 				lpPsiQyI16[i] = dlmx_shl16(lpPsiQyI16[i], -(log2_16(n) - GAMMA_ADD_SHR)); /* log + scale back *//*TODO: implement log fixed point method */
 			}
 		}
+
+//#if LOG_ACTIVE
+//		data2csv_INT16(&logger, "PsiPy after INV MEL and Division", lpPsiPyI16, MIN(n, m + 1));
+//		data2csv_INT16(&logger, "PsiRy after INV MEL and Division", lpPsiRyI16, MIN(n, m));
+//		data2csv_INT16(&logger, "PsiQy after INV MEL and Division", lpPsiQyI16, MIN(n, 2 * m + 1));
+//#endif
 
 		/* Combine to H matrix and invert it */
 		for (i = 0; i < m; i++) {
 			for (k = 0; k <= i; k++) {
 				lpH[i + k * m] = lpPsiPy[abs(k - i)] + lpPsiQy[k + i + 2]; //<<
-				lpHI16[i + k * m] = dlmx_add16(lpPsiPyI16[dlmx_abs16(k - i)],
+				lpHI32[i + k * m] = dlmx_add16(lpPsiPyI16[dlmx_abs16(k - i)],
 						lpPsiQyI16[k + i + 2]);
 			}
 		}
 		/* FLOATING POINT ---------------------------------------------------*/
+#if FIXED_POINT
+		for (i = 0; i < m*m; i++) {
+			lpH[i] = (FLOAT64) lpHI32[i] / CON32;
+		}
+#endif
 		matinv_float(lpH, m);
 		for (i = 0; i < m; i++) {
 			for (k = 0; k < m; k++) {
-				lpHI16[k + m * i] = round16(lpH[k + m * i] * CON16 * MAT_INV_NRM);
+				lpHI32[k + m * i] = round32(lpH[k + m * i] * CON32 * MAT_INV_NRM);
 			}
 		}
 		/*-------------------------------------------------------------------*/
 
-#if LOG_ACTIVE
-		data2csv_FLOAT64(&logger, "MATRIX lpH", lpH, m*m); /*<<<<<<<<<<<<<<<<<<<<<*/
-		data2csv_INT16(&logger, "MATRIX lpHI16", lpHI16, m*m); /*<<<<<<<<<<<<<<<<<<<<<*/
-#endif
+//#if LOG_ACTIVE
+//		data2csv_FLOAT64(&logger, "MATRIX lpH", lpH, m*m); /*<<<<<<<<<<<<<<<<<<<<<*/
+//		data2csv_INT32(&logger, "MATRIX lpHI32", lpHI32, m*m); /*<<<<<<<<<<<<<<<<<<<<<*/
+//#endif
 
 
 		/* Update coefficients from H matrix */
@@ -697,20 +739,20 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order,
 			for (k = 0; k <= i; k++) {
 				s += lpH[i + k * m] * lpPsiRy[k + 1]; //<<
 				sI32 = dlmx_add32(sI32,
-						dlmx_mul16_32(lpHI16[i + k * m], lpPsiRyI16[k + 1]));
+						dlmx_mul3216(lpHI32[i + k * m], lpPsiRyI16[k + 1]));
 			}
 			for (; k < m; k++) {
 				s += lpH[k + i * m] * lpPsiRy[k + 1]; //<<
 				sI32 = dlmx_add32(sI32,
-						dlmx_mul16_32(lpHI16[k + i * m], lpPsiRyI16[k + 1]));
+						dlmx_mul3216(lpHI32[k + i * m], lpPsiRyI16[k + 1]));
 			}
 			out_float[i + 1] = out_float[i + 1] / gamma_float + s; //<<
 			output[i + 1] = dlmx_rnd32(
 					dlmx_add32(dlmx_mul16_32(output[i + 1], gamma_inv), sI32));
-#if LOG_ACTIVE
-			data2csv_FLOAT64(&logger, "s", &s, 1); /*<<<<<<<<<<<<<<<<<<<<<*/
-			data2csv_INT32(&logger, "sI32", &sI32, 1); /*<<<<<<<<<<<<<<<<<<<<<*/
-#endif
+//#if LOG_ACTIVE
+//			data2csv_FLOAT64(&logger, "s", &s, 1); /*<<<<<<<<<<<<<<<<<<<<<*/
+//			data2csv_INT32(&logger, "sI32", &sI32, 1); /*<<<<<<<<<<<<<<<<<<<<<*/
+//#endif
 		}
 
 //#if LOG_ACTIVE
@@ -720,39 +762,31 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order,
 
 		/* Update normalization coefficient */
 		out_float[0] = lpPsiRy[0]; //<<
-		output[0] = lpPsiRyI16[0];
+		outI32[0] = dlmx_shl32(lpPsiRyI16[0], SHL16TO32);
 		for (i = 1; i <= m; i++) {
 			out_float[0] += gamma_float * out_float[i] * lpPsiRy[i]; //<<
-			output[0] = dlmx_rnd32(
-					dlmx_add32(output[0],
-							dlmx_mul32(dlmx_mul16_32(INT16_MAX, gamma),
-									dlmx_mul16_32(output[i], lpPsiRyI16[i])))); /*TODO: fix this! */
+			outI32[0] = dlmx_add32(outI32[0], // TEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+					dlmx_mul32(dlmx_mul16_32(INT16_MAX, gamma),
+							dlmx_mul16_32(output[i], lpPsiRyI16[i])));
+			output[0] = dlmx_rnd32(outI32[0]);
 		}
 
 		out_float[0] = sqrt(out_float[0]) * scale; //<<
-		output[0] = round16(sqrt((FLOAT64) output[0] * CON16)); /* TODO: change to fixed point. No scale needed!*/
+		outI32[0] = sqrt_32(outI32[0]); /* No scale needed!*/
+		output[0] = dlmx_rnd32(outI32[0]);
+
 //#if LOG_ACTIVE
 //		data2csv_FLOAT64(&logger, "out_float[0] after update", &out_float[0], 1); /*<<<<<<<<<<<<<<<<<<<<<*/
 //		data2csv_INT16(&logger, "output[0] after update", &output[0], 1); /*<<<<<<<<<<<<<<<<<<<<<*/
+//		data2csv_INT32(&logger, "outI32[0] for debug", &outI32[0], 1);
 //#endif
 
 		/* DEBUG: see if break condition works*/
-		ep = round16(ep_float * CON16 * 0.0001); //xxx
-		output[0] = round16(out_float[0] * CON16 * 0.0001); //xxx
-//#if LOG_ACTIVE
-//		data2csv_INT16(&logger, "ep", &ep, 1); /*<<<<<<<<<<<<<<<<<<<<<*/
-//		data2csv_INT16(&logger, "output[0] before check", &output[0], 1); /*<<<<<<<<<<<<<<<<<<<<<*/
-//		INT32 testOp1 = dlmx_sub32(dlmx_mul16_32(dd_inv, ep), dlmx_mul16_32(dd_inv, output[0]));
-//		INT32 testOp2 = output[0]<<10;
-//		FLOAT64 ref = (ep_float - out_float[0]) / out_float[0];
-//		data2csv_INT32(&logger, "op2", &testOp2, 1); /*<<<<<<<<<<<<<<<<<<<<<*/
-//		data2csv_INT32(&logger, "op1", &testOp1, 1); /*<<<<<<<<<<<<<<<<<<<<<*/
-//		data2csv_FLOAT64(&logger,"Referenz", &ref, 1);
-//#endif
+		ep = round32((FLOAT64) ep_float * CON32 * 0.00001); //xxx
+		outI32[0] = round32((FLOAT64) out_float[0] * CON32 * 0.00001); //xxx
 
-#if 1 //FIXED_POINT FIXME: Need more precision of the previous Operations!
-//		if (j > itr1 && (dlmx_mul16(dd_inv, dlmx_add16(ep, dlmx_neg16(output[0]))) < (output[0] >> DD_INV_SHL))) { /* ASSERT: out[0] >= 0, valid because of sqrt */
-		if (j > itr1 && (dlmx_sub32(dlmx_mul16_32(dd_inv, ep), dlmx_mul16_32(dd_inv, output[0])) < (INT32) output[0]<<(16-DD_INV_SHL))) {
+#if 1 //FIXED_POINT
+		if (j > itr1 && (dlmx_sub32(ep, outI32[0])) < (dlmx_mul32(outI32[0], dd))) { /* ASSERT: out[0] >= 0, valid because of sqrt */
 			flag = 1;
 		}
 #else
@@ -774,7 +808,7 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order,
 	ignorm_float(out_float, m, gamma_float); /* DEBUG!*/
 #if FIXED_POINT
 	for (i = 0; i < m; i++) {
-		output[i] = round16(out_float[i]);
+		output[i] = round16(out_float[i] * CON16);
 	}
 #endif
 	/*-----------------------------------------------------------------------*/
@@ -782,10 +816,10 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order,
 	/* end - old floating-point implementation */
 	ret = flag;
 	/*-----------------------------------------------------------------------*/
-//#if LOG_ACTIVE
-//	data2csv_FLOAT64(&logger, "out_cepstrum", out_float, order); /*<<<<<<<<<<<<<*/
-//	data2csv_INT32(&logger, "j", &j, 1); /*<<<<<<<<<<<<<*/
-//#endif
+#if LOG_ACTIVE
+	data2csv_FLOAT64(&logger, "out_cepstrum", out_float, order); /*<<<<<<<<<<<<<*/
+	data2csv_INT32(&logger, "j", &j, 1); /*<<<<<<<<<<<<<*/
+#endif
 
 	for (i = 0; i < order; i++) {
 		output[i] = round16(out_float[i] * CON16 / RES_NRM);
