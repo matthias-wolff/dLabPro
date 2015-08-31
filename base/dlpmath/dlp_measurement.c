@@ -52,7 +52,7 @@ void data2csv_FLOAT64(DataLog*log, const char* id, FLOAT64* input, INT32 dim) {
 	INT32 i;
 	fprintf(log->file, "#<---F64---%s--->\n", id);
 	for (i = 0; i < dim; i++) {
-		fprintf(log->file, "%d,%016llx,%g\n", log->line++, input[i], input[i]);
+		fprintf(log->file, "%d,%016llx,%.11g\n", log->line++, input[i], input[i]);
 	}
 }
 
