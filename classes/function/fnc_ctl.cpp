@@ -486,6 +486,9 @@ INT16 CGEN_VPROTECTED CFunction::Quit()
   // Delegate to running function                                               // ------------------------------------
   FNC_DELEGATE Quit();                                                          // Use a weird macro (see function.def)
 
+  // Set return value if provided
+  dlp_set_retval(StackGet(0)?(INT32)PopNumber().x:0);
+
   // Do quit                                                                    // ------------------------------------
   FNC_MSG(1,"QUIT(%ld)",(long)dlp_get_retval(),0,0,0,0);                        // Protocol
   m_nXm |= XM_QUIT;                                                             // Set quit state
