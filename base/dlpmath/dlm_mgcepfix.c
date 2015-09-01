@@ -118,7 +118,7 @@ struct dlmx_fft *fft_n_fwd_plan, *fft_freqt_plan, *fft_n_inv_plan;
 #define FFT_SHR 4
 #define FFT_G_SHR 1
 #define GAMMA_ADD_SHR 1
-#define GAMMA_INV_SHL -4 /* --> Gamma min=0.0625 @ 16-Bit */
+#define GAMMA_INV_SHR 4 /* --> Gamma min=0.0625 @ 16-Bit */
 #define A_INV_SHL -8
 #define TMP1_FACTOR_SHL -5
 //#define TMP1_POW_SHR 1
@@ -374,8 +374,8 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order,
 
 	/* new variables */
 //	INT16 gamma_inv = round16(1 / gamma_float * GAMMA_INV_NRM);
-	INT16 gamma_inv = dlmx_rnd32(dlmx_div32(INT32_MAX, dlmx_shl32(gamma, SHL16TO32), GAMMA_INV_SHL));
-	INT16 tmp1_pow_exp = dlmx_add16(round16(GAMMA_INV_NRM), /* represents 1 (mult. identity element)*/
+	INT16 gamma_inv = dlmx_rnd32(dlmx_div32(INT32_MAX, dlmx_shl32(gamma, SHL16TO32), -GAMMA_INV_SHR));
+	INT16 tmp1_pow_exp = dlmx_add16(dlmx_shl16(1, GAMMA_INV_SHR), /* represents 1 (mult. identity element)*/
 											gamma_inv); /* 1 + 1/gamma */
 
 //#if LOG_ACTIVE
