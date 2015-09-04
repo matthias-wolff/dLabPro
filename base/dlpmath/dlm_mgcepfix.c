@@ -97,18 +97,9 @@ struct dlmx_fft *fft_n_fwd_plan, *fft_freqt_plan, *fft_n_inv_plan;
 #define FREQT_NRM 0.3 /* for all int! */
 #define OUT_NRM 0.00004	/* First component overflows! */
 #define OUT_FIRST_NRM 0.00004	/* -> seperate norm for first coefficient */
-#define FFT_NRM 10.
-#define GAMMA_INV_NRM 2048. /* --> Gamma min=0.0625 @ 16-Bit */
-
-#define A_NRM 171.	/* calculated using floating point as reference */
-#define A_INV_NRM 0.005
-#define TMP1_FACTOR_NRM 1000.	/* these two norms can be combined in one factor */
-#define TMP1_NRM 1000.			/*	.......... */
-//#define PSIRX_NRM 1.
+//#define GAMMA_INV_NRM 2048. /* --> Gamma min=0.0625 @ 16-Bit */
 #define PSIRY_NRM 1.
-//#define PSIPX_NRM 1.
 #define PSIPY_NRM 1.
-//#define PSIQX_NRM 1.
 #define PSIQY_NRM 1.
 #define MAT_INV_NRM 0.0000012
 
@@ -121,7 +112,6 @@ struct dlmx_fft *fft_n_fwd_plan, *fft_freqt_plan, *fft_n_inv_plan;
 #define GAMMA_INV_SHR 4 /* --> Gamma min=0.0625 @ 16-Bit */
 #define A_INV_SHL -8
 #define TMP1_FACTOR_SHL -5
-//#define TMP1_POW_SHR 1
 #define SHL16TO32 16
 
 /*---------------------------------------------------------------------------*/
