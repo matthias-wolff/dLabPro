@@ -38,7 +38,7 @@
 #define FUNCTION_TEST 0
 
 #define LOG_ACTIVE 1
-#define FIXED_POINT 1
+#define FIXED_POINT 0
 
 /* saves data for bachelor thesis evaluation */
 #if LOG_ACTIVE
@@ -110,8 +110,9 @@ struct dlmx_fft *fft_n_fwd_plan, *fft_freqt_plan, *fft_n_inv_plan;
 #define FFT_G_SHR 1
 #define GAMMA_ADD_SHR 1
 #define GAMMA_INV_SHR 4 /* --> Gamma min=0.0625 @ 16-Bit */
+#define A_SHL 3
 #define A_INV_SHL -8
-#define TMP1_FACTOR_SHL -5
+#define TMP1_FACTOR_SHL 3
 #define SHL16TO32 16
 
 /*---------------------------------------------------------------------------*/
@@ -139,6 +140,7 @@ INT16 round16(FLOAT64 x) {
 /*---------------------------------------------------------------------------*/
 /* fixed point saturating functions and function prototypes */
 
+/* NON-FRACTIONAL log2! */
 INT16 log2_16(INT16 x) {
 	return round16((FLOAT64) log2(x)); /* TODO: fixed point */
 }
@@ -148,7 +150,7 @@ INT16 pow_16(INT16 base, INT16 exp, INT8 shf) {
 }
 
 INT32 pow_32(INT32 base, INT32 exp, INT8 shf) {
-	return round32((FLOAT64) pow(((FLOAT64) base/CON32), ((FLOAT64)exp/CON32)) * CON32 * pow(2, shf)); /* TODO: fixed point */
+	return round32(pow(((FLOAT64) base/CON32), ((FLOAT64)exp/CON32)) * CON32 * pow(2, shf)); /* TODO: fixed point */
 }
 
 INT32 sqrt_32(INT32 x) {
@@ -158,6 +160,12 @@ INT32 sqrt_32(INT32 x) {
 void matinv_32(INT32 *A, INT32 n) {
 	return matinv_float((FLOAT64*) A, n);
 }
+
+/* fixed point implementation would have too much scaling issues */
+INT32 calculate_tmp1_factor_inv(INT32 a, INT16 gamma, INT8 shf) {
+	return round32(pow((FLOAT64) a/CON32, -(1. + 1./ ((FLOAT64) gamma/CON16))) * CON32 * pow(2, shf));
+}
+
 // TODO: Implement!
 char lpc_mburg_32(INT32* samples, INT32 n, INT32* a, INT16 p,
 		INT32 lambda, INT32 scale);
@@ -365,8 +373,8 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order,
 	/* new variables */
 //	INT16 gamma_inv = round16(1 / gamma_float * GAMMA_INV_NRM);
 	INT16 gamma_inv = dlmx_rnd32(dlmx_div32(INT32_MAX, dlmx_shl32(gamma, SHL16TO32), -GAMMA_INV_SHR));
-	INT16 tmp1_pow_exp = dlmx_add16(dlmx_shl16(1, GAMMA_INV_SHR), /* represents 1 (mult. identity element)*/
-											gamma_inv); /* 1 + 1/gamma */
+//	INT16 tmp1_pow_exp_inv = dlmx_neg16(dlmx_add16(dlmx_shl16(1, GAMMA_INV_SHR), /* represents 1 (mult. identity element)*/
+//											gamma_inv)); /* -(1 + 1/gamma) */
 
 //#if LOG_ACTIVE
 //	data2csv_INT16(&logger, "gamma_inv", &gamma_inv, 1); /*<<<<<<<<<<<<<<<<<<<<<*/
@@ -426,9 +434,9 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order,
 	lpc_mburg_float(in_float, n, out_float, order, lambda_float, scale);
 	gc2gc_float(out_float, m, -1, gamma_float); /* cepstral transformation from -1 (pure LPC) to gamma */
 
-	output[0] = round16(out_float[0] * CON16 * OUT_FIRST_NRM); /* use different scaling for first coefficient */
-	outI32[0] = round32(out_float[0] * CON32 * OUT_FIRST_NRM); /* use different scaling for first coefficient */
-	for (i = order - 1; i >= 1; i--) {
+//	output[0] = round16(out_float[0] * CON16 * OUT_FIRST_NRM); /* use different scaling for first coefficient */
+//	outI32[0] = round32(out_float[0] * CON32 * OUT_FIRST_NRM); /* use different scaling for first coefficient */
+	for (i = order - 1; i >= 0; i--) {
 		output[i] = round16(out_float[i] * CON16 * OUT_NRM);
 		outI32[i] = round32(out_float[i] * CON32 * OUT_NRM);
 	}
@@ -504,23 +512,25 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order,
 		/* Get temporary psi-signals in spectral domain */
 		for (i = 0; i <= n / 2; i++) {
 			FLOAT64 a = lpGx[i] * lpGx[i] + lpGy[i] * lpGy[i]; //<< max ~1000, min ~0
-			INT32 aI32 = dlmx_add32(dlmx_mul16_32(lpGxI16[i], lpGxI16[i]),
-					dlmx_mul16_32(lpGyI16[i], lpGyI16[i]));
+			INT32 aI32 = dlmx_shl32(dlmx_add32(dlmx_mul16_32(lpGxI16[i], lpGxI16[i]),
+					dlmx_mul16_32(lpGyI16[i], lpGyI16[i])), A_SHL);
 			INT32 aInvI32 = dlmx_div32(INT32_MAX, aI32, A_INV_SHL);
-//#if LOG_ACTIVE
-//			data2csv_FLOAT64(&logger, "a", &a, 1); /*<<<<<<<<<<<<<<<<<<<<<*/
-//			data2csv_INT32(&logger, "aI32", &aI32, 1); /*<<<<<<<<<<<<<<<<<<<<<*/
-//			data2csv_INT32(&logger, "aInvI32", &aInvI32, 1); /*<<<<<<<<<<<<<<<<<<<<<*/
-//#endif
+//			aI32 = round32(a * CON32 * 0.15);//FIXME: DEBUG!!!
+#if LOG_ACTIVE
+			data2csv_FLOAT64(&logger, "a", &a, 1); /*<<<<<<<<<<<<<<<<<<<<<*/
+			data2csv_INT32(&logger, "aI32", &aI32, 1); /*<<<<<<<<<<<<<<<<<<<<<*/
+			data2csv_INT32(&logger, "aInvI32", &aInvI32, 1); /*<<<<<<<<<<<<<<<<<<<<<*/
+#endif
 			FLOAT64 tmp1 = lpSx[i] / pow(a, 1. + 1. / gamma_float); //<< max ~60, min ~0
+//			INT32 tmp1_factor = pow_32(aI32, dlmx_shl32(tmp1_pow_exp_inv, SHL16TO32), TMP1_FACTOR_SHL);
+			INT32 tmp1_factor = calculate_tmp1_factor_inv(aI32, gamma, TMP1_FACTOR_SHL);
+			INT32 tmp1I32 = dlmx_mul32(tmp1_factor, lpSxI32[i]);
 
-			INT32 tmp1_factor = pow_32(aI32, dlmx_shl32(tmp1_pow_exp, SHL16TO32), TMP1_FACTOR_SHL);
-			INT32 tmp1I32 = dlmx_mul3216(tmp1_factor, lpSxI16[i]);
-//#if LOG_ACTIVE
-//			data2csv_FLOAT64(&logger, "tmp1", &tmp1, 1); /*<<<<<<<<<<<<<<<<<<<<<*/
-//			data2csv_INT32(&logger, "tmp1I32 factor", &tmp1_factor, 1); /*<<<<<<<<<<<<<<<<<<<<<*/
-//			data2csv_INT32(&logger, "tmp1I32", &tmp1I32, 1); /*<<<<<<<<<<<<<<<<<<<<<*/
-//#endif
+#if LOG_ACTIVE
+			data2csv_FLOAT64(&logger, "tmp1", &tmp1, 1); /*<<<<<<<<<<<<<<<<<<<<<*/
+			data2csv_INT32(&logger, "tmp1I32 factor", &tmp1_factor, 1); /*<<<<<<<<<<<<<<<<<<<<<*/
+			data2csv_INT32(&logger, "tmp1I32", &tmp1I32, 1); /*<<<<<<<<<<<<<<<<<<<<<*/
+#endif
 
 			lpPsiRx[i] = lpGx[i] * tmp1; //<<
 			lpPsiRxI16[i] = dlmx_mul3216(tmp1I32, lpGxI16[i]);
@@ -532,14 +542,10 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order,
 			lpPsiPyI16[i] = 0;
 
 			lpPsiQx[i] = (lpGx[i] * lpGx[i] - lpGy[i] * lpGy[i]) * tmp1 / a; //<<
-			lpPsiQxI16[i] = dlmx_rnd32(
-					dlmx_mul32(aInvI32,
-							dlmx_mul32(
-									dlmx_sub32(
-											dlmx_mul16_32(lpGxI16[i],
-													lpGxI16[i]),
-											dlmx_mul16_32(lpGyI16[i],
-													lpGyI16[i])), tmp1I32)));
+			INT32 intermRes = dlmx_sub32(dlmx_mul16_32(lpGxI16[i], lpGxI16[i]),
+					dlmx_mul16_32(lpGyI16[i], lpGyI16[i]));
+			intermRes = dlmx_mul32(intermRes, tmp1I32);
+			lpPsiQxI16[i] = dlmx_rnd32(dlmx_mul32(intermRes, aInvI32));
 #endif !FUNCTION_TEST /*-----------------------------------------------------------------------------------------------*/
 #if FUNCTION_TEST
 			printf("FUNCTION TESTING ACTIVE!\n");
