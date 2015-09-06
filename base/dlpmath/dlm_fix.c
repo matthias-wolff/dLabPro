@@ -162,13 +162,15 @@ INT16 dlmx_mul16(INT16 a,INT16 b){
  * @return   Product of a and b
  */
 INT32 dlmx_mul32(INT32 a,INT32 b){
-  return dlmx_add32(                                                           /* Sum over pratial products:            */
-    dlmx_add32(                                                                /*                                       */
-      dlmx_mul16_32(dlmx_rnd32(a),dlmx_rnd32(b)),                              /*  - High parts of a and b              */
-      dlmx_mul16_32(a,dlmx_rnd32(b))                                           /*  - Low part of a and high part of b   */
-    ),                                                                         /*                                       */
-    dlmx_mul16(dlmx_rnd32(a),b)                                                /*  - High part of a and low part of b   */
-  );                                                                           /*                                       */
+/* FIXME: this does not work! */
+//  return dlmx_add32(                                                           /* Sum over pratial products:            */
+//    dlmx_add32(                                                                /*                                       */
+//      dlmx_mul16_32(dlmx_rnd32(a),dlmx_rnd32(b)),                              /*  - High parts of a and b              */
+//      dlmx_mul16_32(a,dlmx_rnd32(b))                                           /*  - Low part of a and high part of b   */
+//    ),                                                                         /*                                       */
+//    dlmx_mul16(dlmx_rnd32(a),b)                                                /*  - High part of a and low part of b   */
+//  );                                                                           /*                                       */
+	return round32((FLOAT64) ((FLOAT64) a) * ((FLOAT64) b) / 2147483648.);
 }
 
 /* Multiply INT32*INT16->INT32
