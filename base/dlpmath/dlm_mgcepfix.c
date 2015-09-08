@@ -37,8 +37,9 @@
 #define OLD_FUNCTION_CALLS 0
 #define FUNCTION_TEST 0
 
-#define LOG_ACTIVE 1
+#define LOG_ACTIVE 0
 #define FIXED_POINT 0
+#define FLOATING_ACTIVE 0
 
 /* saves data for bachelor thesis evaluation */
 #if LOG_ACTIVE
@@ -160,11 +161,11 @@ INT16 log2_16(INT16 x) {
 	return round16((FLOAT64) log2(x)); /* TODO: fixed point */
 }
 
-INT16 pow_16(INT16 base, INT16 exp, INT8 shf) {
-	return round16((FLOAT64) pow(base/CON16, exp/CON16) * CON16 * pow(2, shf)); /* TODO: fixed point */
-}
+//INT16 pow_16(INT16 base, INT16 exp, INT8 shf) {
+//	return round16((FLOAT64) pow(base/CON16, exp/CON16) * CON16 * pow(2, shf)); /* TODO: fixed point */
+//}
 
-INT32 pow_32(INT32 base, INT32 exp, INT8 shf) {
+INT32 pow_32(INT32 base, INT32 exp, INT8 shf) { /* TODO: Add in/out scaling */
 	return round32(pow(((FLOAT64) base/CON32), ((FLOAT64)exp/CON32)) * CON32 * pow(2, shf)); /* TODO: fixed point */
 }
 
@@ -172,7 +173,7 @@ INT32 mul_32(INT32 a, INT32 b, INT8 shf) {
 	return round32( ((FLOAT64) a) * ((FLOAT64) b) * pow(2, shf) );
 }
 
-INT32 sqrt_32(INT32 x) {
+INT32 sqrt_32(INT32 x) { /* TODO: Add in/out scaling */
 	return round32((FLOAT64) sqrt((FLOAT64) x / CON32) * CON32);
 }
 
@@ -328,12 +329,13 @@ void dlm_mgcepfix_init(INT32 n, INT16 order, INT16 lambda) {
 	tempXI16 = dlp_malloc(n * sizeof(INT16));
 	tempYI16 = dlp_malloc(n * sizeof(INT16));
 
+#if FLOATING_ACTIVE
 	lpZo = (FLOAT64*) dlp_malloc((order - 1) * n * sizeof(FLOAT64));
 	lpZn = (FLOAT64*) dlp_malloc((n/2-1)*MIN(n,2*m+1)*sizeof(FLOAT64));
 	filter_freqt_fir_init_float(order, n, -lambda_float, lpZo, 1.);
 	filter_freqt_fir_init_float(n / 2, MIN(n, 2 * m + 1), lambda_float, lpZn,
 			2.);
-
+#endif
 	lpZoI32 = (INT32*) dlp_malloc((order - 1) * n * sizeof(INT32));
 	lpZnI32 = (INT32*) dlp_malloc((n/2-1)*MIN(n,2*m+1)*sizeof(INT32));
 	filter_freqt_fir_init_32(order, n, dlmx_neg16(lambda), lpZoI32, 0);
@@ -344,7 +346,7 @@ void dlm_mgcepfix_init(INT32 n, INT16 order, INT16 lambda) {
 //	data2csv_INT32(&logger, "lpZoI32", lpZoI32, (order - 1) * n);
 //	data2csv_INT32(&logger, "lpZnI32", lpZnI32, (n/2-1)*MIN(n,2*m+1));
 //#endif
-
+#if FLOATING_ACTIVE
 	lpSx = dlp_malloc(n * sizeof(double));
 	lpSy = dlp_malloc(n * sizeof(double));
 	lpGx = dlp_malloc(n * sizeof(double));
@@ -356,7 +358,7 @@ void dlm_mgcepfix_init(INT32 n, INT16 order, INT16 lambda) {
 	lpPsiPy = dlp_malloc(n * sizeof(double));
 	lpPsiQx = dlp_malloc(n * sizeof(double));
 	lpPsiQy = dlp_malloc(n * sizeof(double));
-
+#endif
 	lpH = (FLOAT64*) dlp_malloc(m * m * sizeof(FLOAT64));
 
 	/* fixed point buffer init */
@@ -403,6 +405,7 @@ void dlm_mgcepfix_free() {
 #if OLD_FUNCTION_CALLS
 	dlm_mgcep_free();
 #else
+#if FLOATING_ACTIVE
 	dlp_free(lpZo);
 	dlp_free(lpZn);
 	dlp_free(lpSx);
@@ -416,6 +419,7 @@ void dlm_mgcepfix_free() {
 	dlp_free(lpPsiQx);
 	dlp_free(lpPsiQy);
 	dlp_free(lpH);
+#endif
 	dlp_free(outI32);
 
 	/* free conversion buffers */
@@ -511,6 +515,7 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order,
 	INT32 k;
 	INT16 flag = 0;
 
+
 	/* variables from floating-point implementation */
 	FLOAT64 dd_float = 0.000001;
 	FLOAT64 ep_float = 0.;
@@ -541,24 +546,31 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order,
 	/*-----------------------------------------------------------------------*/
 	/* old floating-point implementation */
 	/* INT16 dlm_mgcep(FLOAT64* input, INT32 n, FLOAT64* output, INT16 order, FLOAT64 gamma, FLOAT64 lambda, FLOAT64 scale) */
-
+#if FLOATING_ACTIVE
 	for (i = 0; i < n; i++) {
 		in_float[i] = (FLOAT64) input[i] / CON16 * SIG_NRM;
 	}
-#if !FUNCTION_TEST
+#endif
+
 	/* Get input spectrum */
 	for (i = n - 1; i >= 0; i--) {
+#if FLOATING_ACTIVE
 		lpSx[i] = in_float[i]; //<<
 		lpSy[i] = 0.; //<<
+#endif
 		lpSxI16[i] = dlmx_shl16(input[i], -IN_SHR);
 		lpSyI16[i] = 0;
 	}
 
+#if FLOATING_ACTIVE
 	dlm_fft(lpSx, lpSy, n, FALSE); //<<
+#endif
 	dlmx_fft(fft_n_fwd_plan, lpSxI16, lpSyI16, FFT_SHR);
 
 	for (i = 0; i <= n / 2; i++) {
+#if FLOATING_ACTIVE
 		lpSx[i] = lpSx[i] * lpSx[i] + lpSy[i] * lpSy[i]; //<<
+#endif
 
 		lpSxI32[i] = dlmx_add32(dlmx_mul16_32(lpSxI16[i], lpSxI16[i]),
 				dlmx_mul16_32(lpSyI16[i], lpSyI16[i]));
@@ -585,9 +597,10 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order,
 //#endif
 
 	/* Init coefficients from input signal */
+#if FLOATING_ACTIVE
 	lpc_mburg_float(in_float, n, out_float, order, lambda_float, scale); //<<
 	gc2gc_float(out_float, m, -1, gamma_float); /* cepstral transformation from -1 (pure LPC) to gamma */ //<<
-
+#endif
 	// TODO: replace with fixed point functions
 	lpc_mburg_float(in_float, n, tempX, order, lambda_float, scale);
 	gc2gc_float(tempX, m, -1, gamma_float); /* cepstral transformation from -1 (pure LPC) to gamma */
@@ -607,14 +620,17 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order,
 
 	/* Improve coefficients iteratively */
 	for (j = 0; j < itr2 && !flag; j++) {
-
+#if FLOATING_ACTIVE
 		ep_float = out_float[0]; //<<
-		ep = outI32[0];
 		out_float[0] = 1.; //<<
+#endif
+		ep = outI32[0];
 //		output[0] = INT16_MAX; // TODO: maybe this needs scaling?
 		outI32[0] = INT32_MAX;
 		for (i = 1; i < order; i++) {
+#if FLOATING_ACTIVE
 			out_float[i] *= gamma_float; //<<
+#endif
 //			output[i] = dlmx_mul16(output[i], gamma); // this is just scaling
 			outI32[i] = dlmx_mul3216(outI32[i], gamma);
 		}
@@ -628,7 +644,9 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order,
 //		}
 
 		/* Mel- + spectral transform of coefficients */
+#if FLOATING_ACTIVE
 		filter_freqt_fir_float(out_float, order, lpGx, n, lpZo);//<<
+#endif
 		filter_freqt_fir_32(outI32, order, lpGxI32, n, lpZoI32, FREQT_SHL);
 		for (i = n - 1; i >= 0; i--) {
 			lpGxI16[i] = dlmx_rnd32(lpGxI32[i]);
@@ -639,10 +657,14 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order,
 //		data2csv_INT32(&logger, "GxI32 before FFT", lpGxI32, n); /*<<<<<<<<<<<<<<<<<<<<<*/
 //#endif
 		for (i = 0; i < n; i++) {
+#if FLOATING_ACTIVE
 			lpGy[i] = 0.; //<<
+#endif
 			lpGyI16[i] = 0;
 		}
+#if FLOATING_ACTIVE
 		dlm_fft(lpGx, lpGy, n, FALSE); //<<
+#endif
 		dlmx_fft(fft_freqt_plan, lpGxI16, lpGyI16, FFT_G_SHR); /* Most of the energy in the high Coefficients! */
 
 //#if LOG_ACTIVE
@@ -654,7 +676,9 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order,
 
 		/* Get temporary psi-signals in spectral domain */
 		for (i = 0; i <= n / 2; i++) {
+#if FLOATING_ACTIVE
 			FLOAT64 a = lpGx[i] * lpGx[i] + lpGy[i] * lpGy[i]; //<< max ~1000, min ~0
+#endif
 			INT32 aI32 = dlmx_shl32(dlmx_add32(dlmx_mul16_32(lpGxI16[i], lpGxI16[i]),
 					dlmx_mul16_32(lpGyI16[i], lpGyI16[i])), A_SHL);
 			INT32 aInvI32 = dlmx_div32(INT32_MAX, aI32, A_INV_SHL);
@@ -664,7 +688,9 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order,
 //			data2csv_INT32(&logger, "aI32", &aI32, 1); /*<<<<<<<<<<<<<<<<<<<<<*/
 //			data2csv_INT32(&logger, "aInvI32", &aInvI32, 1); /*<<<<<<<<<<<<<<<<<<<<<*/
 //#endif
+#if FLOATING_ACTIVE
 			FLOAT64 tmp1 = lpSx[i] / pow(a, 1. + 1. / gamma_float); //<< max ~60, min ~0
+#endif
 //			INT32 tmp1_factor = pow_32(aI32, dlmx_shl32(tmp1_pow_exp_inv, SHL16TO32), TMP1_FACTOR_SHL);
 			INT32 tmp1_factor = calculate_tmp1_factor_inv(aI32, gamma, TMP1_FACTOR_SHL);
 			INT32 tmp1I32 = dlmx_shl32(dlmx_mul32(tmp1_factor, lpSxI32[i]), TMP1_SHL);
@@ -676,23 +702,22 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order,
 //			data2csv_INT32(&logger, "tmp1I32 factor", &tmp1_factor, 1); /*<<<<<<<<<<<<<<<<<<<<<*/
 ////			data2csv_INT32(&logger, "tmp1I32", &tmp1I32, 1); /*<<<<<<<<<<<<<<<<<<<<<*/
 //#endif
-
+#if FLOATING_ACTIVE
 			lpPsiRx[i] = lpGx[i] * tmp1; //<<
-			lpPsiRxI32[i] = dlmx_mul3216(tmp1I32, lpGxI16[i]);
 			lpPsiRy[i] = lpGy[i] * tmp1; //<<
-			lpPsiRyI32[i] = dlmx_mul3216(tmp1I32, lpGyI16[i]);
-
 			lpPsiPx[i] = tmp1; //<<
-			lpPsiPxI32[i] = tmp1I32;
 			lpPsiPy[i] = 0.; //<<
-			lpPsiPyI32[i] = 0;
-
 			lpPsiQx[i] = (lpGx[i] * lpGx[i] - lpGy[i] * lpGy[i]) * tmp1 / a; //<<
+			lpPsiQy[i] = 2 * lpGx[i] * lpGy[i] * tmp1 / a; //<<
+#endif
+			lpPsiRxI32[i] = dlmx_mul3216(tmp1I32, lpGxI16[i]);
+			lpPsiRyI32[i] = dlmx_mul3216(tmp1I32, lpGyI16[i]);
+			lpPsiPxI32[i] = tmp1I32;
+			lpPsiPyI32[i] = 0;
 			INT32 intermRes = dlmx_sub32(dlmx_mul16_32(lpGxI16[i], lpGxI16[i]),
 					dlmx_mul16_32(lpGyI16[i], lpGyI16[i]));
 			intermRes = dlmx_mul32(intermRes, tmp1I32);
 			lpPsiQxI32[i] = dlmx_mul32(intermRes, aInvI32);
-			lpPsiQy[i] = 2 * lpGx[i] * lpGy[i] * tmp1 / a; //<<
 			lpPsiQyI32[i] = dlmx_shl32(dlmx_mul32(aInvI32, dlmx_mul32(dlmx_mul16_32(lpGxI16[i], lpGyI16[i]), tmp1I32)), 1);
 
 //#if LOG_ACTIVE
@@ -701,17 +726,19 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order,
 //#endif
 
 			if (i > 0 && i < n / 2) { /* = not executed in the last iteration */
+#if FLOATING_ACTIVE
 				lpPsiRx[n - i] = lpPsiRx[i]; //<<
-				lpPsiRxI32[n - i] = lpPsiRxI16[i];
 				lpPsiRy[n - i] = -lpPsiRy[i]; //<<
-				lpPsiRyI32[n - i] = dlmx_neg32(lpPsiRyI32[i]);
 				lpPsiPx[n - i] = lpPsiPx[i]; //<<
-				lpPsiPxI32[n - i] = lpPsiPxI32[i];
 				lpPsiPy[n - i] = 0.; //<<
-				lpPsiPyI32[n - i] = 0;
 				lpPsiQx[n - i] = lpPsiQx[i]; //<<
-				lpPsiQxI32[n - i] = lpPsiQxI32[i];
 				lpPsiQy[n - i] = -lpPsiQy[i]; //<<
+#endif
+				lpPsiRxI32[n - i] = lpPsiRxI16[i];
+				lpPsiRyI32[n - i] = dlmx_neg32(lpPsiRyI32[i]);
+				lpPsiPxI32[n - i] = lpPsiPxI32[i];
+				lpPsiPyI32[n - i] = 0;
+				lpPsiQxI32[n - i] = lpPsiQxI32[i];
 				lpPsiQyI32[n - i] = dlmx_neg32(lpPsiQyI32[i]);
 			}
 		}
@@ -743,9 +770,11 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order,
 //#endif
 
 		/* Transform psi-signals in time domain */
+#if FLOATING_ACTIVE
 		dlm_fft(lpPsiPx, lpPsiPy, n, TRUE); //<< /* input real n/2+1, output real n/2 */
 		dlm_fft(lpPsiRx, lpPsiRy, n, TRUE); //<< /* input n/2+1, output real n/2 */
 		dlm_fft(lpPsiQx, lpPsiQy, n, TRUE); //<< /* input n/2+1, output real n/2 */
+#endif
 		dlmx_fft(fft_n_inv_plan, lpPsiPxI16, lpPsiPyI16, IFFT_PSI_P_SHR);
 		dlmx_fft(fft_n_inv_plan, lpPsiQxI16, lpPsiQyI16, IFFT_PSI_Q_SHR);
 		dlmx_fft(fft_n_inv_plan, lpPsiRxI16, lpPsiRyI16, IFFT_PSI_R_SHR);
@@ -758,11 +787,11 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order,
 
 		/* Inverse Mel-transform of psi-signals */
 		if (lambda != 0) {
-
+#if FLOATING_ACTIVE
 			filter_freqt_fir_float(lpPsiPx, n / 2, lpPsiPy, MIN(n, m), lpZn); //<<
 			filter_freqt_fir_float(lpPsiQx, n / 2, lpPsiQy, MIN(n, 2 * m + 1), lpZn); //<<
 			filter_freqt_fir_float(lpPsiRx, n / 2, lpPsiRy, MIN(n, m + 1), lpZn); //<<
-
+#endif
 			for (i = 0; i < n/2; i++) {
 				lpPsiPxI32[i] = dlmx_shl32(lpPsiPxI16[i], SHL16TO32);
 				lpPsiQxI32[i] = dlmx_shl32(lpPsiQxI16[i], SHL16TO32);
@@ -781,15 +810,21 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order,
 //#endif
 
 			for (i = 1; i <= m; i++) {
+#if FLOATING_ACTIVE
 				lpPsiRy[i] *= .5; //<<
+#endif
 				lpPsiRyI32[i] = dlmx_shl32(lpPsiRyI32[i], -1); /* divide by 2 */
 			}
 			for (i = 1; i < m; i++) {
+#if FLOATING_ACTIVE
 				lpPsiPy[i] *= .5; //<<
+#endif
 				lpPsiPyI32[i] = dlmx_shl32(lpPsiPyI32[i], -1); /* divide by 2 */
 			}
 			for (i = 1; i <= 2 * m; i++) {
+#if FLOATING_ACTIVE
 				lpPsiQy[i] *= .5 * (1. + gamma_float); //<<
+#endif
 				lpPsiQyI32[i] = dlmx_shl32(lpPsiQyI32[i], -1); /* divide by 2 */
 				lpPsiQyI32[i] = dlmx_mul3216(lpPsiQyI32[i],
 										dlmx_add16(dlmx_shl16(INT16_MAX, -GAMMA_ADD_SHR),
@@ -799,15 +834,21 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order,
 
 		} else {
 			for (i = 1; i <= m; i++) {
+#if FLOATING_ACTIVE
 				lpPsiRy[i] = lpPsiRx[i] / (FLOAT64) n; //<<
+#endif
 				lpPsiRyI32[i] = dlmx_shl32(lpPsiRxI32[i], dlmx_neg16(log2_16(n)));
 			}
 			for (i = 1; i < m; i++) {
+#if FLOATING_ACTIVE
 				lpPsiPy[i] = lpPsiPx[i] / (FLOAT64) n; //<<
+#endif
 				lpPsiPyI32[i] = dlmx_shl32(lpPsiPxI32[i], dlmx_neg16(log2_16(n)));
 			}
 			for (i = 1; i <= 2 * m; i++) {
+#if FLOATING_ACTIVE
 				lpPsiQy[i] = lpPsiQx[i] * (1. + gamma_float) / (FLOAT64) n; //<<
+#endif
 				lpPsiQyI32[i] = dlmx_mul3216(lpPsiQxI32[i],
 						dlmx_add16(dlmx_shl16(INT16_MAX, -GAMMA_ADD_SHR),
 								dlmx_shl16(gamma, -GAMMA_ADD_SHR)));
@@ -824,7 +865,9 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order,
 		/* Combine to H matrix and invert it */
 		for (i = 0; i < m; i++) {
 			for (k = 0; k <= i; k++) {
+#if FLOATING_ACTIVE
 				lpH[i + k * m] = lpPsiPy[abs(k - i)] + lpPsiQy[k + i + 2]; //<<
+#endif
 				lpHI32[i + k * m] = dlmx_add32(dlmx_shl32(lpPsiPyI32[abs(k - i)], -1), dlmx_shl32(lpPsiQyI32[k + i + 2], -1));
 			}
 		}
@@ -833,8 +876,9 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order,
 //		data2csv_FLOAT64(&logger, "MATRIX lpH", lpH, m*m); /*<<<<<<<<<<<<<<<<<<<<<*/
 //		data2csv_INT32(&logger, "MATRIX lpHI32", lpHI32, m*m); /*<<<<<<<<<<<<<<<<<<<<<*/
 //#endif
-
+#if FLOATING_ACTIVE
 		matinv_float(lpH, m); //<<
+#endif
 		matinv_32(lpHI32, m, MAT_INV_SHL);
 
 //#if LOG_ACTIVE
@@ -844,17 +888,25 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order,
 
 		/* Update coefficients from H matrix */
 		for (i = 0; i < m; i++) {
+#if FLOATING_ACTIVE
 			FLOAT64 s = 0.; //<<
+#endif
 			INT32 sI32 = 0;
 			for (k = 0; k <= i; k++) {
+#if FLOATING_ACTIVE
 				s += lpH[i + k * m] * lpPsiRy[k + 1]; //<<
+#endif
 				sI32 = dlmx_add32(sI32, dlmx_mul32(lpHI32[i + k * m], lpPsiRyI32[k + 1]));
 			}
 			for (; k < m; k++) {
+#if FLOATING_ACTIVE
 				s += lpH[k + i * m] * lpPsiRy[k + 1]; //<<
+#endif
 				sI32 = dlmx_add32(sI32, dlmx_mul32(lpHI32[k + i * m], lpPsiRyI32[k + 1]));
 			}
+#if FLOATING_ACTIVE
 			out_float[i + 1] = out_float[i + 1] / gamma_float + s; //<<
+#endif
 			outI32[i + 1] = dlmx_add32(dlmx_mul3216(outI32[i + 1], gamma_inv), sI32);
 //			output[i + 1] = dlmx_rnd32(outI32[i + 1]); // TODO remove for 32-bit only
 #if LOG_ACTIVE
@@ -874,17 +926,22 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order,
 //#endif
 
 		/* Update normalization coefficient */
+#if FLOATING_ACTIVE
 		out_float[0] = lpPsiRy[0]; //<<
+#endif
 		outI32[0] = lpPsiRyI32[0];
 		for (i = 1; i <= m; i++) {
+#if FLOATING_ACTIVE
 			out_float[0] += gamma_float * out_float[i] * lpPsiRy[i]; //<<
-			outI32[0] = dlmx_add32(outI32[0], // TEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#endif
+			outI32[0] = dlmx_add32(outI32[0],
 					dlmx_mul32(dlmx_mul16_32(INT16_MAX, gamma),
 							dlmx_mul32(outI32[i], lpPsiRyI32[i])));
 //			output[0] = dlmx_rnd32(outI32[0]);
 		}
-
+#if FLOATING_ACTIVE
 		out_float[0] = sqrt(out_float[0]) * scale; //<<
+#endif
 		outI32[0] = sqrt_32(outI32[0]); /* No scale needed!*/
 //		output[0] = dlmx_rnd32(outI32[0]);
 
@@ -893,9 +950,11 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order,
 //		data2csv_INT32(&logger, "outI32[0] after update", &outI32[0], 1);
 //#endif
 
+#if FLOATING_ACTIVE
 		/* DEBUG: see if break condition works*/
-//		ep = round32((FLOAT64) ep_float * CON32 * 0.00001); //xxx
-//		outI32[0] = round32((FLOAT64) out_float[0] * CON32 * 0.00001); //xxx
+		ep = round32((FLOAT64) ep_float * CON32 * 0.00001); //xxx
+		outI32[0] = round32((FLOAT64) out_float[0] * CON32 * 0.00001); //xxx
+#endif
 
 		//#if LOG_ACTIVE
 		//		data2csv_FLOAT64(&logger, "out_float[0] after update", &out_float[0], 1); /*<<<<<<<<<<<<<<<<<<<<<*/
@@ -922,7 +981,9 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order,
 
 
 	/* Denormalize coefficients */
+#if FLOATING_ACTIVE
 	ignorm_float(out_float, m, gamma_float); //<<
+#endif
 	ignorm_32(outI32, m, gamma, IGNORM_FIRST_SHL, IGNORM_IN_SHL, IGNORM_OUT_SHL);
 
 	/* end - old floating-point implementation */
@@ -937,7 +998,7 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order,
 
 	for (i = 0; i < order; i++) {
 //		output[i] = round16(out_float[i] * CON16 / RES_NRM);
-		output[i] = dlmx_rnd32(dlmx_shl32(outI32, RES_SHL));
+		output[i] = dlmx_rnd32(dlmx_shl32(outI32[i], RES_SHL));
 	}
 
 	return ret;
