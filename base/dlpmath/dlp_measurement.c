@@ -32,7 +32,7 @@ void data2csv_INT16(DataLog* log, const char* id, INT16* input, INT32 dim) {
 	INT32 i;
 	fprintf(log->file, "#<---I16---%s--->\n", id);
 	for (i = 0; i < dim; i++) {
-		fprintf(log->file, "%d,%08x,%d\n", log->line++, input[i], input[i]);
+		fprintf(log->file, "%d,%08x,%d\n", i, input[i], input[i]);
 	}
 }
 
@@ -44,7 +44,7 @@ void data2csv_INT32(DataLog* log, const char* id, INT32* input, INT32 dim) {
 	INT32 i;
 	fprintf(log->file, "#<---I32---%s--->\n", id);
 	for (i = 0; i < dim; i++) {
-		fprintf(log->file, "%d,%08x,%d\n", log->line++, input[i], input[i]);
+		fprintf(log->file, "%d,%08x,%d\n", i, input[i], input[i]);
 	}
 }
 
@@ -52,7 +52,7 @@ void data2csv_FLOAT64(DataLog*log, const char* id, FLOAT64* input, INT32 dim) {
 	INT32 i;
 	fprintf(log->file, "#<---F64---%s--->\n", id);
 	for (i = 0; i < dim; i++) {
-		fprintf(log->file, "%d,%016llx,%.11g\n", log->line++, input[i], input[i]);
+		fprintf(log->file, "%d,%016llx,%.11g\n", i, input[i], input[i]);
 	}
 }
 
@@ -77,7 +77,7 @@ void data2csv_init(DataLog* log) {
 		fclose(hashFile);
 	}
 
-	log->line = 0;
+//	log->line = 0;
 
 //	fprintf(file, "sep=,\n");
 //	fprintf(log->file, "line,data\n");
