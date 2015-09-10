@@ -614,7 +614,7 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order, INT16 gamm
 		out_float[0] = 1.; //<<
 #endif
 		epI32 = outI32[0];
-//		output[0] = INT16_MAX; // TODO: maybe this needs scaling?
+//		output[0] = INT16_MAX;
 		outI32[0] = INT32_MAX;
 		for (i = 1; i < order; i++) {
 #if FLOATING_ACTIVE
