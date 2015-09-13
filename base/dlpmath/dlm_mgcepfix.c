@@ -33,7 +33,7 @@
 #include "dlp_base.h"
 #include "dlp_math.h"
 
-#define LOG_ACTIVE 1
+#define LOG_ACTIVE 0
 #define FLOATING_ACTIVE 0
 
 /* saves data for bachelor thesis evaluation */
@@ -97,7 +97,7 @@ struct dlmx_fft *fft_n_fwd_plan, *fft_freqt_plan, *fft_n_inv_plan;
 
 /* Shifts */
 #define SIG_SHL 0
-#define RES_SHL 0
+#define RES_SHL 0	/* compare output range of floating point implementation with fixed point implementation to set this value */
 #define DD_INV_SHL 6
 #define IN_SHR 0 	/* input scaling */
 #define FFT_SHR 5
@@ -537,7 +537,8 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order, INT16 gamm
 	INT32 i;
 
 	INT16 itr1 = 2;
-	INT16 itr2 = 30;
+//	INT16 itr2 = 30;
+	INT16 itr2 = 6; /* FIXME: caution! set for debugging to very low value! */
 	INT16 m = order - 1;
 	INT32 j;
 	INT32 k;
