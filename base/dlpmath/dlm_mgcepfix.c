@@ -33,7 +33,7 @@
 #include "dlp_base.h"
 #include "dlp_math.h"
 
-#define LOG_ACTIVE 0
+#define LOG_ACTIVE 1
 #define FLOATING_ACTIVE 0
 
 /* saves data for bachelor thesis evaluation */
@@ -63,7 +63,7 @@ FLOAT64 *in_float, *out_float;
 #endif
 
 /* temporary buffers */
-FLOAT64 *tempX, *tempY, *tempZ;
+FLOAT64 *tempX, *tempY;
 INT32 *tempXI32, *tempYI32;
 //INT16 *tempXI16, *tempYI16;
 
@@ -180,14 +180,15 @@ INT32 calculate_tmp1_factor_inv(INT32 a, INT16 gamma, INT8 shf) {
 
 void matinv_32(INT32 *A, INT32 n, INT8 shf) {
 	INT32 i;
+	FLOAT64 *cin = (FLOAT64*) dlp_malloc(n * n * sizeof(FLOAT64));
 	for (i = 0; i < n * n; i++) {
-		tempX[i] = (FLOAT64) A[i] / CON32;
+		cin[i] = (FLOAT64) A[i] / CON32;
 	}
-	matinv_float(tempX, n);
+	matinv_float(cin, n);
 	for (i = 0; i < n * n; i++) {
-		A[i] = round32(tempX[i] * CON32 * pow(2, shf));
-
+		A[i] = round32(cin[i] * CON32 * pow(2, shf));
 	}
+	dlp_free(cin);
 }
 
 /* LPC parameter estimation via Burg method
@@ -202,13 +203,17 @@ void matinv_32(INT32 *A, INT32 n, INT8 shf) {
  */
 char lpc_mburg_32(INT32* samples, INT32 n, INT32* a, INT16 p, INT16 lambda, INT8 scale_shf) {
 	INT32 i;
+	FLOAT64 *cin = (FLOAT64*) dlp_malloc(n * sizeof(FLOAT64));
+	FLOAT64 *cout = (FLOAT64*) dlp_malloc(p * sizeof(FLOAT64));
 	for (i = 0; i < n; i++) {
-		tempX[i] = (FLOAT64) samples[i] / CON32;
+		cin[i] = (FLOAT64) samples[i] / CON32;
 	}
-	char res = lpc_mburg_float(tempX, n, tempY, p, ((FLOAT64) lambda / CON16), pow(2, scale_shf));
+	char res = lpc_mburg_float(cin, n, cout, p, ((FLOAT64) lambda / CON16), pow(2, scale_shf));
 	for (i = 0; i < p; i++) {
-		a[i] = round32(tempY[i] * CON32);
+		a[i] = round32(cout[i] * CON32);
 	}
+	dlp_free(cin);
+	dlp_free(cout);
 	return res;
 }
 
@@ -224,13 +229,15 @@ char lpc_mburg_32(INT32* samples, INT32 n, INT32* a, INT16 p, INT16 lambda, INT8
  */
 void gc2gc_32(INT32 *c, const INT32 m, const INT32 g1, const INT32 g2) {
 	INT32 i;
-	for (i = 0; i < m; i++) {
-		tempX[i] = (FLOAT64) c[i] / CON32;
+	FLOAT64 *cin = (FLOAT64*) dlp_malloc((m+1) * sizeof(FLOAT64));
+	for (i = 0; i <= m; i++) {
+		cin[i] = (FLOAT64) c[i] / CON32;
 	}
-	gc2gc_float(tempX, m, (FLOAT64) g1/CON32, (FLOAT64) g2/CON32);
-	for (i = 0; i < m; i++) {
-		c[i] = round32(tempX[i] * CON32);
+	gc2gc_float(cin, m, (FLOAT64) g1/CON32, (FLOAT64) g2/CON32);
+	for (i = 0; i <= m; i++) {
+		c[i] = round32(cin[i] * CON32);
 	}
+	dlp_free(cin);
 }
 
 /* Inverse gain normalization.
@@ -249,17 +256,19 @@ void gc2gc_32(INT32 *c, const INT32 m, const INT32 g1, const INT32 g2) {
  */
 void ignorm_32(INT32 *c, INT32 m, const INT16 g, INT8 first_shf, INT8 in_shf, INT8 out_shf) {
 	INT32 i;
-	tempX[0] = ((FLOAT64) c[0] / CON32 * pow(2, first_shf));
-	for(i = 0; i < m; i++) {
+	FLOAT64 *cin = (FLOAT64*) dlp_malloc((m+1) * sizeof(FLOAT64));
+	cin[0] = ((FLOAT64) c[0] / CON32 * pow(2, first_shf));
+	for(i = 0; i <= m; i++) {
 		if(i > 0) {
-			tempX[i] = ((FLOAT64) c[i] / CON32);
+			cin[i] = ((FLOAT64) c[i] / CON32);
 		}
-		tempX[i] *= pow(2, in_shf);
+		cin[i] *= pow(2, in_shf);
 	}
-	ignorm_float(tempX, m, ((FLOAT64) g / CON16));
-	for (i = 0; i < m; i++) {
-		c[i] = round32((FLOAT64) tempX[i] * CON32 * pow(2, out_shf));
+	ignorm_float(cin, m, ((FLOAT64) g / CON16));
+	for (i = 0; i <= m; i++) {
+		c[i] = round32((FLOAT64) cin[i] * CON32 * pow(2, out_shf));
 	}
+	dlp_free(cin);
 
 //	if (g != 0) { 					/* Check if first coef. is not zero >>*/
 //		FLOAT64 k = pow(c[0], g); /*   Get normalization factor         */
@@ -270,15 +279,28 @@ void ignorm_32(INT32 *c, INT32 m, const INT16 g, INT8 first_shf, INT8 in_shf, IN
 //		*c = log(*c); /* >> else update only first coef.    */
 }
 
+/* Frequency transformation filter initialization
+ *
+ * This function initializes file coefficients for frequency transformation
+ * of autocorrelation signal according the Mel-scale.
+ *
+ * @param n_in    Number of samples in input buffer
+ * @param n_out   Number of samples in output buffer
+ * @param lambda  Warping factor (only for compatibility)
+ * @param z       Filter coefficients
+ * @param norm    Output normalization factor
+ */
 void filter_freqt_fir_init_32(INT32 n_in, INT32 n_out, INT16 lambda, INT32 *z, INT8 norm_shf) {
 	INT32 i;
+	FLOAT64 *cin = (FLOAT64*) dlp_malloc(n_in * n_out * sizeof(FLOAT64));
 	for (i = 0; i < n_in * n_out; i++) {
-		tempX[i] = (FLOAT64) z[i] / CON32;
+		cin[i] = (FLOAT64) z[i] / CON32;
 	}
-	filter_freqt_fir_init_float(n_in, n_out, ((FLOAT64) lambda / CON16), tempX, ((FLOAT64) pow(2, norm_shf)));
+	filter_freqt_fir_init_float(n_in, n_out, ((FLOAT64) lambda / CON16), cin, ((FLOAT64) pow(2, norm_shf)));
 	for (i = 0; i < n_in * n_out; i++) {
-		z[i] = round32(tempX[i] * CON32);
+		z[i] = round32(cin[i] * CON32);
 	}
+	dlp_free(cin);
 }
 
 /* Frequency transformation filter
@@ -295,18 +317,24 @@ void filter_freqt_fir_init_32(INT32 n_in, INT32 n_out, INT16 lambda, INT32 *z, I
  */
 void filter_freqt_fir_32(INT32* in, INT32 n_in, INT32* out, INT32 n_out, INT32 *z, INT8 shf) {
 	INT32 i, j;
+	FLOAT64 *cin = (FLOAT64*) dlp_malloc(n_in * sizeof(FLOAT64));
+	FLOAT64 *cout = (FLOAT64*) dlp_malloc(n_out * sizeof(FLOAT64));
+	FLOAT64 *ccof = (FLOAT64*) dlp_malloc(n_in * n_out * sizeof(FLOAT64));
 	for (i = 0; i < n_in; i++) {
-		tempX[i] = (FLOAT64) in[i] / CON32;
+		cin[i] = (FLOAT64) in[i] / CON32;
 		for(j = 0; j < n_out; j++) {
-			tempZ[i*n_out + j] = (FLOAT64) z[i*n_out + j] / CON32;
+			ccof[i*n_out + j] = (FLOAT64) z[i*n_out + j] / CON32;
 		}
 	}
 
-	filter_freqt_fir_float(tempX, n_in, tempY, n_out, tempZ);
+	filter_freqt_fir_float(cin, n_in, cout, n_out, ccof);
 
 	for (i = 0; i < n_out; i++) {
-		out[i] = round32(tempY[i] * CON32 * pow(2, shf));
+		out[i] = round32(cout[i] * CON32 * pow(2, shf));
 	}
+	dlp_free(cin);
+	dlp_free(cout);
+	dlp_free(ccof);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -323,21 +351,19 @@ void dlm_mgcepfix_init(INT32 n, INT16 order, INT16 lambda) {
 	data2csv_init(&logger);
 #endif
 
-	/* old floating-point implementation */
-	FLOAT64 lambda_float = (FLOAT64) lambda / 32767.;
-
 	INT16 m = order - 1;
 
 	/* temporary buffers */
 	tempX = dlp_malloc(n * n * sizeof(FLOAT64));
 	tempY = dlp_malloc(n * n * sizeof(FLOAT64));
-	tempZ = dlp_malloc(n * n * sizeof(FLOAT64));
 	tempXI32 = dlp_malloc(n * sizeof(INT32));
 	tempYI32 = dlp_malloc(n * sizeof(INT32));
 //	tempXI16 = dlp_malloc(n * sizeof(INT16));
 //	tempYI16 = dlp_malloc(n * sizeof(INT16));
 
 #if FLOATING_ACTIVE
+	/* old floating-point implementation */
+	FLOAT64 lambda_float = (FLOAT64) lambda / 32767.;
 	lpZo = (FLOAT64*) dlp_malloc((order - 1) * n * sizeof(FLOAT64));
 	lpZn = (FLOAT64*) dlp_malloc((n/2-1)*MIN(n,2*m+1)*sizeof(FLOAT64));
 	filter_freqt_fir_init_float(order, n, -lambda_float, lpZo, 1.);
@@ -433,7 +459,6 @@ void dlm_mgcepfix_free() {
 	/* free temporary buffers */
 	dlp_free(tempX);
 	dlp_free(tempY);
-	dlp_free(tempZ);
 	dlp_free(tempXI32);
 	dlp_free(tempYI32);
 //	dlp_free(tempXI16);
@@ -1000,13 +1025,13 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order, INT16 gamm
 	ret = flag;
 	/*-----------------------------------------------------------------------*/
 
-//#if LOG_ACTIVE /*<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<*/
-//	data2csv_INT32(&logger, "Cepstrum", outI32, order);
-//#if FLOATING_ACTIVE
-//	data2csv_FLOAT64(&logger, "Cepstrum", out_float, order);
-//#endif
-//	data2csv_INT32(&logger, "j", &j, 1);
-//#endif /*<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<*/
+#if LOG_ACTIVE /*<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<*/
+	data2csv_INT32(&logger, "Cepstrum", outI32, order);
+#if FLOATING_ACTIVE
+	data2csv_FLOAT64(&logger, "Cepstrum", out_float, order);
+#endif
+	data2csv_INT32(&logger, "j", &j, 1);
+#endif /*<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<*/
 
 	for (i = 0; i < order; i++) {
 //		output[i] = round16(out_float[i] * CON16 / RES_NRM);
