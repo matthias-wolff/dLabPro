@@ -462,6 +462,7 @@ INT16 dlm_mgcep(FLOAT64* input, INT32 n, FLOAT64* output, INT16 order, FLOAT64 g
     output[0]=sqrt(output[0])*scale;
 
     if(j>itr1 && (ep-output[0])/output[0]<dd) flag=1;
+
   }
 
   /* Denormalize coefficients */

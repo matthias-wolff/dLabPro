@@ -99,7 +99,6 @@ struct dlmx_fft *fft_n_fwd_plan, *fft_freqt_plan, *fft_n_inv_plan;
 #define SIG_SHL 0
 #define RES_SHL 0	/* compare output range of floating point implementation with fixed point implementation to set this value */
 #define DD_INV_SHL 6
-#define IN_SHR 0 	/* input scaling */
 #define FFT_SHR 5
 #define FIRST_SHL -13
 #define GC2GC_SHL -2	/* First component overflows! */
@@ -583,7 +582,7 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order, INT16 gamm
 		lpSx[i] = in_float[i]; //<<
 		lpSy[i] = 0.; //<<
 #endif
-		lpSxI16[i] = dlmx_shl16(input[i], -IN_SHR);
+		lpSxI16[i] = input[i];
 		lpSyI16[i] = 0;
 	}
 
