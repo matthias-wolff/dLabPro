@@ -33,12 +33,12 @@
 #include "dlp_base.h"
 #include "dlp_math.h"
 
-#define LOG_ACTIVE 0
-#define FLOATING_ACTIVE 0
+#define LOG_ACTIVE 1
+#define FLOATING_ACTIVE 1
 
 /* saves data for bachelor thesis evaluation */
 #if LOG_ACTIVE
-DataLog logger = { .file_path = "mgcepfix_log.csv" };
+DataLog logger = { .file_path = "mgcepfix_log.csv" }; /* init struct for datalogger */
 #endif
 
 /* functions from floating-point implementation */
