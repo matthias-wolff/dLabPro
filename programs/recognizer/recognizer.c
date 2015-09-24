@@ -761,6 +761,8 @@ INT16 online(struct recosig *lpSig)
   INT32        nColSigBufPos=0;
 /*  THREADHANDLE lpCmdThread;*/
 
+  nFrame=nLastActive=0;
+
   if(!lpSig){ /* ----- online ----- */
 
 #ifndef __USE_PORTAUDIO
