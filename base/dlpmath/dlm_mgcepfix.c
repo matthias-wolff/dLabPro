@@ -33,7 +33,7 @@
 #include "dlp_base.h"
 #include "dlp_math.h"
 
-#define LOG_ACTIVE 0
+#define LOG_ACTIVE 1
 #define FLOATING_ACTIVE 0
 
 /* saves data for bachelor thesis evaluation */
@@ -98,7 +98,7 @@ struct dlmx_fft *fft_n_fwd_plan, *fft_freqt_plan, *fft_n_inv_plan;
 #endif
 
 /* Shifts */
-#define SIG_SHL 0
+#define SIG_SHL 1
 #define RES_SHL 0	/* compare output range of floating point implementation with fixed point implementation to set this value */
 #define DD_INV_SHL 6
 #define FFT_IN_SHR 5
@@ -583,11 +583,19 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order, INT16 gamm
 //	data2csv_INT16(&logger, "tmp1_pow_exp", &tmp1_pow_exp, 1);
 //#endif /*<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<*/
 
-#if FLOATING_ACTIVE
 	for (i = 0; i < n; i++) {
+#if FLOATING_ACTIVE
 		in_float[i] = (FLOAT64) input[i] / CON16 * SIG_NRM;
-	}
 #endif
+		input[i] = dlm_shl16(input[i], SIG_SHL);	/* scale input */
+	}
+
+#if LOG_ACTIVE /*<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<*/
+#if FLOATING_ACTIVE
+	data2csv_FLOAT64(&logger, "SIG input", in_float, n);
+#endif
+	data2csv_INT16(&logger, "SIG input", input, n);
+#endif /*<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<*/
 
 	/* Get input spectrum */
 	for (i = n - 1; i >= 0; i--) {
@@ -630,7 +638,7 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order, INT16 gamm
 	FLOAT64 *inTemp = (FLOAT64*) dlp_malloc(n * sizeof(FLOAT64));
 	FLOAT64 *outTemp = (FLOAT64*) dlp_malloc(order * sizeof(FLOAT64));
 	for (i = 0; i < n; i++) {
-		inTemp[i] = (FLOAT64) input[i] / CON16 * pow(2, SIG_SHL);
+		inTemp[i] = (FLOAT64) input[i] / CON16;
 	}
 	lpc_mburg_float(inTemp, n, outTemp, order, lambda_float, scale);
 	gc2gc_float(outTemp, m, -1, gamma_float); /* cepstral transformation from -1 (pure LPC) to gamma */
