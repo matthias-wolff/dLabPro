@@ -101,7 +101,7 @@ struct dlmx_fft *fft_n_fwd_plan, *fft_freqt_plan, *fft_n_inv_plan;
 #define SIG_SHL 0
 #define RES_SHL 0	/* compare output range of floating point implementation with fixed point implementation to set this value */
 #define DD_INV_SHL 6
-#define FFT_SHR 5
+#define FFT_IN_SHR 5
 #define FIRST_SHL -13
 #define GC2GC_SHL -2	/* First component overflows! */
 #define GC2GC_FIRST_SHL	((FIRST_SHL) + (GC2GC_SHL))	/* -> seperate norm for first coefficient */
@@ -306,12 +306,12 @@ void ignorm_32(INT32 *c, INT32 m, const INT16 g, INT8 first_shf, INT8 in_shf, IN
  */
 void filter_freqt_fir_init_32(INT32 n_in, INT32 n_out, INT16 lambda, INT32 *z, INT8 norm_shf) {
 	INT32 i;
-	FLOAT64 *cin = (FLOAT64*) dlp_malloc(n_in * n_out * sizeof(FLOAT64));
-	for (i = 0; i < n_in * n_out; i++) {
+	FLOAT64 *cin = (FLOAT64*) dlp_malloc(((n_in-1) * n_out) * sizeof(FLOAT64));
+	for (i = 0; i < ((n_in-1) * n_out); i++) {
 		cin[i] = (FLOAT64) z[i] / CON32;
 	}
 	filter_freqt_fir_init_float(n_in, n_out, ((FLOAT64) lambda / CON16), cin, ((FLOAT64) pow(2, norm_shf)));
-	for (i = 0; i < n_in * n_out; i++) {
+	for (i = 0; i < ((n_in-1) * n_out); i++) {
 		z[i] = round32(cin[i] * CON32);
 	}
 	dlp_free(cin);
@@ -331,10 +331,10 @@ void filter_freqt_fir_init_32(INT32 n_in, INT32 n_out, INT16 lambda, INT32 *z, I
  */
 void filter_freqt_fir_32(INT32* in, INT32 n_in, INT32* out, INT32 n_out, INT32 *z, INT8 shf) {
 	INT32 i, j;
-	FLOAT64 *cin = (FLOAT64*) dlp_malloc(n_in * sizeof(FLOAT64));
+	FLOAT64 *cin = (FLOAT64*) dlp_malloc((n_in-1) * sizeof(FLOAT64));
 	FLOAT64 *cout = (FLOAT64*) dlp_malloc(n_out * sizeof(FLOAT64));
-	FLOAT64 *ccof = (FLOAT64*) dlp_malloc(n_in * n_out * sizeof(FLOAT64));
-	for (i = 0; i < n_in; i++) {
+	FLOAT64 *ccof = (FLOAT64*) dlp_malloc((n_in-1) * n_out * sizeof(FLOAT64));
+	for (i = 0; i < (n_in-1); i++) {
 		cin[i] = (FLOAT64) in[i] / CON32;
 		for(j = 0; j < n_out; j++) {
 			ccof[i*n_out + j] = (FLOAT64) z[i*n_out + j] / CON32;
@@ -382,10 +382,10 @@ void dlm_mgcepfix_init(INT32 n, INT16 order, INT16 lambda) {
 	filter_freqt_fir_init_float(n / 2, MIN(n, 2 * m + 1), lambda_float, lpZn,
 			2.);
 #endif
-	lpZoI32 = (INT32*) dlp_malloc((order - 1) * n * sizeof(INT32));
-	lpZnI32 = (INT32*) dlp_malloc((n/2-1) * MIN(n, 2 * m + 1) * sizeof(INT32));
+	lpZoI32 = (INT32*) dlp_malloc(m * n * sizeof(INT32));
 	filter_freqt_fir_init_32(order, n, dlmx_neg16(lambda), lpZoI32, 0);
-	filter_freqt_fir_init_32(dlmx_shl32(n, -1), MIN(n, 2 * m + 1), lambda, lpZnI32, 0);
+	lpZnI32 = (INT32*) dlp_malloc(((n/2)-1) * MIN(n, ((2 * m) + 1)) * sizeof(INT32));
+	filter_freqt_fir_init_32(n/2, MIN(n, ((2 * m) + 1)), lambda, lpZnI32, 0);
 //#if LOG_ACTIVE
 //	data2csv_FLOAT64(&logger, "lpZo", lpZo, (order - 1) * n);
 //	data2csv_FLOAT64(&logger, "lpZn", lpZn, (n/2-1)*MIN(n,2*m+1));
@@ -602,7 +602,7 @@ INT16 dlm_mgcepfix(INT16* input, INT32 n, INT16* output, INT16 order, INT16 gamm
 #if FLOATING_ACTIVE
 	dlm_fft(lpSx, lpSy, n, FALSE); //<<
 #endif
-	dlmx_fft(fft_n_fwd_plan, lpSxI16, lpSyI16, FFT_SHR);
+	dlmx_fft(fft_n_fwd_plan, lpSxI16, lpSyI16, FFT_IN_SHR);
 
 	for (i = 0; i <= n / 2; i++) {
 #if FLOATING_ACTIVE
