@@ -759,7 +759,9 @@ INT16 online(struct recosig *lpSig)
   INT32        nWlen=0;
   FLOAT32     *lpColSigBuf=NULL;
   INT32        nColSigBufPos=0;
-  THREADHANDLE lpCmdThread;
+/*  THREADHANDLE lpCmdThread;*/
+
+  nFrame=nLastActive=0;
 
   if(!lpSig){ /* ----- online ----- */
 
@@ -796,7 +798,7 @@ INT16 online(struct recosig *lpSig)
     if(Pa_StartStream(stream)!=paNoError) return NOT_EXEC;
 #endif
 
-    if(rCfg.eIn==I_cmd) lpCmdThread=dlp_create_thread(cmdthread,NULL);
+    if(rCfg.eIn==I_cmd) /*lpCmdThread=*/dlp_create_thread(cmdthread,NULL);
   }
 
   /* Get feature dimension after delta calculation */
@@ -1172,7 +1174,6 @@ void processfile(struct recofile lpF){
   INT32 nC;
   FLOAT32 nNorm;
   const char *errstr="";
-  struct dlm_vad_state  lpVadState;
 
   rTmp.sSigFname=lpF.lpsFName;
   IF_NOK(CDlpFile_LibsndfileImport(rTmp.iFile, lpF.lpsFName, BASEINST(idSig), "wav")) goto err;

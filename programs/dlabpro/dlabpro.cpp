@@ -243,7 +243,6 @@ int main(int nArgc, char** lpArgv)
 #endif
 
   BOOL bTml = dlp_scancmdlineoption(&nArgc,lpArgv,"--trace-mem","",NULL,TRUE);
-  BOOL bContArchive = FALSE;                                                    // Continuing restored program archive
 
   // Register classes
   REGISTER_CLASS(CDlpObject);

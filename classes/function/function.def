@@ -965,7 +965,8 @@ METHOD:  quit
 SYNTAX:  ()
 COMMENT: Exits dLabPro session.
 /html MAN:
-  <p>This method terminates the dLabPro session immediately.</p>
+  <p>This method terminates the dLabPro session immediately.
+  If there is a number of the Stack, it is used as exit code of dLabPro.</p>
   @see leave
   @see return
 END_MAN
