@@ -315,6 +315,18 @@ INT16 dlm_gcep2gcep  (FLOAT64*, INT32, FLOAT64, FLOAT64*, INT32, FLOAT64);
 INT16 dlm_mgcep2mgcep(FLOAT64*, INT32, FLOAT64, FLOAT64, FLOAT64*, INT32, FLOAT64, FLOAT64);
 INT16 dlm_gc2gc      (FLOAT64*, INT32, FLOAT64, FLOAT64*, INT32, FLOAT64);
 
+/* Data Logging for Bachelor Thesis */
+typedef struct {
+	FILE *file;
+	INT32 line;
+	const char* file_path;
+} DataLog;
+void data2csv_init(DataLog* log);
+void data2csv_free(DataLog* log);
+void data2csv_INT16(DataLog* log, const char* id, INT16* input, INT32 dim);
+void data2csv_INT32(DataLog* log, const char* id, INT32* input, INT32 dim);
+void data2csv_FLOAT64(DataLog*log, const char* id, FLOAT64* input, INT32 dim);
+
 /* Functions - dlm_mgcep.c */
 void dlm_mgcep_init(INT32 n, INT16 order, FLOAT64 lambda);
 void dlm_mgcep_free();
