@@ -53,6 +53,7 @@ fvrtools.html fvrtools CFvrtools [
   fvrtools.html#mth Methods - [
     fvrtools.html#mth_-from_string "-from_string" "-from_string"
     fvrtools.html#mth_-is_fvr "-is_fvr" "-is_fvr"
+    fvrtools.html#mth_-synthesize "-synthesize" "-synthesize"
   ]
   fvrtools.html#cfn C/C++ API - [
     fvrtools.html#cfn_001 "CFvrtools_AddToSeq" "AddToSeq"
@@ -63,14 +64,16 @@ fvrtools.html fvrtools CFvrtools [
   ]
   fvrtools.html#err Errors - [
     fvrtools.html#err_FVRT_SEQSYNTAX "fvrtools1001" "FVRT_SEQSYNTAX"
-    fvrtools.html#err_FVRT_EXTRATIS "fvrtools1002" "FVRT_EXTRATIS"
-    fvrtools.html#err_FVRT_NOTIS "fvrtools1003" "FVRT_NOTIS"
+    fvrtools.html#err_FVRT_NOTFVR "fvrtools1002" "FVRT_NOTFVR"
+    fvrtools.html#err_FVRT_EXTRATIS "fvrtools1003" "FVRT_EXTRATIS"
+    fvrtools.html#err_FVRT_NOTIS "fvrtools1004" "FVRT_NOTIS"
   ]
 ]
 }} END_SITEMAP
 //{{ BEGIN_TOC
         top.TC1.InsertItem("-from_string","&lt;string src&gt; &lt;fst itFvr&gt; &lt;fvrtools this&gt; -from_string     Creates a (weighted) FVR from a string representation",27,27,0,"automatic/fvrtools.html#mth_-from_string","CONT",nCls);
         top.TC1.InsertItem("-is_fvr","&lt;int nU&gt; &lt;fst itFvr&gt; &lt;fvrtools this&gt; -is_fvr     Determines if the argument is an FVR",27,27,0,"automatic/fvrtools.html#mth_-is_fvr","CONT",nCls);
+        top.TC1.InsertItem("-synthesize","&lt;fst itDst&gt; &lt;fst itFvr&gt; &lt;fvrtools this&gt; -synthesize     Creates a list of all possible combinations from a FVR",27,27,0,"automatic/fvrtools.html#mth_-synthesize","CONT",nCls);
         nCfn = top.TC1.InsertItem("C/C++ API","",8,9,0,"automatic/fvrtools.html#cfn","CONT",nCls);
         top.TC1.InsertItem("CFvrtools_AddToSeq","void CFvrtools_AddToSeq(CFvrtools _this, const char* lpsTok, INT32 nU, CFst* itSeq)     Adds a token to a sequence FST.",32,32,0,"automatic/fvrtools.html#cfn_001","CONT",nCfn);
         top.TC1.InsertItem("CFvrtools_FindIs","FST_STYPE CFvrtools_FindIs(const char* lpsStr, BOOL bAdd, CFst* itFst)     Finds a string in an FST`s input symbol table.",32,32,0,"automatic/fvrtools.html#cfn_000","CONT",nCfn);
@@ -79,8 +82,9 @@ fvrtools.html fvrtools CFvrtools [
         top.TC1.InsertItem("CFvrtools_StrToSeq","INT16 CFvrtools_StrToSeq(CFvrtools _this, const char* lpsSrc, CFst* itSeq)     Creates a sequence FST from a wFVR string.",32,32,0,"automatic/fvrtools.html#cfn_003","CONT",nCfn);
         nErr = top.TC1.InsertItem("Errors","",8,9,0,"automatic/fvrtools.html#err","CONT",nCls);
         top.TC1.InsertItem("fvrtools1001","FVRT_SEQSYNTAX FVR string or sequence syntax error (%s)",30,30,0,"automatic/fvrtools.html#err_FVRT_SEQSYNTAX","CONT",nErr);
-        top.TC1.InsertItem("fvrtools1002","FVRT_EXTRATIS Ignored extra input symbol `%s` at transition %ld",31,31,0,"automatic/fvrtools.html#err_FVRT_EXTRATIS","CONT",nErr);
-        top.TC1.InsertItem("fvrtools1003","FVRT_NOTIS No input symbol at transition %ld",31,31,0,"automatic/fvrtools.html#err_FVRT_NOTIS","CONT",nErr);
+        top.TC1.InsertItem("fvrtools1002","FVRT_NOTFVR `%s` is not a feature-value relation",30,30,0,"automatic/fvrtools.html#err_FVRT_NOTFVR","CONT",nErr);
+        top.TC1.InsertItem("fvrtools1003","FVRT_EXTRATIS Ignored extra input symbol `%s` at transition %ld",31,31,0,"automatic/fvrtools.html#err_FVRT_EXTRATIS","CONT",nErr);
+        top.TC1.InsertItem("fvrtools1004","FVRT_NOTIS No input symbol at transition %ld",31,31,0,"automatic/fvrtools.html#err_FVRT_NOTIS","CONT",nErr);
 //}} END_TOC
 -->
 
@@ -265,6 +269,7 @@ FST-based feature-value relation processing tools
     </tr>
     <tr><td><a href="#mth_-from_string"><code class="link">-from_string</code></a></td><td><code>&lt;string src&gt; &lt;fst itFvr&gt; &lt;fvrtools this&gt; <b>-from_string</b> </code><br> Creates a (weighted) FVR from a string representation</td></tr>
     <tr><td><a href="#mth_-is_fvr"><code class="link">-is_fvr</code></a></td><td><code>&lt;int nU&gt; &lt;fst itFvr&gt; &lt;fvrtools this&gt; <b>-is_fvr</b> </code><br> Determines if the argument is an FVR</td></tr>
+    <tr><td><a href="#mth_-synthesize"><code class="link">-synthesize</code></a></td><td><code>&lt;fst itDst&gt; &lt;fst itFvr&gt; &lt;fvrtools this&gt; <b>-synthesize</b> </code><br> Creates a list of all possible combinations from a FVR</td></tr>
     <tr><td colspan="2" class="rowempty">&nbsp;</td></tr>
     <tr>
       <td class="rowgroup"><a name="cfn">C/C++ API</a></td>
@@ -301,8 +306,9 @@ FST-based feature-value relation processing tools
       </td>
     </tr>
     <tr><td><a href="#err_FVRT_SEQSYNTAX"><code class="link">fvrtools1001</code></a></td><td> FVR string or sequence syntax error (%s)</td></tr>
-    <tr><td><a href="#err_FVRT_EXTRATIS"><code class="link">fvrtools1002</code></a></td><td> Ignored extra input symbol '%s' at transition %ld</td></tr>
-    <tr><td><a href="#err_FVRT_NOTIS"><code class="link">fvrtools1003</code></a></td><td> No input symbol at transition %ld</td></tr>
+    <tr><td><a href="#err_FVRT_NOTFVR"><code class="link">fvrtools1002</code></a></td><td> '%s' is not a feature-value relation</td></tr>
+    <tr><td><a href="#err_FVRT_EXTRATIS"><code class="link">fvrtools1003</code></a></td><td> Ignored extra input symbol '%s' at transition %ld</td></tr>
+    <tr><td><a href="#err_FVRT_NOTIS"><code class="link">fvrtools1004</code></a></td><td> No input symbol at transition %ld</td></tr>
     <tr><td colspan="2" class="rowempty">&nbsp;</td></tr>
   </table>
   </div>
@@ -508,6 +514,99 @@ The <a href="fst.html" class="code">fst</a> to test.
 	<h3>Return value</h3>
 	<p>
 <code>TRUE</code> if the unit is a FVR, <code>FALSE</code> otherwise.
+	</p>
+  <!--{{ CUSTOM_DOC -->
+  <!--}} CUSTOM_DOC -->
+  </div>
+  <img src="../resources/blank_stc.gif" height="10">
+  </div>
+  <div id="mth_-synthesize">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td nowrap width="25%" class="navbar"><a 
+        name="mth_-synthesize"></a>Method <span 
+        class="mid">-synthesize</span></td>
+      <td nowrap width="75%" class="navbar" style="text-align:right;">
+        <a class="navbar" href="javascript:__PrintSection('mth_-synthesize','Class fvrtools');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
+  </table>
+  <div class="mframe"><table cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td class="hidden">dLabPro</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Identifier</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code><b>-synthesize</b></code></td>
+    </tr>
+    <tr>
+      <td class="hidden">&nbsp;</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Syntax</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code>
+&lt;fst itDst&gt; &lt;fst itFvr&gt; &lt;fvrtools this&gt; <b>-synthesize</b> 
+</code></td>
+    </tr>
+    <tr>
+      <td class="hidden" colspan="5">&nbsp;</td>
+    </tr>
+    <tr>
+      <td class="hidden">C/C++</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Member function</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code>
+INT16 <b>CFvrtools_Synthesize</b>(CFvrtools _this, CFst* itDst, CFst* itFvr);<br>public: INT16 <b>CFvrtools::Synthesize</b>(CFst* itDst, CFst* itFvr);<br>
+</code></td>
+    </tr>
+    <tr>
+      <td class="hidden">&nbsp;</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Source</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">fvrt_iam.c(89)</td>
+    </tr>
+  </table></div>
+  <div class="mframe2">
+  <h3>Synopsis</h3>
+  <p>
+Creates a list of all possible combinations from a FVR
+  </p>
+  <h3>Description</h3>
+	<h3>Parameters</h3>
+	<table>
+		<tr>
+			<td class="hidden">&nbsp;&nbsp;</td>
+			<td class="hidden"><b><code>
+itDst
+</code></b></td>
+			<td class="hidden">&nbsp;</td>
+			<td class="hidden">
+FST to be filled with the serializations.
+			</td>
+		</tr>
+		<tr>
+			<td class="hidden">&nbsp;&nbsp;</td>
+			<td class="hidden"><b><code>
+itFvr
+</code></b></td>
+			<td class="hidden">&nbsp;</td>
+			<td class="hidden">
+The feature-value relation to synthesize from.
+			</td>
+		</tr>
+	</table>
+	<h3>Return value</h3>
+	<p>
+
 	</p>
   <!--{{ CUSTOM_DOC -->
   <!--}} CUSTOM_DOC -->
@@ -849,7 +948,7 @@ INT16 <b>CFvrtools_SeqToFvr</b>(CFvrtools _this, CFst* itSeq, CFst* itFvr);<br>p
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fvrt_compile.c(346)</td>
+      <td class="hidden">fvrt_compile.c(345)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -942,7 +1041,7 @@ INT16 <b>CFvrtools_StrToSeq</b>(CFvrtools _this, const char* lpsSrc, CFst* itSeq
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fvrt_compile.c(256)</td>
+      <td class="hidden">fvrt_compile.c(255)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -1063,14 +1162,14 @@ FVR string or sequence syntax error (%s)
   </div>
   <img src="../resources/blank_stc.gif" height="10">
   </div>
-  <div id="err_FVRT_EXTRATIS">
+  <div id="err_FVRT_NOTFVR">
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="err_FVRT_EXTRATIS"></a>Warning <span 
+        name="err_FVRT_NOTFVR"></a>Error <span 
         class="mid">fvrtools1002</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
-        <a class="navbar" href="javascript:__PrintSection('err_FVRT_EXTRATIS','Class fvrtools');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
+        <a class="navbar" href="javascript:__PrintSection('err_FVRT_NOTFVR','Class fvrtools');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
         <a class="navbar" href="../home.html">Home</a>
         <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
@@ -1094,7 +1193,7 @@ FVR string or sequence syntax error (%s)
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Error Level</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">EL_WARNING</td>
+      <td class="hidden">EL_ERROR</td>
     </tr>
     <tr>
       <td class="hidden" colspan="5">&nbsp;</td>
@@ -1104,33 +1203,29 @@ FVR string or sequence syntax error (%s)
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Symbol</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden"><code>#define FVRT_EXTRATIS -1002</code></td>
+      <td class="hidden"><code>#define FVRT_NOTFVR -1002</code></td>
     </tr>
   </table></div>
   <div class="mframe2">
   <h3>Synopsis</h3>
   <p>
-Ignored extra input symbol '%s' at transition %ld
+'%s' is not a feature-value relation
   </p>
   <h3>Description</h3>
-  <p>An FST string or sequence contained more than one input symbol for a FVR
-  transition. For example, the instruction</p>
-  <pre class="code">
-  "FVR[A[B]EXTRA[C]]" itFvr fvrtools <a href="#mth_-from_string">-from_string</a>;</pre>
-  <p>will produce this warning for the symbol "EXTRA".</p>
+  <p>The object is not a feature-value relation.</p>
   <!--{{ CUSTOM_DOC -->
   <!--}} CUSTOM_DOC -->
   </div>
   <img src="../resources/blank_stc.gif" height="10">
   </div>
-  <div id="err_FVRT_NOTIS">
+  <div id="err_FVRT_EXTRATIS">
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="err_FVRT_NOTIS"></a>Warning <span 
+        name="err_FVRT_EXTRATIS"></a>Warning <span 
         class="mid">fvrtools1003</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
-        <a class="navbar" href="javascript:__PrintSection('err_FVRT_NOTIS','Class fvrtools');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
+        <a class="navbar" href="javascript:__PrintSection('err_FVRT_EXTRATIS','Class fvrtools');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
         <a class="navbar" href="../home.html">Home</a>
         <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
@@ -1164,7 +1259,67 @@ Ignored extra input symbol '%s' at transition %ld
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Symbol</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden"><code>#define FVRT_NOTIS -1003</code></td>
+      <td class="hidden"><code>#define FVRT_EXTRATIS -1003</code></td>
+    </tr>
+  </table></div>
+  <div class="mframe2">
+  <h3>Synopsis</h3>
+  <p>
+Ignored extra input symbol '%s' at transition %ld
+  </p>
+  <h3>Description</h3>
+  <p>An FST string or sequence contained more than one input symbol for a FVR
+  transition. For example, the instruction</p>
+  <pre class="code">
+  "FVR[A[B]EXTRA[C]]" itFvr fvrtools <a href="#mth_-from_string">-from_string</a>;</pre>
+  <p>will produce this warning for the symbol "EXTRA".</p>
+  <!--{{ CUSTOM_DOC -->
+  <!--}} CUSTOM_DOC -->
+  </div>
+  <img src="../resources/blank_stc.gif" height="10">
+  </div>
+  <div id="err_FVRT_NOTIS">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td nowrap width="25%" class="navbar"><a 
+        name="err_FVRT_NOTIS"></a>Warning <span 
+        class="mid">fvrtools1004</span></td>
+      <td nowrap width="75%" class="navbar" style="text-align:right;">
+        <a class="navbar" href="javascript:__PrintSection('err_FVRT_NOTIS','Class fvrtools');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
+  </table>
+  <div class="mframe"><table cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td class="hidden">dLabPro</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Identifier</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code><b>fvrtools1004</b></code></td>
+    </tr>
+    <tr>
+      <td class="hidden">&nbsp;</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Error Level</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">EL_WARNING</td>
+    </tr>
+    <tr>
+      <td class="hidden" colspan="5">&nbsp;</td>
+    </tr>
+    <tr>
+      <td class="hidden">C/C++</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Symbol</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code>#define FVRT_NOTIS -1004</code></td>
     </tr>
   </table></div>
   <div class="mframe2">
