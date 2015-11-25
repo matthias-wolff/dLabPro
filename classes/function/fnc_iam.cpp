@@ -531,7 +531,7 @@ INT16 CGEN_PROTECTED CFunction::This()
  */
 INT16 CGEN_PUBLIC CFunction::Cd(const char* lpsDir)
 {
-  if (chdir(lpsDir)==0) return O_K;                                             // Change directory
+  if (dlp_chdir(lpsDir,FALSE)==0) return O_K;                                   // Change directory
   return IERROR(this,ERR_CHDIR,lpsDir,0,0);                                     // Failed? --> error message
 }
 

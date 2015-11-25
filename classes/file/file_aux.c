@@ -38,8 +38,8 @@ BOOL CGEN_PUBLIC CDlpFile_Exists(CDlpFile* _this, const char* sFilename)
 #ifndef __TMS
     char sBuf[L_PATH+1];
     if(getcwd(sBuf,L_PATH) == NULL) return IERROR(_this,ERR_GETCWD,0,0,0);
-    bRet = (chdir(sFilename)==0);
-    if(chdir(sBuf) != 0) return IERROR(_this,ERR_CHDIR,sBuf,0,0);
+    bRet = (dlp_chdir(sFilename,FALSE)==0);
+    if(dlp_chdir(sBuf,FALSE) != 0) return IERROR(_this,ERR_CHDIR,sBuf,0,0);
 #endif
     return bRet;
   }

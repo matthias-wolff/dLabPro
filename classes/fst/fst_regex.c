@@ -363,7 +363,7 @@ INT16 CGEN_PUBLIC CFst_RegexMatch_int(CFst* _this,const char* sStr,INT32 *nS,INT
  */
 INT16 CGEN_PUBLIC CFst_RegexMatch(CFst* _this,const char* sStr)
 {
-  INT32 nS,nL;
+  INT32 nS=0.,nL=0.;
   INT16 nErr;
   IF_NOK((nErr=CFst_RegexMatch_int(_this,sStr,&nS,&nL))) return nErr;
   MIC_PUT_N((FLOAT64)nL);
