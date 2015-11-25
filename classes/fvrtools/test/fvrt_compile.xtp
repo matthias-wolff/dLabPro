@@ -3,20 +3,20 @@
 var s; 
 fst f;
 
-"FVR[LDIM:0.61[val:1[DIG:1[o:1[(ein)1:1]]]][val:NaN[komma:NaN]][unit:0.7[(m)m:0.7]][val:0.36[CN2:0.36[t:0.36[(zwan)2(-zig):0.36]]]]]" s =;
+#"FVR[LDIM:0.61[val:1[DIG:1[o:1[(ein)1:1]]]][val:NaN[komma:NaN]][unit:0.7[(m)m:0.7]][val:0.36[CN2:0.36[t:0.36[(zwan)2(-zig):0.36]]]]]" s =;
 #"FVR[(bitte)(verschiebe)[MAID[(das)(obere)ma2(Mikrofonfeld)]]MOVETOREL(noch)[relpos[(ein)(kleines)-(Stueck)bit]][dir[towards]](zum)[abspos[(Bildschirm)max]]]" s =;
 #"FVR[SWITCH[switch[(aktiviere)on]](Mikrofon/e)[MCID[CN2[o[(eins)1]]]][MCID[(bis)-]][MCID[CN2[o[0]][t[(zehn)1]]]](sowie)[MCID[CN2[t[(zwan)2(-zig)]]]][MCID[CN2[o[(acht)8]](und)[t[(zwan)2(-zig)]]]](und)[MCID[CN2[o[(vier)4]](und)[t[(vier)4(-zig)]]]]]" s =;
 #"FVR[PROG:0.3[STEP:0.3[FUNC:1[OFF:1]]TEST[TIME:0.2[SA-09.00h:0.2]]][STEP:0.2[FUNC:1[ON:1]][TIME:-0.2[SU-20.00h:-0.2]]]]" s =;
-#"FVR[A[B]EXTRA[C]]" s =;
+#"FVR[A:1[B:1][EXTRA:1[C:1]]]" s =;
+"FVR[A:1[B:1][EXTRA:1[C:1]][F:2[H:4]][EXTRA:1[D:2]]]" s =;
 #"FVR[[B][C]]" s =;
 
 s f fvrtools -from_string;
 ( 0 f fvrtools -is_fvr ) -echo;
-#1 brk;
+"\n" -echo;
 
-data x;
-#:f.td["~TIS"]: 0 f.is 0 1 x -lookup;
-#x /list -print;
-#f /nonstop -print;
+
+:f.td["~TIS"]: 0 f.is 0 1 x -lookup;
+x /list -print;
+f /nonstop -print;
 "$__SFILE__.svg" f.is NULL 0 f -FST_render;
-

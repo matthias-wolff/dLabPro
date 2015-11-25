@@ -97,6 +97,12 @@ COMMENT: FVR string or sequence syntax error (%s)
   parentheses.</p>
 END_MAN
 
+ERROR:   FVRT_NOTFVR
+COMMENT: '%s' is not a feature-value relation
+/html MAN:
+  <p>The object is not a feature-value relation.</p>
+END_MAN
+
 ERROR:   FVRT_EXTRATIS
 COMMENT: Ignored extra input symbol '%s' at transition %ld
 LEVEL:   EL_WARNING
@@ -156,6 +162,15 @@ COMMENT: Creates a (weighted) FVR from a string representation
   @param src The source string.
   @param itFvr The target FST, must not be <code>NULL</code>.
   @return void
+END_MAN
+
+METHOD:  -synthesize
+SYNTAX:  (INSTANCE(fst) itDst, INSTANCE(fst) itFvr)
+COMMENT: Creates a list of all possible combinations from a FVR
+/html MAN:
+  @param itDst FST to be filled with the serializations.
+  @param itFvr The feature-value relation to synthesize from.
+  @return
 END_MAN
 
 ## -- Generate files --
