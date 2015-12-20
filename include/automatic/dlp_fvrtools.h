@@ -35,11 +35,13 @@
 
 /*{{CGEN_ERRORS */
 #undef FVRT_SEQSYNTAX      
+#undef FVRT_NOTFVR         
 #undef FVRT_EXTRATIS       
 #undef FVRT_NOTIS          
 #define FVRT_SEQSYNTAX       -1001
-#define FVRT_EXTRATIS        -1002
-#define FVRT_NOTIS           -1003
+#define FVRT_NOTFVR          -1002
+#define FVRT_EXTRATIS        -1003
+#define FVRT_NOTIS           -1004
 /*}}CGEN_END */
 
 /* C/C++ language abstraction layer */
@@ -103,6 +105,7 @@ public:
 /*{{CGEN_PMIC */
 	INT16 OnFromString();
 	INT16 OnIsFvr();
+	INT16 OnSynthesize();
 /*}}CGEN_PMIC */
 #endif /* #ifndef __NOITP */
 
@@ -127,6 +130,7 @@ public:
 /* Taken from 'fvrt_iam.c' */
 	public: BOOL IsFvr(INT32 nU, CFst* itFvr);
 	public: INT16 FromString(const char* lpsSrc, CFst* itFvr);
+	public: INT16 Synthesize(CFst* itDst, CFst* itFvr);
 
 /* Taken from 'fvrt_compile.c' */
 	protected: static FST_STYPE FindIs(const char* lpsStr, BOOL bAdd, CFst* itFst);
@@ -193,6 +197,7 @@ INT16 CFvrtools_ResetAllOptions(CDlpObject*, BOOL bInit);
 /*{{CGEN_CPMIC */
 INT16 CFvrtools_OnFromString(CDlpObject*);
 INT16 CFvrtools_OnIsFvr(CDlpObject*);
+INT16 CFvrtools_OnSynthesize(CDlpObject*);
 /*}}CGEN_CPMIC */
 #endif /* #ifndef __NOITP */
 
@@ -214,6 +219,7 @@ INT16 CFvrtools_OnIsFvr(CDlpObject*);
 /* Taken from 'fvrt_iam.c' */
 BOOL CFvrtools_IsFvr(CFvrtools*, INT32 nU, CFst* itFvr);
 INT16 CFvrtools_FromString(CFvrtools*, const char* lpsSrc, CFst* itFvr);
+INT16 CFvrtools_Synthesize(CFvrtools*, CFst* itDst, CFst* itFvr);
 
 /* Taken from 'fvrt_compile.c' */
 FST_STYPE CFvrtools_FindIs(const char* lpsStr, BOOL bAdd, CFst* itFst);

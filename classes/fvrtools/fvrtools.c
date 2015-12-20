@@ -113,11 +113,13 @@ INT16 CFvrtools_AutoRegisterWords(CDlpObject* __this)
 	/* Register methods */
 	REGISTER_METHOD("-from_string","",LPMF(CFvrtools,OnFromString),"Creates a (weighted) FVR from a string representation",0,"<string src> <fst itFvr> <fvrtools this>","")
 	REGISTER_METHOD("-is_fvr","",LPMF(CFvrtools,OnIsFvr),"Determines if the argument is an FVR",0,"<int nU> <fst itFvr> <fvrtools this>","")
+	REGISTER_METHOD("-synthesize","",LPMF(CFvrtools,OnSynthesize),"Creates a list of all possible combinations from a FVR",0,"<fst itDst> <fst itFvr> <fvrtools this>","")
 
 	/* Register errors */
 	REGISTER_ERROR("~e1_0_0__1",EL_ERROR,FVRT_SEQSYNTAX,"FVR string or sequence syntax error (%s)")
-	REGISTER_ERROR("~e2_0_0__1",EL_WARNING,FVRT_EXTRATIS,"Ignored extra input symbol '%s' at transition %ld")
-	REGISTER_ERROR("~e3_0_0__1",EL_WARNING,FVRT_NOTIS,"No input symbol at transition %ld")
+	REGISTER_ERROR("~e2_0_0__1",EL_ERROR,FVRT_NOTFVR,"'%s' is not a feature-value relation")
+	REGISTER_ERROR("~e3_0_0__1",EL_WARNING,FVRT_EXTRATIS,"Ignored extra input symbol '%s' at transition %ld")
+	REGISTER_ERROR("~e4_0_0__1",EL_WARNING,FVRT_NOTIS,"No input symbol at transition %ld")
 	/*}}CGEN_REGISTERWORDS */
 
 	return O_K;
@@ -359,6 +361,24 @@ INT16 CFvrtools_OnIsFvr(CDlpObject* __this)
 	return __nErr;
 }
 
+INT16 CFvrtools_OnSynthesize(CDlpObject* __this)
+/* DO NOT CALL THIS FUNCTION FROM C++ SCOPE.     */
+/* IT MAY INTERFERE WITH THE INTERPRETER SESSION */
+{
+	INT16 __nErr    = O_K;
+	INT32  __nErrCnt = 0;
+	fst* itDst;
+	fst* itFvr;
+	GET_THIS_VIRTUAL_RV(CFvrtools,NOT_EXEC);
+	MIC_CHECK;
+	__nErrCnt = CDlpObject_GetErrorCount();
+	itFvr = MIC_GET_I_EX(itFvr,fst,1,1);
+	itDst = MIC_GET_I_EX(itDst,fst,2,2);
+	if (CDlpObject_GetErrorCount()>__nErrCnt) return NOT_EXEC;
+	__nErr = CFvrtools_Synthesize(_this, itDst, itFvr);
+	return __nErr;
+}
+
 /*}}CGEN_CPMIC */
 #endif /* #ifndef __NOITP */
 
@@ -487,6 +507,13 @@ INT16 CFvrtools::OnIsFvr()
 	return CFvrtools_OnIsFvr(this);
 }
 
+INT16 CFvrtools::OnSynthesize()
+/* DO NOT CALL THIS FUNCTION FROM C++ SCOPE.     */
+/* IT MAY INTERFERE WITH THE INTERPRETER SESSION */
+{
+	return CFvrtools_OnSynthesize(this);
+}
+
 /*}}CGEN_PMIC */
 #endif /* #ifndef __NOITP */
 
@@ -508,6 +535,11 @@ BOOL CFvrtools::IsFvr(INT32 nU, CFst* itFvr)
 INT16 CFvrtools::FromString(const char* lpsSrc, CFst* itFvr)
 {
 	return CFvrtools_FromString(this, lpsSrc, itFvr);
+}
+
+INT16 CFvrtools::Synthesize(CFst* itDst, CFst* itFvr)
+{
+	return CFvrtools_Synthesize(this, itDst, itFvr);
 }
 
 FST_STYPE CFvrtools::FindIs(const char* lpsStr, BOOL bAdd, CFst* itFst)

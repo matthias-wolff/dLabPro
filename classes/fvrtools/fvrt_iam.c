@@ -83,4 +83,33 @@ L_EXCEPTION:                                                                    
   return nRet;                                                                  /* Return                            */
 }
 
+/*
+ * Documentation in fvrtools.def
+ */
+INT16 CGEN_PUBLIC CFvrtools_Synthesize(CFvrtools* _this, CFst* itDst, CFst* itFvr)
+{
+  INT16 nRet = O_K;                                                             /* The return value                  */
+
+  int actNode;
+  int nNode; nNode=itFvr->td->m_nRC;
+  //itFvr->sd
+
+  /* Initialization */                                                          /* --------------------------------- */
+  CHECK_THIS_RV(NOT_EXEC);                                                      /* Check this instance               */
+  if (itDst==NULL)
+	  FVRT_EXCEPTION(ERR_NULLINST,"itDst is NULL",0,0);                           /* Wrong Input                       */
+  if (itFvr==NULL)
+    FVRT_EXCEPTION(ERR_NULLINST,"itFvr is NULL",0,0);                           /* Wrong Input                       */
+  if (CFvrtools_IsFvr(_this,0,itFvr))
+    FVRT_EXCEPTION(FVRT_NOTFVR,BASEINST(itFvr)->m_lpInstanceName,0,0);          /* Wrong Input                       */ //Error Number?
+
+  //loop over nodes
+  while(actNode<nNode){
+
+  }
+
+L_EXCEPTION:
+  return nRet;
+}
+
 /* EOF */
