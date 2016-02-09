@@ -85,6 +85,7 @@ void usage()
   printf(  "\n        --in-IDE     Called from within an IDE (e.g. Eclipse)" );
   printf(  "\n        --name=XXX   Name session 'XXX' instead of 'dLabPro'"  );
   printf(  "\n        --logo       Print logos at startup and shutdown"      );
+  printf(  "\n        --log=NAME   Write log file NAME"                      );
   printf(  "\n        --pipemode   Put a line break at the end of prompts"   );
   printf(  "\n        --trace-mem  Print list of memory leaks at shutdown"   );
   printf(  "\n        --verbose=N  Set verbose level of root function"       );
@@ -109,13 +110,16 @@ void usage()
  */
 INT16 StartSession(CFunction* iRoot, INT32* lpArgc, char** lpArgv)
 {
-  char lpsBuffer[255] = "";
+  char lpsBuffer     [4096] = "";
+  char lpsLogFileName[4096] = "";
 
   iRoot->m_nXm|=XM_NOLOGO;
 
   // Process command line options
   if (dlp_scancmdlineoption(lpArgc,lpArgv,"--name","=",lpsBuffer,TRUE))
     dlp_strcpy(iRoot->m_lpInstanceName,lpsBuffer);
+  if (dlp_scancmdlineoption(lpArgc,lpArgv,"--log","=",lpsBuffer,TRUE))
+    dlp_strcpy(lpsLogFileName,lpsBuffer);
   if (dlp_scancmdlineoption(lpArgc,lpArgv,"--verbose","=",lpsBuffer,TRUE))
     iRoot->m_nCheck=(short)atoi(lpsBuffer);
   if (dlp_scancmdlineoption(lpArgc,lpArgv,"--logo","",NULL,TRUE))
@@ -132,6 +136,10 @@ INT16 StartSession(CFunction* iRoot, INT32* lpArgc, char** lpArgv)
     dlp_set_color_mode(TRUE);
   dlp_set_binary_path(lpArgv[0]);
   dlp_set_binary_name(iRoot->m_lpInstanceName);
+
+  // Open log file
+  if (dlp_strlen(lpsLogFileName)>0)
+    dlp_openLogFile(lpsLogFileName);
 
   // Print logo
   if (!(iRoot->m_nXm&XM_NOLOGO))
@@ -186,6 +194,7 @@ void EndSession(CFunction* iRoot)
 {
   if (!(iRoot->m_nXm&XM_NOLOGO))
     printf("\n// Exiting %s...\n",iRoot->m_lpInstanceName);
+  dlp_closeLogFile();
 
 #if (!defined __NOREADLINE)
   {

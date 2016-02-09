@@ -905,6 +905,11 @@ typedef struct { FLOAT64 x; FLOAT64 y; } COMPLEX64;
 #define IVIR_BADCHAR     -3                                                     /* Contains bad charcter(s)          */
 #define IVIR_BADLEAD     -4                                                     /* Begins with bad character(s)      */
 
+/* Defines - Type arguments to dlp_log(...) */                                  /* --------------------------------- */
+#define LOG_IN            1                                                     /* Log of stdin                      */
+#define LOG_OUT           2                                                     /* Log of stdout                     */
+#define LOG_ERR           3                                                     /* Log of stderr                     */
+
 /* Variable type definitions*/
 
 #ifdef _MSC_VER
@@ -1280,6 +1285,9 @@ INT16         dlp_sprintc(char* lpsDst, COMPLEX64 what, BOOL bExact);
 INT32         dlp_sprintx(char* lpsBuffer, char* nWhat, INT32 nType, BOOL bExact);
 void          dlp_puts_ex(INT16 nArgs, ...);
 char*         dlp_fgetl(char* lpsBuffer, INT16 nBufferLen, FILE* lpfIn, INT32* nLines);
+void          dlp_openLogFile(const char* lpsLogFileName);
+void          dlp_closeLogFile();
+void          dlp_log(INT16 nType, const char* lpsFormat, ...);
 
 /* Functions - dlp_session.c */
 void          dlp_set_kernel_debug(INT16 nLevel);
@@ -1379,6 +1387,7 @@ INT32         dlp_fprintf(DLP_FILE *lpZF,const char *format, ...);
 BOOL          dlp_fzip(const char *lpsInfile, const char *lpsMode);
 BOOL          dlp_funzip(const char *lpsInfile,char const ** lpsOutfile);
 INT16         dlp_chdir(const char* lpsDirname, BOOL bCreate);
+BOOL          dlp_mkdirs(const char* lpsDirname);
 char*         dlp_tempnam(const char* lpsDir, const char* lpsPfx);
 char*         dlp_fullpath(char* lpsAbsPath, const char* lpsRelPath, INT32 nMaxLen);
 

@@ -27,6 +27,9 @@
 #include "dlp_kernel.h"
 #include "dlp_base.h"
 
+/* Forward declarations of private functions */
+void dlp_vlog(INT16 nType, const char* lpsFormat, va_list ap);
+
 /* Get mktemp() on MSVC */
 #ifdef __MSVC
 #undef _POSIX_
@@ -51,6 +54,7 @@ static INT16 __nNonstop      = 0;
 static INT16 __nNonstopMode  = 0;
 static BOOL  __bColMode      = FALSE;
 static BOOL  __bPipeMode     = FALSE;
+static FILE* __logFile       = NULL;
 
 void dlp_chgwinsz(void) {
 #ifdef SIGWINCH
@@ -80,6 +84,7 @@ INT32 __dlp_printf(const char* lpsFormat, ...)
   /* Output everything immediately */
   va_start(ap,lpsFormat);
   vfprintf(stdout,lpsFormat,ap);
+  dlp_vlog(LOG_OUT,lpsFormat,ap);
   va_end(ap);
   fflush(stdout);
 
@@ -156,11 +161,16 @@ INT32 __dlp_printstop_ni(INT32 nItem, const char* lpNext, char* lpAnswer)
  {
   va_list ap;
 
-  if (dlp_strlen(lpsFilename)) __dlp_printf("\n%s(%d): ",lpsFilename,(int)nLine);
+  if (dlp_strlen(lpsFilename))
+  {
+    __dlp_printf("\n%s(%d): ",lpsFilename,(int)nLine);
+    dlp_log(LOG_OUT,"\n%s(%d): ",lpsFilename,(int)nLine);
+  }
   if(__bColMode) __dlp_printf("[32m");
 
   va_start(ap,lpsFormat);
   vfprintf(stdout,lpsFormat,ap);
+  dlp_vlog(LOG_OUT,lpsFormat,ap);
   va_end(ap);
 
   if(__bColMode) __dlp_printf("[0m");
@@ -178,13 +188,18 @@ void dlp_error_message(const char* lpsFilename, INT32 nLine, const char* lpsForm
 #ifdef __TMS
   if (dlp_strlen(lpsFilename)) fprintf(stderr,"\n%s(%d): ",lpsFilename,(int)nLine);
 #else
-  if (dlp_strlen(lpsFilename)) fprintf(stderr,"\n%s(%ld): ",lpsFilename,(long)nLine);
+  if (dlp_strlen(lpsFilename))
+  {
+    fprintf(stderr,"\n%s(%ld): ",lpsFilename,(long)nLine);
+    dlp_log(LOG_ERR,"\n%s(%ld): ",lpsFilename,(long)nLine);
+  }
 #endif
 
   if (__bColMode) fprintf(stderr,"[31m");
 
   va_start(ap,lpsFormat);
   vfprintf(stderr,lpsFormat,ap);
+  dlp_vlog(LOG_ERR,lpsFormat,ap);
   va_end(ap);
 
   if (__bColMode) fprintf(stderr,"[0m");
@@ -648,6 +663,7 @@ void dlp_fprint_x_line(FILE* lpFout, char c, INT16 n)
   lpBuf[i]='\0';
 
   fputs(lpBuf,lpFout);
+  dlp_log(LOG_OUT,lpBuf);
 }
 
 /**
@@ -727,6 +743,7 @@ INT16 CGEN_IGNORE dlp_sprintc(char* lpsDst, COMPLEX64 what, BOOL bExact) {
   }
   return nLen;
 }
+
 /**
  * Prints a variable to a string in an default format.
  *
@@ -898,6 +915,76 @@ char* dlp_fgetl(char* lpBuffer, INT16 nBufferLen, FILE* lpfIn, INT32* nLines)
   } while (bBackslash);
 
   return lpBuffer;
+}
+
+// -- Log files --
+
+/**
+ * Creates a log file in write mode. If a log file is already open, the function
+ * closes that file and creates a new one.
+ *
+ * @param lpsLogFileName
+ *          The file name.
+ */
+void dlp_openLogFile(const char* lpsLogFileName)
+{
+  char lpsDirName[L_PATH];                                                      /* The target directory              */
+  if (__logFile)                                                                /* There is a log file already       */
+    dlp_closeLogFile();                                                         /*   Close it                        */
+  dlp_splitpath(lpsLogFileName,lpsDirName,NULL);                                /* Get target directory              */
+  if (dlp_strlen(lpsDirName)>0)                                                 /* If there is a target directory    */
+    dlp_mkdirs(lpsDirName);                                                     /*   Recursively create it           */
+  __logFile = fopen(lpsLogFileName,"w");                                        /* Open log file                     */
+  if (!__logFile)                                                               /* No log file pointer               */
+    dlp_error_message(__FILE__,__LINE__,"Cannot create log file \"%s\".",       /*   Not funny ...                   */
+      lpsLogFileName);                                                          /*   |                               */
+}
+
+/**
+ * Closes the log file. If there is no log file, the function does nothing.
+ */
+void dlp_closeLogFile()
+{
+  if (!__logFile)
+    return;
+  fclose(__logFile);
+  __logFile=NULL;
+}
+
+/**
+ * Writes to the log file. If there is no log file, the function does nothing.
+ *
+ * @param nType
+ *          -- reserved -- The message type: <code>LOG_IN</code>,
+ *          <code>LOG_OUT</code>, or <code>LOG_ERR</code>.
+ * @param lpsFormat
+ *          The format string as in <code>printf</code>.
+ */
+void dlp_log(INT16 nType, const char* lpsFormat, ...)
+{
+  va_list ap;
+  va_start(ap,lpsFormat);
+  dlp_vlog(nType,lpsFormat,ap);
+  va_end(ap);
+}
+
+/**
+ * Writes to the log file. If there is no log file, the function does nothing.
+ *
+ * @param nType
+ *          -- reserved -- The message type: <code>LOG_IN</code>,
+ *          <code>LOG_OUT</code>, or <code>LOG_ERR</code>.
+ * @param lpsFormat
+ *          The format string as in <code>printf</code>.
+ * @param ap
+ *          Pointer to variable argument list.
+ */
+void dlp_vlog(INT16 nType, const char* lpsFormat, va_list ap)
+{
+  if (!__logFile)
+    return;
+  vfprintf(__logFile,lpsFormat,ap);
+  fflush(__logFile);
 }
 
 /* EOF */
