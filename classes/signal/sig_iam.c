@@ -1407,6 +1407,70 @@ INT16 CGEN_PUBLIC CSignal_MFb(CData* idY, CData* idX, FLOAT64 nLambda, INT32 nCo
 }
 
 /**
+ * <p>Mel-Filter-Bank analysis in spectral domain.</p>
+ *
+ * <p>This operation calculates <code>nCoeff</code> MFB-coefficients with warping factor <code>nLambda</code> and
+ * method <code>lpsMethod</code> from each frame given in the records of <code>idX</code>. The following methods
+ * currently implemented:
+ * <ul><li>"BS" - Bark scale warping, sinc frequency window (i.e. cepstral smoothing),</li>
+ *     <li>"BT" - Bark scale warping, triangular frequency window,</li>
+ *     <li>"MS" - Bilinear warping, sinc frequency window (i.e. cepstral smoothing),</li>
+ *     <li>"MT" - Bilinear warping, triangular frequency window,</li>
+ * </ul></p>
+ *
+ * @param idY Output data instance.
+ * @param idX Input data instance.
+ * @param nCoeff Number of MFB-coefficients to calculate.
+ * @param nLambda Warping factor.
+ * @param lpsMethod Calculation method.
+ *
+ */
+INT16 CGEN_PUBLIC CSignal_MFbs(CData* idY, CData* idX, FLOAT64 nLambda, INT32 nCoeff, const char* lpsMethod) {
+  INT16 nRetVal = O_K;
+  INT16 nTS = -1;
+  INT32 nCS = 0;
+  INT32 nRS = 0;
+  INT32 iR = 0;
+  FLOAT64 nMinLog = 0.0;
+  COMPLEX64 nQuant = CMPLX(T_DOUBLE);
+  COMPLEX64 nScale = CMPLX(1.0);
+  CData* idR = NULL;
+  CData* idS = NULL;
+  CData* idL = NULL;
+  MLP_CNVC_TYPE lpCnvc = { 0, 0, 0, NULL, { NULL, NULL }, NULL, NULL, NULL, "\0", nLambda };
+
+  CSignal_GetVar(idX, "nType", &nQuant);
+  CSignal_GetVar(idX, "nScale", &nScale);
+  FOP_PRECALC(idX, idY, idS, idR, idL);
+
+  nMinLog = dlp_scalop(CSignal_GetMinQuant((INT16) nQuant.x, nScale).x, 0.0, OP_LN);
+  nCS = CData_GetNComps(idS);
+  nRS = CData_GetNRecs(idS);
+  nTS = CData_GetCompType(idS, 0);
+
+  CData_Tconvert(idS, idS, T_DOUBLE);
+
+  if (nCoeff > 0) {
+    CData_AddNcomps(idR, CData_GetCompType(idS, 0), nCoeff);
+    CData_Allocate(idR, nRS);
+
+    dlp_strcpy(lpCnvc.type, (lpsMethod == NULL) ? "MT" : lpsMethod);
+    dlm_mf_init(&lpCnvc, nCS, nCoeff, -dlp_scalop(nScale.x, 0, OP_LN));
+
+    for (iR = 0; iR < nRS; iR++)
+      dlm_mf_convolve(&lpCnvc, (FLOAT64*) CData_XAddr(idS, iR, 0), (FLOAT64*) CData_XAddr(idR, iR, 0));
+
+    dlm_mf_done(&lpCnvc);
+  }
+  CData_SetNBlocks(idR, CData_GetNBlocks(idS));
+  CData_Tconvert(idS, idS, nTS);
+
+  FOP_POSTCALC(idX, idY, idS, idR, idL);
+
+  return nRetVal;
+}
+
+/**
  * <p>Warped Discrete Fourier Transform.</p>
  *
  * <p>This operation calls {@link CSignal_Fft} and warps the resulting

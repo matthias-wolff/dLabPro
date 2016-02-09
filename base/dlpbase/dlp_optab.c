@@ -262,6 +262,7 @@ static const opcode_table __ftab[] =
   { FOP_MCEP        ,1,3,"D:oDrn"    ,"Mel-Cepstrum"                                                            ,"mcep"        },
   { FOP_MCEPENHANCE ,1,1,"D:oD"      ,"Mel-Cepstrum enhancement"                                                ,"mcep_enhance"},
   { FOP_MFB         ,1,4,"D:oDrns"   ,"MelFilter"                                                               ,"mfb"         },
+  { FOP_MFBS        ,1,4,"D:oDrns"   ,"MelFilter in spectral domain"                                            ,"mfbs"        },
   { FOP_MFFT        ,1,2,"C:oDr"     ,"Mel-Fourier transform"                                                   ,"mfft"        },
   { FOP_MFILTER     ,1,5,"D:oDDDrD"  ,"Mel-Infinite Imp. Response filter"                                       ,"mfilter"     },
   { FOP_MFIR        ,1,4,"D:oDDrD"   ,"Mel-Finite Imp. Response filter"                                         ,"mfir"        },

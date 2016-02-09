@@ -649,6 +649,11 @@ INT16 CSignal::MFb(CData* idY, CData* idX, FLOAT64 nLambda, INT32 nCoeff, const 
 	return CSignal_MFb(idY, idX, nLambda, nCoeff, lpsMethod);
 }
 
+INT16 CSignal::MFbs(CData* idY, CData* idX, FLOAT64 nLambda, INT32 nCoeff, const char* lpsMethod)
+{
+	return CSignal_MFbs(idY, idX, nLambda, nCoeff, lpsMethod);
+}
+
 INT16 CSignal::Mfft(CData* idY, CData* idX, FLOAT64 nLambda)
 {
 	return CSignal_Mfft(idY, idX, nLambda);

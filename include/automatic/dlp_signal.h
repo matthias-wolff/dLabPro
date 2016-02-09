@@ -169,6 +169,7 @@ public:
 	public: static INT16 Denoise(CData* idY, CData* idX, INT32 nT, FLOAT64 nP, const char* lpsType);
 	public: static INT16 MCepEnhance(CData* idY, CData* idC);
 	public: static INT16 MFb(CData* idY, CData* idX, FLOAT64 nLambda, INT32 nCoeff, const char* lpsMethod);
+	public: static INT16 MFbs(CData* idY, CData* idX, FLOAT64 nLambda, INT32 nCoeff, const char* lpsMethod);
 	public: static INT16 Mfft(CData* idY, CData* idX, FLOAT64 nLambda);
 	public: static INT16 MFilter(CData* idY, CData* idX, CData* idB, CData* idA, FLOAT64 nLambda, CData* idM);
 	public: static INT16 MFir(CData* Y, CData* X, CData* B, FLOAT64 nLambda, CData* M);
@@ -325,6 +326,7 @@ INT16 CSignal_MCep(CData* idY, CData* idX, FLOAT64 nLambda, INT32 nCoeff);
 INT16 CSignal_Denoise(CData* idY, CData* idX, INT32 nT, FLOAT64 nP, const char* lpsType);
 INT16 CSignal_MCepEnhance(CData* idY, CData* idC);
 INT16 CSignal_MFb(CData* idY, CData* idX, FLOAT64 nLambda, INT32 nCoeff, const char* lpsMethod);
+INT16 CSignal_MFbs(CData* idY, CData* idX, FLOAT64 nLambda, INT32 nCoeff, const char* lpsMethod);
 INT16 CSignal_Mfft(CData* idY, CData* idX, FLOAT64 nLambda);
 INT16 CSignal_MFilter(CData* idY, CData* idX, CData* idB, CData* idA, FLOAT64 nLambda, CData* idM);
 INT16 CSignal_MFir(CData* Y, CData* X, CData* B, FLOAT64 nLambda, CData* M);

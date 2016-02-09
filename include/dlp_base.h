@@ -816,6 +816,7 @@ typedef struct { FLOAT64 x; FLOAT64 y; } COMPLEX64;
 #define FOP_MCEP         4039                                                   /* M-Cepstrum                        */
 #define FOP_MCEPENHANCE  4040                                                   /* M-Cepstrum enhancement            */
 #define FOP_MFB          4041                                                   /* Mel Filter Bank                   */
+#define FOP_MFBS         4069                                                   /* Mel Filter Bank in spectral domain*/
 #define FOP_MFFT         4042                                                   /* Mel-FFT                           */
 #define FOP_MFILTER      4043                                                   /* Mel-Infinite impulse resp. filter */
 #define FOP_MFIR         4044                                                   /* Mel-Finite impulse response filter*/
