@@ -917,7 +917,7 @@ char* dlp_fgetl(char* lpBuffer, INT16 nBufferLen, FILE* lpfIn, INT32* nLines)
   return lpBuffer;
 }
 
-// -- Log files --
+/* -- Log files -- */
 
 /**
  * Creates a log file in write mode. If a log file is already open, the function
