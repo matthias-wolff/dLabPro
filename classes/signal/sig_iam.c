@@ -539,6 +539,7 @@ INT16 CGEN_PUBLIC CSignal_Frame(CData* idY, CData* idX, INT32 nLen, INT32 nStep)
   if ((nRS % nStep) > 0) nRR++;
   nCR = nLen;
 
+  CData_Clear(idR);
   CData_AddNcomps(idR, CData_GetCompType(idS, 0), nLen);
   for (k = 0; k < CData_GetNComps(idL); k++)
     CData_AddComp(idR, CData_GetCname(idL, k), CData_GetCompType(idL, k));
