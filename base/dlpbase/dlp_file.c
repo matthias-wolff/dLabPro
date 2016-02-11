@@ -480,6 +480,34 @@ INT32 gz_rename(char* lpsSource, const char* lpsDest)
 
 #endif /* __NOZLIB */
 
+/**
+ * Creates a structure of directories. The function does not create parts of the
+ * path that are already existing.
+ *
+ * @param lpsDirname
+ *          The directory name.
+ * @param TRUE if successful, FALSE otherwise.
+ */
+BOOL dlp_mkdirs(const char* lpsDirname)
+{
+  if (dlp_strlen(lpsDirname)<=0)
+    return FALSE;
+#ifndef __TMS
+  char lpsCurDir[L_PATH];                                                       /* The current working directory     */
+  if (getcwd(lpsCurDir,L_PATH)==NULL)                                           /* Get current directory             */
+    return FALSE;                                                               /*   Something is terribly wrong     */
+  if (dlp_chdir(lpsDirname,TRUE)!=0)                                            /*   Go there creating missing dirs. */
+  {                                                                             /*   >> (failed)                     */
+    dlp_chdir(lpsCurDir,FALSE);                                                 /*     Go back to current directory  */
+    return FALSE;                                                               /*     Return with error             */
+  }                                                                             /*   <<                              */
+  dlp_chdir(lpsCurDir,FALSE);                                                   /*   Go back to current directory    */
+  return TRUE;                                                                  /* OK                                */
+#else /* #ifndef __TMS */
+  return FALSE;
+#endif /* #ifndef __TMS */
+}
+
 #ifndef __TMS
 /**
  * Changes the current working directory. If <code>bCreate</code> is

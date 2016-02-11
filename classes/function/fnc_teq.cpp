@@ -379,11 +379,11 @@ INT16 __kbhit()
  * {@link teq}. The {@link pp program pointer} will be adjusted to point to the
  * next function token.
  *
- * @return <code>O_K</code> if successfull, a (negative) error code otherwise.
+ * @return <code>O_K</code> if successful, a (negative) error code otherwise.
  */
 INT16 CGEN_PROTECTED CFunction::PumpToken(BOOL bPostSyn DEFAULT(FALSE))
 {
-  char        lpsBuf[256];                                                      // String buffer
+  char        lpsBuf[L_INPUTLINE+2];                                            // String buffer
   char        lpsToken[L_INPUTLINE+1];                                          // Token buffer
   char        lpsIdel[256];                                                     // Insignificant delimiters buffer
   const char* lpsTt;                                                            // Token type
@@ -485,6 +485,8 @@ INT16 CGEN_PROTECTED CFunction::PumpToken(BOOL bPostSyn DEFAULT(FALSE))
       free(lpsInput);                                                           //     Free memory
 #endif // #if (!defined __NOREADLINE)
       dlp_strtrimleft(dlp_strtrimright(lpsToken));                              //     Trim white spaces
+      dlp_strcpy(lpsBuf,lpsToken); dlp_strcat(lpsBuf,"\n");                     //     Copy command line, append LBR
+      dlp_log(LOG_IN,lpsBuf);                                                   //     Log input
       EmptyUserInput(lpsToken);                                                 //     Remember/auto-insert token
     }                                                                           //   <<
     dlp_strtrimleft(dlp_strtrimright(lpsToken));                                //   Trim white spaces
