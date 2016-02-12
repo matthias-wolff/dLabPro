@@ -1432,7 +1432,6 @@ INT16 CGEN_PUBLIC CSignal_MFbs(CData* idY, CData* idX, FLOAT64 nLambda, INT32 nC
   INT32 nCS = 0;
   INT32 nRS = 0;
   INT32 iR = 0;
-  FLOAT64 nMinLog = 0.0;
   COMPLEX64 nQuant = CMPLX(T_DOUBLE);
   COMPLEX64 nScale = CMPLX(1.0);
   CData* idR = NULL;
@@ -1444,7 +1443,6 @@ INT16 CGEN_PUBLIC CSignal_MFbs(CData* idY, CData* idX, FLOAT64 nLambda, INT32 nC
   CSignal_GetVar(idX, "nScale", &nScale);
   FOP_PRECALC(idX, idY, idS, idR, idL);
 
-  nMinLog = dlp_scalop(CSignal_GetMinQuant((INT16) nQuant.x, nScale).x, 0.0, OP_LN);
   nCS = CData_GetNComps(idS);
   nRS = CData_GetNRecs(idS);
   nTS = CData_GetCompType(idS, 0);
