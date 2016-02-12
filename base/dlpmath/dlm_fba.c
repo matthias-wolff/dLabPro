@@ -83,7 +83,7 @@ INT16 CGEN_IGNORE dlm_fba_makewindow(FLOAT64 *lpWindow, INT32 nWlen, const char*
   return O_K;
 }
 
-INT16 CGEN_IGNORE dlm_fba_doframing_maxframelen(INT32 nXSamples, INT64 *lpPitch, INT32 nXPitch, INT16 nNPeriods, INT32 nLen, INT32 nCrate, INT32 nWlen, INT32 *nMaxFrameLength, INT32 *nXFrames) {
+INT16 CGEN_IGNORE dlm_fba_doframing_maxframelen(INT32 nXSamples, INT64 *lpPitch, INT32 nXPitch, INT16 nNPeriods, INT32 nLen, INT32 nCrateRef, INT32 nWlen, INT32 *nMaxFrameLength, INT32 *nXFrames) {
   INT32 i = 0;
   INT32 nOffset = 0;
   INT32 nFrame = 0;
@@ -92,6 +92,7 @@ INT16 CGEN_IGNORE dlm_fba_doframing_maxframelen(INT32 nXSamples, INT64 *lpPitch,
   INT32 nFrameLength = 0;
   INT32 nPeriodLength = 0;
   INT32 nPrevFrameLength = 0;
+  INT32 nCrate = 0;
   char bLastFrame = FALSE;
   for (nFrame = 0; bLastFrame == FALSE; nFrame++) {
     /* Last frame? */
@@ -108,11 +109,16 @@ INT16 CGEN_IGNORE dlm_fba_doframing_maxframelen(INT32 nXSamples, INT64 *lpPitch,
         }
         nPPOffset += 1;
         nPSOffset += nPeriodLength;
-        if (nOffset > nPSOffset) nOffset = nOffset - nCrate + nPeriodLength;
+        nCrate = nPeriodLength;
+        if (nOffset > nPSOffset) nOffset = nOffset - nCrateRef + nPeriodLength;
       }
-    } else nFrameLength = nWlen;
+    } else {
+      nFrameLength = nWlen;
+      nCrate = nCrateRef;
+    }
     if (nFrameLength > *nMaxFrameLength) *nMaxFrameLength = nFrameLength;
     nPrevFrameLength = nFrameLength;
+    nOffset += nCrate;
   }
   *nXFrames = nFrame;
   return O_K;
