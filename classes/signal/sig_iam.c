@@ -527,6 +527,7 @@ INT16 CGEN_PUBLIC CSignal_Frame(CData* idY, CData* idX, INT32 nLen, INT32 nStep)
   CData* idS = NULL;
   CData* idL = NULL;
   CData* idR = NULL;
+  CData* idLn= NULL;
 
   if (nStep <= 0) nStep = nLen;
 
@@ -541,10 +542,14 @@ INT16 CGEN_PUBLIC CSignal_Frame(CData* idY, CData* idX, INT32 nLen, INT32 nStep)
 
   CData_Clear(idR);
   CData_AddNcomps(idR, CData_GetCompType(idS, 0), nLen);
-  for (k = 0; k < CData_GetNComps(idL); k++)
-    CData_AddComp(idR, CData_GetCname(idL, k), CData_GetCompType(idL, k));
   CData_Allocate(idR, nRR * nCS);
   CData_SetNBlocks(idR, nCS);
+
+  ICREATEEX(CData,idLn,"~newlab",NULL);
+  for (k = 0; k < CData_GetNComps(idL); k++)
+    CData_AddComp(idLn, CData_GetCname(idL, k), CData_GetCompType(idL, k));
+  CData_Allocate(idLn, nRR * nCS);
+  CData_SetNBlocks(idLn, nCS);
 
   for (k = 0; k < nCS; k++) {
     nOff = 0;
@@ -553,12 +558,14 @@ INT16 CGEN_PUBLIC CSignal_Frame(CData* idY, CData* idX, INT32 nLen, INT32 nStep)
       for (j = 0; j < nCRr; j++)
         CData_Cstore(idR, CData_Cfetch(idS, nOff + j, k), nRR * k + i, j);
       for (j = 0; j < nCL; j++)
-        CData_Sstore(idR, CData_Sfetch(idL, nOff + nCRr / 2, j), nRR * k + i, nLen + j);
+        CData_Sstore(idLn, CData_Sfetch(idL, nOff + nCRr / 2, j), nRR * k + i, j);
       nOff += nStep;
     }
   }
 
-  CData_Reset(BASEINST(idL), FALSE);
+  CData_Copy(BASEINST(idL),BASEINST(idLn));
+  IDESTROY(idLn);
+
   FOP_POSTCALC(idX, idY, idS, idR, idL);
 
   idY->m_lpTable->m_fsr = idX->m_lpTable->m_fsr * nStep;
@@ -609,6 +616,7 @@ INT16 CGEN_PUBLIC CSignal_Sframe(CData* idY, CData* idX, INT32 nMaxlen, INT32 nS
   CData* idL = NULL;
   CData* idR = NULL;
   CData* idWLen = NULL;
+  CData* idLn   = NULL;
   char bLastFrame = FALSE;
 
   if (nStep <= 0) nStep = nMaxlen;
@@ -656,10 +664,14 @@ INT16 CGEN_PUBLIC CSignal_Sframe(CData* idY, CData* idX, INT32 nMaxlen, INT32 nS
 
   CData_Clear(idR);
   CData_AddNcomps(idR, CData_GetCompType(idS, 0), nMaxlen);
-  for (k = 0; k < CData_GetNComps(idL); k++)
-    CData_AddComp(idR, CData_GetCname(idL, k), CData_GetCompType(idL, k));
   CData_Allocate(idR, nRR * nCS);
   CData_SetNBlocks(idR, nCS);
+
+  ICREATEEX(CData,idLn,"~newlab",NULL);
+  for (k = 0; k < CData_GetNComps(idL); k++)
+    CData_AddComp(idLn, CData_GetCname(idL, k), CData_GetCompType(idL, k));
+  CData_Allocate(idLn, nRR * nCS);
+  CData_SetNBlocks(idLn, nCS);
 
   nOff = 0;
   for (p = i = 0; i<nRR ; i++) {
@@ -676,7 +688,9 @@ INT16 CGEN_PUBLIC CSignal_Sframe(CData* idY, CData* idX, INT32 nMaxlen, INT32 nS
     nOff += nStepr;
   }
 
-  CData_Reset(BASEINST(idL), FALSE);
+  CData_Copy(BASEINST(idL),BASEINST(idLn));
+  IDESTROY(idLn);
+
   FOP_POSTCALC(idX, idY, idS, idR, idL);
 
   CSignal_SetData(idY,"idWLen",idWLen);

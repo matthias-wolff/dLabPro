@@ -130,9 +130,10 @@ DEFINE: FOP_PRECALC(idX,idY,idS,idR,idL)                                        
     DLPASSERT((idY!=NULL)&&(idX!=NULL));                                            \
     if(idY==idX) { ICREATE(CData,idR,NULL); }                                       \
     else           idR = idY;                                                       \
+    CSignal_GetData(idX,"idLab",&idL);                                              \
     if(CData_GetNNumericComps(idX) == CData_GetNComps(idX)) idS = idX;              \
     else {                                                                          \
-      ICREATEEX(CData, idL, "~lab", NULL);                                          \
+      if(!idL) ICREATEEX(CData, idL, "~lab", NULL);                                 \
       ICREATEEX(CData, idS, "~src", NULL);                                          \
       CMatrix_CopyLabels(idL,idX);                                                  \
       CData_Select(idS,idX,0,CData_GetNNumericComps(idX));                          \
@@ -146,9 +147,11 @@ DEFINE: FOP_POSTCALC(idX,idY,idS,idR,idL)                                       
     }                                                                               \
     CData_CopyDescr(idY,idX);                                                       \
     CDlpObject_CopySelective(BASEINST(idY),BASEINST(idX),WL_TYPE_INSTANCE);         \
-    CData_Join(idY,idL);                                                            \
+    if(idL && !strncmp(BASEINST(idL)->m_lpInstanceName,"~lab",5)){                  \
+      CData_Join(idY,idL);                                                          \
+      IDESTROY(idL);                                                                \
+    }                                                                               \
     if(idS != idX) IDESTROY(idS);                                                   \
-    IDESTROY(idL);                                                                  \
   }
 
 ## Errors
