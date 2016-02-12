@@ -519,6 +519,11 @@ INT16 CSignal::Frame(CData* idY, CData* idX, INT32 nLen, INT32 nStep)
 	return CSignal_Frame(idY, idX, nLen, nStep);
 }
 
+INT16 CSignal::Sframe(CData* idY, CData* idX, INT32 nMaxlen, INT32 nStep, CData* idP, INT32 nNPeriods)
+{
+	return CSignal_Sframe(idY, idX, nMaxlen, nStep, idP, nNPeriods);
+}
+
 INT16 CSignal::GCep(CData* idY, CData* idX, FLOAT64 nGamma, INT32 nCoeff)
 {
 	return CSignal_GCep(idY, idX, nGamma, nCoeff);

@@ -571,6 +571,127 @@ INT16 CGEN_PUBLIC CSignal_Frame(CData* idY, CData* idX, INT32 nLen, INT32 nStep)
 }
 
 /**
+ * <p>Splits the signal into frames synchronised to pitch information.</p>
+ *
+ * <p>The input signal can have more than one channel. Each channel has to be one component of the input data instance.
+ * The frames of the channels stored to blocks of the output data instance with one frame per record and
+ * <code>nMaxlen</code> columns plus possibly existent label components. For every period a frame of maximal
+ * <code>nMaxlen</code> samples and maximal <code>nNPeriods</code> length is copied to one output frame. If <code>nStep &le; 0</code> the values will be set
+ * to <code>nMaxlen</code>. The real frame length (comp. 0) as well as the step increment (comp. 1) is recorded
+ * to idY.idWLen for {@link CSignal_Window}.</p>
+ *
+ * @param idX       Input data instance containing the signal. The time axis of the signal is expected to be the records of
+ *                  the data object. If there are more than one channels (numeric columns) the output frames of every
+ *                  channel are written to blocks of the output data instance.
+ * @param nMaxlen   The maximal frame lenght.
+ * @param nStep     The default continuous rate (fallback for pitch missing).
+ * @param idP       The first component should contain period lengths.
+ * @param nNPeriods The maximal number of periods added to the frist one if not exceeds <code>nMaxlen</code>.
+ * @param idY       Output data instance.
+ * @return          <code>O_K</code>
+ *
+ * @see CSignal_DeFrame
+ *
+ */
+INT16 CGEN_PUBLIC CSignal_Sframe(CData* idY, CData* idX, INT32 nMaxlen, INT32 nStep, CData *idP, INT32 nNPeriods) {
+  INT32 i, j, k, p, x;
+  INT32 nOff = 0;  /* Current frame position in signal records */
+  INT32 nPOff = 0; /* ?? */
+  INT32 nRS;       /* Number of signal records */
+  INT32 nCS;       /* Number of signal channels */
+  INT32 nCL;       /* Number of label channels */
+  INT32 nRR;       /* Number of frame records */
+  INT32 nCR;       /* Frame dimension */
+  INT32 nCRr;      /* Current frame length */
+  INT32 nRP = 0;   /* Current position in idP */
+  INT32 nStepr = nStep; /* Current offset for next frame */
+  CData* idS = NULL;
+  CData* idL = NULL;
+  CData* idR = NULL;
+  CData* idWLen = NULL;
+  char bLastFrame = FALSE;
+
+  if (nStep <= 0) nStep = nMaxlen;
+
+  FOP_PRECALC(idX, idY, idS, idR, idL);
+
+  nRS = CData_GetNRecs(idS);
+  nCS = CData_GetNComps(idS);
+  nCL = CData_GetNComps(idL);
+  nCRr = nCR = nMaxlen;
+  nRP = CData_GetNRecs(idP);
+  if(!CData_GetNComps(idP)) nRP=0;
+
+  ICREATEEX(CData, idWLen, "idWLen", NULL);
+  CData_AddNcomps(idWLen,T_INT,2);
+  CData_Allocate(idWLen, nRS * nCS);
+
+  for (p = i = 0; bLastFrame==FALSE ; i++) {
+    /* Last frame? */
+    if ((nOff + nCRr) >= nRS) bLastFrame = TRUE;
+    /* Lookup length of next period */
+    if(p<nRP){
+      if(nOff>=nPOff){
+        /* Get period length as frame length */
+        nCRr = CData_Dfetch(idP,p,0);
+        nPOff+=nCRr;
+        nStepr=nCRr;
+        if(nOff>nPOff) nOff=nOff-nStep+nCRr;
+        /* The frame may contain n following frames (as much as fit completely in the analysis window) */
+        for(x=1;x<=nNPeriods;x++){
+          INT32 nNext = CData_Dfetch(idP,p+x,0);
+          if(nCRr+nNext > nMaxlen) break;
+          nCRr+=nNext;
+        }
+        p++;
+      }
+    }else nStepr = nStep;
+    if(nCRr>nMaxlen)  nCRr=nMaxlen;  /* Clip frame length to maximal frame length */
+    if(nOff+nCRr>nRS) nCRr=nRS-nOff; /* Clip frame length at end of signal */
+    CData_Dstore(idWLen,nCRr,i,0);   /* Store frame length */
+    CData_Dstore(idWLen,nStepr,i,1);   /* Store frame increment */
+    nOff += nStepr;
+  }
+  CData_Reallocate(idWLen,nRR=i);
+
+  CData_Clear(idR);
+  CData_AddNcomps(idR, CData_GetCompType(idS, 0), nMaxlen);
+  for (k = 0; k < CData_GetNComps(idL); k++)
+    CData_AddComp(idR, CData_GetCname(idL, k), CData_GetCompType(idL, k));
+  CData_Allocate(idR, nRR * nCS);
+  CData_SetNBlocks(idR, nCS);
+
+  nOff = 0;
+  for (p = i = 0; i<nRR ; i++) {
+    /* Get frame length & increment */
+    nCRr = CData_Dfetch(idWLen,i,0);
+    nStepr = CData_Dfetch(idWLen,i,1);
+    /* Copy frame + labels */
+    for (k = 0; k < nCS; k++) {
+      for (j = 0; j < nCRr; j++)
+        CData_Cstore(idR, CData_Cfetch(idS, nOff + j, k), nRR * k + i, j);
+      for (j = 0; j < nCL; j++)
+        CData_Sstore(idR, CData_Sfetch(idL, nOff + nCRr / 2, j), nRR * k + i, nMaxlen + j);
+    }
+    nOff += nStepr;
+  }
+
+  CData_Reset(BASEINST(idL), FALSE);
+  FOP_POSTCALC(idX, idY, idS, idR, idL);
+
+  CSignal_SetData(idY,"idWLen",idWLen);
+  IDESTROY(idWLen);
+
+  idY->m_lpTable->m_fsr = idX->m_lpTable->m_fsr * nStep;
+  idY->m_lpTable->m_zf = idX->m_lpTable->m_fsr * nMaxlen;
+  idY->m_nCinc = idX->m_lpTable->m_fsr;
+  idY->m_nCofs = idX->m_lpTable->m_ofs;
+  dlp_strcpy(idY->m_lpCunit, idX->m_lpRunit);
+
+  return O_K;
+}
+
+/**
  * <p>Generalized Cepstrum  analysis.</p>
  *
  * <p>This operation calculates <code>nCoeff</code> Generalized Cepstrum coefficients from each frame given in the
@@ -2727,7 +2848,8 @@ INT16 CGEN_PUBLIC CSignal_Vq(CData* idQ, CData* idI, CData* idX, INT32 nBits, co
  * in <code>lpsWindow</code>. If <code>bNorm</code> is <code>TRUE</code> the window will be normalized. If
  * <code>nLenIn&le;0</code> or <code>nLenIn</code> greater than the the amount of numeric components of <code>idX</code>,
  * <code>nLenIn</code> will be set to this amount. The resulting windowed frames are zero padded to length
- * <code>nLenOut</code>.</p>
+ * <code>nLenOut</code>. If the subobject idWLen (created by {@link CSignal_Sframe}) exists the window will be scaled
+ * to real window length for each frame.</p>
  *
  * @param idY Output data instance.
  * @param idX Input data instance.
@@ -2742,11 +2864,14 @@ INT16 CGEN_PUBLIC CSignal_Window(CData* idY, CData* idX, INT32 nLenIn, INT32 nLe
   INT32 i, j;
   INT32 nCS = 0;
   INT32 nRS = 0;
+  INT32 nWLenIn;
   FLOAT64* lpWindow = NULL;
   CData* idR = NULL;
   CData* idS = NULL;
   CData* idL = NULL;
+  CData* idWLen = NULL;
 
+  CSignal_GetData(idX,"idWLen",&idWLen);
   FOP_PRECALC(idX, idY, idS, idR, idL);
 
   nCS = CData_GetNComps(idS);
@@ -2758,8 +2883,13 @@ INT16 CGEN_PUBLIC CSignal_Window(CData* idY, CData* idX, INT32 nLenIn, INT32 nLe
   lpWindow = (FLOAT64*) dlp_calloc(nLenIn,sizeof(FLOAT64));
   if (lpWindow) {
     CData_Copy(BASEINST(idR), BASEINST(idS));
-    dlm_fba_makewindow(lpWindow, nLenIn, lpsWindow, bNorm);
+    dlm_fba_makewindow(lpWindow, nWLenIn=nLenIn, lpsWindow, bNorm);
     for (i = 0; i < nRS; i++) {
+      if(idWLen){
+        INT32 nWLen=CData_Dfetch(idWLen,i,0);
+        if(nWLen>nLenIn) nWLen=nLenIn;
+        if(nWLen!=nWLenIn) dlm_fba_makewindow(lpWindow,nWLenIn=nWLen,lpsWindow,bNorm);
+      }
       for (j = 0; j < nLenIn; j++) {
         CData_Cstore(idR, CMPLX_MULT_R(CData_Cfetch(idR,i,j),lpWindow[j]), i, j);
       }

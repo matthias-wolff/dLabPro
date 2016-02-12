@@ -789,6 +789,7 @@ typedef struct { FLOAT64 x; FLOAT64 y; } COMPLEX64;
 #define FOP_FILTER       4012                                                   /* Infinite impulse response filter  */
 #define FOP_FIR          4013                                                   /* Finite impulse response filter    */
 #define FOP_FRAME        4014                                                   /* Signal framing                    */
+#define FOP_SFRAME       4070                                                   /* Pitch synchron signal framing     */
 #define FOP_GCEP         4015                                                   /* GCEP                              */
 #define FOP_GCEP2GCEP    4016                                                   /* Generalized Cepstrum transform    */
 #define FOP_GCEP2LPC     4017                                                   /* GCEP to LPC transform             */

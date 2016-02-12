@@ -143,6 +143,7 @@ public:
 	public: static INT16 Filter(CData* Y, CData* X, CData* B, CData* A, CData* M);
 	public: static INT16 Fir(CData* Y, CData* X, CData* B, CData* M);
 	public: static INT16 Frame(CData* idY, CData* idX, INT32 nLen, INT32 nStep);
+	public: static INT16 Sframe(CData* idY, CData* idX, INT32 nMaxlen, INT32 nStep, CData* idP, INT32 nNPeriods);
 	public: static INT16 GCep(CData* idY, CData* idX, FLOAT64 nGamma, INT32 nCoeff);
 	public: static INT16 GCep2GCep(CData* idY, CData* idX, FLOAT64 nGamma2, INT32 n);
 	public: static INT16 GCep2Lpc(CData* idY, CData* idG, CData* idX, INT32 n);
@@ -300,6 +301,7 @@ INT16 CSignal_Fft(CData* idY, CData* idX);
 INT16 CSignal_Filter(CData* Y, CData* X, CData* B, CData* A, CData* M);
 INT16 CSignal_Fir(CData* Y, CData* X, CData* B, CData* M);
 INT16 CSignal_Frame(CData* idY, CData* idX, INT32 nLen, INT32 nStep);
+INT16 CSignal_Sframe(CData* idY, CData* idX, INT32 nMaxlen, INT32 nStep, CData* idP, INT32 nNPeriods);
 INT16 CSignal_GCep(CData* idY, CData* idX, FLOAT64 nGamma, INT32 nCoeff);
 INT16 CSignal_GCep2GCep(CData* idY, CData* idX, FLOAT64 nGamma2, INT32 n);
 INT16 CSignal_GCep2Lpc(CData* idY, CData* idG, CData* idX, INT32 n);

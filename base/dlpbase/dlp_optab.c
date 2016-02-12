@@ -235,6 +235,7 @@ static const opcode_table __ftab[] =
   { FOP_FILTER      ,1,4,"D:oDDDD"   ,"Infinite Imp. Response filter"                                           ,"filter"      },
   { FOP_FIR         ,1,3,"D:oDDD"    ,"Finite Imp. Response filter"                                             ,"fir"         },
   { FOP_FRAME       ,1,3,"D:oDnn"    ,"Signal framing"                                                          ,"frame"       },
+  { FOP_SFRAME      ,1,5,"D:oDnnDn"  ,"Pitch synchron signal framing"                                           ,"sframe"      },
   { FOP_GCEP        ,1,3,"D:oDrn"    ,"Generalized Cepstrum"                                                    ,"gcep"        },
   { FOP_GCEP2GCEP   ,1,3,"D:oDrn"    ,"Generalized Cepstrum transform"                                          ,"gcep2gcep"   },
   { FOP_GCEP2LPC    ,2,2,"DD:oDn"    ,"Generalized Cepstrum to Linear Predictive Coding transform"              ,"gcep2lpc"    },
