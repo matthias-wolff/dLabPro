@@ -288,6 +288,7 @@ static const opcode_table __ftab[] =
   { FOP_SCALE       ,1,2,"D:oDd"     ,"Signal scaling"                                                          ,"scale"       },
   { FOP_SVQ         ,2,2,"DN:oDN"    ,"Scalar Vector Quantization"                                              ,"svq"         },
   { FOP_WINDOW      ,1,5,"D:oDnnsb"  ,"Windowing"                                                               ,"window"      },
+  { FOP_WVL         ,1,3,"D:oDnn"    ,"Wavelet analysis"                                                        ,"wvl"         },
   { FOP_VQ          ,2,3,"DN:oDns"   ,"Vector Quantization"                                                     ,"vq"          },
   { FOP_UNWRAP      ,1,1,"C:oC"      ,"Phase unwrapping"                                                        ,"unwrap"      },
   { FOP_ZCR         ,1,2,"N:oDR"     ,"Zero crossing"                                                           ,"zcr"         },

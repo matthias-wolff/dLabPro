@@ -2918,6 +2918,52 @@ INT16 CGEN_PUBLIC CSignal_Window(CData* idY, CData* idX, INT32 nLenIn, INT32 nLe
 }
 
 /**
+ * <p>Preforms wavelet analysis for each frame.</p>
+ *
+ * @param idX    Input data instance containing the framed signal. 
+ * @param nDi    The desired daubechies wavelet index.
+ * @param nLevel The desired level of detail (-1 for max. level)
+ * @param idY    Output data instance.
+ * @return       <code>O_K</code>
+ *
+ * @see CSignal_DeFrame
+ *
+ */
+INT16 CGEN_PUBLIC CSignal_Wavelet(CData* idY, CData* idX, INT32 nDi, INT32 nLevel) {
+  INT16  ret = O_K;     
+  CData* idR = NULL;
+  CData* idS = NULL;
+  CData* idL = NULL;
+  INT32  nR;
+  INT32  nXR;
+  INT32  nXC;
+
+  if(dlm_log2_i(CData_GetNComps(idX))==-1) return IERROR(idX,ERR_INVALARG,"number of components in idX",0,0);
+  if(!nDi) return IERROR(idX,ERR_INVALARG,"daubechies index",0,0);
+
+  FOP_PRECALC(idX, idY, idS, idR, idL);
+
+  CData_Tconvert(idY,idX,T_DOUBLE);
+
+  nXR=CData_GetNRecs(idY);
+  nXC=CData_GetNComps(idY);
+
+  for(nR=0;ret==O_K && nR<nXR;nR++){
+    ret=dlm_fwt_dx(
+      (FLOAT64*)CData_XAddr(idY,nR,0),
+      (FLOAT64*)CData_XAddr(idY,nR,0),
+      nXC,
+      nDi,
+      nLevel
+    );
+  }
+
+  FOP_POSTCALC(idX, idY, idS, idR, idL);
+
+  return ret;
+}
+
+/**
  * <p>Zero-crossing counter</p>
  * This operation counts the zero-crossing instances selective to their step sizes falling in the intervals given in
  * <code>idP</code>. Zero crossing for complex signals are consecutive values with phase step of &#8805;&pi;

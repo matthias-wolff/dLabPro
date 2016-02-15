@@ -113,6 +113,7 @@ FLAGS:   /singleton /noautoactivate
     <tr><td>unwrap           </td><td>C:oC         </td><td>Phase unwrapping                                                      </td><td>see {@link CSignal_Rmdc}         </td><td><code>idC unwrap idC =;</code></td></tr>
     <tr><td>vq               </td><td>ND:oDns      </td><td>Vector Quantization                                                   </td><td>see {@link CSignal_Vq}           </td><td><code>idX 10 "LBG" vq idI = idQ =;</code></td</tr>
     <tr><td>window           </td><td>D:oDnnsb     </td><td>Windowing                                                             </td><td>see {@link CSignal_Window}       </td><td><code>idF 400 512 "blackman" FALSE window idF =;</code></td</tr>
+    <tr><td>wvl              </td><td>D:oDnn       </td><td>Wavelet analysis                                                      </td><td>see {@link CSignal_Wavelet}      </td><td><code>idF 4 -1 wvl idF=;</code></td</tr>
     <tr><td>zcr              </td><td>N:oDR        </td><td>Zero-crossing                                                         </td><td>see {@link CSignal_Zcr}          </td><td><code>idS { 0.5 } zcr idZ =;<code></td></tr>
   </table></p>
 END_MAN

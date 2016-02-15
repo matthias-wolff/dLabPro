@@ -199,6 +199,7 @@ public:
 	public: static INT16 Unwrap(CData* idY, CData* idX);
 	public: static INT16 Vq(CData* idQ, CData* idI, CData* idX, INT32 nBits, const char* sMethod);
 	public: static INT16 Window(CData* idY, CData* idX, INT32 nLenIn, INT32 nLenOut, const char* lpsWindow, BOOL bNorm);
+	public: static INT16 Wavelet(CData* idY, CData* idX, INT32 nDi, INT32 nLevel);
 	public: static INT16 Zcr(CData* idY, CData* idX, CData* idP);
 
 /* Taken from 'sig_work.c' */
@@ -357,6 +358,7 @@ INT16 CSignal_Svq(CData* idQ, CData* idI, CData* idX, CData* idB);
 INT16 CSignal_Unwrap(CData* idY, CData* idX);
 INT16 CSignal_Vq(CData* idQ, CData* idI, CData* idX, INT32 nBits, const char* sMethod);
 INT16 CSignal_Window(CData* idY, CData* idX, INT32 nLenIn, INT32 nLenOut, const char* lpsWindow, BOOL bNorm);
+INT16 CSignal_Wavelet(CData* idY, CData* idX, INT32 nDi, INT32 nLevel);
 INT16 CSignal_Zcr(CData* idY, CData* idX, CData* idP);
 
 /* Taken from 'sig_work.c' */

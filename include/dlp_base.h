@@ -842,6 +842,7 @@ typedef struct { FLOAT64 x; FLOAT64 y; } COMPLEX64;
 #define FOP_SCALE        4063                                                   /* Signal scaling                    */
 #define FOP_SVQ          4064                                                   /* Scalar Vector Quantization        */
 #define FOP_WINDOW       4065                                                   /* Windowing                         */
+#define FOP_WVL          4071                                                   /* Wavelet analysis                  */
 #define FOP_VQ           4066                                                   /* Vector Quantization               */
 #define FOP_UNWRAP       4067                                                   /* Phase unwrapping                  */
 #define FOP_ZCR          4068                                                   /* Zero crossing                     */

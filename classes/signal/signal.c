@@ -799,6 +799,11 @@ INT16 CSignal::Window(CData* idY, CData* idX, INT32 nLenIn, INT32 nLenOut, const
 	return CSignal_Window(idY, idX, nLenIn, nLenOut, lpsWindow, bNorm);
 }
 
+INT16 CSignal::Wavelet(CData* idY, CData* idX, INT32 nDi, INT32 nLevel)
+{
+	return CSignal_Wavelet(idY, idX, nDi, nLevel);
+}
+
 INT16 CSignal::Zcr(CData* idY, CData* idX, CData* idP)
 {
 	return CSignal_Zcr(idY, idX, idP);

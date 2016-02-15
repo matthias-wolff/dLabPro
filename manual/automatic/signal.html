@@ -115,13 +115,14 @@ signal.html signal CSignal [
     signal.html#cfn_062 "CSignal_Rmdc" "Rmdc"
     signal.html#cfn_063 "CSignal_Roots" "Roots"
     signal.html#cfn_064 "CSignal_Scale" "Scale"
-    signal.html#cfn_070 "CSignal_SetScale" "SetScale"
+    signal.html#cfn_071 "CSignal_SetScale" "SetScale"
     signal.html#cfn_013 "CSignal_Sframe" "Sframe"
     signal.html#cfn_065 "CSignal_Svq" "Svq"
     signal.html#cfn_066 "CSignal_Unwrap" "Unwrap"
     signal.html#cfn_067 "CSignal_Vq" "Vq"
+    signal.html#cfn_069 "CSignal_Wavelet" "Wavelet"
     signal.html#cfn_068 "CSignal_Window" "Window"
-    signal.html#cfn_069 "CSignal_Zcr" "Zcr"
+    signal.html#cfn_070 "CSignal_Zcr" "Zcr"
   ]
   signal.html#err Errors - [
     signal.html#err_FOP_ERR_FAIL "signal1001" "FOP_ERR_FAIL"
@@ -197,13 +198,14 @@ signal.html signal CSignal [
         top.TC1.InsertItem("CSignal_Rmdc","INT16 CSignal_Rmdc(CData* idY, CData* idX)     Remove direct component from signal.",27,27,0,"automatic/signal.html#cfn_062","CONT",nCfn);
         top.TC1.InsertItem("CSignal_Roots","INT16 CSignal_Roots(CData* idY, CData* idX)     Roots of polynomials.",27,27,0,"automatic/signal.html#cfn_063","CONT",nCfn);
         top.TC1.InsertItem("CSignal_Scale","INT16 CSignal_Scale(CData* idY, CData* idX, COMPLEX64 nScale)     Scales the signal by factor nScale.",27,27,0,"automatic/signal.html#cfn_064","CONT",nCfn);
-        top.TC1.InsertItem("CSignal_SetScale","INT16 CSignal_SetScale(CData* idDst, COMPLEX64 nScale)     Set the signal scale factor",27,27,0,"automatic/signal.html#cfn_070","CONT",nCfn);
+        top.TC1.InsertItem("CSignal_SetScale","INT16 CSignal_SetScale(CData* idDst, COMPLEX64 nScale)     Set the signal scale factor",27,27,0,"automatic/signal.html#cfn_071","CONT",nCfn);
         top.TC1.InsertItem("CSignal_Sframe","INT16 CSignal_Sframe(CData* idY, CData* idX, INT32 nMaxlen, INT32 nStep, CData* idP, INT32 nNPeriods)     Splits the signal into frames synchronised to pitch information.",27,27,0,"automatic/signal.html#cfn_013","CONT",nCfn);
         top.TC1.InsertItem("CSignal_Svq","INT16 CSignal_Svq(CData* idQ, CData* idI, CData* idX, CData* idB)     Scalar Vector Quantization  Each of the N components of the M vectors of idX were independently  quantized.",27,27,0,"automatic/signal.html#cfn_065","CONT",nCfn);
         top.TC1.InsertItem("CSignal_Unwrap","INT16 CSignal_Unwrap(CData* idY, CData* idX)     Unwraps radian phases given in imaginary part of idY to their 2&amp;pi; complement if the  phase jumps greater than &amp;pi;.",27,27,0,"automatic/signal.html#cfn_066","CONT",nCfn);
         top.TC1.InsertItem("CSignal_Vq","INT16 CSignal_Vq(CData* idQ, CData* idI, CData* idX, INT32 nBits, const char* sMethod)     Vector Quantization  The vectors of idX where used to generate 2nBits codebook  vectors using LGB-Algorithm.",27,27,0,"automatic/signal.html#cfn_067","CONT",nCfn);
+        top.TC1.InsertItem("CSignal_Wavelet","INT16 CSignal_Wavelet(CData* idY, CData* idX, INT32 nDi, INT32 nLevel)     Preforms wavelet analysis for each frame.",27,27,0,"automatic/signal.html#cfn_069","CONT",nCfn);
         top.TC1.InsertItem("CSignal_Window","INT16 CSignal_Window(CData* idY, CData* idX, INT32 nLenIn, INT32 nLenOut, const char* lpsWindow, BOOL bNorm)     Frame windowing.",27,27,0,"automatic/signal.html#cfn_068","CONT",nCfn);
-        top.TC1.InsertItem("CSignal_Zcr","INT16 CSignal_Zcr(CData* idY, CData* idX, CData* idP)     Zero-crossing counter  This operation counts the zero-crossing instances selective to their step sizes falling in the intervals given in  idP.",27,27,0,"automatic/signal.html#cfn_069","CONT",nCfn);
+        top.TC1.InsertItem("CSignal_Zcr","INT16 CSignal_Zcr(CData* idY, CData* idX, CData* idP)     Zero-crossing counter  This operation counts the zero-crossing instances selective to their step sizes falling in the intervals given in  idP.",27,27,0,"automatic/signal.html#cfn_070","CONT",nCfn);
         nErr = top.TC1.InsertItem("Errors","",8,9,0,"automatic/signal.html#err","CONT",nCls);
         top.TC1.InsertItem("signal1001","FOP_ERR_FAIL Execution of \��%s\�� failed.",30,30,0,"automatic/signal.html#err_FOP_ERR_FAIL","CONT",nErr);
         top.TC1.InsertItem("signal1002","FOP_ERR_NOTSUPP Operation %s is not implemented yet or not supported.",30,30,0,"automatic/signal.html#err_FOP_ERR_NOTSUPP","CONT",nErr);
@@ -383,7 +385,8 @@ Signal operations
     <tr><td>unwrap           </td><td>C:oC         </td><td>Phase unwrapping                                                      </td><td>see <a href="#cfn_062"><code class="link">CSignal_Rmdc</code></a>         </td><td><code>idC unwrap idC =;</code></td></tr>
     <tr><td>vq               </td><td>ND:oDns      </td><td>Vector Quantization                                                   </td><td>see <a href="#cfn_067"><code class="link">CSignal_Vq</code></a>           </td><td><code>idX 10 "LBG" vq idI = idQ =;</code></td</tr>
     <tr><td>window           </td><td>D:oDnnsb     </td><td>Windowing                                                             </td><td>see <a href="#cfn_068"><code class="link">CSignal_Window</code></a>       </td><td><code>idF 400 512 "blackman" FALSE window idF =;</code></td</tr>
-    <tr><td>zcr              </td><td>N:oDR        </td><td>Zero-crossing                                                         </td><td>see <a href="#cfn_069"><code class="link">CSignal_Zcr</code></a>          </td><td><code>idS { 0.5 } zcr idZ =;<code></td></tr>
+    <tr><td>wvl              </td><td>D:oDnn       </td><td>Wavelet analysis                                                      </td><td>see <a href="#cfn_069"><code class="link">CSignal_Wavelet</code></a>      </td><td><code>idF 4 -1 wvl idF=;</code></td</tr>
+    <tr><td>zcr              </td><td>N:oDR        </td><td>Zero-crossing                                                         </td><td>see <a href="#cfn_070"><code class="link">CSignal_Zcr</code></a>          </td><td><code>idS { 0.5 } zcr idZ =;<code></td></tr>
   </table></p>
   <!--{{ CUSTOM_DOC -->
   <!--}} CUSTOM_DOC -->
@@ -509,13 +512,14 @@ Signal operations
     <tr><td><a href="#cfn_062"><code class="link">CSignal_Rmdc</code></a></td><td><code>INT16 <b>CSignal_Rmdc</b>(CData* idY, CData* idX);<br>public: static INT16 <b>CSignal::Rmdc</b>(CData* idY, CData* idX);<br></code><br>  Remove direct component from signal.</td></tr>
     <tr><td><a href="#cfn_063"><code class="link">CSignal_Roots</code></a></td><td><code>INT16 <b>CSignal_Roots</b>(CData* idY, CData* idX);<br>public: static INT16 <b>CSignal::Roots</b>(CData* idY, CData* idX);<br></code><br>  Roots of polynomials.</td></tr>
     <tr><td><a href="#cfn_064"><code class="link">CSignal_Scale</code></a></td><td><code>INT16 <b>CSignal_Scale</b>(CData* idY, CData* idX, COMPLEX64 nScale);<br>public: static INT16 <b>CSignal::Scale</b>(CData* idY, CData* idX, COMPLEX64 nScale);<br></code><br>  Scales the signal by factor nScale.</td></tr>
-    <tr><td><a href="#cfn_070"><code class="link">CSignal_SetScale</code></a></td><td><code>INT16 <b>CSignal_SetScale</b>(CData* idDst, COMPLEX64 nScale);<br>public: static INT16 <b>CSignal::SetScale</b>(CData* idDst, COMPLEX64 nScale);<br></code><br>  Set the signal scale factor</td></tr>
+    <tr><td><a href="#cfn_071"><code class="link">CSignal_SetScale</code></a></td><td><code>INT16 <b>CSignal_SetScale</b>(CData* idDst, COMPLEX64 nScale);<br>public: static INT16 <b>CSignal::SetScale</b>(CData* idDst, COMPLEX64 nScale);<br></code><br>  Set the signal scale factor</td></tr>
     <tr><td><a href="#cfn_013"><code class="link">CSignal_Sframe</code></a></td><td><code>INT16 <b>CSignal_Sframe</b>(CData* idY, CData* idX, INT32 nMaxlen, INT32 nStep, CData* idP, INT32 nNPeriods);<br>public: static INT16 <b>CSignal::Sframe</b>(CData* idY, CData* idX, INT32 nMaxlen, INT32 nStep, CData* idP, INT32 nNPeriods);<br></code><br>  Splits the signal into frames synchronised to pitch information.</td></tr>
     <tr><td><a href="#cfn_065"><code class="link">CSignal_Svq</code></a></td><td><code>INT16 <b>CSignal_Svq</b>(CData* idQ, CData* idI, CData* idX, CData* idB);<br>public: static INT16 <b>CSignal::Svq</b>(CData* idQ, CData* idI, CData* idX, CData* idB);<br></code><br>  Scalar Vector Quantization  Each of the N components of the M vectors of idX were independently  quantized.</td></tr>
     <tr><td><a href="#cfn_066"><code class="link">CSignal_Unwrap</code></a></td><td><code>INT16 <b>CSignal_Unwrap</b>(CData* idY, CData* idX);<br>public: static INT16 <b>CSignal::Unwrap</b>(CData* idY, CData* idX);<br></code><br>  Unwraps radian phases given in imaginary part of idY to their 2&amp;pi; complement if the  phase jumps greater than &amp;pi;.</td></tr>
     <tr><td><a href="#cfn_067"><code class="link">CSignal_Vq</code></a></td><td><code>INT16 <b>CSignal_Vq</b>(CData* idQ, CData* idI, CData* idX, INT32 nBits, const char* sMethod);<br>public: static INT16 <b>CSignal::Vq</b>(CData* idQ, CData* idI, CData* idX, INT32 nBits, const char* sMethod);<br></code><br>  Vector Quantization  The vectors of idX where used to generate 2nBits codebook  vectors using LGB-Algorithm.</td></tr>
+    <tr><td><a href="#cfn_069"><code class="link">CSignal_Wavelet</code></a></td><td><code>INT16 <b>CSignal_Wavelet</b>(CData* idY, CData* idX, INT32 nDi, INT32 nLevel);<br>public: static INT16 <b>CSignal::Wavelet</b>(CData* idY, CData* idX, INT32 nDi, INT32 nLevel);<br></code><br>  Preforms wavelet analysis for each frame.</td></tr>
     <tr><td><a href="#cfn_068"><code class="link">CSignal_Window</code></a></td><td><code>INT16 <b>CSignal_Window</b>(CData* idY, CData* idX, INT32 nLenIn, INT32 nLenOut, const char* lpsWindow, BOOL bNorm);<br>public: static INT16 <b>CSignal::Window</b>(CData* idY, CData* idX, INT32 nLenIn, INT32 nLenOut, const char* lpsWindow, BOOL bNorm);<br></code><br>  Frame windowing.</td></tr>
-    <tr><td><a href="#cfn_069"><code class="link">CSignal_Zcr</code></a></td><td><code>INT16 <b>CSignal_Zcr</b>(CData* idY, CData* idX, CData* idP);<br>public: static INT16 <b>CSignal::Zcr</b>(CData* idY, CData* idX, CData* idP);<br></code><br>  Zero-crossing counter  This operation counts the zero-crossing instances selective to their step sizes falling in the intervals given in  idP.</td></tr>
+    <tr><td><a href="#cfn_070"><code class="link">CSignal_Zcr</code></a></td><td><code>INT16 <b>CSignal_Zcr</b>(CData* idY, CData* idX, CData* idP);<br>public: static INT16 <b>CSignal::Zcr</b>(CData* idY, CData* idX, CData* idP);<br></code><br>  Zero-crossing counter  This operation counts the zero-crossing instances selective to their step sizes falling in the intervals given in  idP.</td></tr>
     <tr><td colspan="2" class="rowempty">&nbsp;</td></tr>
     <tr>
       <td class="rowgroup"><a name="err">Errors</a></td>
@@ -6571,14 +6575,14 @@ Scale factor
   </div>
   <img src="../resources/blank_stc.gif" height="10">
   </div>
-  <div id="cfn_070">
+  <div id="cfn_071">
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_070"></a>C/C++ Function <span 
+        name="cfn_071"></a>C/C++ Function <span 
         class="mid">CSignal_SetScale</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
-        <a class="navbar" href="javascript:__PrintSection('cfn_070','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
+        <a class="navbar" href="javascript:__PrintSection('cfn_071','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
         <a class="navbar" href="../home.html">Home</a>
         <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
@@ -7002,6 +7006,106 @@ String indicating cluster method: <code>LBG</code> or <code>PAM</code> currently
   </div>
   <img src="../resources/blank_stc.gif" height="10">
   </div>
+  <div id="cfn_069">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td nowrap width="25%" class="navbar"><a 
+        name="cfn_069"></a>C/C++ Function <span 
+        class="mid">CSignal_Wavelet</span></td>
+      <td nowrap width="75%" class="navbar" style="text-align:right;">
+        <a class="navbar" href="javascript:__PrintSection('cfn_069','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
+  </table>
+  <div class="mframe"><table cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td class="hidden"></td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Signature</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code>
+INT16 <b>CSignal_Wavelet</b>(CData* idY, CData* idX, INT32 nDi, INT32 nLevel);<br>public: static INT16 <b>CSignal::Wavelet</b>(CData* idY, CData* idX, INT32 nDi, INT32 nLevel);<br>
+</code></td>
+    </tr>
+    <tr>
+      <td class="hidden">&nbsp;</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Source</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">sig_iam.c(2932)</td>
+    </tr>
+  </table></div>
+  <div class="mframe2">
+  <h3>Description</h3>
+ <p>Preforms wavelet analysis for each frame.</p>
+	<h3>Parameters</h3>
+	<table>
+		<tr>
+			<td class="hidden">&nbsp;&nbsp;</td>
+			<td class="hidden"><b><code>
+idX
+</code></b></td>
+			<td class="hidden">&nbsp;</td>
+			<td class="hidden">
+   Input data instance containing the framed signal.
+			</td>
+		</tr>
+		<tr>
+			<td class="hidden">&nbsp;&nbsp;</td>
+			<td class="hidden"><b><code>
+nDi
+</code></b></td>
+			<td class="hidden">&nbsp;</td>
+			<td class="hidden">
+   The desired daubechies wavelet index.
+			</td>
+		</tr>
+		<tr>
+			<td class="hidden">&nbsp;&nbsp;</td>
+			<td class="hidden"><b><code>
+nLevel
+</code></b></td>
+			<td class="hidden">&nbsp;</td>
+			<td class="hidden">
+The desired level of detail (-1 for max. level)
+			</td>
+		</tr>
+		<tr>
+			<td class="hidden">&nbsp;&nbsp;</td>
+			<td class="hidden"><b><code>
+idY
+</code></b></td>
+			<td class="hidden">&nbsp;</td>
+			<td class="hidden">
+   Output data instance.
+			</td>
+		</tr>
+	</table>
+	<h3>Return value</h3>
+	<p>
+<code>O_K</code>
+	</p>
+	<h3>See also</h3>
+	<table>
+		<tr>
+			<td class="hidden">&nbsp;&nbsp;</td>
+			<td class="hidden">
+<a href="#cfn_004"><code class="link">CSignal_DeFrame</code></a>
+			</td>
+		</tr>
+	</table>
+  <!--{{ CUSTOM_DOC -->
+  <!--}} CUSTOM_DOC -->
+  </div>
+  <img src="../resources/blank_stc.gif" height="10">
+  </div>
   <div id="cfn_068">
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
@@ -7120,14 +7224,14 @@ Window normalization.
   </div>
   <img src="../resources/blank_stc.gif" height="10">
   </div>
-  <div id="cfn_069">
+  <div id="cfn_070">
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_069"></a>C/C++ Function <span 
+        name="cfn_070"></a>C/C++ Function <span 
         class="mid">CSignal_Zcr</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
-        <a class="navbar" href="javascript:__PrintSection('cfn_069','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
+        <a class="navbar" href="javascript:__PrintSection('cfn_070','Class signal');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
         <a class="navbar" href="../home.html">Home</a>
         <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
@@ -7153,7 +7257,7 @@ INT16 <b>CSignal_Zcr</b>(CData* idY, CData* idX, CData* idP);<br>public: static 
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">sig_iam.c(2930)</td>
+      <td class="hidden">sig_iam.c(2962)</td>
     </tr>
   </table></div>
   <div class="mframe2">
