@@ -171,7 +171,7 @@ INT16 CGEN_PROTECTED CFunction::IncludeEx
   INT32  nTok             = 0;                                                  // Current token
   INT32  nXTok            = 0;                                                  // Total number of included tokens
   INT32  nCS              = 0;                                                  // Size of string components
-  CDgen* iPar              = iParser!=NULL?iParser:GetDlpParser();              // Get dLabPro parser
+  CDgen* iPar             = iParser!=NULL?iParser:GetDlpParser();               // Get dLabPro parser
   char   lpsInclFn[L_PATH];                                                     // Include file name (fully qualified)
   char   lpsCurrFn[L_PATH];                                                     // Current file name
 
