@@ -199,7 +199,7 @@ void CGEN_PRIVATE CFst_Rank_Rcsn
   while ((lpT=CFst_STI_TfromS(lpTI,nS,lpT))!=NULL)                              /* Enumerate trans. starting at nS   */
   {                                                                             /* >>                                */
     FST_ITYPE nTerS = *CFst_STI_TTer(lpTI,lpT);                                 /*   Terminal state of curr. trans.  */
-    if (CData_Dfetch(idDst,nTerS,0)<(FLOAT64)nRank) continue;                    /*   We have been here earlier       */
+    if ((CData_Dfetch(idDst,nTerS,0)>0) && (CData_Dfetch(idDst,nTerS,0)<(FLOAT64)nRank))continue;/*   We have been here earlier       */
     CData_Dstore(idDst,(FLOAT64)nRank,nTerS,0);                                  /*   Store rank of terminal state    */
     CFst_Rank_Rcsn(lpTI,nRank+1,nTerS,idDst);                                   /*   Continue recursion at term. st. */
   }                                                                             /* <<                                */

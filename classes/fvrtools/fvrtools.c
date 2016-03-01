@@ -537,6 +537,11 @@ INT16 CFvrtools::FromString(const char* lpsSrc, CFst* itFvr)
 	return CFvrtools_FromString(this, lpsSrc, itFvr);
 }
 
+INT16 CFvrtools::FromFst(CFst* itSrc, CFst* itFvr)
+{
+	return CFvrtools_FromFst(this, itSrc, itFvr);
+}
+
 INT16 CFvrtools::Synthesize(CFst* itDst, CFst* itFvr)
 {
 	return CFvrtools_Synthesize(this, itDst, itFvr);
