@@ -355,7 +355,7 @@ INT16 CGEN_PROTECTED CFvrtools_SeqToFvr(CFvrtools* _this, CFst* itSeq, CFst* itF
 
   /* Create FVR tree */                                                         /* --------------------------------- */
   CFst_Reset(BASEINST(itFvr),TRUE);                                             /* Reset target                      */
-  CData_Copy(AS(CData,itFvr->is),AS(CData,itSeq->is));                          /* Copy input symbol table           */
+  CData_Copy(itFvr->is,itSeq->is);                                              /* Copy input symbol table           */
   ISETOPTION(itFvr,"/lsr"); ISETOPTION(itFvr,"/fsa");                           /* Set some options                  */
   CFst_Addunit(itFvr,"FVR");                                                    /* Add a unit                        */
   IRESETOPTIONS(itFvr);                                                         /* Clear options                     */

@@ -132,7 +132,7 @@ INT16 CGEN_PUBLIC CFvrtools_Synthesize(CFvrtools* _this, CFst* itDst, CFst* itFv
   int           nAux3;
   int           nAux4;
   int           nAux5;
-  int           nAux6;
+  int           nAux6=0;
   int           nRec;
   FST_ITYPE nTransItDst;
   FST_ITYPE nTer;
