@@ -88,6 +88,7 @@ cache = yes\n\
 #  - Temporary filename of the reference recognized fst\n\
 #  - Temporary filename of the nld-matrix\n\
 #  - Temporary filename of the audio signal\n\
+#  - Temporary filename of the fvr-fst or \"NULL\"\n\
 #  - Filename of the session info object\n\
 postproc.cmd = \n\
 \n\

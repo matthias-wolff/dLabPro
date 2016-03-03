@@ -27,6 +27,7 @@
 #include "recognizer.h"
 #include "dlp_math.h"
 #include "config_melproc.h"
+#include "dlp_fvrtools.h"
 
 #ifdef __USE_PORTAUDIO
 #include "portaudio.h"
@@ -378,19 +379,48 @@ void confidence(CFst* itDC, CFst* itDCr, const char *sLab)
   if(nRAcc) dlg_upd(lpsRRes);
 }
 
-void postprocess(CFst* itDC, CFst* itDCr)
+CFst* fvrgen(CFst* itDC)
+{
+  CFst *itFvr;
+  INT32 nI,nC;
+  INT32 nXI=CData_GetNRecs(AS(CData,itDC->os));
+  INT32 nOI=CData_GetRecLen(AS(CData,itDC->os));
+  INT32 nXC=CData_GetCompType(AS(CData,itDC->os),0);
+  const char *lpI=(const char*)CData_XAddr(AS(CData,itDC->os),0,0);
+
+  /* Check for FVR[ at begin of command */
+  if(dlp_strncmp(CData_Sfetch(AS(CData,itDC->ud),0,0),"FVR[",4)) return NULL;
+  /* Check for output symbols with '[' or ']' and other characters */
+  for(nI=0;nI<nXI;nI++,lpI+=nOI) for(nC=0;nC<nXC && lpI[nC];nC++)
+    if((lpI[nC]=='[' || lpI[nC]==']') && (nC || lpI[nC+1])) return NULL;
+
+  /* Extract output symbol sequence */
+  ICREATEEX(CFst, itFvr,"itFvr",NULL);
+  CFst_CopyUi(itFvr,itDC,NULL,0);
+  CFst_Invert(itFvr,0);
+  CFst_Project(itFvr);
+  CData_DeleteComps(AS(CData,itFvr->td),4,CData_GetNComps(AS(CData,itFvr->td))-4);
+  CFst_Lazymin(itFvr);
+  /* Convert to FVR */
+  CFvrtools_FromFst(NULL,itFvr,itFvr);
+  return itFvr;
+}
+
+void postprocess(CFst* itDC, CFst* itDCr, CFst *itFvr)
 {
   routput(O_sta,1,"rec post (fst: %i)\n",rTmp.nFstSel);
   char sTmpDC[L_PATH];
   char sTmpDCr[L_PATH];
   char sTmpNld[L_PATH];
   char sTmpSig[L_PATH];
+  char sTmpFvr[L_PATH];
   char sCmd[L_PATH*4];
   CData *idColSig;
   snprintf(sTmpDC, L_PATH,"%s-dc.fst", dlp_tempnam(NULL,"recognizer")); dlp_strreplace(sTmpDC ,"\\","/");
   snprintf(sTmpDCr,L_PATH,"%s-dcr.fst",dlp_tempnam(NULL,"recognizer")); dlp_strreplace(sTmpDCr,"\\","/");
   snprintf(sTmpNld,L_PATH,"%s-nld.fst",dlp_tempnam(NULL,"recognizer")); dlp_strreplace(sTmpNld,"\\","/");
   snprintf(sTmpSig,L_PATH,"%s-sig.wav",dlp_tempnam(NULL,"recognizer")); dlp_strreplace(sTmpSig,"\\","/");
+  snprintf(sTmpFvr,L_PATH,"%s-fvr.fst",dlp_tempnam(NULL,"recognizer")); dlp_strreplace(sTmpSig,"\\","/");
   CDlpObject_Save(BASEINST(itDC),      sTmpDC, SV_XML);
   CDlpObject_Save(BASEINST(itDCr),     sTmpDCr,SV_XML);
   CDlpObject_Save(BASEINST(rTmp.idNld),sTmpNld,SV_XML);
@@ -400,13 +430,16 @@ void postprocess(CFst* itDC, CFst* itDCr)
   idColSig->m_lpTable->m_fsr=1000./rCfg.nSigSampleRate;
   CDlpFile_LibsndfileExport(rTmp.iFile,sTmpSig,BASEINST(idColSig),"wav");
   IDESTROY(idColSig);
-  snprintf(sCmd,L_PATH*4,"%s \"%s\" \"%s\" \"%s\" \"%s\" \"%s\"",
-          rCfg.sPostProc,sTmpDC,sTmpDCr,sTmpNld,sTmpSig,cfgload[CL_SES]);
+  if(itFvr) CDlpObject_Save(BASEINST(itFvr),sTmpFvr,SV_XML);
+  else snprintf(sTmpFvr,L_PATH,"NULL");
+  snprintf(sCmd,L_PATH*4,"%s \"%s\" \"%s\" \"%s\" \"%s\" \"%s\" \"%s\"",
+          rCfg.sPostProc,sTmpDC,sTmpDCr,sTmpNld,sTmpSig,sTmpFvr,cfgload[CL_SES]);
   system(sCmd);
   unlink(sTmpDC);
   unlink(sTmpDCr);
   unlink(sTmpNld);
   unlink(sTmpSig);
+  if(itFvr) unlink(sTmpFvr);
 }
 
 INT32 decode(CFst* itGP, CFst* itRN, CFstsearch *itSP, CFst* itDC)
@@ -496,6 +529,7 @@ INT32 recognize(const char *sLab)
   CFst*  itDC;
   CFst*  itDCr;
   CFst*  itRNforce=NULL;
+  CFst*  itFvr=NULL;
 
   ICREATEEX(CFst, itDC, "itDC", NULL);
   ICREATEEX(CFst, itDCr,"itDCr",NULL);
@@ -525,14 +559,18 @@ INT32 recognize(const char *sLab)
 
   /* Confidence computation */
   confidence(itDC,itDCr,sLab);
+
+  /* FVR generation */
+  itFvr=fvrgen(itDC);
   
   /* External post-processing */
   if(rCfg.sPostProc[0])
-    postprocess(itDC,itDCr);
+    postprocess(itDC,itDCr,itFvr);
 
 end:
   IDESTROYFST(itDCr);
   IDESTROYFST(itDC);
+  if(itFvr) IDESTROYFST(itFvr);
   if(itRNforce){
     CFstsearch_Load(rCfg.rDSession.itSP,rCfg.rDSession.itRN,0);
     IDESTROYFST(itRNforce);

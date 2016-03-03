@@ -36,6 +36,7 @@ SOURCES   = $(PROJNAME) cfg cfgdef hlp cmd
 
 LIBS      = \
 	$(CLS_LPTH)/fstsearch$(LET) $(LPOST)  \
+	$(CLS_LPTH)/fvrtools$(LET) $(LPOST)   \
 	$(CLS_LPTH)/file$(LET) $(LPOST)       \
 	$(CLS_LPTH)/gmm$(LET) $(LPOST)        \
 	$(CLS_LPTH)/vmap$(LET) $(LPOST)       \
