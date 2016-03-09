@@ -149,6 +149,7 @@ INT16 CGEN_PROTECTED CFvrtools_ParseSeq
   FST_ITYPE     nTer      = -1;                                                 /* Terminal state in itSeq           */
   FST_ITYPE     nSsq      = -1;                                                 /* 1st state of sub-sequence in itSeq*/
   FST_WTYPE     nW        = NAN;                                                /* Weight in itSeq                   */
+  FST_WTYPE     nWL       = 0;                                                  /* Preserved weight of eps. trans.   */
   FST_ITYPE     nChd      = -1;                                                 /* Child state index in itFvr        */
   FST_ITYPE     nFvrT     = -1;                                                 /* Transition index in itFvr         */
   BOOL          bTis      = FALSE;                                              /* Input symbol found                */
@@ -174,7 +175,8 @@ INT16 CGEN_PROTECTED CFvrtools_ParseSeq
   {                                                                             /* >>                                */
     nTer = *CFst_STI_TTer(lpSeqTI,lpSeqT);                                      /*   Get trans. terminal state index */
     nTis = *CFst_STI_TTis(lpSeqTI,lpSeqT);                                      /*   Get trans. input symbol index   */
-    nW   = *CFst_STI_TW  (lpSeqTI,lpSeqT);                                      /*   Get transition weight           */
+    nW   = *CFst_STI_TW  (lpSeqTI,lpSeqT) + nWL;                                /*   Get transition weight           */
+    nWL  = 0;                                                                   /*   Reset preserved weight          */
     /*printf("%ld: '%s'\n",nChd,FVRT_STIS(itFvr,nTis));*/
 
     if (nTis==nIsBo)                                                            /*   Input symbol is '['             */
@@ -194,6 +196,10 @@ INT16 CGEN_PROTECTED CFvrtools_ParseSeq
       else if (nBCnt==0)                                                        /*     End of sub-sequence           */
         break;                                                                  /*       Parsing complete            */
       nBCnt--;                                                                  /*     Count braces                  */
+    }                                                                           /*   <<                              */
+    else if (nBCnt==0 && nTis<0)                                                /*   Top-level epsilon symbol        */
+    {                                                                           /*   >>                              */
+      nWL=nW;                                                                   /*     Preserve weight for next iter.*/
     }                                                                           /*   <<                              */
     else if (nBCnt==0)                                                          /*   Other top-level input symbol    */
     {                                                                           /*   >>                              */
