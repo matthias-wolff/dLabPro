@@ -383,29 +383,28 @@ CFst* fvrgen(CFst* itDC)
 {
   CFst *itFvr;
   CFvrtools *iFvr;
-  INT32 nI,nC;
-  INT32 nXI=CData_GetNRecs(AS(CData,itDC->os));
-  INT32 nOI=CData_GetRecLen(AS(CData,itDC->os));
-  INT32 nXC=CData_GetCompType(AS(CData,itDC->os),0);
-  const char *lpI=(const char*)CData_XAddr(AS(CData,itDC->os),0,0);
 
   /* Check for FVR[ at begin of command */
   if(dlp_strncmp(CData_Sfetch(AS(CData,itDC->ud),0,0),"FVR[",4)) return NULL;
-  /* Check for output symbols with '[' or ']' and other characters */
-  for(nI=0;nI<nXI;nI++,lpI+=nOI) for(nC=0;nC<nXC && lpI[nC];nC++)
-    if((lpI[nC]=='[' || lpI[nC]==']') && (nC || lpI[nC+1])) return NULL;
 
-  /* Extract output symbol sequence */
+  /* Copy first unit */
   ICREATEEX(CFst, itFvr,"itFvr",NULL);
   CFst_CopyUi(itFvr,itDC,NULL,0);
+
+  /* Extract output symbol sequence */
   CFst_Invert(itFvr,0);
   CFst_Project(itFvr);
   CData_DeleteComps(AS(CData,itFvr->td),4,CData_GetNComps(AS(CData,itFvr->td))-4);
   CFst_Lazymin(itFvr);
+
   /* Convert to FVR */
   ICREATEEX(CFvrtools, iFvr, "iFvr", NULL);
-  CFvrtools_FromFst(iFvr,itFvr,itFvr);
+  IF_NOK(CFvrtools_FromFst(iFvr,itFvr,itFvr)){
+    IDESTROYFST(itFvr);
+    itFvr=NULL;
+  }
   IDESTROY(iFvr);
+
   return itFvr;
 }
 
