@@ -382,6 +382,7 @@ void confidence(CFst* itDC, CFst* itDCr, const char *sLab)
 CFst* fvrgen(CFst* itDC)
 {
   CFst *itFvr;
+  CFvrtools *iFvr;
   INT32 nI,nC;
   INT32 nXI=CData_GetNRecs(AS(CData,itDC->os));
   INT32 nOI=CData_GetRecLen(AS(CData,itDC->os));
@@ -402,7 +403,9 @@ CFst* fvrgen(CFst* itDC)
   CData_DeleteComps(AS(CData,itFvr->td),4,CData_GetNComps(AS(CData,itFvr->td))-4);
   CFst_Lazymin(itFvr);
   /* Convert to FVR */
-  CFvrtools_FromFst(NULL,itFvr,itFvr);
+  ICREATEEX(CFvrtools, iFvr, "iFvr", NULL);
+  CFvrtools_FromFst(iFvr,itFvr,itFvr);
+  IDESTROY(iFvr);
   return itFvr;
 }
 
