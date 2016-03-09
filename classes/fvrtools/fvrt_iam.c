@@ -86,6 +86,54 @@ L_EXCEPTION:                                                                    
 /*
  * Documentation in fvrtools.def
  */
+INT16 CGEN_PRIVATE CFvrtools_CheckSeq(CFvrtools* _this, CFst* itSeq)
+{
+  INT16 nRet = O_K;                                                             /* The return value                  */
+  INT32 nI,nC;
+  INT32 nXI=CData_GetNRecs(AS(CData,itSeq->is));
+  INT32 nOI=CData_GetRecLen(AS(CData,itSeq->is));
+  INT32 nXC=CData_GetCompType(AS(CData,itSeq->is),0);
+  char *lpI;
+  FST_TID_TYPE *lpTI;
+  BYTE* lpT;
+
+  /* Initialization */                                                          /* --------------------------------- */
+  CHECK_THIS_RV(NOT_EXEC);                                                      /* Check this instance               */
+  if (itSeq==NULL)                                                              /* Output not correct instance       */
+    FVRT_EXCEPTION(ERR_NULLINST,"itDst is NULL",0,0);                           /*   Error message and exit          */
+
+  /* Remove (XX) in output symbols & check for singular [ or ] */               /* --------------------------------- */
+  lpI=(char*)CData_XAddr(AS(CData,itSeq->is),0,0);
+  for(nI=0;nI<nXI;nI++,lpI+=nOI){
+    INT32 nBrk=0;
+    INT32 nCd=0;
+    for(nC=0;nC<nXC && lpI[nC];nC++){
+      if((lpI[nC]=='[' || lpI[nC]==']') && (nC || lpI[nC+1]))
+        FVRT_EXCEPTION(FVRT_SEQSYNTAX,"symbol [ or ] occurs with other characters",0,0);
+      if(lpI[nC]=='(') nBrk++;
+      if(!nBrk) lpI[nCd++]=lpI[nC];
+      if(lpI[nC]==')') nBrk--;
+    }
+    lpI[nCd]='\0';
+  }
+
+  /* Remove empty output symbols */
+  lpI=(char*)CData_XAddr(AS(CData,itSeq->is),0,0);
+  lpTI=CFst_STI_Init(itSeq,0,0);
+  for(lpT=lpTI->lpFT ; lpT<lpTI->lpFT+lpTI->nRlt*lpTI->nXT ; lpT+=lpTI->nRlt){
+    FST_STYPE *nTis=CFst_STI_TTis(lpTI,lpT);
+    if(*nTis>=0 && *nTis<nXI && !lpI[*nTis*nOI]) *nTis=-1;
+  }
+  CFst_STI_Done(lpTI);
+
+  /* Clean-up */                                                                /* --------------------------------- */
+L_EXCEPTION:                                                                    /* : Clean exit label                */
+  return nRet;                                                                  /* Return                            */
+}
+
+/*
+ * Documentation in fvrtools.def
+ */
 INT16 CGEN_PUBLIC CFvrtools_FromFst(CFvrtools* _this, CFst* itSrc, CFst* itFvr)
 {
   INT16 nRet = O_K;                                                             /* The return value                  */
@@ -95,6 +143,8 @@ INT16 CGEN_PUBLIC CFvrtools_FromFst(CFvrtools* _this, CFst* itSrc, CFst* itFvr)
   if (itSrc==NULL)                                                              /* Output not correct instance       */
     FVRT_EXCEPTION(ERR_NULLINST,"itDst is NULL",0,0);                           /*   Error message and exit          */
   /* Create wFVR from sequence FST  */                                          /* --------------------------------- */
+  CFst_CopyUi(itSrc,itFvr,NULL,0);                                              /* Get the first unit                */
+  IF_NOK(nRet=CFvrtools_CheckSeq(_this,itFvr) ) goto L_EXCEPTION;               /* Check sequence symbol table       */
   IF_NOK(nRet=CFvrtools_SeqToFvr(_this,itFvr,itFvr) ) goto L_EXCEPTION;         /* Create FVR                        */
 
   /* Clean-up */                                                                /* --------------------------------- */
