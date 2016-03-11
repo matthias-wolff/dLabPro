@@ -251,79 +251,91 @@ void dlg_upd(const char *lpsRes)
 }
 
 BOOL isfvr(CFst* itDC,INT32 *nBO,INT32 *nBC){
+  /* Check for FVR[ at begin of command */
   if(dlp_strncmp(CData_Sfetch(AS(CData,itDC->ud),0,0),"FVR[",4)) return FALSE;
+  /* Check for bracket in symbol table */
   IF_NOK(CFvrtools_CheckSeq(rTmp.iFvr,NULL,AS(CData,itDC->os),nBO,nBC)) return FALSE;
   return TRUE;
 }
 
+INT32 data_findsymbol(CData *idS,const char *lpS){
+  INT32 nXS=CData_GetNRecs(idS);
+  INT32 nS;
+  INT32 nLen=MIN(strlen(lpS)+1,CData_GetCompType(idS,0));
+  for(nS=0;nS<nXS;nS++) if(!dlp_strncmp(CData_Sfetch(idS,nS,0),lpS,nLen)) return nS;
+  return -1;
+}
+
+INT32 data_findcompoffset(CData *idX,const char *lpsName){
+  INT32 nId=CData_FindComp(idX,lpsName);
+  if(nId<0) return nId;
+  return CData_GetCompOffset(idX,nId);
+}
+
 FLOAT32 confidence_phn(CFst* itDC, CFst* itDCr){
-  INT32 N_MID_G=4;                                         /* uasr.am.gbg = 4 */
-  INT32 N_MID_S=3;                                         /* uasr.am.sil = 3 */
-  FLOAT32 nRNAD=0.;
-  FLOAT32 nRNED=0.;
-  FLOAT32 nRTNAD;
-  FLOAT32 nRTNED;
-  FLOAT32 N_LAMBDA=rCfg.rRej.nFVRLAM;
-  INT32 nBO=-1,nBC=-1;
-  /* Check for FVR[ at begin of command */
-  BOOL bFvr=isfvr(itDC,&nBO,&nBC);
-  nRTNAD = rCfg.rRej.nTAD;
-  nRTNED = rCfg.rRej.nTED;
-  if(rCfg.rSearch.eTyp==RS_as) nRTNAD = rCfg.rRej.nASTAD;
-  CData_AddComp(AS(CData,itDC->td),"~CNF",T_FLOAT);
-  /* Sum up number of not pause words, identical phonems, reco. lsr and ref. lsr */
-  INT32 nOfRPhn = CData_FindComp(AS(CData,itDC->td),"~PHN");
-  INT32 nOfFPhn = CData_FindComp(AS(CData,itDCr->td),"~PHN");
-  INT32 nOfRLsr = CData_FindComp(AS(CData,itDC->td),"~LSR");
-  INT32 nOfFLsr = CData_FindComp(AS(CData,itDCr->td),"~LSR");
-  INT32 nOfRTos = CData_FindComp(AS(CData,itDC->td),"~TOS");
-  INT32 nOfRCnf = CData_FindComp(AS(CData,itDC->td),"~CNF");
-  INT32 nRNT = CData_GetNRecs(AS(CData,itDC->td));
-  INT32 nFNT = CData_GetNRecs(AS(CData,itDCr->td));
-  BYTE *lpRT = CData_XAddr(AS(CData,itDC->td),0,0);
-  BYTE *lpFT = CData_XAddr(AS(CData,itDCr->td),0,0);
-  INT32 nRRLen = CData_GetRecLen(AS(CData,itDC->td));
-  INT32 nFRLen = CData_GetRecLen(AS(CData,itDCr->td));
-  INT32 ri,fi;
+  INT32 ssil=data_findsymbol(AS(CData,itDCr->os),"#");  /* Silence symbol index */
+  INT32 sgar=data_findsymbol(AS(CData,itDCr->os),".");  /* Garbage symbol index */
+  INT32 sbo=-1,sbc=-1;                                  /* Bracket symbol indices */
+  BOOL bfvr=isfvr(itDC,&sbo,&sbc);                      /* FVR confidence calculation? */
+  CData *rtd=AS(CData,itDC->td);                        /* Result transition table */
+  CData *ftd=AS(CData,itDCr->td);                       /* Reference transition table */
+  INT32 rl,fl;                                          /* Transistions record length in result / reference */
+  BYTE  *rt,*ft;                                        /* Transistions pointer in result / reference */
+  BYTE  *ret,*fet;                                      /* Pointer after last transition in result / reference */
+  INT32 orp,ofp;                                        /* Offset of ~PHN component in result / reference */
+  INT32 orw,ofw;                                        /* Offset of ~LSR component in result / reference */
+  INT32 oro;                                            /* Offset of ~TOS component in result */
+  INT32 orc;                                            /* Offset of ~CNF component in result */
+  FLOAT32 nad,ned;                                      /* Normalized acoustic and edit distant */
+  FLOAT32 tad,ted;                                      /* Threshold for acoustic and edit distant */
+
+  if(bfvr) CData_AddComp(rtd,"~CNF",T_FLOAT);
+  rt =CData_XAddr(rtd,0,0);
+  ft =CData_XAddr(ftd,0,0);
+  rl =CData_GetRecLen(rtd);
+  fl =CData_GetRecLen(ftd);
+  ret=rt+rl*CData_GetNRecs(rtd);
+  fet=ft+fl*CData_GetNRecs(ftd);
+  orp=data_findcompoffset(rtd,"~PHN");
+  ofp=data_findcompoffset(ftd,"~PHN");
+  if(orp<0 || ofp<0) return 0;
+  orw=data_findcompoffset(rtd,"~LSR");
+  ofw=data_findcompoffset(ftd,"~LSR");
+  oro=data_findcompoffset(rtd,"~TOS");
+  orc=data_findcompoffset(rtd,"~CNF");
+
   INT32 n=0,neq=0,wn=0,wneq=0;
   FLOAT32 rlsr=0.,flsr=0.,wrlsr=0.,wflsr=0.;
-  if(nOfRPhn>=0) nOfRPhn = CData_GetCompOffset(AS(CData,itDC->td),nOfRPhn);
-  if(nOfFPhn>=0) nOfFPhn = CData_GetCompOffset(AS(CData,itDCr->td),nOfFPhn);
-  if(nOfRLsr>=0) nOfRLsr = CData_GetCompOffset(AS(CData,itDC->td),nOfRLsr);
-  if(nOfFLsr>=0) nOfFLsr = CData_GetCompOffset(AS(CData,itDCr->td),nOfFLsr);
-  if(nOfRTos>=0) nOfRTos = CData_GetCompOffset(AS(CData,itDC->td),nOfRTos);
-  if(nOfRCnf>=0) nOfRCnf = CData_GetCompOffset(AS(CData,itDC->td),nOfRCnf);
-  if(nOfRPhn>=0 && nOfFPhn>=0) for(ri=fi=0;; ri++, fi++, lpRT+=nRRLen, lpFT+=nFRLen){
-    INT32 nRPhn, nFPhn;
-    for( ; ri<nRNT && *(FST_STYPE*)(lpRT+nOfRPhn)<0 ; ri++,lpRT+=nRRLen)
-      if(nOfRTos>=0 && nOfRCnf>=0 && *(FST_STYPE*)(lpRT+nOfRTos)>=0){
-        nRNAD=wrlsr ? (wrlsr-wflsr)/wrlsr : 0;
-        nRNED=wn ? 1.-wneq/(FLOAT32)wn : 0;
-        *(FST_WTYPE*)(lpRT+nOfRCnf)=N_LAMBDA*MAX(1-nRNED/rCfg.rRej.nFVRTED,-1)+(1-N_LAMBDA)*MAX(1-nRNAD/rCfg.rRej.nTAD,-1);
+
+  for(;; rt+=rl,ft+=fl){
+    INT32 rp=-1,fp=-1;
+    for( ; rt<ret && (rp=*(FST_STYPE*)(rt+orp))<0 ; rt+=rl)
+      if(oro>=0 && orc>=0 && *(FST_STYPE*)(rt+oro)>=0){
+        nad=wrlsr ? (wrlsr-wflsr)/wrlsr : 0;
+        ned=wn ? 1.-wneq/(FLOAT32)wn : 0;
+        *(FST_WTYPE*)(rt+orc)=rCfg.rRej.nFVRLAM*MAX(1-ned/rCfg.rRej.nFVRTED,-1)+(1-rCfg.rRej.nFVRLAM)*MAX(1-nad/rCfg.rRej.nTAD,-1);
         wn=wneq=0;
         wrlsr=wflsr=0.;
       }
-    if(ri==nRNT) break;
-    while(fi<nFNT && *(FST_STYPE*)(lpFT+nOfFPhn)<0){ fi++; lpFT+=nFRLen; } if(fi==nFNT) break;
-    nRPhn=*(FST_STYPE*)(lpRT+nOfRPhn);
-    nFPhn=*(FST_STYPE*)(lpRT+nOfRPhn);
-    if(nRPhn==N_MID_S || nRPhn==N_MID_G || nFPhn==N_MID_S || nFPhn==N_MID_G) continue;
+    while(ft<fet && (fp=*(FST_STYPE*)(ft+ofp))<0) ft+=fl;
+    if(rt>=ret || ft>=fet) break;
+    if(rp==ssil || rp==sgar || fp==ssil || fp==sgar) continue;
     n++; wn++;
-    if(nRPhn==nFPhn){ neq++; wneq++; }
-    if(nOfRLsr<0 || nOfFLsr<0) continue;
-    rlsr+=*(FST_WTYPE*)(lpRT+nOfRLsr);
-    flsr+=*(FST_WTYPE*)(lpFT+nOfFLsr);
-    wrlsr+=*(FST_WTYPE*)(lpRT+nOfRLsr);
-    wflsr+=*(FST_WTYPE*)(lpFT+nOfFLsr);
+    if(rp==fp){ neq++; wneq++; }
+    if(orw<0 || ofw<0) continue;
+    rlsr+=*(FST_WTYPE*)(rt+orw);
+    flsr+=*(FST_WTYPE*)(ft+ofw);
+    wrlsr+=*(FST_WTYPE*)(rt+orw);
+    wflsr+=*(FST_WTYPE*)(ft+ofw);
   }
 
-  /* NAD = abs(LSR - LSRr)/abs(LSR) */
-  nRNAD = rlsr ? ABS(rlsr-flsr) / ABS(rlsr) : nRTNAD;
-  /* NED = 1 - Nequal / Nspeech */
-  nRNED = n ? 1. - neq / (FLOAT32)n : nRTNED;
-  /* ACC = NAD<TNA && NED<TNE */
-  routput(O_dbg,1,"rec nad: %.4g ned: %.4g tnad: %.4g tned: %.4g\n",nRNAD,nRNED,nRTNAD,nRTNED);
-  return nRNAD<nRTNAD && nRNED<nRTNED;
+  tad=rCfg.rRej.nTAD;
+  ted=rCfg.rRej.nTED;
+  if(rCfg.rSearch.eTyp==RS_as) tad = rCfg.rRej.nASTAD;
+  nad = rlsr ? ABS(rlsr-flsr) / ABS(rlsr) : tad;
+  ned = n ? 1. - neq / (FLOAT32)n : ted;
+  routput(O_dbg,1,"rec nad: %.4g ned: %.4g tnad: %.4g tned: %.4g\n",nad,ned,tad,ted);
+  return nad<tad && ned<ted;
 }
 
 void confidence(CFst* itDC, CFst* itDCr, const char *sLab)
