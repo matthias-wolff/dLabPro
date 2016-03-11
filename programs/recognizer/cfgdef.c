@@ -99,12 +99,6 @@ postproc.cmd = \n\
 #  as    A* search \n\
 search.typ = tp\n\
 \n\
-# Rejection method\n\
-#  off   Rejection disabled\n\
-#  phn   Free phoneme reference recognition\n\
-#  two   Decode two best paths\n\
-search.rej = phn\n\
-\n\
 # Debug level for search algorithm\n\
 search.debug = 0\n\
 \n\
@@ -129,15 +123,6 @@ search.asprn1 = 40\n\
 search.asprn2 = 40\n\
 search.as2prn = 110\n\
 \n\
-# Configuration of search rejection\n\
-#\n\
-#  astna  sets N_TNA for one path A* search\n\
-#  as2tna sets N_TNA for two path search\n\
-#  as2tne sets N_TNE for two path search\n\
-search.astna  = 0.5\n\
-search.twotna = 15\n\
-search.twotne = 0\n\
-\n\
 # Number of threads to use\n\
 #\n\
 # only used in token passing search (see fstsearch.tp_threads)\n\
@@ -148,6 +133,29 @@ search.threads = 1\n\
 # Only valid for iterative search.\n\
 # Disables VAD!\n\
 search.permanent = no\n\
+\n\
+# Rejection method\n\
+#  off   Rejection disabled\n\
+#  phn   Free phoneme reference recognition\n\
+#  two   Rejection based on two best paths\n\
+rej.typ = phn\n\
+\n\
+# Rejection thresholds\n\
+#\n\
+#  tad        Default threshold for acoustic distance (NAD)\n\
+#  ted        Default threshold for edit distance (NED)\n\
+#  tad.as     Threshold for NAD With A* search\n\
+#  tad.two    Threshold for NAD With two path A* search rejection\n\
+#  ted.two    Threshold for NED With two path A* search rejection\n\
+#  ted.fvr    Threshold for NED in FVR confidence\n\
+#  ted.lambda Balance bias between NED and NAD for FVR confidence\n\
+rej.tad     = 0.05\n\
+rej.ted     = 0.75\n\
+rej.as.tad  = 0.5\n\
+rej.two.tad = 15\n\
+rej.two.ted = 0\n\
+rej.fvr.ted = 0.5\n\
+rej.fvr.lambda = 0.5\n\
 \n\
 # Force vad decission or selected fst\n\
 #\n\

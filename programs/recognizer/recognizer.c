@@ -174,7 +174,7 @@ void evaluation()
   FLOAT32 nAcc2=((nCor ? lpRes->nTP/nCor : 1.)*nFaqTP + (nNCor ? lpRes->nTN/nNCor : 1.)*nFaqTN) / (nFaqTN+nFaqTP);*/
   routput(O_cmd,1,"N:   %i\n",(int)lpRes->nN);
   routput(O_cmd,1,"TP:  %i\n",(int)lpRes->nTP);
-  if(rCfg.rSearch.eRejTyp!=RR_off){
+  if(rCfg.rRej.eTyp!=RR_off){
     routput(O_cmd,1,"TP:  %i\n",(int)lpRes->nTP);
     routput(O_cmd,1,"FP:  %i\n",(int)lpRes->nFP);
     routput(O_cmd,1,"TN:  %i\n",(int)lpRes->nTN);
@@ -183,7 +183,7 @@ void evaluation()
     routput(O_cmd,1,"FO:  %i\n",(int)lpRes->nFO);
   }
   routput(O_cmd,1,"WRR: %.3f%%\n",(lpRes->nTP+lpRes->nFN)/(float)lpRes->nN*100.);
-  if(rCfg.rSearch.eRejTyp!=RR_off){
+  if(rCfg.rRej.eTyp!=RR_off){
     routput(O_cmd,1,"ACC: %.3f%%\n",(lpRes->nTP+lpRes->nTN+lpRes->nTO)/(float)(lpRes->nN+lpRes->nNO)*100.);
 /*    routput(O_cmd,1,"ACC2:%.3f%%\n",nAcc2*100.);*/
     routput(O_cmd,1,"FAR: %.3f%%\n",(lpRes->nFP+lpRes->nTN+lpRes->nNO==0)?0.:((lpRes->nFP+lpRes->nFO)/(float)(lpRes->nFP+lpRes->nTN+lpRes->nNO)*100.));
@@ -267,7 +267,7 @@ void confidence(CFst* itDC, CFst* itDCr, const char *sLab)
   /* Get & store result sentence */
   strcpy(lpsRRes,result_text(CData_Sfetch(AS(CData,itDC->ud),0,0)));
   nGW0=CData_Dfetch(AS(CData,itDC->ud),0,CData_FindComp(AS(CData,itDC->ud),"~GW"));
-  switch(rCfg.rSearch.eRejTyp){
+  switch(rCfg.rRej.eTyp){
   case RR_off: break;
   case RR_phn: nGW1=CData_Dfetch(AS(CData,itDCr->ud),0,CData_FindComp(AS(CData,itDCr->ud),"~GW")); break;
   case RR_two: nGW1=CData_Dfetch(AS(CData,itDC->ud),1,CData_FindComp(AS(CData,itDC->ud),"~GW")); break;
@@ -275,56 +275,70 @@ void confidence(CFst* itDC, CFst* itDCr, const char *sLab)
   routput(O_dbg,1,"rec gw: %.5g %.5g\n",nGW0,nGW1);
 
   /* Get nad & ned thresholds from lexicon -> TNA & TNE */
-  nRTNAD = N_TNAD;
-  nRTNED = N_TNED;
-  switch(rCfg.rSearch.eRejTyp){
+  FLOAT32 N_LAMBDA=rCfg.rRej.nFVRLAM;
+  nRTNAD = rCfg.rRej.nTAD;
+  nRTNED = rCfg.rRej.nTED;
+  switch(rCfg.rRej.eTyp){
     case RR_off:
     case RR_phn:
       if(rCfg.rSearch.eTyp==RS_as)
-        nRTNAD = rCfg.rSearch.nASTNA;
+        nRTNAD = rCfg.rRej.nASTAD;
     break;
     case RR_two:
-      nRTNAD = rCfg.rSearch.nTWOTNA;
-      nRTNED = rCfg.rSearch.nTWOTNE;
+      nRTNAD = rCfg.rRej.nTWOTAD;
+      nRTNED = rCfg.rRej.nTWOTED;
     break;
   }
 
   if(nGW0 && nGW1){
-    switch(rCfg.rSearch.eRejTyp){
-    case RR_phn: {
+    switch(rCfg.rRej.eTyp){
+    case RR_phn:
+      CData_AddComp(AS(CData,itDC->td),"~CNF",T_FLOAT);
+      {
       /* Sum up number of not pause words, identical phonems, reco. lsr and ref. lsr */
-      INT64 nOfRPhn = CData_FindComp(AS(CData,itDC->td),"~PHN");
-      INT64 nOfFPhn = CData_FindComp(AS(CData,itDCr->td),"~PHN");
-      INT64 nOfRLsr = CData_FindComp(AS(CData,itDC->td),"~LSR");
-      INT64 nOfFLsr = CData_FindComp(AS(CData,itDCr->td),"~LSR");
-      INT64 nRNT = CData_GetNRecs(AS(CData,itDC->td));
-      INT64 nFNT = CData_GetNRecs(AS(CData,itDCr->td));
+      INT32 nOfRPhn = CData_FindComp(AS(CData,itDC->td),"~PHN");
+      INT32 nOfFPhn = CData_FindComp(AS(CData,itDCr->td),"~PHN");
+      INT32 nOfRLsr = CData_FindComp(AS(CData,itDC->td),"~LSR");
+      INT32 nOfFLsr = CData_FindComp(AS(CData,itDCr->td),"~LSR");
+      INT32 nOfRTos = CData_FindComp(AS(CData,itDC->td),"~TOS");
+      INT32 nOfRCnf = CData_FindComp(AS(CData,itDC->td),"~CNF");
+      INT32 nRNT = CData_GetNRecs(AS(CData,itDC->td));
+      INT32 nFNT = CData_GetNRecs(AS(CData,itDCr->td));
       BYTE *lpRT = CData_XAddr(AS(CData,itDC->td),0,0);
       BYTE *lpFT = CData_XAddr(AS(CData,itDCr->td),0,0);
-      INT64 nRRLen = CData_GetRecLen(AS(CData,itDC->td));
-      INT64 nFRLen = CData_GetRecLen(AS(CData,itDCr->td));
-      INT64 ri,fi;
-      INT64 n     = 0;
-      INT64 neq   = 0;
-      FLOAT32 rlsr = -1.;
-      FLOAT32 flsr = -1.;
+      INT32 nRRLen = CData_GetRecLen(AS(CData,itDC->td));
+      INT32 nFRLen = CData_GetRecLen(AS(CData,itDCr->td));
+      INT32 ri,fi;
+      INT32 n=0,neq=0,wn=0,wneq=0;
+      FLOAT32 rlsr=0.,flsr=0.,wrlsr=0.,wflsr=0.;
       if(nOfRPhn>=0) nOfRPhn = CData_GetCompOffset(AS(CData,itDC->td),nOfRPhn);
       if(nOfFPhn>=0) nOfFPhn = CData_GetCompOffset(AS(CData,itDCr->td),nOfFPhn);
       if(nOfRLsr>=0) nOfRLsr = CData_GetCompOffset(AS(CData,itDC->td),nOfRLsr);
       if(nOfFLsr>=0) nOfFLsr = CData_GetCompOffset(AS(CData,itDCr->td),nOfFLsr);
+      if(nOfRTos>=0) nOfRTos = CData_GetCompOffset(AS(CData,itDC->td),nOfRTos);
+      if(nOfRCnf>=0) nOfRCnf = CData_GetCompOffset(AS(CData,itDC->td),nOfRCnf);
       if(nOfRPhn>=0 && nOfFPhn>=0) for(ri=fi=0;; ri++, fi++, lpRT+=nRRLen, lpFT+=nFRLen){
-        INT64 nPhn;
-        while(ri<nRNT && *(FST_STYPE*)(lpRT+nOfRPhn)<0){ ri++; lpRT+=nRRLen; } if(ri==nRNT) break;
+        INT32 nRPhn, nFPhn;
+        for( ; ri<nRNT && *(FST_STYPE*)(lpRT+nOfRPhn)<0 ; ri++,lpRT+=nRRLen)
+          if(nOfRTos>=0 && nOfRCnf>=0 && *(FST_STYPE*)(lpRT+nOfRTos)>=0){
+            nRNAD=wrlsr ? (wrlsr-wflsr)/wrlsr : 0;
+            nRNED=wn ? 1.-wneq/(FLOAT32)wn : 0;
+            *(FST_WTYPE*)(lpRT+nOfRCnf)=N_LAMBDA*MAX(1-nRNED/rCfg.rRej.nFVRTED,-1)+(1-N_LAMBDA)*MAX(1-nRNAD/rCfg.rRej.nTAD,-1);
+            wn=wneq=0;
+            wrlsr=wflsr=0.;
+          }
+        if(ri==nRNT) break;
         while(fi<nFNT && *(FST_STYPE*)(lpFT+nOfFPhn)<0){ fi++; lpFT+=nFRLen; } if(fi==nFNT) break;
-        nPhn=*(FST_STYPE*)(lpRT+nOfRPhn);
-        if(nPhn==N_MID_S || nPhn==N_MID_G) continue;
-        n++;
-        if(nPhn == *(FST_STYPE*)(lpFT+nOfFPhn)) neq++;
+        nRPhn=*(FST_STYPE*)(lpRT+nOfRPhn);
+        nFPhn=*(FST_STYPE*)(lpRT+nOfRPhn);
+        if(nRPhn==N_MID_S || nRPhn==N_MID_G || nFPhn==N_MID_S || nFPhn==N_MID_G) continue;
+        n++; wn++;
+        if(nRPhn==nFPhn){ neq++; wneq++; }
         if(nOfRLsr<0 || nOfFLsr<0) continue;
-        if(rlsr<0.){ rlsr=flsr=0.; }else{
-          rlsr+=*(FST_WTYPE*)(lpRT+nOfRLsr);
-          flsr+=*(FST_WTYPE*)(lpFT+nOfFLsr);
-        }
+        rlsr+=*(FST_WTYPE*)(lpRT+nOfRLsr);
+        flsr+=*(FST_WTYPE*)(lpFT+nOfFLsr);
+        wrlsr+=*(FST_WTYPE*)(lpRT+nOfRLsr);
+        wflsr+=*(FST_WTYPE*)(lpFT+nOfFLsr);
       }
 
       /* NAD = abs(LSR - LSRr)/abs(LSR) */
@@ -347,7 +361,7 @@ void confidence(CFst* itDC, CFst* itDCr, const char *sLab)
     break;
     }
     routput(O_dbg,1,"rec nad: %.4g ned: %.4g tnad: %.4g tned: %.4g\n",nRNAD,nRNED,nRTNAD,nRTNED);
-  }else if(rCfg.rSearch.eRejTyp==RR_off) nRAcc=1;
+  }else if(rCfg.rRej.eTyp==RR_off) nRAcc=1;
   CData_AddComp(AS(CData,itDC->ud),"~ACC",T_INT);
   CData_Dstore(AS(CData,itDC->ud),nRAcc,0,CData_GetNComps(AS(CData,itDC->ud))-1);
   /* COR = sRes==sRRes */
@@ -362,7 +376,7 @@ void confidence(CFst* itDC, CFst* itDCr, const char *sLab)
     if(sLab) routput(O_cmd,0,"lab: %s ",sLab);
   	routput(O_cmd,0,"res: %s ",rTmp.rRes.sLastRes);
     if(sLab) routput(O_cmd,0,"cor: %i ",nRCor);
-    if(rCfg.rSearch.eRejTyp!=RR_off) routput(O_cmd,0,"acc: %i",nRAcc);
+    if(rCfg.rRej.eTyp!=RR_off) routput(O_cmd,0,"acc: %i",nRAcc);
     routput(O_cmd,0,"\n");
     if(!CData_IsEmpty(AS(CData,itDCr->ud)))
       routput(O_dbg,1,"refrec %s\n",CData_Sfetch(AS(CData,itDCr->ud),0,0));
@@ -394,9 +408,14 @@ CFst* fvrgen(CFst* itDC)
   /* Extract output symbol sequence */
   CFst_Invert(itFvr,0);
   CFst_Project(itFvr);
+  CData_Xstore(AS(CData,itFvr->td),AS(CData,itFvr->td),
+    CData_FindComp(AS(CData,itFvr->td),"~CNF"),1,
+    CData_FindComp(AS(CData,itFvr->td),"~LSR"));
+  IRESETOPTIONS(AS(CData,itFvr->td));
   CData_DeleteComps(AS(CData,itFvr->td),4,CData_GetNComps(AS(CData,itFvr->td))-4);
   CFst_Lazymin(itFvr);
 
+  CFst_Print(itFvr);
   /* Convert to FVR */
   ICREATEEX(CFvrtools, iFvr, "iFvr", NULL);
   IF_NOK(CFvrtools_FromFst(iFvr,itFvr,itFvr)){
@@ -467,7 +486,7 @@ INT32 decode(CFst* itGP, CFst* itRN, CFstsearch *itSP, CFst* itDC)
   
 /* add component ~PHN to itDC.td with phonem id's */
 #ifndef __NORTTI /* TODO: phn labels in RTTI mode */
-  if(rCfg.rSearch.eRejTyp==RR_phn){
+  if(rCfg.rRej.eTyp==RR_phn){
     IF_NOK(ret = CFst_Copy(BASEINST(itAux), BASEINST(itDC)))                               goto end;
     IF_NOK(ret = CFst_Invert(itAux, 0))                                                    goto end;
     IF_NOK(ret = CFst_Compose(itAux, itAux, itGP, 0, 0))                                   goto end;
@@ -555,7 +574,7 @@ INT32 recognize(const char *sLab)
     goto end;
 
   /* Reference decoding */
-  if(rCfg.rSearch.eRejTyp==RR_phn)
+  if(rCfg.rRej.eTyp==RR_phn)
     IF_NOK(ret=decode(rCfg.rDSession.itGP,rCfg.rDSession.itRNr,rCfg.rDSession.itSPr,itDCr))
       goto end;
 
@@ -964,7 +983,7 @@ INT16 online(struct recosig *lpSig)
         if(rCfg.rSearch.bIter && nVadSfa>0){
           CData_Reset(BASEINST(rTmp.idNld),TRUE);
           CFstsearch_Restart(rCfg.rDSession.itSP);
-          if(rCfg.rSearch.eRejTyp==RR_phn) CFstsearch_Restart(rCfg.rDSession.itSPr);
+          if(rCfg.rRej.eTyp==RR_phn) CFstsearch_Restart(rCfg.rDSession.itSPr);
         }
       }
       routput(O_vad,0,"pF%4i: V:%i Sw:%3i => VS:%i ViS:%2i VP:%2i VC:%2i => sF%4i V:%i ",
@@ -1028,7 +1047,7 @@ INT16 online(struct recosig *lpSig)
         rCfg.rDSession.itSP->m_bFinal=FALSE;
         if(rCfg.rSearch.bPermanent) rCfg.rDSession.itSP->m_bStart=TRUE;
         CFstsearch_Isearch(rCfg.rDSession.itSP,rTmp.idFea);
-        if(rCfg.rSearch.eRejTyp==RR_phn){
+        if(rCfg.rRej.eTyp==RR_phn){
           rCfg.rDSession.itSPr->m_bFinal=FALSE;
           if(rCfg.rSearch.bPermanent) rCfg.rDSession.itSPr->m_bStart=TRUE;
           CFstsearch_Isearch(rCfg.rDSession.itSPr,rTmp.idFea);

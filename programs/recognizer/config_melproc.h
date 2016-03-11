@@ -27,44 +27,8 @@
 #define CONFIG_MELPROC_H_
 
 #define FEAPROC CMELproc
-#define N_DIM 31
 #define N_MID_G 4                                          /* uasr.am.gbg = 4 */
 #define N_MID_S 3                                          /* uasr.am.sil = 3 */
-#define N_TNAD  0.05                                       /* uasr.defnad = 0.05 */
-#define N_TNED  0.75                                       /* uasr.defned = 0.60 */
 #define B_FORCE FALSE
-
-INT32 delta_table_pattern[N_DIM][2] = {
-  { 1, 1 },
-  { 0, 0 },
-  { 1, 1 },
-  { 0, 0 },
-  { 1, 1 },
-  { 0, 0 },
-  { 1, 1 },
-  { 0, 0 },
-  { 1, 1 },
-  { 0, 0 },
-  { 1, 1 },
-  { 0, 0 },
-  { 1, 1 },
-  { 0, 0 },
-  { 1, 1 },
-  { 0, 0 },
-  { 1, 1 },
-  { 0, 0 },
-  { 1, 1 },
-  { 0, 0 },
-  { 1, 1 },
-  { 0, 0 },
-  { 1, 1 },
-  { 0, 0 },
-  { 1, 1 },
-  { 0, 0 },
-  { 1, 1 },
-  { 0, 0 },
-  { 1, 1 },
-  { 0, 0 },
-  { 1, 1 } };
 
 #endif /*CONFIG_MELPROC_H_*/

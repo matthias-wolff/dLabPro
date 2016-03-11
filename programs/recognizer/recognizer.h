@@ -84,20 +84,27 @@ enum recorejtyp {RECOREJTYP};
 
 struct recosearch {
   enum recosearchtyp eTyp;
-  enum recorejtyp eRejTyp;
   BOOL    bPrn;
   BOOL    bIter;
   INT32   nDebug;
   INT32   nASPrn1;
   INT32   nASPrn2;
-  FLOAT32 nASTNA;
   INT32   nAS2Prn;
-  FLOAT32 nTWOTNA;
-  FLOAT32 nTWOTNE;
   FLOAT32 nTPPrnW;
   INT32   nTPPrnH;
   INT32   nThreads;
   BOOL    bPermanent;
+};
+
+struct recorej {
+  enum recorejtyp eTyp;
+  FLOAT32 nTAD;
+  FLOAT32 nTED;
+  FLOAT32 nASTAD;
+  FLOAT32 nTWOTAD;
+  FLOAT32 nTWOTED;
+  FLOAT32 nFVRTED;
+  FLOAT32 nFVRLAM;
 };
 
 struct recovad {
@@ -211,6 +218,7 @@ struct recocfg {
   enum recoin       eIn;
   char              sPostProc[STR_LEN];
   struct recosearch rSearch;
+  struct recorej    rRej;
   BOOL              bFSTForce;
   FLOAT32           nFstSleep;
   struct recovad    rVAD;
@@ -317,7 +325,6 @@ struct recoopt {
   { "cache",           OT_BOOL,  TRUE,  &rCfg.bCache            },
   { "postproc.cmd",    OT_STR,   FALSE, &rCfg.sPostProc         },
   { "search.typ",      OT_ENUM,  FALSE, &rCfg.rSearch.eTyp      },
-  { "search.rej",      OT_ENUM,  FALSE, &rCfg.rSearch.eRejTyp   },
   { "search.debug",    OT_INT,   FALSE, &rCfg.rSearch.nDebug    },
   { "search.iterative",OT_BOOL,  FALSE, &rCfg.rSearch.bIter     },
   { "search.prn",      OT_BOOL,  FALSE, &rCfg.rSearch.bPrn      },
@@ -326,11 +333,16 @@ struct recoopt {
   { "search.asprn1",   OT_INT,   FALSE, &rCfg.rSearch.nASPrn1   },
   { "search.asprn2",   OT_INT,   FALSE, &rCfg.rSearch.nASPrn2   },
   { "search.as2prn",   OT_INT,   FALSE, &rCfg.rSearch.nAS2Prn   },
-  { "search.astna",    OT_FLOAT, FALSE, &rCfg.rSearch.nASTNA    },
-  { "search.twotna",   OT_FLOAT, FALSE, &rCfg.rSearch.nTWOTNA   },
-  { "search.twotne",   OT_FLOAT, FALSE, &rCfg.rSearch.nTWOTNE   },
   { "search.threads",  OT_INT,   FALSE, &rCfg.rSearch.nThreads  },
   { "search.permanent",OT_BOOL,  FALSE, &rCfg.rSearch.bPermanent},
+  { "rej.typ",         OT_ENUM,  FALSE, &rCfg.rRej.eTyp         },
+  { "rej.tad",         OT_FLOAT, FALSE, &rCfg.rRej.nTAD         },
+  { "rej.ted",         OT_FLOAT, FALSE, &rCfg.rRej.nTED         },
+  { "rej.as.tad",      OT_FLOAT, FALSE, &rCfg.rRej.nASTAD       },
+  { "rej.two.tad",     OT_FLOAT, FALSE, &rCfg.rRej.nTWOTAD      },
+  { "rej.two.ted",     OT_FLOAT, FALSE, &rCfg.rRej.nTWOTED      },
+  { "rej.fvr.ted",     OT_FLOAT, FALSE, &rCfg.rRej.nFVRTED      },
+  { "rej.fvr.lambda",  OT_FLOAT, FALSE, &rCfg.rRej.nFVRLAM      },
   { "fst.force",       OT_BOOL,  FALSE, &rCfg.bFSTForce         },
   { "fst.sel",         OT_INT,   TRUE,  &rTmp.nFstSel           },
   { "fst.sleep",       OT_FLOAT, FALSE, &rCfg.nFstSleep         },

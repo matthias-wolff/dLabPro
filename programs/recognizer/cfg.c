@@ -129,7 +129,7 @@ const char **optenum_getstr(void *lpDst){
   if(lpDst==&rCfg.eOut) return recoout_str;
   else if(lpDst==&rCfg.eIn) return recoin_str;
   else if(lpDst==&rCfg.rSearch.eTyp) return recosearchtyp_str;
-  else if(lpDst==&rCfg.rSearch.eRejTyp) return recorejtyp_str;
+  else if(lpDst==&rCfg.rRej.eTyp) return recorejtyp_str;
   else usage("Unknown enum in setoptenum");
   return NULL;
 }
@@ -365,7 +365,7 @@ void searchinit(){
     case RS_as: snprintf(itSP->m_lpsAlgo,3,"as"); break;
   }
   itSP->m_nNumpaths=1;
-  switch(rCfg.rSearch.eRejTyp){
+  switch(rCfg.rRej.eTyp){
   case RR_two:
     itSP->m_nNumpaths=2;
   break;
@@ -374,7 +374,7 @@ void searchinit(){
   }
   if(rCfg.rSearch.bPrn){
     itSP->m_nAsQsize=MAX(UD_XXS(rCfg.rDSession.itRN),32767);
-    itSP->m_nAsPrnf= rCfg.rSearch.eRejTyp==RR_two ? rCfg.rSearch.nAS2Prn : rCfg.rSearch.nASPrn1;
+    itSP->m_nAsPrnf= rCfg.rRej.eTyp==RR_two ? rCfg.rSearch.nAS2Prn : rCfg.rSearch.nASPrn1;
     itSP->m_nTpPrnw=rCfg.rSearch.nTPPrnW;
     itSP->m_nTpPrnh=rCfg.rSearch.nTPPrnH;
     itSP->m_bStkprn=TRUE;
@@ -382,7 +382,7 @@ void searchinit(){
   itSP->m_nTpThreads=rCfg.rSearch.nThreads;
   CFstsearch_Restart(itSP);
   searchload(rTmp.nFstSel);
-  if(rCfg.rSearch.eRejTyp!=RR_phn) return;
+  if(rCfg.rRej.eTyp!=RR_phn) return;
   if(!rCfg.rDSession.itSPr){ ICREATEEX(CFstsearch,rCfg.rDSession.itSPr,"itSPr",NULL); }
   else CFstsearch_Reset(BASEINST(rCfg.rDSession.itSPr),TRUE);
   itSPr=rCfg.rDSession.itSPr;
@@ -396,7 +396,7 @@ void searchinit(){
     itSPr->m_nTpPrnw=rCfg.rSearch.nTPPrnW;
     itSPr->m_nTpPrnh=rCfg.rSearch.nTPPrnH;
   }
-  if(rCfg.rSearch.eRejTyp==RR_phn) snprintf(itSPr->m_lpsBt,2,"t");
+  if(rCfg.rRej.eTyp==RR_phn) snprintf(itSPr->m_lpsBt,2,"t");
 /*  itSPr->m_lpsAsAheutype="exist"; TODO: set through setfield
   itSPr->m_lpsAsSheutype="exist"; */
   CFstsearch_Restart(itSPr);
