@@ -537,6 +537,11 @@ INT16 CFvrtools::FromString(const char* lpsSrc, CFst* itFvr)
 	return CFvrtools_FromString(this, lpsSrc, itFvr);
 }
 
+INT16 CFvrtools::CheckSeq(CFst* itSeq, CData* idS, INT32* pBO, INT32* pBC)
+{
+	return CFvrtools_CheckSeq(this, itSeq, idS, pBO, pBC);
+}
+
 INT16 CFvrtools::FromFst(CFst* itSrc, CFst* itFvr)
 {
 	return CFvrtools_FromFst(this, itSrc, itFvr);

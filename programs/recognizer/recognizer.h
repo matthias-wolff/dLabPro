@@ -34,6 +34,7 @@
 #include "dlp_fst.h"
 #include "dlp_fstsearch.h"
 #include "dlp_file.h"
+#include "dlp_fvrtools.h"
 
 #ifdef __TMS
   #undef long
@@ -101,8 +102,8 @@ struct recorej {
   FLOAT32 nTAD;
   FLOAT32 nTED;
   FLOAT32 nASTAD;
-  FLOAT32 nTWOTAD;
-  FLOAT32 nTWOTED;
+  FLOAT32 nTWOTWD;
+  FLOAT32 nTWOTNWD;
   FLOAT32 nFVRTED;
   FLOAT32 nFVRLAM;
 };
@@ -209,6 +210,7 @@ struct recotmp {
   const char*    sSigFname;
   FLOAT32*       lpColSig;
   INT32          nColSigLen;
+  CFvrtools*     iFvr;
 };
 
 struct recocfg {
@@ -339,8 +341,8 @@ struct recoopt {
   { "rej.tad",         OT_FLOAT, FALSE, &rCfg.rRej.nTAD         },
   { "rej.ted",         OT_FLOAT, FALSE, &rCfg.rRej.nTED         },
   { "rej.as.tad",      OT_FLOAT, FALSE, &rCfg.rRej.nASTAD       },
-  { "rej.two.tad",     OT_FLOAT, FALSE, &rCfg.rRej.nTWOTAD      },
-  { "rej.two.ted",     OT_FLOAT, FALSE, &rCfg.rRej.nTWOTED      },
+  { "rej.two.twd",     OT_FLOAT, FALSE, &rCfg.rRej.nTWOTWD      },
+  { "rej.two.tnwd",    OT_FLOAT, FALSE, &rCfg.rRej.nTWOTNWD     },
   { "rej.fvr.ted",     OT_FLOAT, FALSE, &rCfg.rRej.nFVRTED      },
   { "rej.fvr.lambda",  OT_FLOAT, FALSE, &rCfg.rRej.nFVRLAM      },
   { "fst.force",       OT_BOOL,  FALSE, &rCfg.bFSTForce         },

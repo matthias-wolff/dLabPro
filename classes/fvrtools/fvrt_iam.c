@@ -88,52 +88,66 @@ L_EXCEPTION:                                                                    
  * This function fails if there are input symbols containing a square bracket [ or ] and other characters.
  * Furthermore this function removes all strings in round brackets (XX) from the input symbols.
  * All transitions with empty string as input symbol afterwards are converted to epsilon transitions.
+ * If itSeq is NULL no changes are mode to itSeq or idS.
  *
  * @param _this
  *          This instance of CFvrtools.
  * @param itSeq
- *          The (normalized) sequence FST as obtained through {@link CFvrtools_StrToSeq} in unit 0.
+ *          The sequence FST in unit 0 (maybe NULL for no changes).
+ * @param idS
+ *          The symbol table to check (maybe itSeq->is or itSeq->os).
+ * @param nBO
+ *          Return pointer for opening bracket index
+ * @param nBC
+ *          Return pointer for closing bracket index
  * @return <code>O_K</code> if successful, a (negative) error code otherwise.
  */
-INT16 CGEN_PRIVATE CFvrtools_CheckSeq(CFvrtools* _this, CFst* itSeq)
+INT16 CGEN_PRIVATE CFvrtools_CheckSeq(CFvrtools* _this, CFst* itSeq, CData* idS, INT32 *pBO, INT32 *pBC)
 {
   INT16 nRet = O_K;                                                             /* The return value                  */
   INT32 nI,nC;                                                                  /* Symbol, character index           */
   INT32 nXI;                                                                    /* Number of input symbols           */
   INT32 nOI;                                                                    /* Input symbol record length        */
   INT32 nXC;                                                                    /* Number of characters per symbol   */
+  INT32 nBO=-1;                                                                 /* Opening bracket index             */
+  INT32 nBC=-1;                                                                 /* Closing bracket index             */
   char *lpI;                                                                    /* Input symbol pointer              */
   FST_TID_TYPE *lpTI;                                                           /* Transition interator              */
   BYTE* lpT;                                                                    /* Transition pointer                */
 
   /* Initialization */                                                          /* --------------------------------- */
   CHECK_THIS_RV(NOT_EXEC);                                                      /* Check this instance               */
-  if (itSeq==NULL)                                                              /* Input not correct instance        */
-    FVRT_EXCEPTION(ERR_NULLINST,"itSeq is NULL",0,0);                           /*   Error message and exit          */
-  if (itSeq->is==NULL || CData_IsEmpty(AS(CData,itSeq->is)))                    /* Sequence has no input symbols     */
-    FVRT_EXCEPTION(ERR_NULLINST,"itSeq has no input symbols",0,0);              /*   Error message and exit          */
+  if (idS==NULL || CData_IsEmpty(idS))                                          /* Symbol table is empty             */
+    FVRT_EXCEPTION(ERR_NULLINST,"idS is empty",0,0);                            /*   Error message and exit          */
 
-  nXI=CData_GetNRecs(AS(CData,itSeq->is));                                      /* Get number of input symbols       */
-  nOI=CData_GetRecLen(AS(CData,itSeq->is));                                     /* Get input symbol record length    */
-  nXC=CData_GetCompType(AS(CData,itSeq->is),0);                                 /* Get number of characters per symb.*/
+  nXI=CData_GetNRecs(idS);                                                      /* Get number of symbols             */
+  nOI=CData_GetRecLen(idS);                                                     /* Get input symbol record length    */
+  nXC=CData_GetCompType(idS,0);                                                 /* Get number of characters per symb.*/
 
   /* Remove (XX) in output symbols & check for singular [ or ] */               /* --------------------------------- */
-  lpI=(char*)CData_XAddr(AS(CData,itSeq->is),0,0);                              /* Get input symbol pointer          */
+  lpI=(char*)CData_XAddr(idS,0,0);                                              /* Get symbol pointer                */
   for(nI=0;nI<nXI;nI++,lpI+=nOI){                                               /* Loop over input symbols >>        */
     INT32 nBrk=0;                                                               /*   Bracket depth                   */
     INT32 nCd=0;                                                                /*   Character writing index         */
     for(nC=0;nC<nXC && lpI[nC];nC++){                                           /*   Loop over characters >>         */
       if((lpI[nC]=='[' || lpI[nC]==']') && (nC || lpI[nC+1]))                   /*     Check for singular [ or ]     */
-        FVRT_EXCEPTION(FVRT_SEQSYNTAX,"symbol [ or ] occurs with other characters",0,0); /* Check failed             */
+        FVRT_EXCEPTION(FVRT_SEQSYNTAX,"Symbol [ or ] occurs with other characters",0,0); /* Check failed             */
+      if(lpI[nC]=='[') nBO=nI;                                                  /*     Return opening bracket index  */
+      if(lpI[nC]==']') nBC=nI;                                                  /*     Return closing bracket index  */
+      if(!itSeq) continue;                                                      /*     No changes                    */
       if(lpI[nC]=='(') nBrk++;                                                  /*     Increase bracket depth on open*/
       if(!nBrk) lpI[nCd++]=lpI[nC];                                             /*     Copy char. if outside bracket */
       if(lpI[nC]==')') nBrk--;                                                  /*     Decrease brck. depth on close */
     }                                                                           /*   <<                              */
-    lpI[nCd]='\0';                                                              /*   End of string                   */
+    if(itSeq) lpI[nCd]='\0';                                                    /*   End of string                   */
   }                                                                             /* <<                                */
+  if(nBO<0 || nBC<0) FVRT_EXCEPTION(FVRT_SEQSYNTAX,"Symbol [ or ] missing",0,0);/* Check existance of bracket symbols*/
+  if(pBO) *pBO=nBO;                                                             /* Export opening bracket index      */
+  if(pBC) *pBC=nBC;                                                             /* Export closing bracket index      */
+  if(!itSeq) return nRet;                                                       /* No changes -> return              */
 
   /* Remove empty output symbols */
-  lpI=(char*)CData_XAddr(AS(CData,itSeq->is),0,0);                              /* Get input symbol pointer          */
+  lpI=(char*)CData_XAddr(idS,0,0);                                              /* Get symbol pointer                */
   lpTI=CFst_STI_Init(itSeq,0,0);                                                /* Setup iterator without sorting    */
   for(lpT=lpTI->lpFT ; lpT<lpTI->lpFT+lpTI->nRlt*lpTI->nXT ; lpT+=lpTI->nRlt){  /* Loop over all transitions >>      */
     FST_STYPE *nTis=CFst_STI_TTis(lpTI,lpT);                                    /*   Get input symbol pointer        */
@@ -159,7 +173,8 @@ INT16 CGEN_PUBLIC CFvrtools_FromFst(CFvrtools* _this, CFst* itSrc, CFst* itFvr)
     FVRT_EXCEPTION(ERR_NULLINST,"itDst is NULL",0,0);                           /*   Error message and exit          */
   /* Create wFVR from sequence FST  */                                          /* --------------------------------- */
   CFst_CopyUi(itSrc,itFvr,NULL,0);                                              /* Get the first unit                */
-  IF_NOK(nRet=CFvrtools_CheckSeq(_this,itFvr) ) goto L_EXCEPTION;               /* Check sequence symbol table       */
+  IF_NOK(nRet=CFvrtools_CheckSeq(_this,itFvr,AS(CData,itFvr->is),NULL,NULL) )   /* Check sequence symbol table       */
+    goto L_EXCEPTION;                                                           /* |                                 */
   IF_NOK(nRet=CFvrtools_SeqToFvr(_this,itFvr,itFvr) ) goto L_EXCEPTION;         /* Create FVR                        */
 
   /* Clean-up */                                                                /* --------------------------------- */

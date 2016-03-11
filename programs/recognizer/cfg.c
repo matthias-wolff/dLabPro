@@ -419,15 +419,17 @@ void tmpinit(){
   rTmp.sSigFname="";
   rTmp.lpColSig=NULL;
   rTmp.nColSigLen=0;
+  ICREATEEX(CFvrtools,rTmp.iFvr,"tmp.fvr",NULL);
 }
 
 void tmpdone(){
-  if(rTmp.iFile) IDESTROYFILE(rTmp.iFile);
-  if(rTmp.idSig) IDESTROY(rTmp.idSig);
-  if(rTmp.idFea) IDESTROY(rTmp.idFea);
-  if(rTmp.idNld) IDESTROY(rTmp.idNld);
+  if(rTmp.iFile)  IDESTROYFILE(rTmp.iFile);
+  if(rTmp.idSig)  IDESTROY(rTmp.idSig);
+  if(rTmp.idFea)  IDESTROY(rTmp.idFea);
+  if(rTmp.idNld)  IDESTROY(rTmp.idNld);
   if(rTmp.idVFea) IDESTROY(rTmp.idVFea);
   if(rTmp.idVNld) IDESTROY(rTmp.idVNld);
+  if(rTmp.iFvr)   IDESTROY(rTmp.iFvr);
 }
 
 BOOL loadgmm(char *lpsVal,CGmm **itGM,INT32 *nDim){

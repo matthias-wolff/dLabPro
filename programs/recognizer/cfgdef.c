@@ -144,17 +144,17 @@ rej.typ = phn\n\
 #\n\
 #  tad        Default threshold for acoustic distance (NAD)\n\
 #  ted        Default threshold for edit distance (NED)\n\
-#  tad.as     Threshold for NAD With A* search\n\
-#  tad.two    Threshold for NAD With two path A* search rejection\n\
-#  ted.two    Threshold for NED With two path A* search rejection\n\
-#  ted.fvr    Threshold for NED in FVR confidence\n\
-#  ted.lambda Balance bias between NED and NAD for FVR confidence\n\
-rej.tad     = 0.05\n\
-rej.ted     = 0.75\n\
-rej.as.tad  = 0.5\n\
-rej.two.tad = 15\n\
-rej.two.ted = 0\n\
-rej.fvr.ted = 0.5\n\
+#  as.tad     Threshold for NAD With A* search\n\
+#  two.twd    Threshold for weight difference (WD) With two path A* search rejection\n\
+#  twd.tnwd   Threshold for normalized weight difference (NWD) With two path A* search rejection\n\
+#  fvr.ted    Threshold for NED in FVR confidence\n\
+#  fvr.lambda Balance bias between NED and NAD for FVR confidence\n\
+rej.tad      = 0.05\n\
+rej.ted      = 0.75\n\
+rej.as.tad   = 0.5\n\
+rej.two.twd  = 15\n\
+rej.two.tnwd = 0\n\
+rej.fvr.ted  = 0.5\n\
 rej.fvr.lambda = 0.5\n\
 \n\
 # Force vad decission or selected fst\n\

@@ -130,6 +130,8 @@ public:
 /* Taken from 'fvrt_iam.c' */
 	public: BOOL IsFvr(INT32 nU, CFst* itFvr);
 	public: INT16 FromString(const char* lpsSrc, CFst* itFvr);
+	private: INT16 CheckSeq(CFst* itSeq, CData* idS, INT32* pBO, INT32* pBC);
+	public: INT16 FromFst(CFst* itSrc, CFst* itFvr);
 	public: INT16 Synthesize(CFst* itDst, CFst* itFvr);
 
 /* Taken from 'fvrt_compile.c' */
@@ -219,6 +221,8 @@ INT16 CFvrtools_OnSynthesize(CDlpObject*);
 /* Taken from 'fvrt_iam.c' */
 BOOL CFvrtools_IsFvr(CFvrtools*, INT32 nU, CFst* itFvr);
 INT16 CFvrtools_FromString(CFvrtools*, const char* lpsSrc, CFst* itFvr);
+INT16 CFvrtools_CheckSeq(CFvrtools*, CFst* itSeq, CData* idS, INT32* pBO, INT32* pBC);
+INT16 CFvrtools_FromFst(CFvrtools*, CFst* itSrc, CFst* itFvr);
 INT16 CFvrtools_Synthesize(CFvrtools*, CFst* itDst, CFst* itFvr);
 
 /* Taken from 'fvrt_compile.c' */
