@@ -287,7 +287,15 @@ FLOAT32 confidence_phn(CFst* itDC, CFst* itDCr){
   INT32 oro;                                            /* Offset of ~TOS component in result */
   INT32 orc;                                            /* Offset of ~CNF component in result */
   FLOAT32 nad,ned;                                      /* Normalized acoustic and edit distant */
-  FLOAT32 tad,ted;                                      /* Threshold for acoustic and edit distant */
+  FLOAT32 tad,ted,lam;                                  /* Threshold for acoustic and edit distant */
+  struct {
+    INT32 n,neq;
+    FLOAT32 rw,fw;
+  } *frm, *fi;
+  struct {
+    INT32 ibo;
+    FLOAT32 *tcnf;
+  } *lvl=NULL, *li=NULL;
 
   if(bfvr) CData_AddComp(rtd,"~CNF",T_FLOAT);
   rt =CData_XAddr(rtd,0,0);
@@ -303,38 +311,63 @@ FLOAT32 confidence_phn(CFst* itDC, CFst* itDCr){
   ofw=data_findcompoffset(ftd,"~LSR");
   oro=data_findcompoffset(rtd,"~TOS");
   orc=data_findcompoffset(rtd,"~CNF");
+  if(oro<0 || orc<0) bfvr=FALSE;
+  frm=fi=dlp_malloc((MAX(CData_GetNRecs(rtd),CData_GetNRecs(ftd))+1)*sizeof(*frm));
+  fi[0].n=fi[0].neq=0;
+  fi[0].rw=fi[0].fw=0.;
+  if(bfvr) lvl=li=dlp_malloc((MAX(CData_GetNRecs(rtd),CData_GetNRecs(ftd))+1)*sizeof(*lvl));
 
-  INT32 n=0,neq=0,wn=0,wneq=0;
-  FLOAT32 rlsr=0.,flsr=0.,wrlsr=0.,wflsr=0.;
+  tad=rCfg.rRej.nTAD;
+  if(rCfg.rSearch.eTyp==RS_as) tad = rCfg.rRej.nASTAD;
+  ted=rCfg.rRej.nFVRTED;
+  lam=rCfg.rRej.nFVRLAM;
 
   for(;; rt+=rl,ft+=fl){
-    INT32 rp=-1,fp=-1;
-    for( ; rt<ret && (rp=*(FST_STYPE*)(rt+orp))<0 ; rt+=rl)
-      if(oro>=0 && orc>=0 && *(FST_STYPE*)(rt+oro)>=0){
-        nad=wrlsr ? (wrlsr-wflsr)/wrlsr : 0;
-        ned=wn ? 1.-wneq/(FLOAT32)wn : 0;
-        *(FST_WTYPE*)(rt+orc)=rCfg.rRej.nFVRLAM*MAX(1-ned/rCfg.rRej.nFVRTED,-1)+(1-rCfg.rRej.nFVRLAM)*MAX(1-nad/rCfg.rRej.nTAD,-1);
-        wn=wneq=0;
-        wrlsr=wflsr=0.;
+    INT32 rp=-1,fp=-1, ro;
+    for( ; rt<ret ; rt+=rl){
+      if(bfvr && (ro=*(FST_STYPE*)(rt+oro))>=0){
+        if(ro==sbo){
+          li++;
+          li->ibo=fi-frm;
+          li->tcnf=NULL;
+        }else if(ro==sbc){
+          if(li>lvl){
+            INT32   n  =fi->n  -frm[li->ibo].n;
+            INT32   neq=fi->neq-frm[li->ibo].neq;
+            FLOAT32 rw =fi->rw -frm[li->ibo].rw;
+            FLOAT32 fw =fi->fw -frm[li->ibo].fw;
+            nad = orw>=0 && ofw>=0 ? rw ? ABS(rw-fw) / ABS(rw) : tad : 0.f;
+            ned = n ? 1.f - neq/(FLOAT32)n : ted;
+            if(li->tcnf) *li->tcnf=lam*MAX(1.f-ned/ted,-1.f)+(1.f-lam)*MAX(1.f-nad/tad,-1.f);
+            else rerror("FVR confidence: no output symbol at certained bracket level");
+            li--;
+          }else rerror("FVR confidence: too many closing brackets ']'");
+        }else li->tcnf=(FLOAT32*)(rt+orc);
       }
+      if((rp=*(FST_STYPE*)(rt+orp))>=0) break;
+    }
     while(ft<fet && (fp=*(FST_STYPE*)(ft+ofp))<0) ft+=fl;
     if(rt>=ret || ft>=fet) break;
     if(rp==ssil || rp==sgar || fp==ssil || fp==sgar) continue;
-    n++; wn++;
-    if(rp==fp){ neq++; wneq++; }
-    if(orw<0 || ofw<0) continue;
-    rlsr+=*(FST_WTYPE*)(rt+orw);
-    flsr+=*(FST_WTYPE*)(ft+ofw);
-    wrlsr+=*(FST_WTYPE*)(rt+orw);
-    wflsr+=*(FST_WTYPE*)(ft+ofw);
+    fi[1].n=fi[0].n+1;
+    fi[1].neq=fi[0].neq+(rp==fp);
+    if(orw>=0 && ofw>=0){
+      fi[1].rw=fi[0].rw+*(FST_WTYPE*)(rt+orw);
+      fi[1].fw=fi[0].fw+*(FST_WTYPE*)(ft+ofw);
+    }
+    fi++;
   }
+  if(bfvr && li!=lvl) rerror("FVR confidence: too less closing brackets ']'");
 
-  tad=rCfg.rRej.nTAD;
   ted=rCfg.rRej.nTED;
-  if(rCfg.rSearch.eTyp==RS_as) tad = rCfg.rRej.nASTAD;
-  nad = rlsr ? ABS(rlsr-flsr) / ABS(rlsr) : tad;
-  ned = n ? 1. - neq / (FLOAT32)n : ted;
+
+  nad = orw>=0 && ofw>=0 ? fi[0].rw ? ABS(fi[0].rw-fi[0].fw) / ABS(fi[0].rw) : tad : 0.f;
+  ned = fi[0].n ? 1.f-fi[0].neq / (FLOAT32)fi[0].n : ted;
   routput(O_dbg,1,"rec nad: %.4g ned: %.4g tnad: %.4g tned: %.4g\n",nad,ned,tad,ted);
+
+  dlp_free(frm);
+  if(bfvr) dlp_free(lvl);
+
   return nad<tad && ned<ted;
 }
 
