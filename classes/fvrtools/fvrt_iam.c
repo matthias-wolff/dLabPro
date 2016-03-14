@@ -255,7 +255,7 @@ INT16 CGEN_PUBLIC CFvrtools_Synthesize(CFvrtools* _this, CFst* itDst, CFst* itFv
   CData_AddComp(idSym,"Sym",T_LONG);    CData_Allocate(idSym,1);                /* Allocate memory for symbol(s)     */
   CData_AddComp(idSymRef,"Ref",T_LONG); CData_Allocate(idSymRef,1);             /* Allocate memory for Ref to symbol */
   CData_AddComp(idStArray,"Ref",T_LONG); CData_Allocate(idStArray,1);           /* Allocate memory for Ref to symbol */
-  CData_AddComp(idTWeight,"~LSR",T_LONG); CData_Allocate(idTWeight,UD_XS(itFvr,0));/* Allocate memory for weight of sy. */  //CData_GetNRecs(AS(CData,itFvr->td))
+  CData_AddComp(idTWeight,"~LSR",T_FLOAT); CData_Allocate(idTWeight,UD_XS(itFvr,0));/* Allocate memory for weight    */
 
   /* Start iteration over all states and collect needed information */          /* --------------------------------- */
   while (nMyIniState<=UD_XT(itFvr,0))                                           /* loop over all States of FVR       */
