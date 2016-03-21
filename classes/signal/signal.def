@@ -131,7 +131,7 @@ DEFINE: FOP_PRECALC(idX,idY,idS,idR,idL)                                        
     DLPASSERT((idY!=NULL)&&(idX!=NULL));                                            \
     if(idY==idX) { ICREATE(CData,idR,NULL); }                                       \
     else           idR = idY;                                                       \
-    CSignal_GetData(idX,"idLab",&idL);                                              \
+    CSignal_GetData(idX,"lab",&idL);                                                \
     if(CData_GetNNumericComps(idX) == CData_GetNComps(idX)) idS = idX;              \
     else {                                                                          \
       if(!idL) ICREATEEX(CData, idL, "~lab", NULL);                                 \
