@@ -303,8 +303,8 @@ INT16 CGEN_PUBLIC CFvrtools_Synthesize(CFvrtools* _this, CFst* itDst, CFst* itFv
             nAux2 = nTerS2;                                                     /* set child as next node            */
           }
         }
-      }//if ( nTis != nISym )
-    }//while ((lpTrans=CFst_STI_TfromS(iMySearch,nMyIniState,lpTrans))!=NULL)
+      }/*if ( nTis != nISym )*/
+    }/*while ((lpTrans=CFst_STI_TfromS(iMySearch,nMyIniState,lpTrans))!=NULL)*/
 
     /* Start permutation only when is more than one element */                  /* --------------------------------- */
     if (nAux > 0){                                                              /* start only if more than one symb. */
@@ -338,7 +338,7 @@ INT16 CGEN_PUBLIC CFvrtools_Synthesize(CFvrtools* _this, CFst* itDst, CFst* itFv
           CData_Join(idSymList,idSym);                                          /* ... than store the combination    */
           CData_Join(idStList,idStArray);                                       /* ... and combination of ref. value */
         }
-      } // End while (nAux < nRecIdSym)
+      } /* End while (nAux < nRecIdSym) */
 
       /* Start to save in new FST */                                            /* --------------------------------- */
       nRec = CData_GetNRecs(AS(CData,itDst->td));                               /* Get number of already exists trans*/
@@ -379,17 +379,17 @@ INT16 CGEN_PUBLIC CFvrtools_Synthesize(CFvrtools* _this, CFst* itDst, CFst* itFv
               CData_Dstore(AS(CData,itDst->td),nIsym,CData_GetNRecs(AS(CData,itDst->td))-1,nCTIS);
               CData_Dstore(AS(CData,itDst->td),nAux, CData_GetNRecs(AS(CData,itDst->td))-1,nCTOS);
             }
-          } // for(nAux2 = 0; nAux2 < nComp; nAux2++){                          /* End of possible permutations      */
-        } // if((INT32)CData_Dfetch(AS(CData,itDst->td)...                      /* End of check input symbol and rank*/
-      } // for(nTransItDst = 0; nTransItDst < nRec; nTransItDst++){             /* End of loop over transitions      */
-    } // End if(nAux > 0){                                                      /* End of start if more than one symb*/
+          } /* for(nAux2 = 0; nAux2 < nComp; nAux2++){ */                       /* End of possible permutations      */
+        } /* if((INT32)CData_Dfetch(AS(CData,itDst->td)... */                   /* End of check input symbol and rank*/
+      } /* for(nTransItDst = 0; nTransItDst < nRec; nTransItDst++){ */          /* End of loop over transitions      */
+    } /* End if(nAux > 0){ */                                                   /* End of start if more than one symb*/
 
     CData_Reallocate(idSymList,0);                                              /* Reset list of input symbols       */
     CData_Reallocate(idStList,0);                                               /* Reset list of original state num. */
     p = (FST_ITYPE*) dlp_realloc(p, 1, sizeof(FST_ITYPE));                      /* Reset Auxiliary value for permut. */
     nMyIniState ++;                                                             /* Increment IniState for next state */
     CFst_Tree(itDst, itDst, 0);                                                 /* Make tree of added states         */
-  }// End while(nMyIniState<=UD_XT(itFvr,0))                                    /* End of loop over states of IniFst */
+  }/* End while(nMyIniState<=UD_XT(itFvr,0)) */                                 /* End of loop over states of IniFst */
 
   /* Add weight and finite state */
   nAux = UD_XS(itDst,0);                                                        /* Auxiliary values to set final st. */
