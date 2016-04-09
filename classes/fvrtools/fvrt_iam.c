@@ -260,6 +260,7 @@ INT16 CGEN_PUBLIC CFvrtools_Synthesize(CFvrtools* _this, CFst* itDst, CFst* itFv
   /* Start iteration over all states and collect needed information */          /* --------------------------------- */
   while (nMyIniState<=UD_XT(itFvr,0))                                           /* loop over all States of FVR       */
   {                                                                             /*                                   */
+	CFst_STI_Done(iMySearch);
     iMySearch = CFst_STI_Init(itFvr,0,FSTI_SORTTER);                            /*                                   */
     if( (lpTrans=CFst_STI_TtoS(iMySearch, nMyIniState, NULL)) != NULL ){        /* Get input transition              */
       nTis = *CFst_STI_TTis(iMySearch, lpTrans);                                /* Get Tis to compare with child     */
@@ -269,6 +270,7 @@ INT16 CGEN_PUBLIC CFvrtools_Synthesize(CFvrtools* _this, CFst* itDst, CFst* itFv
     CData_Reallocate(idSymRef,0);                                               /* Reset value for next permutation  */
     CData_Reallocate(idStArray,0);                                              /* Reset value for next permutation  */
 
+    CFst_STI_Done(iMySearch);
     nAux = 0; lpTrans = NULL; iMySearch = CFst_STI_Init(itFvr,0,FSTI_SORTINI);  /* --------------------------------- */
     while ((lpTrans=CFst_STI_TfromS(iMySearch,nMyIniState,lpTrans))!=NULL)      /* loop over trans. from act. node   */
     {                                                                           /*  to take in sep. list for permut  */
@@ -308,6 +310,7 @@ INT16 CGEN_PUBLIC CFvrtools_Synthesize(CFvrtools* _this, CFst* itDst, CFst* itFv
 
     /* Start permutation only when is more than one element */                  /* --------------------------------- */
     if (nAux > 0){                                                              /* start only if more than one symb. */
+      dlp_free(p);
       p = (FST_ITYPE*) dlp_realloc(p, nAux, sizeof(FST_ITYPE));                 /* Auxiliary value for permutation   */
       nRecIdSym = CData_GetNRecs(idSym);                                        /* Get NRec of idSym                 */
       for(nAux = 0; nAux < nRecIdSym; nAux++) p[nAux]=nAux;                     /* fill aux. with series of numbers  */
@@ -386,6 +389,7 @@ INT16 CGEN_PUBLIC CFvrtools_Synthesize(CFvrtools* _this, CFst* itDst, CFst* itFv
 
     CData_Reallocate(idSymList,0);                                              /* Reset list of input symbols       */
     CData_Reallocate(idStList,0);                                               /* Reset list of original state num. */
+    dlp_free(p);
     p = (FST_ITYPE*) dlp_realloc(p, 1, sizeof(FST_ITYPE));                      /* Reset Auxiliary value for permut. */
     nMyIniState ++;                                                             /* Increment IniState for next state */
     CFst_Tree(itDst, itDst, 0);                                                 /* Make tree of added states         */
@@ -393,31 +397,35 @@ INT16 CGEN_PUBLIC CFvrtools_Synthesize(CFvrtools* _this, CFst* itDst, CFst* itFv
 
   /* Add weight and finite state */
   nAux = UD_XS(itDst,0);                                                        /* Auxiliary values to set final st. */
+  CFst_STI_Done(iMySearch);
   iMySearch   = CFst_STI_Init(itDst,0,FSTI_SORTINI);                            /* Set search to find finite State   */
   for(nMyIniState=0; nMyIniState < nAux; nMyIniState++){                        /* Iterate over all new states       */
     if((lpTrans=CFst_STI_TfromS(iMySearch, nMyIniState, NULL)) == NULL)         /* Check state has not transition... */
       CData_Dstore(AS(CData,itDst->sd),1,nMyIniState,0); }                      /* ... yes? Than take it to finite   */
                                                                                 /* --------------------------------- */
+  CFst_STI_Done(iMySearch2);
   iMySearch2  = CFst_STI_Init(itDst,0,FSTI_SORTTER);                            /* Set search to find weight of trans*/
   for(nMyIniState=0; nMyIniState < nAux; nMyIniState++){                        /* Iterate over all new states       */
     if( (lpTrans2=CFst_STI_TtoS(iMySearch2, nMyIniState, NULL)) != NULL )       /* Check state has transition...     */
       CData_Dstore(AS(CData,itDst->td),CData_Dfetch(idTWeight,*CFst_STI_TTos(iMySearch2, lpTrans2),0),nMyIniState-1,4);
   }                                                                             /* Store weight                      */
 
-  itDst->is = itFvr->is;                                                        /* Transfer the symbol list, its same*/
+  CData_Copy(itFvr->is,itDst->is);                                              /* Copy input symbol table           */
   if(CFvrtools_IsFvr(_this, 0, itDst))
     nRet = O_K;
 
+  /* Clean-up */                                                                /* --------------------------------- */
 L_EXCEPTION:                                                                    /*                                   */
-  CFst_STI_Done(iMySearch);                                                     /*                                   */
-  CFst_STI_Done(iMySearch2);                                                    /*                                   */
   IDESTROY(idRank);                                                             /*                                   */
   IDESTROY(idSym);                                                              /*                                   */
   IDESTROY(idSymRef);                                                           /*                                   */
+  IDESTROY(idSymList);                                                          /*                                   */
   IDESTROY(idStArray);                                                          /*                                   */
   IDESTROY(idStList);                                                           /*                                   */
-  IDESTROY(idSymList);                                                          /*                                   */
-  dlp_free(p);                                                                  /*                                   */
+  IDESTROY(idTWeight);                                                          /*                                   */
+  CFst_STI_Done(iMySearch);                                                     /*                                   */
+  CFst_STI_Done(iMySearch2);                                                    /*                                   */
+  dlp_free(p);																    /*                                   */
   return nRet;                                                                  /*                                   */
 }
 
