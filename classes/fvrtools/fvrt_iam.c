@@ -410,7 +410,7 @@ INT16 CGEN_PUBLIC CFvrtools_Synthesize(CFvrtools* _this, CFst* itDst, CFst* itFv
       CData_Dstore(AS(CData,itDst->td),CData_Dfetch(idTWeight,*CFst_STI_TTos(iMySearch2, lpTrans2),0),nMyIniState-1,4);
   }                                                                             /* Store weight                      */
 
-  CData_Copy(itFvr->is,itDst->is);                                              /* Copy input symbol table           */
+  CData_Copy(itDst->is,itFvr->is);                                              /* Copy input symbol table           */
   if(CFvrtools_IsFvr(_this, 0, itDst))
     nRet = O_K;
 
