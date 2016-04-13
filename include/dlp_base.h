@@ -181,17 +181,14 @@
 
 #elif !defined __MSOS && !defined __UNIX_EMULATION && !defined __TMS
   /* Unix (incl. Linux) additional includes */
+  #include <unistd.h>
   #include <signal.h>
 /*  #include <values.h>*/
   #include <wctype.h>
   #include <errno.h>
   #define PTW32_STATIC_LIB
+  #define HAVE_STRUCT_TIMESPEC
   #include <pthread.h>
-  #ifdef __MINGW32__
-    /* timespec in pthread conflicts with unistd in new MinGW */
-    #define __struct_timespec_defined 1
-  #endif
-  #include <unistd.h>
   #define HAVE_PTHREAD
 #endif
 
