@@ -2458,9 +2458,9 @@ INT16 CFst::CopyUi(CFst* itSrc, CData* idIndex, INT32 nPar)
 	return CFst_CopyUi(this, itSrc, idIndex, nPar);
 }
 
-INT32 CFst::Nmg_StoreSeq(INT32 nUnit, FST_ITYPE nSeqId, FST_SEQ_TYPE* lpSseq, FST_SEQ_TYPE* lpCseq, BOOL bSubSeq)
+INT32 CFst::Nmg_StoreSeq(INT32 nUnit, FST_ITYPE nSeqId, FST_SEQ_TYPE* lpSseq, FST_SEQ_TYPE* lpTseq, FST_SEQ_TYPE* lpCseq, BOOL bSubSeq)
 {
-	return CFst_Nmg_StoreSeq(this, nUnit, nSeqId, lpSseq, lpCseq, bSubSeq);
+	return CFst_Nmg_StoreSeq(this, nUnit, nSeqId, lpSseq, lpTseq, lpCseq, bSubSeq);
 }
 
 INT16 CFst::Addseq(CData* idSrc, INT32 nIcTis, INT32 nIcTer, INT32 nIcRci, INT32 nUnit)

@@ -555,7 +555,7 @@ fst.html fst CFst [
         top.TC1.InsertItem("CFst_Nmg_CalcSeqProb","FST_WTYPE CFst_Nmg_CalcSeqProb(CFst _this, FST_TID_TYPE* lpTI, FST_SEQ_TYPE Sseq, INT32 nOrder, CData* idWeights, FST_ITYPE* lpSid, INT16* lpActualOrder)     Calculates the logarithmic probability of a symbol sequence.",33,33,0,"automatic/fst.html#cfn_047","CONT",nCfn);
         top.TC1.InsertItem("CFst_Nmg_FetchSeq","INT32 CFst_Nmg_FetchSeq(CFst _this, FST_TID_TYPE* lpTI, FST_SEQ_TYPE Sseq, FST_ITYPE* lpTseq)     Retrieves the unique transition sequence (starting from the root state) for a given transducer input symbol  sequence from a forward tree.",33,33,0,"automatic/fst.html#cfn_044","CONT",nCfn);
         top.TC1.InsertItem("CFst_Nmg_GetMgiWeights","void CFst_Nmg_GetMgiWeights(CFst _this, CData* idWeights, FST_WTYPE* lpW, INT16 nLen)     Copies a multigram weighting vector to a buffer and scales its values to sum up to 1.",33,33,0,"automatic/fst.html#cfn_045","CONT",nCfn);
-        top.TC1.InsertItem("CFst_Nmg_StoreSeq","INT32 CFst_Nmg_StoreSeq(CFst _this, INT32 nUnit, FST_ITYPE nSeqId, FST_SEQ_TYPE* lpSseq, FST_SEQ_TYPE* lpCseq, BOOL bSubSeq)     Stores a sequence into an n-multigram.",32,32,0,"automatic/fst.html#cfn_043","CONT",nCfn);
+        top.TC1.InsertItem("CFst_Nmg_StoreSeq","INT32 CFst_Nmg_StoreSeq(CFst _this, INT32 nUnit, FST_ITYPE nSeqId, FST_SEQ_TYPE* lpSseq, FST_SEQ_TYPE* lpTseq, FST_SEQ_TYPE* lpCseq, BOOL bSubSeq)     Stores a sequence into an n-multigram.",32,32,0,"automatic/fst.html#cfn_043","CONT",nCfn);
         top.TC1.InsertItem("CFst_Rank_Rcsn","void CFst_Rank_Rcsn(FST_TID_TYPE* lpTI, INT32 nRank, FST_ITYPE nS, CData* idDst)    ",33,33,0,"automatic/fst.html#cfn_053","CONT",nCfn);
         top.TC1.InsertItem("CFst_Rank_Unit","INT16 CFst_Rank_Unit(CFst _this, INT32 nUnit, CData* idDst)     ~",32,32,0,"automatic/fst.html#cfn_054","CONT",nCfn);
         top.TC1.InsertItem("CFst_RegexMatch_int","INT16 CFst_RegexMatch_int(CFst _this, const char* sStr, INT32* nS, INT32* nL)    ",27,27,0,"automatic/fst.html#cfn_104","CONT",nCfn);
@@ -1027,7 +1027,7 @@ Finite state transducers
     <tr><td><a href="#cfn_047"><code class="link">CFst_Nmg_CalcSeqProb</code></a></td><td><code>FST_WTYPE <b>CFst_Nmg_CalcSeqProb</b>(CFst _this, FST_TID_TYPE* lpTI, FST_SEQ_TYPE Sseq, INT32 nOrder, CData* idWeights, FST_ITYPE* lpSid, INT16* lpActualOrder);<br>private: FST_WTYPE <b>CFst::Nmg_CalcSeqProb</b>(FST_TID_TYPE* lpTI, FST_SEQ_TYPE Sseq, INT32 nOrder, CData* idWeights, FST_ITYPE* lpSid, INT16* lpActualOrder);<br></code><br>  Calculates the logarithmic probability of a symbol sequence.</td></tr>
     <tr><td><a href="#cfn_044"><code class="link">CFst_Nmg_FetchSeq</code></a></td><td><code>INT32 <b>CFst_Nmg_FetchSeq</b>(CFst _this, FST_TID_TYPE* lpTI, FST_SEQ_TYPE Sseq, FST_ITYPE* lpTseq);<br>private: INT32 <b>CFst::Nmg_FetchSeq</b>(FST_TID_TYPE* lpTI, FST_SEQ_TYPE Sseq, FST_ITYPE* lpTseq);<br></code><br>  Retrieves the unique transition sequence (starting from the root state) for a given transducer input symbol  sequence from a forward tree.</td></tr>
     <tr><td><a href="#cfn_045"><code class="link">CFst_Nmg_GetMgiWeights</code></a></td><td><code>void <b>CFst_Nmg_GetMgiWeights</b>(CFst _this, CData* idWeights, FST_WTYPE* lpW, INT16 nLen);<br>private: void <b>CFst::Nmg_GetMgiWeights</b>(CData* idWeights, FST_WTYPE* lpW, INT16 nLen);<br></code><br>  Copies a multigram weighting vector to a buffer and scales its values to sum up to 1.</td></tr>
-    <tr><td><a href="#cfn_043"><code class="link">CFst_Nmg_StoreSeq</code></a></td><td><code>INT32 <b>CFst_Nmg_StoreSeq</b>(CFst _this, INT32 nUnit, FST_ITYPE nSeqId, FST_SEQ_TYPE* lpSseq, FST_SEQ_TYPE* lpCseq, BOOL bSubSeq);<br>protected: INT32 <b>CFst::Nmg_StoreSeq</b>(INT32 nUnit, FST_ITYPE nSeqId, FST_SEQ_TYPE* lpSseq, FST_SEQ_TYPE* lpCseq, BOOL bSubSeq);<br></code><br>  Stores a sequence into an n-multigram.</td></tr>
+    <tr><td><a href="#cfn_043"><code class="link">CFst_Nmg_StoreSeq</code></a></td><td><code>INT32 <b>CFst_Nmg_StoreSeq</b>(CFst _this, INT32 nUnit, FST_ITYPE nSeqId, FST_SEQ_TYPE* lpSseq, FST_SEQ_TYPE* lpTseq, FST_SEQ_TYPE* lpCseq, BOOL bSubSeq);<br>protected: INT32 <b>CFst::Nmg_StoreSeq</b>(INT32 nUnit, FST_ITYPE nSeqId, FST_SEQ_TYPE* lpSseq, FST_SEQ_TYPE* lpTseq, FST_SEQ_TYPE* lpCseq, BOOL bSubSeq);<br></code><br>  Stores a sequence into an n-multigram.</td></tr>
     <tr><td><a href="#cfn_053"><code class="link">CFst_Rank_Rcsn</code></a></td><td><code>void <b>CFst_Rank_Rcsn</b>(FST_TID_TYPE* lpTI, INT32 nRank, FST_ITYPE nS, CData* idDst);<br>private: static void <b>CFst::Rank_Rcsn</b>(FST_TID_TYPE* lpTI, INT32 nRank, FST_ITYPE nS, CData* idDst);<br></code><br> </td></tr>
     <tr><td><a href="#cfn_054"><code class="link">CFst_Rank_Unit</code></a></td><td><code>INT16 <b>CFst_Rank_Unit</b>(CFst _this, INT32 nUnit, CData* idDst);<br>protected: INT16 <b>CFst::Rank_Unit</b>(INT32 nUnit, CData* idDst);<br></code><br>  ~</td></tr>
     <tr><td><a href="#cfn_104"><code class="link">CFst_RegexMatch_int</code></a></td><td><code>INT16 <b>CFst_RegexMatch_int</b>(CFst _this, const char* sStr, INT32* nS, INT32* nL);<br>public: INT16 <b>CFst::RegexMatch_int</b>(const char* sStr, INT32* nS, INT32* nL);<br></code><br> </td></tr>
@@ -7979,7 +7979,7 @@ INT32 <b>CFst_Addseq</b>(CFst _this, CData* idSrc, INT32 nIcTis, INT32 nIcTer, I
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fst_nmg.c(180)</td>
+      <td class="hidden">fst_nmg.c(198)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -8705,7 +8705,7 @@ INT16 <b>CFst_AnalyzeMultigram</b>(CFst _this, CData* idCtrs, INT32 nUnit);<br>p
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fst_nmg.c(794)</td>
+      <td class="hidden">fst_nmg.c(827)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -10116,7 +10116,7 @@ INT16 <b>CFst_Discount</b>(CFst _this, INT32 nDiscount, INT32 nUnit);<br>protect
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fst_nmg.c(955)</td>
+      <td class="hidden">fst_nmg.c(988)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -11408,7 +11408,7 @@ INT16 <b>CFst_Multigram</b>(CFst _this, CData* idSeq, INT32 nComp, CData* idWeig
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fst_nmg.c(597)</td>
+      <td class="hidden">fst_nmg.c(630)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -17534,7 +17534,7 @@ INT16 <b>CFst_MarkConnected</b>(CFst _this, INT32 nUnit);<br>protected: INT16 <b
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fst_nmg.c(1137)</td>
+      <td class="hidden">fst_nmg.c(1170)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -17609,7 +17609,7 @@ void <b>CFst_Mc_Bkw</b>(CFst _this, FST_TID_TYPE* lpTI, FST_ITYPE nS);<br>privat
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fst_nmg.c(1116)</td>
+      <td class="hidden">fst_nmg.c(1149)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -17653,7 +17653,7 @@ void <b>CFst_Mc_Fwd</b>(CFst _this, FST_TID_TYPE* lpTI, FST_ITYPE nS);<br>privat
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fst_nmg.c(1102)</td>
+      <td class="hidden">fst_nmg.c(1135)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -17787,7 +17787,7 @@ FST_WTYPE <b>CFst_Nmg_CalcCondProb</b>(CFst _this, FST_TID_TYPE* lpTI, FST_SEQ_T
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fst_nmg.c(412)</td>
+      <td class="hidden">fst_nmg.c(445)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -17917,7 +17917,7 @@ FST_WTYPE <b>CFst_Nmg_CalcSeqProb</b>(CFst _this, FST_TID_TYPE* lpTI, FST_SEQ_TY
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fst_nmg.c(552)</td>
+      <td class="hidden">fst_nmg.c(585)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -18071,7 +18071,7 @@ INT32 <b>CFst_Nmg_FetchSeq</b>(CFst _this, FST_TID_TYPE* lpTI, FST_SEQ_TYPE Sseq
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fst_nmg.c(282)</td>
+      <td class="hidden">fst_nmg.c(315)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -18169,7 +18169,7 @@ void <b>CFst_Nmg_GetMgiWeights</b>(CFst _this, CData* idWeights, FST_WTYPE* lpW,
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fst_nmg.c(338)</td>
+      <td class="hidden">fst_nmg.c(371)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -18254,7 +18254,7 @@ nLen
       <td class="hidden">Signature</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden"><code>
-INT32 <b>CFst_Nmg_StoreSeq</b>(CFst _this, INT32 nUnit, FST_ITYPE nSeqId, FST_SEQ_TYPE* lpSseq, FST_SEQ_TYPE* lpCseq, BOOL bSubSeq);<br>protected: INT32 <b>CFst::Nmg_StoreSeq</b>(INT32 nUnit, FST_ITYPE nSeqId, FST_SEQ_TYPE* lpSseq, FST_SEQ_TYPE* lpCseq, BOOL bSubSeq);<br>
+INT32 <b>CFst_Nmg_StoreSeq</b>(CFst _this, INT32 nUnit, FST_ITYPE nSeqId, FST_SEQ_TYPE* lpSseq, FST_SEQ_TYPE* lpTseq, FST_SEQ_TYPE* lpCseq, BOOL bSubSeq);<br>protected: INT32 <b>CFst::Nmg_StoreSeq</b>(INT32 nUnit, FST_ITYPE nSeqId, FST_SEQ_TYPE* lpSseq, FST_SEQ_TYPE* lpTseq, FST_SEQ_TYPE* lpCseq, BOOL bSubSeq);<br>
 </code></td>
     </tr>
     <tr>
@@ -18262,7 +18262,7 @@ INT32 <b>CFst_Nmg_StoreSeq</b>(CFst _this, INT32 nUnit, FST_ITYPE nSeqId, FST_SE
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fst_nmg.c(56)</td>
+      <td class="hidden">fst_nmg.c(60)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -18316,6 +18316,19 @@ lpSseq
  A pointer to a <code>FST_SEQ_TYPE</code> structure defining
                 the symbols of the sequence to store. The items of the
                 sequence must be of type <code>FST_STYPE</code>.
+			</td>
+		</tr>
+		<tr>
+			<td class="hidden">&nbsp;&nbsp;</td>
+			<td class="hidden"><b><code>
+lpTseq
+</code></b></td>
+			<td class="hidden">&nbsp;</td>
+			<td class="hidden">
+ A pointer to a <code>FST_SEQ_TYPE</code> structure defining
+                the terminal states of the sequence to store, can be
+                <code>NULL</code>. The items of the sequence must be of type
+                <code>FST_ITYPE</code>.
 			</td>
 		</tr>
 		<tr>
@@ -22898,7 +22911,7 @@ INT16 <b>CFst_TrimStates</b>(CFst _this, INT32 nU);<br>protected: INT16 <b>CFst:
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fst_nmg.c(1175)</td>
+      <td class="hidden">fst_nmg.c(1208)</td>
     </tr>
   </table></div>
   <div class="mframe2">
