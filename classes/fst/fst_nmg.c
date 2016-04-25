@@ -146,7 +146,7 @@ INT32 CGEN_PROTECTED CFst_Nmg_StoreSeq
       if (!lpT)                                                                 /*     Found usable n-gram?          */
       {                                                                         /*     >> NO:                        */
         /* Add one new state and one new transition and store input symbol */   /*       - - - - - - - - - - - - - - */
-        bBranch      = TRUE;                                                    /*       Remember new branch stated  */
+        bBranch      = TRUE;                                                    /*       Remember new branch started */
         bUnitChanged = TRUE;                                                    /*       Remember unit changed       */
         /* WARNING: THIS INVALIDATES ALL POINTERS IN lpTI! --> */               /*                                   */
         if (nTer<0 || nTer>=UD_XS(_this,nUnit))                                 /*       Have no valid term. state   */
@@ -155,7 +155,7 @@ INT32 CGEN_PROTECTED CFst_Nmg_StoreSeq
           nTer = CFst_Addstates(_this,nUnit,1,bFinal)-UD_FS(_this,nUnit);       /*         Create new terminal state */
           /* TODO: Replace all occurrences of current state index in lpTSeq by nTer! */
         }                                                                       /*       <<                          */
-        nT = CFst_Addtrans(_this,nUnit,nS,nTer);                                /*       Add state and transition    */
+        nT = CFst_Addtrans(_this,nUnit,nS,nTer);                                /*       Add transition              */
         /* <-- */                                                               /*                                   */
         lpT = CData_XAddr(AS(CData,_this->td),nT,0);                            /*       Calculate correct trans.ptr.*/
         *CFst_STI_TTis(lpTI,lpT) = *(FST_STYPE*)lpSymb;                         /*       Store input symbol          */
@@ -256,11 +256,11 @@ INT16 CGEN_PUBLIC CFst_Addseq
   /* Fetch terminal state sequence */
   if (CData_GetCompType(idSrc,nIcTer)==DLP_TYPE(FST_ITYPE))
   {
-    Tseq.lpItm = CData_XAddr(idSrc,0,nIcTis);
+    Tseq.lpItm = CData_XAddr(idSrc,0,nIcTer);
     Tseq.nOfs  = CData_GetRecLen(idSrc);
     Tseq.nCnt  = CData_GetNRecs(idSrc);
   }
-  else if (dlp_is_numeric_type_code(CData_GetCompType(idSrc,nIcTis)))
+  else if (dlp_is_numeric_type_code(CData_GetCompType(idSrc,nIcTer)))
   {
     Tseq.lpItm = (BYTE*)dlp_calloc(CData_GetNRecs(idSrc),sizeof(FST_ITYPE));
     Tseq.nOfs  = sizeof(FST_ITYPE);
@@ -274,7 +274,7 @@ INT16 CGEN_PUBLIC CFst_Addseq
   /* Fetch reference counter increment sequence */
   if (CData_GetCompType(idSrc,nIcRci)==DLP_TYPE(FST_ITYPE))
   {
-    Cseq.lpItm = CData_XAddr(idSrc,0,nIcTis);
+    Cseq.lpItm = CData_XAddr(idSrc,0,nIcRci);
     Cseq.nOfs  = CData_GetRecLen(idSrc);
     Cseq.nCnt  = CData_GetNRecs(idSrc);
   }
@@ -295,6 +295,7 @@ INT16 CGEN_PUBLIC CFst_Addseq
 
   /* Clean up */
   if (Sseq.lpItm && Sseq.lpItm!=CData_XAddr(idSrc,0,nIcTis)) dlp_free(Sseq.lpItm);
+  if (Tseq.lpItm && Tseq.lpItm!=CData_XAddr(idSrc,0,nIcTer)) dlp_free(Tseq.lpItm);
   if (Cseq.lpItm && Cseq.lpItm!=CData_XAddr(idSrc,0,nIcRci)) dlp_free(Cseq.lpItm);
 
   return nS;
