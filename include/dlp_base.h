@@ -1340,6 +1340,7 @@ hash_val_t    dlp_strhash(const void* lpKey);
 char*         dlp_strconvert(INT16 nHow, char* lpsStr1, const char* lpsStr2);
 INT16         dlp_strreplace_ex(char* lpsStr, const char* lpsKey, const char* lpsRpl, BOOL bOnce);
 INT16         dlp_strreplace(char* lpsText, const char* lpsKey, const char* lpsRpl);
+INT16         dlp_strreplace_env(char* lpsStr, BOOL bOnce);
 char*         dlp_strsep(char** stringp, const char* delim, char* del);
 INT16         dlp_strstartswith(const char* lpsStr, const char* lpsOther);
 INT16         dlp_strendswith(const char* lpsStr, const char* lpsOther);

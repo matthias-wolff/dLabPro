@@ -1,8 +1,9 @@
 dLabPro - A Signal Processing and Pattern Recognition Toolbox
 
-Copyright 2013-2015
-Chair of System Theory and Speech Technology, TU Dresden, Germany, and
-Chair of Communications Engineering, BTU Cottbus, Germany
+Copyright 2013-2016 dLabPro contributors (see below)
+- Chair of Communications Engineering, BTU Cottbus-Senftenberg
+- Fraunhofer IKTS, Dresden
+- Chair of System Theory and Speech Technology, TU Dresden
 
 dLabPro is free software: you can redistribute it and/or modify it under the
 terms of the GNU Lesser General Public License as published by the Free
@@ -17,12 +18,16 @@ details.
 You should have received a copy of the GNU Lesser General Public License
 along with dLabPro. If not, see <http://www.gnu.org/licenses/>.
 
-dLabPro contains the following third-party software:
+dLabPro contains the following third-party software (see ext/ folder):
+clapack by E. Anderson at al.
+ipkclib by Florian Schiel
 kazlib by Kaz Kylheku
 libsbdfile by Erik de Castro Lopo
 libsvm by Chih-Chung Chang and Chih-Jen Lin
+portaudio by Ross Bencina and Phil Burk
+sptk by Keiichi Tokuda et al.
 zlib by Jean-loup Gailly and Mark Adler
-xpat by Thai Open Source Software Center Ltd
+xpat by Thai Open Source Software Center Ltd.
 
 dLabPro contributors:
 Christian-Michael Westendorf
@@ -36,10 +41,12 @@ Mike Lorenz
 Rainer Schaffer
 Rico Petrick
 Robert Schubert
-Roland Dörschel
-Sören Wittenberg
-Steffen Kürbis
+Roland Doerschel
+Soeren Wittenberg
+Steffen Kuerbis
 Steffen Werner
-Stephan Hübler
+Stephan Huebler
 Thomas Hutschenreuther
 Torsten Rudolph
+Werner Meyer
+
