@@ -111,6 +111,7 @@ INT16 CFvrtools_AutoRegisterWords(CDlpObject* __this)
 	/*{{CGEN_REGISTERWORDS */
 
 	/* Register methods */
+	REGISTER_METHOD("-from_fst","",LPMF(CFvrtools,OnFromFst),"Creates a (weighted) FVR from an FST containing a single path.",0,"<fst itSeq> <fst itFvr> <fvrtools this>","")
 	REGISTER_METHOD("-from_string","",LPMF(CFvrtools,OnFromString),"Creates a (weighted) FVR from a string representation",0,"<string src> <fst itFvr> <fvrtools this>","")
 	REGISTER_METHOD("-fsg_check","",LPMF(CFvrtools,OnFsgCheck),"Check parity of braces of a grammer",0,"<fst itFsg> <fvrtools this>","")
 	REGISTER_METHOD("-fsg_normalize","",LPMF(CFvrtools,OnFsgNormalize),"...",0,"<fst itFsgSrc> <fst itFsgDst> <fvrtools this>","")
@@ -327,6 +328,24 @@ INT16 CFvrtools_ResetAllOptions(CDlpObject* __this, BOOL bInit)
 
 #ifndef __NOITP
 /*{{CGEN_CPMIC */
+INT16 CFvrtools_OnFromFst(CDlpObject* __this)
+/* DO NOT CALL THIS FUNCTION FROM C++ SCOPE.     */
+/* IT MAY INTERFERE WITH THE INTERPRETER SESSION */
+{
+	INT16 __nErr    = O_K;
+	INT32  __nErrCnt = 0;
+	fst* itSeq;
+	fst* itFvr;
+	GET_THIS_VIRTUAL_RV(CFvrtools,NOT_EXEC);
+	MIC_CHECK;
+	__nErrCnt = CDlpObject_GetErrorCount();
+	itFvr = MIC_GET_I_EX(itFvr,fst,1,1);
+	itSeq = MIC_GET_I_EX(itSeq,fst,2,2);
+	if (CDlpObject_GetErrorCount()>__nErrCnt) return NOT_EXEC;
+	__nErr = CFvrtools_FromFst(_this, itSeq, itFvr);
+	return __nErr;
+}
+
 INT16 CFvrtools_OnFromString(CDlpObject* __this)
 /* DO NOT CALL THIS FUNCTION FROM C++ SCOPE.     */
 /* IT MAY INTERFERE WITH THE INTERPRETER SESSION */
@@ -529,6 +548,13 @@ INT16 CFvrtools::ResetAllOptions(BOOL bInit)
 
 #ifndef __NOITP
 /*{{CGEN_PMIC */
+INT16 CFvrtools::OnFromFst()
+/* DO NOT CALL THIS FUNCTION FROM C++ SCOPE.     */
+/* IT MAY INTERFERE WITH THE INTERPRETER SESSION */
+{
+	return CFvrtools_OnFromFst(this);
+}
+
 INT16 CFvrtools::OnFromString()
 /* DO NOT CALL THIS FUNCTION FROM C++ SCOPE.     */
 /* IT MAY INTERFERE WITH THE INTERPRETER SESSION */
@@ -587,14 +613,9 @@ INT16 CFvrtools::FromString(const char* lpsSrc, CFst* itFvr)
 	return CFvrtools_FromString(this, lpsSrc, itFvr);
 }
 
-INT16 CFvrtools::CheckSeq(CFst* itSeq, CData* idS, INT32* pBO, INT32* pBC)
+INT16 CFvrtools::FromFst(CFst* itSeq, CFst* itFvr)
 {
-	return CFvrtools_CheckSeq(this, itSeq, idS, pBO, pBC);
-}
-
-INT16 CFvrtools::FromFst(CFst* itSrc, CFst* itFvr)
-{
-	return CFvrtools_FromFst(this, itSrc, itFvr);
+	return CFvrtools_FromFst(this, itSeq, itFvr);
 }
 
 INT16 CFvrtools::Synthesize(CFst* itDst, CFst* itFvr)
@@ -615,6 +636,11 @@ FST_STYPE CFvrtools::FindOs(const char* lpsStr, BOOL bAdd, CFst* itFst)
 void CFvrtools::AddToSeq(const char* lpsTok, INT32 nU, CFst* itSeq)
 {
 	CFvrtools_AddToSeq(this, lpsTok, nU, itSeq);
+}
+
+INT16 CFvrtools::CheckSeq(CFst* itSeq, CData* idS, INT32* pBO, INT32* pBC)
+{
+	return CFvrtools_CheckSeq(this, itSeq, idS, pBO, pBC);
 }
 
 INT16 CFvrtools::ParseSeq(CFst* itSeq, FST_ITYPE nIni, FST_ITYPE nPar, CFst* itFvr)
