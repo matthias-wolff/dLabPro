@@ -59,6 +59,38 @@ FST_STYPE CGEN_SPROTECTED CFvrtools_FindIs(const char* lpsStr, BOOL bAdd, CFst* 
 }
 
 /**
+ * Finds a string in an FST's output symbol table.
+ *
+ * @param lpsStr
+ *          The string to search.
+ * @param bAdd
+ *          Add the string if not found.
+ * @param itFst
+ *          The FST to search the string in.
+ * @return The zero-based index of the string in the input symbol table of <code>itFst</code>, or -1 if the string
+ *         was neither found nor added.
+ */
+FST_STYPE CGEN_SPROTECTED CFvrtools_FindOs(const char* lpsStr, BOOL bAdd, CFst* itFst)
+{
+  CData*    idOs = NULL;                                                        /* The input symbol table of itFst   */
+  FST_STYPE nIs  = -1;                                                          /* The zero-based symbol index       */
+
+  if (itFst==NULL) return -1;                                                   /* No FST, no service!               */
+  idOs = AS(CData,itFst->os);                                                   /* Get input symbol table            */
+  if (CData_GetNComps(idOs)==0)                                                 /* Table has no components           */
+  {                                                                             /* >>                                */
+    if (!bAdd) return -1;                                                       /*   If adding disabled -> forget it */
+    CData_AddComp(idOs,"TOS",255);                                              /*   Add symbol component            */
+  }                                                                             /* <<                                */
+  nIs = CData_Find(idOs,0,CData_GetNRecs(idOs),1,0,lpsStr);                     /* Find the string                   */
+  if (nIs>=0 || !bAdd) return nIs;                                              /* Found or adding disabled -> return*/
+
+  nIs = CData_AddRecs(idOs,1,25);                                               /* Add record to symbol table        */
+  CData_Sstore(idOs,lpsStr,nIs,0);                                              /* Store string                      */
+  return nIs;                                                                   /* Return symbol index               */
+}
+
+/**
  * Adds a token to a sequence FST. Adds one state and one transition from the previous last state to the new state,
  * labels that transition with the name component of the token and weights it with the weight component. This member
  * function is invoked by {@link CFvrtools_StrToSeq}. There are no checks performed!

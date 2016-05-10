@@ -79,6 +79,7 @@ END_MAN
 
 FILE:    fvrt_iam.c
 FILE:    fvrt_compile.c
+FILE:    fvrt_fsg.c
 
 INCLUDE: "dlp_data.h"
 INCLUDE: "dlp_fst.h"
@@ -166,11 +167,22 @@ END_MAN
 
 METHOD:  -synthesize
 SYNTAX:  (INSTANCE(fst) itDst, INSTANCE(fst) itFvr)
-COMMENT: Creates a list of all possible combinations from a FVR
+COMMENT: Creates a list of all possible combinations of a FVR
 /html MAN:
   @param itDst FST to be filled with the serializations.
   @param itFvr The feature-value relation to synthesize from.
   @return
+END_MAN
+
+METHOD:  -fsg_normalize
+SYNTAX:  (INSTANCE(fst) itFsgSrc, INSTANCE(fst) itFsgDst)
+COMMENT: ...
+
+METHOD:  -fsg_check
+SYNTAX:  BOOL (INSTANCE(fst) itFsg)
+COMMENT: Check parity of braces of a grammer
+/html MAN:
+  @param itFsg Finite state grammer to check
 END_MAN
 
 ## -- Generate files --

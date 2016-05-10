@@ -1,7 +1,7 @@
 /* dLabPro class CFvrtools (fvrtools)
  * - Class CFvrtools interactive methods (user defined SMI functions)
  *
- * AUTHOR : Matthias Wolff, Werner Mexer
+ * AUTHOR : Matthias Wolff, Werner Meyer
  * PACKAGE: dLabPro/classes
  *
  * Copyright 2013-2015 dLabPro contributors and others (see COPYRIGHT file)
@@ -232,6 +232,7 @@ INT16 CGEN_PUBLIC CFvrtools_Synthesize(CFvrtools* _this, CFst* itDst, CFst* itFv
     return OK(IERROR(_this,ERR_NULLINST,"itFvr",0,0));                          /*   Error message and exit          */
   if (!CFvrtools_IsFvr(_this,0,itFvr))                                          /* Check Input is an FVR?            */
     FVRT_EXCEPTION(FVRT_NOTFVR,BASEINST(itFvr)->m_lpInstanceName,0,0);          /*   Error message and exit          */
+  /* TODO: Use CREATEVIRTUAL!*/
   if (itDst==itFvr)                                                             /* Input and Output are not same     */
     FVRT_EXCEPTION(ERR_GENERIC,"Source and target must not be identical",0,0);  /*   Error message and exit          */
   ICREATEEX(CData,idRank,"CFvrtools_Synthesize~idRank",NULL);                   /*                                   */
