@@ -193,7 +193,7 @@ INT16 CGEN_PROTECTED CFvrtools_CheckSeq(CFvrtools* _this, CFst* itSeq, CData* id
     lpI = (char*)CData_XAddr(idS,0,0);                                          /*   Get symbol pointer              */
     lpTI = CFst_STI_Init(itSeq,0,0);                                            /*   Setup iterator without sorting  */
 
-    // Pass I: Check path integrity and get required comment buffer size */     /*   - - - - - - - - - - - - - - - - */
+    /* Pass I: Check path integrity and get required comment buffer size */     /*   - - - - - - - - - - - - - - - - */
     for (nS=0; nS<lpTI->nXS; nS++)                                              /*   Loop over states                */
       SD_FLG(itSeq,nS+lpTI->nFS) &= ~SD_FLG_USER1;                              /*     Clear user flag #1            */
     nS = 0;                                                                     /*   Current state is the start state*/

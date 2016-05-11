@@ -132,7 +132,7 @@ INT16 CGEN_PUBLIC CFvrtools_Synthesize(CFvrtools* _this, CFst* itDst, CFst* itFv
   BYTE*         lpTrans2    = NULL;                                             /* transition of 2. level iteration  */
   FST_ITYPE     nAux;                                                           /* Auxiliary value                   */
   FST_ITYPE     nAux2;                                                          /* Auxiliary value2                  */
-  FST_ITYPE     nAux3;                                                          /* Auxiliary value3                  */
+  FST_ITYPE     nAux3       = 0;                                                /* Auxiliary value3                  */
   FST_ITYPE     nIsym       = NULL;                                             /* Input Symbol for store new values */
   FST_ITYPE     nRec;                                                           /* Number of transitions             */
   FST_ITYPE     nSym;                                                           /* Number of symbols                 */
@@ -141,7 +141,7 @@ INT16 CGEN_PUBLIC CFvrtools_Synthesize(CFvrtools* _this, CFst* itDst, CFst* itFv
   FST_ITYPE     nU;                                                             /* Unit index in target              */
   BOOL          permutCheck = TRUE;                                             /* Checking the combination of symb. */
   BOOL          isNotLeaf = FALSE;                                              /* Different mode to store           */
-  FST_STYPE		nIsBo = -1;                                                     /* Symbol index of opening brace     */
+  FST_STYPE     nIsBo = -1;                                                     /* Symbol index of opening brace     */
   FST_STYPE     nIsBc = -1;                                                     /* Symbol index of closing brace     */
   FST_ITYPE*    p  = NULL; p  = (FST_ITYPE*) dlp_calloc(1,sizeof(FST_ITYPE));   /* Dyn. array for permutation        */
 

@@ -87,7 +87,7 @@ void CGEN_PRIVATE CFunction::ArgDestroy()
  */
 INT16 CGEN_PUBLIC CFunction::ArgCmdline(INT32 argc, char** argv)
 {
-  ArgInit();                                                                    // Zero-initialize argument list
+  ArgInit();                                                                    // Clear argument list
   for (INT32 nArg=0; nArg<argc; nArg++)                                         // Loop over command line arguments
   {                                                                             // >>
     INT32 nLen = dlp_strlen(argv[nArg])+L_INPUTLINE;                            //   Estimate size of temp. buffer
