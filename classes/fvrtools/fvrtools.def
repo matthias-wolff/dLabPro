@@ -176,6 +176,9 @@ COMMENT: Creates a (weighted) FVR from an FST containing a single path.
   <code>itSeq</code>. See documentation of method <a class="code" 
   href="#mth_-from_string">-from_string</a> for the format specification of FVR
   strings. 
+  <p>If the FVR string as FST contains comments, the method will store the space-separated string of comments in 
+  <code>itFvr.<a class="code" href="fst.html#fld_ud">ud</a>.<a class="code" 
+  href="data.html#fld_rtext">rtext</a></code>.</p>
   @param itSeg The source FST, must contain exactly one path.
   @param itFvr The target FST, must not be <code>NULL</code>.
   @return void

@@ -62,7 +62,7 @@ BOOL CGEN_PROTECTED CFvrtools_ParseFsgCheck(CFvrtools* _this, CFst* itFsg, FST_I
     nState = *CFst_STI_TTer(lpTI,lpT);                                          /* Get next terminal state           */
     if (CData_Dfetch(idVal,nState,1) == TRUE){                                  /* Check is already visited          */
       if ((FST_ITYPE)CData_Dfetch(idVal,nState,0) != nBrace){                   /*   ...Check is count of brace same */
-        printf("\n ERROR: Wrong count of brace on State: %d", nState);          /* Error Message                     */
+        printf("\n ERROR: Wrong count of brace on State: %d", nMyIniState);     /* Error Message                     */
         goto FALSE_RENDER_AND_RETURN;                                           /* Clean exit with false return      */
       }
       if (CFst_STI_TfromS(lpTI,nMyIniState,lpT)==NULL){                         /*   ...and no more transitions left */

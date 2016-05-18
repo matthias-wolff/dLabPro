@@ -385,7 +385,7 @@ INT16 <b>CFvrtools_FromFst</b>(CFvrtools _this, CFst* itSeq, CFst* itFvr);<br>pu
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fvrt_iam.c(89)</td>
+      <td class="hidden">fvrt_iam.c(90)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -398,6 +398,9 @@ Creates a (weighted) FVR from an FST containing a single path.
   <code>itSeq</code>. See documentation of method <a class="code"
   href="#mth_-from_string">-from_string</a> for the format specification of FVR
   strings.
+  <p>If the FVR string as FST contains comments, the method will store the space-separated string of comments in
+  <code>itFvr.<a class="code" href="fst.html#fld_ud">ud</a>.<a class="code"
+  href="data.html#fld_rtext">rtext</a></code>.</p>
 	<h3>Parameters</h3>
 	<table>
 		<tr>
@@ -843,7 +846,7 @@ INT16 <b>CFvrtools_Synthesize</b>(CFvrtools _this, CFst* itDst, CFst* itFvr);<br
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fvrt_iam.c(111)</td>
+      <td class="hidden">fvrt_iam.c(112)</td>
     </tr>
   </table></div>
   <div class="mframe2">
