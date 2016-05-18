@@ -15,21 +15,39 @@ INT16 CGEN_PUBLIC CFvrtools_FsgNormalize(CFvrtools* _this, CFst* itFsgSrc, CFst*
 /*
  * Documentation in fvrtools.def
  */
-BOOL CGEN_PUBLIC CFvrtools_FsgCheck(CFvrtools* _this, CFst* itFsg)
+BOOL CGEN_PUBLIC CFvrtools_FsgFvrCheck(CFvrtools* _this, CFst* itFsg, CFst* itErr)
 {
   BOOL          bRet        = FALSE;                                            /* Return value                      */
   FST_ITYPE     nMyIniState = 0;                                                /* State iterator of Fsg             */
+  CFst*         itAux       = NULL;                                             /* Auxiliary FST (error path)        */
   CData*        idVal       = NULL;                                             /* Count braces for state            */
+
+  /* Simple tests */                                                            /* --------------------------------- */
+  if (itFsg==NULL)                                                              /* FST is NULL                       */
+    return OK(IERROR(_this,ERR_NULLINST,"itFsg",0,0));                          /*   but must not be                 */
+
+ if((-1 == CFvrtools_FindOs("FVR",FALSE,itFsg))                                 /* Check typical FVR symbols         */
+     || (-1 == CFvrtools_FindOs("[",FALSE,itFsg))                               /*                                   */
+     || (-1 == CFvrtools_FindOs("]",FALSE,itFsg))){                             /*                                   */
+   printf("\n No FVR. \"FVR\", \"[\" or \"]\" not found. Dont execute check."); /* No Error when function is used... */
+   return TRUE;                                                                 /* ...for other finite state grammer */
+ }
+  /* NO RETURNS AFTER THIS POINT! */
   ICREATEEX(CData,idVal,"CFvrtools_Synthesize~idVal",NULL);                     /*                                   */
   CData_AddComp(idVal,"nBr",T_INT);                                             /* Comp for count of braces          */
   CData_AddComp(idVal,"Vis",T_BOOL);                                            /* Comp for flag state already visit */
   CData_Allocate(idVal,UD_XS(itFsg,0));                                         /* Allocate memory                   */
 
-  /* Simple tests */                                                            /* --------------------------------- */
-  if (itFsg==NULL)                                                              /* FST is NULL                       */
-    return OK(IERROR(_this,ERR_NULLINST,"itFsg",0,0));                          /*   but must not be                 */
-  bRet = CFvrtools_ParseFsgCheck(_this, itFsg, nMyIniState, idVal);
+  ICREATEEX(CFst,itAux,"CFvrtools_Synthesize~itAux",NULL);                      /*                                   */
+  CFst_Copy(BASEINST(itAux),BASEINST(itFsg));                                   /* Copy grammar to check             */
+
+  bRet = CFvrtools_ParseFsgCheck(_this, itAux, nMyIniState, idVal);
+
+  if (itErr!=NULL && !bRet)                                                     /* Check failed and have error FST   */
+    CFst_Copy(BASEINST(itErr),BASEINST(itAux));                                 /*   Copy error FST                  */
+
   IDESTROY(idVal);                                                              /*                                   */
+  IDESTROY(itAux);                                                              /*                                   */
   return bRet;                                                                  /* Return result                     */
 }
 
@@ -47,7 +65,7 @@ BOOL CGEN_PROTECTED CFvrtools_ParseFsgCheck(CFvrtools* _this, CFst* itFsg, FST_I
   ICREATEEX(CData,idState,"CFvrtools_Synthesize~idState",NULL);                 /*                                   */
   CData_AddComp(idState,"Sta",T_INT);                                           /*                                   */
   CData_Allocate(idState,1);                                                    /* Allocate memory for               */
-
+  
   nOsBo = CFvrtools_FindOs("[",FALSE,itFsg);                                    /* Find opening brace symbol         */
   nOsBc = CFvrtools_FindOs("]",FALSE,itFsg);                                    /* Find closing brace symbol         */
   lpTI=CFst_STI_Init(itFsg,0,FSTI_SORTINI);                                     /* Initialize transition iterator    */

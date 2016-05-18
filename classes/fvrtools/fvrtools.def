@@ -198,11 +198,24 @@ METHOD:  -fsg_normalize
 SYNTAX:  (INSTANCE(fst) itFsgSrc, INSTANCE(fst) itFsgDst)
 COMMENT: ...
 
-METHOD:  -fsg_check
-SYNTAX:  BOOL (INSTANCE(fst) itFsg)
-COMMENT: Check parity of braces of a grammer
+METHOD:  -fsg_fvr_check
+SYNTAX:  BOOL (INSTANCE(fst) itFsg, INSTANCE(fst) itErr)
+COMMENT: Check square bracket parity in the output language of a FVR grammar.
 /html MAN:
-  @param itFsg Finite state grammer to check
+  <p>Checks if the parity of opening and closing square brackes <code>'['</code>/<code>']'</code>
+  in an FVR finite state grammar is correct in all each consecutive paths. A grammar is
+  considered an FVR grammar, iff its <a href="fst.html#fld_os">output symbol table</a> contains
+  at least the symbols "FVR", "[", and "]".</p>
+  
+  <p>Note: you must <a href="#mth_-fsg_normalize">normalize</a> the grammar before invoking this method!</p>
+
+  @param itFsg Finite state grammer to check.
+  @param itErr If the return value is <code>FALSE</code>: Filled with the beginning of
+               the first path violating the bracket parity up to the erroneous transition,
+               can be <code>NULL</code> or identical with <code>itFgs</code>.
+  @return <code>TRUE</code> if the bracket parity is ok or if the <code>itFsg</code> is 
+  <em>not</em> an FVR grammar, <code>FALSE</code> in all other cases. 
+  @see -fsg_normalize
 END_MAN
 
 ## -- Generate files --

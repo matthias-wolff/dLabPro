@@ -113,7 +113,7 @@ INT16 CFvrtools_AutoRegisterWords(CDlpObject* __this)
 	/* Register methods */
 	REGISTER_METHOD("-from_fst","",LPMF(CFvrtools,OnFromFst),"Creates a (weighted) FVR from an FST containing a single path.",0,"<fst itSeq> <fst itFvr> <fvrtools this>","")
 	REGISTER_METHOD("-from_string","",LPMF(CFvrtools,OnFromString),"Creates a (weighted) FVR from a string representation",0,"<string src> <fst itFvr> <fvrtools this>","")
-	REGISTER_METHOD("-fsg_check","",LPMF(CFvrtools,OnFsgCheck),"Check parity of braces of a grammer",0,"<fst itFsg> <fvrtools this>","")
+	REGISTER_METHOD("-fsg_fvr_check","",LPMF(CFvrtools,OnFsgFvrCheck),"Check square bracket parity in the output language of a FVR grammar.",0,"<fst itFsg> <fst itErr> <fvrtools this>","")
 	REGISTER_METHOD("-fsg_normalize","",LPMF(CFvrtools,OnFsgNormalize),"...",0,"<fst itFsgSrc> <fst itFsgDst> <fvrtools this>","")
 	REGISTER_METHOD("-is_fvr","",LPMF(CFvrtools,OnIsFvr),"Determines if the argument is an FVR",0,"<int nU> <fst itFvr> <fvrtools this>","")
 	REGISTER_METHOD("-synthesize","",LPMF(CFvrtools,OnSynthesize),"Creates a list of all possible combinations of a FVR",0,"<fst itDst> <fst itFvr> <fvrtools this>","")
@@ -364,19 +364,21 @@ INT16 CFvrtools_OnFromString(CDlpObject* __this)
 	return __nErr;
 }
 
-INT16 CFvrtools_OnFsgCheck(CDlpObject* __this)
+INT16 CFvrtools_OnFsgFvrCheck(CDlpObject* __this)
 /* DO NOT CALL THIS FUNCTION FROM C++ SCOPE.     */
 /* IT MAY INTERFERE WITH THE INTERPRETER SESSION */
 {
 	INT16 __nErr    = O_K;
 	INT32  __nErrCnt = 0;
 	fst* itFsg;
+	fst* itErr;
 	GET_THIS_VIRTUAL_RV(CFvrtools,NOT_EXEC);
 	MIC_CHECK;
 	__nErrCnt = CDlpObject_GetErrorCount();
-	itFsg = MIC_GET_I_EX(itFsg,fst,1,1);
+	itErr = MIC_GET_I_EX(itErr,fst,1,1);
+	itFsg = MIC_GET_I_EX(itFsg,fst,2,2);
 	if (CDlpObject_GetErrorCount()>__nErrCnt) return NOT_EXEC;
-	MIC_PUT_B(CFvrtools_FsgCheck(_this, itFsg));
+	MIC_PUT_B(CFvrtools_FsgFvrCheck(_this, itFsg, itErr));
 	return __nErr;
 }
 
@@ -562,11 +564,11 @@ INT16 CFvrtools::OnFromString()
 	return CFvrtools_OnFromString(this);
 }
 
-INT16 CFvrtools::OnFsgCheck()
+INT16 CFvrtools::OnFsgFvrCheck()
 /* DO NOT CALL THIS FUNCTION FROM C++ SCOPE.     */
 /* IT MAY INTERFERE WITH THE INTERPRETER SESSION */
 {
-	return CFvrtools_OnFsgCheck(this);
+	return CFvrtools_OnFsgFvrCheck(this);
 }
 
 INT16 CFvrtools::OnFsgNormalize()
@@ -663,9 +665,9 @@ INT16 CFvrtools::FsgNormalize(CFst* itFsgSrc, CFst* itFsgDst)
 	return CFvrtools_FsgNormalize(this, itFsgSrc, itFsgDst);
 }
 
-BOOL CFvrtools::FsgCheck(CFst* itFsg)
+BOOL CFvrtools::FsgFvrCheck(CFst* itFsg, CFst* itErr)
 {
-	return CFvrtools_FsgCheck(this, itFsg);
+	return CFvrtools_FsgFvrCheck(this, itFsg, itErr);
 }
 
 BOOL CFvrtools::ParseFsgCheck(CFst* itFsg, FST_ITYPE nMyIniState, CData* idVal)
