@@ -53,7 +53,7 @@ fvrtools.html fvrtools CFvrtools [
   fvrtools.html#mth Methods - [
     fvrtools.html#mth_-from_fst "-from_fst" "-from_fst"
     fvrtools.html#mth_-from_string "-from_string" "-from_string"
-    fvrtools.html#mth_-fsg_check "-fsg_check" "-fsg_check"
+    fvrtools.html#mth_-fsg_fvr_check "-fsg_fvr_check" "-fsg_fvr_check"
     fvrtools.html#mth_-fsg_normalize "-fsg_normalize" "-fsg_normalize"
     fvrtools.html#mth_-is_fvr "-is_fvr" "-is_fvr"
     fvrtools.html#mth_-synthesize "-synthesize" "-synthesize"
@@ -79,7 +79,7 @@ fvrtools.html fvrtools CFvrtools [
 //{{ BEGIN_TOC
         top.TC1.InsertItem("-from_fst","&lt;fst itSeq&gt; &lt;fst itFvr&gt; &lt;fvrtools this&gt; -from_fst     Creates a (weighted) FVR from an FST containing a single path.",27,27,0,"automatic/fvrtools.html#mth_-from_fst","CONT",nCls);
         top.TC1.InsertItem("-from_string","&lt;string src&gt; &lt;fst itFvr&gt; &lt;fvrtools this&gt; -from_string     Creates a (weighted) FVR from a string representation",27,27,0,"automatic/fvrtools.html#mth_-from_string","CONT",nCls);
-        top.TC1.InsertItem("-fsg_check","&lt;fst itFsg&gt; &lt;fvrtools this&gt; -fsg_check     Check parity of braces of a grammer",27,27,0,"automatic/fvrtools.html#mth_-fsg_check","CONT",nCls);
+        top.TC1.InsertItem("-fsg_fvr_check","&lt;fst itFsg&gt; &lt;fst itErr&gt; &lt;fvrtools this&gt; -fsg_fvr_check     Check square bracket parity in the output language of a FVR grammar.",27,27,0,"automatic/fvrtools.html#mth_-fsg_fvr_check","CONT",nCls);
         top.TC1.InsertItem("-fsg_normalize","&lt;fst itFsgSrc&gt; &lt;fst itFsgDst&gt; &lt;fvrtools this&gt; -fsg_normalize     ...",27,27,0,"automatic/fvrtools.html#mth_-fsg_normalize","CONT",nCls);
         top.TC1.InsertItem("-is_fvr","&lt;int nU&gt; &lt;fst itFvr&gt; &lt;fvrtools this&gt; -is_fvr     Determines if the argument is an FVR",27,27,0,"automatic/fvrtools.html#mth_-is_fvr","CONT",nCls);
         top.TC1.InsertItem("-synthesize","&lt;fst itDst&gt; &lt;fst itFvr&gt; &lt;fvrtools this&gt; -synthesize     Creates a list of all possible combinations of a FVR",27,27,0,"automatic/fvrtools.html#mth_-synthesize","CONT",nCls);
@@ -281,7 +281,7 @@ FST-based feature-value relation processing tools
     </tr>
     <tr><td><a href="#mth_-from_fst"><code class="link">-from_fst</code></a></td><td><code>&lt;fst itSeq&gt; &lt;fst itFvr&gt; &lt;fvrtools this&gt; <b>-from_fst</b> </code><br> Creates a (weighted) FVR from an FST containing a single path.</td></tr>
     <tr><td><a href="#mth_-from_string"><code class="link">-from_string</code></a></td><td><code>&lt;string src&gt; &lt;fst itFvr&gt; &lt;fvrtools this&gt; <b>-from_string</b> </code><br> Creates a (weighted) FVR from a string representation</td></tr>
-    <tr><td><a href="#mth_-fsg_check"><code class="link">-fsg_check</code></a></td><td><code>&lt;fst itFsg&gt; &lt;fvrtools this&gt; <b>-fsg_check</b> </code><br> Check parity of braces of a grammer</td></tr>
+    <tr><td><a href="#mth_-fsg_fvr_check"><code class="link">-fsg_fvr_check</code></a></td><td><code>&lt;fst itFsg&gt; &lt;fst itErr&gt; &lt;fvrtools this&gt; <b>-fsg_fvr_check</b> </code><br> Check square bracket parity in the output language of a FVR grammar.</td></tr>
     <tr><td><a href="#mth_-fsg_normalize"><code class="link">-fsg_normalize</code></a></td><td><code>&lt;fst itFsgSrc&gt; &lt;fst itFsgDst&gt; &lt;fvrtools this&gt; <b>-fsg_normalize</b> </code><br> ...</td></tr>
     <tr><td><a href="#mth_-is_fvr"><code class="link">-is_fvr</code></a></td><td><code>&lt;int nU&gt; &lt;fst itFvr&gt; &lt;fvrtools this&gt; <b>-is_fvr</b> </code><br> Determines if the argument is an FVR</td></tr>
     <tr><td><a href="#mth_-synthesize"><code class="link">-synthesize</code></a></td><td><code>&lt;fst itDst&gt; &lt;fst itFvr&gt; &lt;fvrtools this&gt; <b>-synthesize</b> </code><br> Creates a list of all possible combinations of a FVR</td></tr>
@@ -385,7 +385,7 @@ INT16 <b>CFvrtools_FromFst</b>(CFvrtools _this, CFst* itSeq, CFst* itFvr);<br>pu
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fvrt_iam.c(90)</td>
+      <td class="hidden">fvrt_iam.c(89)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -550,14 +550,14 @@ void
   </div>
   <img src="../resources/blank_stc.gif" height="10">
   </div>
-  <div id="mth_-fsg_check">
+  <div id="mth_-fsg_fvr_check">
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_-fsg_check"></a>Method <span 
-        class="mid">-fsg_check</span></td>
+        name="mth_-fsg_fvr_check"></a>Method <span 
+        class="mid">-fsg_fvr_check</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
-        <a class="navbar" href="javascript:__PrintSection('mth_-fsg_check','Class fvrtools');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
+        <a class="navbar" href="javascript:__PrintSection('mth_-fsg_fvr_check','Class fvrtools');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
         <a class="navbar" href="../home.html">Home</a>
         <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
@@ -574,7 +574,7 @@ void
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Identifier</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden"><code><b>-fsg_check</b></code></td>
+      <td class="hidden"><code><b>-fsg_fvr_check</b></code></td>
     </tr>
     <tr>
       <td class="hidden">&nbsp;</td>
@@ -582,7 +582,7 @@ void
       <td class="hidden">Syntax</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden"><code>
-&lt;fst itFsg&gt; &lt;fvrtools this&gt; <b>-fsg_check</b> 
+&lt;fst itFsg&gt; &lt;fst itErr&gt; &lt;fvrtools this&gt; <b>-fsg_fvr_check</b> 
 </code></td>
     </tr>
     <tr>
@@ -594,7 +594,7 @@ void
       <td class="hidden">Member function</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden"><code>
-BOOL <b>CFvrtools_FsgCheck</b>(CFvrtools _this, CFst* itFsg);<br>public: BOOL <b>CFvrtools::FsgCheck</b>(CFst* itFsg);<br>
+BOOL <b>CFvrtools_FsgFvrCheck</b>(CFvrtools _this, CFst* itFsg, CFst* itErr);<br>public: BOOL <b>CFvrtools::FsgFvrCheck</b>(CFst* itFsg, CFst* itErr);<br>
 </code></td>
     </tr>
     <tr>
@@ -608,9 +608,16 @@ BOOL <b>CFvrtools_FsgCheck</b>(CFvrtools _this, CFst* itFsg);<br>public: BOOL <b
   <div class="mframe2">
   <h3>Synopsis</h3>
   <p>
-Check parity of braces of a grammer
+Check square bracket parity in the output language of a FVR grammar.
   </p>
   <h3>Description</h3>
+  <p>Checks if the parity of opening and closing square brackes <code>'['</code>/<code>']'</code>
+  in an FVR finite state grammar is correct in all each consecutive paths. A grammar is
+  considered an FVR grammar, iff its <a href="fst.html#fld_os">output symbol table</a> contains
+  at least the symbols "FVR", "[", and "]".</p>
+
+  <p>Note: you must <a href="#mth_-fsg_normalize">normalize</a> the grammar before invoking this method!</p>
+
 	<h3>Parameters</h3>
 	<table>
 		<tr>
@@ -620,7 +627,33 @@ itFsg
 </code></b></td>
 			<td class="hidden">&nbsp;</td>
 			<td class="hidden">
-Finite state grammer to check
+Finite state grammer to check.
+			</td>
+		</tr>
+		<tr>
+			<td class="hidden">&nbsp;&nbsp;</td>
+			<td class="hidden"><b><code>
+itErr
+</code></b></td>
+			<td class="hidden">&nbsp;</td>
+			<td class="hidden">
+If the return value is <code>FALSE</code>: Filled with the beginning of
+the first path violating the bracket parity up to the erroneous transition,
+can be <code>NULL</code> or identical with <code>itFgs</code>.
+			</td>
+		</tr>
+	</table>
+	<h3>Return value</h3>
+	<p>
+<code>TRUE</code> if the bracket parity is ok or if the <code>itFsg</code> is
+<em>not</em> an FVR grammar, <code>FALSE</code> in all other cases.
+	</p>
+	<h3>See also</h3>
+	<table>
+		<tr>
+			<td class="hidden">&nbsp;&nbsp;</td>
+			<td class="hidden">
+<a href="#mth_-fsg_normalize"><code class="link">-fsg_normalize</code></a>
 			</td>
 		</tr>
 	</table>
@@ -846,7 +879,7 @@ INT16 <b>CFvrtools_Synthesize</b>(CFvrtools _this, CFst* itDst, CFst* itFvr);<br
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fvrt_iam.c(112)</td>
+      <td class="hidden">fvrt_iam.c(111)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -1296,7 +1329,7 @@ BOOL <b>CFvrtools_ParseFsgCheck</b>(CFvrtools _this, CFst* itFsg, FST_ITYPE nMyI
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fvrt_fsg.c(36)</td>
+      <td class="hidden">fvrt_fsg.c(48)</td>
     </tr>
   </table></div>
   <div class="mframe2">

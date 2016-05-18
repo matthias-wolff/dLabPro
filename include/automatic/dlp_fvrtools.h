@@ -105,7 +105,7 @@ public:
 /*{{CGEN_PMIC */
 	INT16 OnFromFst();
 	INT16 OnFromString();
-	INT16 OnFsgCheck();
+	INT16 OnFsgFvrCheck();
 	INT16 OnFsgNormalize();
 	INT16 OnIsFvr();
 	INT16 OnSynthesize();
@@ -147,7 +147,7 @@ public:
 
 /* Taken from 'fvrt_fsg.c' */
 	public: INT16 FsgNormalize(CFst* itFsgSrc, CFst* itFsgDst);
-	public: BOOL FsgCheck(CFst* itFsg);
+	public: BOOL FsgFvrCheck(CFst* itFsg, CFst* itErr);
 	protected: BOOL ParseFsgCheck(CFst* itFsg, FST_ITYPE nMyIniState, CData* idVal);
 /*}}CGEN_EXPORT */
 
@@ -208,7 +208,7 @@ INT16 CFvrtools_ResetAllOptions(CDlpObject*, BOOL bInit);
 /*{{CGEN_CPMIC */
 INT16 CFvrtools_OnFromFst(CDlpObject*);
 INT16 CFvrtools_OnFromString(CDlpObject*);
-INT16 CFvrtools_OnFsgCheck(CDlpObject*);
+INT16 CFvrtools_OnFsgFvrCheck(CDlpObject*);
 INT16 CFvrtools_OnFsgNormalize(CDlpObject*);
 INT16 CFvrtools_OnIsFvr(CDlpObject*);
 INT16 CFvrtools_OnSynthesize(CDlpObject*);
@@ -247,7 +247,7 @@ INT16 CFvrtools_SeqToFvr(CFvrtools*, CFst* itSeq, CFst* itFvr);
 
 /* Taken from 'fvrt_fsg.c' */
 INT16 CFvrtools_FsgNormalize(CFvrtools*, CFst* itFsgSrc, CFst* itFsgDst);
-BOOL CFvrtools_FsgCheck(CFvrtools*, CFst* itFsg);
+BOOL CFvrtools_FsgFvrCheck(CFvrtools*, CFst* itFsg, CFst* itErr);
 BOOL CFvrtools_ParseFsgCheck(CFvrtools*, CFst* itFsg, FST_ITYPE nMyIniState, CData* idVal);
 /*}}CGEN_CEXPORT */
 
