@@ -83,23 +83,28 @@ void CGEN_PRIVATE CFunction::ArgDestroy()
 }
 
 /**
- * Initializes the function argument list from a command line
+ * Initializes the function argument list from a command line.
  */
 INT16 CGEN_PUBLIC CFunction::ArgCmdline(INT32 argc, char** argv)
 {
-  ArgInit();                                                                    // Zero-initialize argument list
-  for (INT32 nArg=0; nArg<argc; nArg++)
-  {
-    char* lpsArg     = (char*)dlp_malloc((dlp_strlen(argv[nArg])+1)*sizeof(char));
-    char  lpsNam[16];
-    dlp_strcpy(lpsArg,argv[nArg]);
-    sprintf(lpsNam,"$%d",(int)(nArg+1));
-    m_idArg->AddRecs(1,10);
-    m_idArg->Sstore(lpsNam,nArg,0);
-    m_idArg->Dstore(T_STRING,nArg,1);
-    m_idArg->Pstore(lpsArg,nArg,2);
-  }
-  return O_K;
+  ArgInit();                                                                    // Clear argument list
+  for (INT32 nArg=0; nArg<argc; nArg++)                                         // Loop over command line arguments
+  {                                                                             // >>
+    INT32 nLen = dlp_strlen(argv[nArg])+L_INPUTLINE;                            //   Estimate size of temp. buffer
+    char* lpsBuf = (char*)dlp_calloc(nLen,sizeof(char));                        //   Allocate a temporary buffer
+    dlp_strcpy(lpsBuf,argv[nArg]);                                              //   Copy current argument to buffer
+    dlp_strreplace_env(lpsBuf,FALSE);                                           //   Replace environment variables
+    char* lpsArg = (char*)dlp_calloc(dlp_strlen(lpsBuf)+1,sizeof(char));        //   Allocate argument value buffer
+    char  lpsNam[16];                                                           //   Allocate argument name buffer
+    dlp_strcpy(lpsArg,lpsBuf);                                                  //   Copy finished argument value
+    sprintf(lpsNam,"$%d",(int)(nArg+1));                                        //   Make argument name
+    m_idArg->AddRecs(1,10);                                                     //   Add a record to the arguments list
+    m_idArg->Sstore(lpsNam,nArg,0);                                             //   Store argument name
+    m_idArg->Dstore(T_STRING,nArg,1);                                           //   Store argument type (always string)
+    m_idArg->Pstore(lpsArg,nArg,2);                                             //   Store argument value
+    dlp_free(lpsBuf);                                                           //   Free temporary buffer
+  }                                                                             // <<
+  return O_K;                                                                   // Cannot fail :)
 }
 
 /**

@@ -59,6 +59,38 @@ FST_STYPE CGEN_SPROTECTED CFvrtools_FindIs(const char* lpsStr, BOOL bAdd, CFst* 
 }
 
 /**
+ * Finds a string in an FST's output symbol table.
+ *
+ * @param lpsStr
+ *          The string to search.
+ * @param bAdd
+ *          Add the string if not found.
+ * @param itFst
+ *          The FST to search the string in.
+ * @return The zero-based index of the string in the input symbol table of <code>itFst</code>, or -1 if the string
+ *         was neither found nor added.
+ */
+FST_STYPE CGEN_SPROTECTED CFvrtools_FindOs(const char* lpsStr, BOOL bAdd, CFst* itFst)
+{
+  CData*    idOs = NULL;                                                        /* The input symbol table of itFst   */
+  FST_STYPE nIs  = -1;                                                          /* The zero-based symbol index       */
+
+  if (itFst==NULL) return -1;                                                   /* No FST, no service!               */
+  idOs = AS(CData,itFst->os);                                                   /* Get input symbol table            */
+  if (CData_GetNComps(idOs)==0)                                                 /* Table has no components           */
+  {                                                                             /* >>                                */
+    if (!bAdd) return -1;                                                       /*   If adding disabled -> forget it */
+    CData_AddComp(idOs,"TOS",255);                                              /*   Add symbol component            */
+  }                                                                             /* <<                                */
+  nIs = CData_Find(idOs,0,CData_GetNRecs(idOs),1,0,lpsStr);                     /* Find the string                   */
+  if (nIs>=0 || !bAdd) return nIs;                                              /* Found or adding disabled -> return*/
+
+  nIs = CData_AddRecs(idOs,1,25);                                               /* Add record to symbol table        */
+  CData_Sstore(idOs,lpsStr,nIs,0);                                              /* Store string                      */
+  return nIs;                                                                   /* Return symbol index               */
+}
+
+/**
  * Adds a token to a sequence FST. Adds one state and one transition from the previous last state to the new state,
  * labels that transition with the name component of the token and weights it with the weight component. This member
  * function is invoked by {@link CFvrtools_StrToSeq}. There are no checks performed!
@@ -107,6 +139,138 @@ void CGEN_PROTECTED CFvrtools_AddToSeq(CFvrtools* _this, const char* lpsTok, INT
 
   /* Clean-up */                                                                /* --------------------------------- */
   dlp_free(lpsT);                                                               /* Free string buffer                */
+}
+
+/**
+ * Check a sequence FST symbol table.
+ * This function fails if there are input symbols containing a square bracket [ or ] and other characters.
+ * Furthermore this function removes all strings in parentheses (XX) from the input symbols, concatenates
+ * them and stores the concatenation in <code>itSeq.ud.rtext</code>.
+ * All transitions with empty string as input symbol afterwards are converted to epsilon transitions.
+ * If <code>itSeq</code> is <code>NULL</code>, no changes are mode to <code>idS</code>.
+ *
+ * @param _this
+ *          This instance of CFvrtools.
+ * @param itSeq
+ *          The sequence FST in unit 0 (maybe NULL for no changes).
+ * @param idS
+ *          The symbol table to check (maybe itSeq->is or itSeq->os).
+ * @param nBO
+ *          Return pointer for opening bracket index
+ * @param nBC
+ *          Return pointer for closing bracket index
+ * @return <code>O_K</code> if successful, a (negative) error code otherwise.
+ */
+INT16 CGEN_PROTECTED CFvrtools_CheckSeq(CFvrtools* _this, CFst* itSeq, CData* idS, INT32 *pBO, INT32 *pBC)
+{
+  INT16 nRet = O_K;                                                             /* The return value                  */
+  INT32 nI,nC;                                                                  /* Symbol, character index           */
+  INT32 nXI;                                                                    /* Number of input symbols           */
+  INT32 nOI;                                                                    /* Input symbol record length        */
+  INT32 nXC;                                                                    /* Number of characters per symbol   */
+  INT32 nBO = -1;                                                               /* Opening bracket index             */
+  INT32 nBC = -1;                                                               /* Closing bracket index             */
+  char *lpI;                                                                    /* Input symbol pointer              */
+  FST_TID_TYPE* lpTI;                                                           /* Transition iterator               */
+  BYTE* lpT = NULL;                                                             /* Transition pointer                */
+
+  /* Initialization */                                                          /* --------------------------------- */
+  CHECK_THIS_RV(NOT_EXEC);                                                      /* Check this instance               */
+  if (idS==NULL || CData_IsEmpty(idS))                                          /* Symbol table is empty             */
+    FVRT_EXCEPTION(ERR_NULLINST,"idS is empty",0,0);                            /*   Error message and exit          */
+
+  nXI=CData_GetNRecs(idS);                                                      /* Get number of symbols             */
+  nOI=CData_GetRecLen(idS);                                                     /* Get input symbol record length    */
+  nXC=CData_GetCompType(idS,0);                                                 /* Get number of characters per symb.*/
+
+  /* Check path integrity and get comments */                                   /* --------------------------------- */
+  if (itSeq)                                                                    /* Have a sequence                   */
+  {                                                                             /* >>                                */
+    FST_ITYPE nS;                                                               /*   Current state                   */
+    INT32 nLen = 0;                                                             /*   Comment buffer size             */
+    char* lpO;                                                                  /*   Comment buffer                  */
+    INT32 nOw;                                                                  /*   Comment buffer write index      */
+    lpI = (char*)CData_XAddr(idS,0,0);                                          /*   Get symbol pointer              */
+    lpTI = CFst_STI_Init(itSeq,0,0);                                            /*   Setup iterator without sorting  */
+
+    /* Pass I: Check path integrity and get required comment buffer size */     /*   - - - - - - - - - - - - - - - - */
+    for (nS=0; nS<lpTI->nXS; nS++)                                              /*   Loop over states                */
+      SD_FLG(itSeq,nS+lpTI->nFS) &= ~SD_FLG_USER1;                              /*     Clear user flag #1            */
+    nS = 0;                                                                     /*   Current state is the start state*/
+    while ((lpT=CFst_STI_TfromS(lpTI,nS,NULL))!=NULL)                           /*   Traverse sequence               */
+    {                                                                           /*   >>                              */
+      if (CFst_STI_TfromS(lpTI,nS,lpT)!=NULL)                                   /*     Not a single path             */
+        FVRT_EXCEPTION(FVRT_SEQSYNTAX,"path not unique",0,0);                   /*       Invalid argument!           */
+      if (SD_FLG(itSeq,nS+lpTI->nFS) & SD_FLG_USER1)                            /*     We have been here before      */
+        FVRT_EXCEPTION(FVRT_SEQSYNTAX,"input contains cycles",0,0);             /*       Invalid argument!           */
+      nLen += dlp_strlen(&lpI[*CFst_STI_TTis(lpTI,lpT)*nOI]);                   /*     Accumulate req. buffer size   */
+      SD_FLG(itSeq,nS+lpTI->nFS) |= SD_FLG_USER1;                               /*     Mark current state visited    */
+      nS = *CFst_STI_TTer(lpTI,lpT);                                            /*     Get next state                */
+    }                                                                           /*   <<                              */
+    for (nS=0; nS<lpTI->nXS; nS++)                                              /*   Loop over states                */
+      SD_FLG(itSeq,nS+lpTI->nFS) &= ~SD_FLG_USER1;                              /*     Clear user flag #1            */
+
+    /* Pass II: Get comment */                                                  /*   - - - - - - - - - - - - - - - - */
+    dlp_free(AS(CData,itSeq->ud)->m_lpTable->m_rtext);                          /*   Free itSeq.ud.rtext             */
+    lpO = (char*)dlp_calloc(nLen+1,sizeof(char));                               /*   Allocate comment buffer         */
+    AS(CData,itSeq->ud)->m_lpTable->m_rtext = lpO;                              /*   Make it the new itSeq.ud.rtext  */
+    nOw = 0;                                                                    /*   Initialize write index          */
+    nS = 0;                                                                     /*   Current state is the start state*/
+    while ((lpT=CFst_STI_TfromS(lpTI,nS,NULL))!=NULL)                           /*   Traverse sequence               */
+    {                                                                           /*   >>                              */
+      INT32 nBrk = 0;                                                           /*     Current brace level is 0      */
+      char* lpR = &lpI[*CFst_STI_TTis(lpTI,lpT)*nOI];                           /*     Pointer to input symbol       */
+      for(nC=0; nC<nXC && lpR[nC]; nC++)                                        /*     Loop over characters          */
+        if (lpR[nC]=='(')                                                       /*       Opening parenthesis         */
+          nBrk++;                                                               /*         Count                     */
+        else if (lpR[nC]==')')                                                  /*       Closing parenthesis         */
+        {                                                                       /*       >>                          */
+          nBrk--; if (nBrk<0) nBrk=0;                                           /*         Count, ignore parity      */
+          lpO[nOw++] = ' ';                                                     /*         Write comment delimiter   */
+        }                                                                       /*       <<                          */
+        else if (nBrk>0)                                                        /*       Character in parentheses    */
+          lpO[nOw++] = lpR[nC];                                                 /*         Write to comment          */
+      nS = *CFst_STI_TTer(lpTI,lpT);                                            /*     Get next state                */
+    }                                                                           /*   <<                              */
+    dlp_strtrimright(lpO);                                                      /*   Trim tailing space from comment */
+
+    CFst_STI_Done(lpTI);                                                        /*   Dispose of iterator             */
+  }                                                                             /* <<                                */
+
+  /* Remove (XX) in output symbols & check for singular [ or ] */               /* --------------------------------- */
+  lpI=(char*)CData_XAddr(idS,0,0);                                              /* Get symbol pointer                */
+  for(nI=0;nI<nXI;nI++,lpI+=nOI){                                               /* Loop over input symbols >>        */
+    INT32 nBrk=0;                                                               /*   Bracket depth                   */
+    INT32 nCd=0;                                                                /*   Character writing index         */
+    for(nC=0;nC<nXC && lpI[nC];nC++){                                           /*   Loop over characters >>         */
+      if((lpI[nC]=='[' || lpI[nC]==']') && (nC || lpI[nC+1]))                   /*     Check for singular [ or ]     */
+        FVRT_EXCEPTION(FVRT_SEQSYNTAX,"Symbol [ or ] occurs with other characters",0,0); /* Check failed             */
+      if(lpI[nC]=='[') nBO=nI;                                                  /*     Return opening bracket index  */
+      if(lpI[nC]==']') nBC=nI;                                                  /*     Return closing bracket index  */
+      if(!itSeq) continue;                                                      /*     No changes                    */
+      if(lpI[nC]=='(') nBrk++;                                                  /*     Increase bracket depth on open*/
+      if(!nBrk) lpI[nCd++]=lpI[nC];                                             /*     Copy char. if outside bracket */
+      if(lpI[nC]==')') nBrk--;                                                  /*     Decrease brck. depth on close */
+    }                                                                           /*   <<                              */
+    if(itSeq) lpI[nCd]='\0';                                                    /*   End of string                   */
+  }                                                                             /* <<                                */
+  if(nBO<0 || nBC<0) FVRT_EXCEPTION(FVRT_SEQSYNTAX,"Symbol [ or ] missing",0,0);/* Check existance of bracket symbols*/
+  if(pBO) *pBO=nBO;                                                             /* Export opening bracket index      */
+  if(pBC) *pBC=nBC;                                                             /* Export closing bracket index      */
+  if(!itSeq) return nRet;                                                       /* No changes -> return              */
+
+  /* Remove empty output symbols */
+  lpI=(char*)CData_XAddr(idS,0,0);                                              /* Get symbol pointer                */
+  lpTI=CFst_STI_Init(itSeq,0,0);                                                /* Setup iterator without sorting    */
+  for(lpT=lpTI->lpFT ; lpT<lpTI->lpFT+lpTI->nRlt*lpTI->nXT ; lpT+=lpTI->nRlt){  /* Loop over all transitions >>      */
+    FST_STYPE *nTis=CFst_STI_TTis(lpTI,lpT);                                    /*   Get input symbol pointer        */
+    if(*nTis>=0 && *nTis<nXI && !lpI[*nTis*nOI]) *nTis=-1;                      /*   Clear input sym. on empty string*/
+  }                                                                             /* <<                                */
+  CFst_STI_Done(lpTI);                                                          /* Finalize iterator                 */
+
+  /* Clean-up */                                                                /* --------------------------------- */
+L_EXCEPTION:                                                                    /* : Clean exit label                */
+  return nRet;                                                                  /* Return                            */
 }
 
 /**
@@ -292,6 +456,7 @@ INT16 CGEN_PROTECTED CFvrtools_StrToSeq(CFvrtools* _this, const char* lpsSrc, CF
       nPct++;                                                                   /*     Count parentheses             */
       break;                                                                    /*     ==                            */
     case ')':                                                                   /*   End of comment                  */
+      *c++=' '; *c='\0';                                                        /*     Write space to comment        */
       nPct--;                                                                   /*     Count parentheses             */
       if (nPct<0)                                                               /*     Too many closing              */
         FVRT_EXCEPTION(FVRT_SEQSYNTAX,"too many \")\"",0,0);                    /*       Syntax error (irrecoverable)*/
@@ -324,6 +489,7 @@ INT16 CGEN_PROTECTED CFvrtools_StrToSeq(CFvrtools* _this, const char* lpsSrc, CF
   /* Finish target */                                                           /* --------------------------------- */
   if (UD_XS(itSeq,nU)>0)                                                        /* If target has states              */
     SD_FLG(itSeq,UD_FS(itSeq,nU)+UD_XS(itSeq,nU)-1)|=SD_FLG_FINAL;              /*   Make the last one final         */
+  ISETFIELD_SVALUE(AS(CData,itSeq->ud),"rtext",dlp_strtrimright(lpsCmt));       /* Store in itSeq.ud.rtext           */
 
   /* Clean-up */                                                                /* --------------------------------- */
 L_EXCEPTION:                                                                    /* : Clean exit label                */
@@ -361,6 +527,7 @@ INT16 CGEN_PROTECTED CFvrtools_SeqToFvr(CFvrtools* _this, CFst* itSeq, CFst* itF
 
   /* Create FVR tree */                                                         /* --------------------------------- */
   CFst_Reset(BASEINST(itFvr),TRUE);                                             /* Reset target                      */
+  CData_CopyDescr(AS(CData,itFvr->ud),AS(CData,itSeq->ud));                     /* Copy unit table descriptors       */
   CData_Copy(itFvr->is,itSeq->is);                                              /* Copy input symbol table           */
   ISETOPTION(itFvr,"/lsr"); ISETOPTION(itFvr,"/fsa");                           /* Set some options                  */
   CFst_Addunit(itFvr,"FVR");                                                    /* Add a unit                        */

@@ -774,6 +774,76 @@ INT16 dlp_strreplace(char* lpsStr, const char* lpsKey, const char* lpsRpl)
 }
 
 /**
+ * Replaces all occurrences of references to environment variables by the
+ * respective values. An environment variables is referred to by
+ * <code>$NAME</code> or <code>${NAME}</code> unless the leading "$" is quoted
+ * by a backslash.
+ *
+ * @param lpsStr
+ *          The string to be processed.
+ * @param bOnce
+ *          If <code>TRUE</code>, process first reference only (no matter, if
+ *          replacement was successful or not).
+ * @return The number of replaced references.
+ */
+INT16 dlp_strreplace_env(char* lpsStr, BOOL bOnce)
+{
+  INT16 i;                                                                      /* Character loop counter            */
+  INT16 nReplaced;                                                              /* Number of replacements            */
+  char* tx;                                                                     /* Input string pointer              */
+  char* lpsRpl;                                                                 /* Replacement string buffer         */
+  char* lpsKey;                                                                 /* Environment variable name buffer  */
+  char* lpsVal;                                                                 /* Environment variable value        */
+
+  /* Initialization */                                                          /* --------------------------------- */
+  nReplaced = 0;                                                                /* Init. no. of replacements         */
+  lpsRpl = (char*)dlp_calloc(dlp_strlen(lpsStr),sizeof(char));                  /* Allocate replacement string buffer*/
+  lpsKey = (char*)dlp_calloc(dlp_strlen(lpsStr),sizeof(char));                  /* Allocate env. variable name buffer*/
+
+  /* Search and replace ${NAME} */                                              /* --------------------------------- */
+  tx=lpsStr;
+  while ((tx=strstr(tx,"${"))!=NULL)                                            /* Seek for next "${"                */
+  {                                                                             /* >>                                */
+    for (i=2; (tx[i]!='\0')&&(tx[i]!='}'); i++) {}                              /*   Seek for next "}"               */
+    if (tx==lpsStr || tx[-1]!='\\')                                             /*   '$' not quoted                  */
+    {                                                                           /*   >>                              */
+      dlp_strncpy(lpsRpl,tx,i+1); lpsRpl[i+1]='\0';                             /*    Copy string to replace         */
+      dlp_strcpy(lpsKey,&lpsRpl[2]); lpsKey[i-2]='\0';                          /*    Copy string between ${ and }   */
+      lpsVal = getenv(lpsKey);                                                  /*     Look-up environment variable  */
+      if (lpsVal)                                                               /*     Found                         */
+        nReplaced += dlp_strreplace_ex(tx,lpsRpl,lpsVal,TRUE);                  /*       Replace reference           */
+      if (bOnce)                                                                /*     Process only one              */
+        goto L_EXIT;                                                            /*       That was it...              */
+    }                                                                           /*   <<                              */
+    tx++;                                                                       /*   Advance input string pointer    */
+  }                                                                             /* <<                                */
+
+  /* Search and replace $NAME */                                                /* --------------------------------- */
+  tx=lpsStr;
+  while ((tx=strstr(tx,"$"))!=NULL)                                             /* Seek for next "$"                 */
+  {                                                                             /* >>                                */
+    for (i=1; !isspace(tx[i])&&(isalnum(tx[i])||tx[i]=='_'); i++) {}            /*   Advance to next non-alpha char. */
+    if (tx==lpsStr || tx[-1]!='\\')                                             /*   '$' not quoted                  */
+    {                                                                           /*   >>                              */
+      dlp_strncpy(lpsRpl,tx,i); lpsRpl[i]='\0';                                 /*     Copy string to replace        */
+      dlp_strcpy(lpsKey,&lpsRpl[1]); lpsKey[i-1]='\0';                          /*     Copy string following "$"     */
+      lpsVal = getenv(lpsKey);                                                  /*     Look-up environment variable  */
+      if (lpsVal)                                                               /*     Found                         */
+        nReplaced += dlp_strreplace_ex(tx,lpsRpl,lpsVal,TRUE);                  /*       Replace reference           */
+      if (bOnce)                                                                /*     Process only one              */
+        goto L_EXIT;                                                            /*       That was it...              */
+    }                                                                           /*   <<                              */
+    tx++;                                                                       /*   Advance input string pointer    */
+  }                                                                             /* <<                                */
+
+  /* Clean-up */                                                                /* --------------------------------- */
+L_EXIT:
+  dlp_free(lpsRpl);                                                             /* Free replacement string buffer    */
+  dlp_free(lpsKey);                                                             /* Free env. variable name buffer    */
+  return nReplaced;                                                             /* Return number of replacements     */
+}
+
+/**
  * Extract token from string
  *
  * @param stringp

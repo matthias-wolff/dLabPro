@@ -172,11 +172,14 @@ INT16 CGEN_PROTECTED CFunction::IncludeEx
   INT32  nXTok            = 0;                                                  // Total number of included tokens
   INT32  nCS              = 0;                                                  // Size of string components
   CDgen* iPar             = iParser!=NULL?iParser:GetDlpParser();               // Get dLabPro parser
+  char   lpsRenvFn[L_PATH];                                                     // Include file name (env. replaced)
   char   lpsInclFn[L_PATH];                                                     // Include file name (fully qualified)
   char   lpsCurrFn[L_PATH];                                                     // Current file name
 
   // Preprocess file name                                                       // ------------------------------------
-  if (!dlp_fullpath(lpsInclFn,lpsFilename,L_PATH))                              // No valid absolute path
+  dlp_strcpy(lpsRenvFn,lpsFilename);                                            // Copy name of file to include
+  dlp_strreplace_env(lpsRenvFn,FALSE);                                          // Replace reference to env. variables
+  if (!dlp_fullpath(lpsInclFn,lpsRenvFn,L_PATH))                                // No valid absolute path
   {                                                                             // >>
     char lpsDir[L_PATH];                                                        //   Buffer for directory name
     char lpsPath[L_PATH];                                                       //   Buffer for alternative path
@@ -184,7 +187,7 @@ INT16 CGEN_PROTECTED CFunction::IncludeEx
     dlp_splitpath(lpsCurrFn,lpsDir,NULL);                                       //   Get directory of current file
     sprintf(lpsPath,"%s%c%s",lpsDir,C_DIR,lpsFilename);                         //   Make relative path to include
     if (!dlp_fullpath(lpsInclFn,lpsPath,L_PATH))                                //   Try converting to abs. path
-      return IERROR(this,ERR_FILEOPEN,lpsFilename,"reading",0);                 //     Failed: error message
+      return IERROR(this,ERR_FILEOPEN,lpsInclFn,"reading",0);                 //     Failed: error message
   }                                                                             // <<
 
   // Validate                                                                   // ------------------------------------

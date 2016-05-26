@@ -103,7 +103,10 @@ public:
 #ifndef __NOITP
 public:
 /*{{CGEN_PMIC */
+	INT16 OnFromFst();
 	INT16 OnFromString();
+	INT16 OnFsgFvrCheck();
+	INT16 OnFsgNormalize();
 	INT16 OnIsFvr();
 	INT16 OnSynthesize();
 /*}}CGEN_PMIC */
@@ -130,16 +133,22 @@ public:
 /* Taken from 'fvrt_iam.c' */
 	public: BOOL IsFvr(INT32 nU, CFst* itFvr);
 	public: INT16 FromString(const char* lpsSrc, CFst* itFvr);
-	private: INT16 CheckSeq(CFst* itSeq, CData* idS, INT32* pBO, INT32* pBC);
-	public: INT16 FromFst(CFst* itSrc, CFst* itFvr);
+	public: INT16 FromFst(CFst* itSeq, CFst* itFvr);
 	public: INT16 Synthesize(CFst* itDst, CFst* itFvr);
 
 /* Taken from 'fvrt_compile.c' */
 	protected: static FST_STYPE FindIs(const char* lpsStr, BOOL bAdd, CFst* itFst);
+	protected: static FST_STYPE FindOs(const char* lpsStr, BOOL bAdd, CFst* itFst);
 	protected: void AddToSeq(const char* lpsTok, INT32 nU, CFst* itSeq);
+	protected: INT16 CheckSeq(CFst* itSeq, CData* idS, INT32* pBO, INT32* pBC);
 	protected: INT16 ParseSeq(CFst* itSeq, FST_ITYPE nIni, FST_ITYPE nPar, CFst* itFvr);
 	protected: INT16 StrToSeq(const char* lpsSrc, CFst* itSeq);
 	protected: INT16 SeqToFvr(CFst* itSeq, CFst* itFvr);
+
+/* Taken from 'fvrt_fsg.c' */
+	public: INT16 FsgNormalize(CFst* itFsgSrc, CFst* itFsgDst);
+	public: BOOL FsgFvrCheck(CFst* itFsg, CFst* itErr);
+	protected: BOOL ParseFsgCheck(CFst* itFsg, FST_ITYPE nMyIniState, CData* idVal);
 /*}}CGEN_EXPORT */
 
 /* Member variables */
@@ -197,7 +206,10 @@ INT16 CFvrtools_ResetAllOptions(CDlpObject*, BOOL bInit);
 /* THEY MAY INTERFERE WITH THE INTERPRETER SESSION */
 #ifndef __NOITP
 /*{{CGEN_CPMIC */
+INT16 CFvrtools_OnFromFst(CDlpObject*);
 INT16 CFvrtools_OnFromString(CDlpObject*);
+INT16 CFvrtools_OnFsgFvrCheck(CDlpObject*);
+INT16 CFvrtools_OnFsgNormalize(CDlpObject*);
 INT16 CFvrtools_OnIsFvr(CDlpObject*);
 INT16 CFvrtools_OnSynthesize(CDlpObject*);
 /*}}CGEN_CPMIC */
@@ -221,16 +233,22 @@ INT16 CFvrtools_OnSynthesize(CDlpObject*);
 /* Taken from 'fvrt_iam.c' */
 BOOL CFvrtools_IsFvr(CFvrtools*, INT32 nU, CFst* itFvr);
 INT16 CFvrtools_FromString(CFvrtools*, const char* lpsSrc, CFst* itFvr);
-INT16 CFvrtools_CheckSeq(CFvrtools*, CFst* itSeq, CData* idS, INT32* pBO, INT32* pBC);
-INT16 CFvrtools_FromFst(CFvrtools*, CFst* itSrc, CFst* itFvr);
+INT16 CFvrtools_FromFst(CFvrtools*, CFst* itSeq, CFst* itFvr);
 INT16 CFvrtools_Synthesize(CFvrtools*, CFst* itDst, CFst* itFvr);
 
 /* Taken from 'fvrt_compile.c' */
 FST_STYPE CFvrtools_FindIs(const char* lpsStr, BOOL bAdd, CFst* itFst);
+FST_STYPE CFvrtools_FindOs(const char* lpsStr, BOOL bAdd, CFst* itFst);
 void CFvrtools_AddToSeq(CFvrtools*, const char* lpsTok, INT32 nU, CFst* itSeq);
+INT16 CFvrtools_CheckSeq(CFvrtools*, CFst* itSeq, CData* idS, INT32* pBO, INT32* pBC);
 INT16 CFvrtools_ParseSeq(CFvrtools*, CFst* itSeq, FST_ITYPE nIni, FST_ITYPE nPar, CFst* itFvr);
 INT16 CFvrtools_StrToSeq(CFvrtools*, const char* lpsSrc, CFst* itSeq);
 INT16 CFvrtools_SeqToFvr(CFvrtools*, CFst* itSeq, CFst* itFvr);
+
+/* Taken from 'fvrt_fsg.c' */
+INT16 CFvrtools_FsgNormalize(CFvrtools*, CFst* itFsgSrc, CFst* itFsgDst);
+BOOL CFvrtools_FsgFvrCheck(CFvrtools*, CFst* itFsg, CFst* itErr);
+BOOL CFvrtools_ParseFsgCheck(CFvrtools*, CFst* itFsg, FST_ITYPE nMyIniState, CData* idVal);
 /*}}CGEN_CEXPORT */
 
 #endif /*#ifndef __FVRTOOLS_H */

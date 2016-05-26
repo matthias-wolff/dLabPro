@@ -477,6 +477,7 @@ void postprocess(CFst* itDC, CFst* itDCr, CFst *itFvr)
   snprintf(sTmpNld,L_PATH,"%s-nld.fst",dlp_tempnam(NULL,"recognizer")); dlp_strreplace(sTmpNld,"\\","/");
   snprintf(sTmpSig,L_PATH,"%s-sig.wav",dlp_tempnam(NULL,"recognizer")); dlp_strreplace(sTmpSig,"\\","/");
   snprintf(sTmpFvr,L_PATH,"%s-fvr.fst",dlp_tempnam(NULL,"recognizer")); dlp_strreplace(sTmpSig,"\\","/");
+  rTmp.idNld->m_lpTable->m_fsr = 1000./rCfg.nSigSampleRate*rCfg.rPfa.lpFba.nCrate;
   CDlpObject_Save(BASEINST(itDC),      sTmpDC, SV_XML);
   CDlpObject_Save(BASEINST(itDCr),     sTmpDCr,SV_XML);
   CDlpObject_Save(BASEINST(rTmp.idNld),sTmpNld,SV_XML);

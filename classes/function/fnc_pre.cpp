@@ -115,15 +115,22 @@ BOOL CGEN_PUBLIC CFunction::PreprocessToken
       {
         dlp_strncpy(lpBuf ,p    ,i+1); lpBuf [i+1]='\0'; // ${xxx} (to replace)
         dlp_strncpy(lpBuf2,&p[2],i-1); lpBuf2[i-2]='\0'; // xxx (to evaluate)
-        if (!m_lpsLastFml) m_lpsLastFml = (char*)dlp_malloc(L_INPUTLINE);
-        IF_NOK(Formula2RPN(lpBuf2,m_lpsLastFml,L_INPUTLINE-1))
-          nReplaced += dlp_strreplace_ex(p,lpBuf,"",TRUE);
+        if (getenv(lpBuf2)) // xxx is an environment variable
+        {
+          nReplaced += dlp_strreplace_ex(p,lpBuf,getenv(lpBuf2),TRUE);
+        }
         else
         {
-          IF_NOK(SendCommand(m_lpsLastFml,lpBuf3,L_INPUTLINE,m_nPp))
+          if (!m_lpsLastFml) m_lpsLastFml = (char*)dlp_malloc(L_INPUTLINE);
+          IF_NOK(Formula2RPN(lpBuf2,m_lpsLastFml,L_INPUTLINE-1))
             nReplaced += dlp_strreplace_ex(p,lpBuf,"",TRUE);
           else
-            nReplaced += dlp_strreplace_ex(p,lpBuf,lpBuf3,TRUE);
+          {
+            IF_NOK(SendCommand(m_lpsLastFml,lpBuf3,L_INPUTLINE,m_nPp))
+              nReplaced += dlp_strreplace_ex(p,lpBuf,"",TRUE);
+            else
+              nReplaced += dlp_strreplace_ex(p,lpBuf,lpBuf3,TRUE);
+          }
         }
       }
     }
@@ -187,8 +194,7 @@ BOOL CGEN_PUBLIC CFunction::PreprocessToken
       }
       // test for environment variable
       else
-        if ((tx=getenv(&lpBuf[1])))
-          nReplaced += dlp_strreplace_ex(p,lpBuf,tx,TRUE);
+        nReplaced += dlp_strreplace_env(p,TRUE);
     }
   }
 

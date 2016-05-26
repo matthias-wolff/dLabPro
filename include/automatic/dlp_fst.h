@@ -522,7 +522,7 @@ public:
 	public: INT16 CopyUi(CFst* itSrc, CData* idIndex, INT32 nPar);
 
 /* Taken from 'fst_nmg.c' */
-	protected: INT32 Nmg_StoreSeq(INT32 nUnit, FST_ITYPE nSeqId, FST_SEQ_TYPE* lpSseq, FST_SEQ_TYPE* lpCseq, BOOL bSubSeq);
+	protected: INT32 Nmg_StoreSeq(INT32 nUnit, FST_ITYPE nSeqId, FST_SEQ_TYPE* lpSseq, FST_SEQ_TYPE* lpTseq, FST_SEQ_TYPE* lpCseq, BOOL bSubSeq);
 	public: INT16 Addseq(CData* idSrc, INT32 nIcTis, INT32 nIcTer, INT32 nIcRci, INT32 nUnit);
 	private: INT32 Nmg_FetchSeq(FST_TID_TYPE* lpTI, FST_SEQ_TYPE Sseq, FST_ITYPE* lpTseq);
 	private: void Nmg_GetMgiWeights(CData* idWeights, FST_WTYPE* lpW, INT16 nLen);
@@ -952,7 +952,7 @@ INT16 CFst_Cat(CFst*, CFst* itSrc);
 INT16 CFst_CopyUi(CFst*, CFst* itSrc, CData* idIndex, INT32 nPar);
 
 /* Taken from 'fst_nmg.c' */
-INT32 CFst_Nmg_StoreSeq(CFst*, INT32 nUnit, FST_ITYPE nSeqId, FST_SEQ_TYPE* lpSseq, FST_SEQ_TYPE* lpCseq, BOOL bSubSeq);
+INT32 CFst_Nmg_StoreSeq(CFst*, INT32 nUnit, FST_ITYPE nSeqId, FST_SEQ_TYPE* lpSseq, FST_SEQ_TYPE* lpTseq, FST_SEQ_TYPE* lpCseq, BOOL bSubSeq);
 INT16 CFst_Addseq(CFst*, CData* idSrc, INT32 nIcTis, INT32 nIcTer, INT32 nIcRci, INT32 nUnit);
 INT32 CFst_Nmg_FetchSeq(CFst*, FST_TID_TYPE* lpTI, FST_SEQ_TYPE Sseq, FST_ITYPE* lpTseq);
 void CFst_Nmg_GetMgiWeights(CFst*, CData* idWeights, FST_WTYPE* lpW, INT16 nLen);

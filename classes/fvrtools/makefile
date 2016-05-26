@@ -43,7 +43,8 @@ DEFFILE    = fvrtools.def
 ## Target settings
 SOURCES    = fvrtools \
                   fvrt_iam \
-                  fvrt_compile
+                  fvrt_compile \
+                  fvrt_fsg
 
 include $(DLABPRO_HOME)/make/class.mk
 

@@ -51,17 +51,22 @@
 {{ BEGIN_SITEMAP
 fvrtools.html fvrtools CFvrtools [
   fvrtools.html#mth Methods - [
+    fvrtools.html#mth_-from_fst "-from_fst" "-from_fst"
     fvrtools.html#mth_-from_string "-from_string" "-from_string"
+    fvrtools.html#mth_-fsg_fvr_check "-fsg_fvr_check" "-fsg_fvr_check"
+    fvrtools.html#mth_-fsg_normalize "-fsg_normalize" "-fsg_normalize"
     fvrtools.html#mth_-is_fvr "-is_fvr" "-is_fvr"
     fvrtools.html#mth_-synthesize "-synthesize" "-synthesize"
   ]
   fvrtools.html#cfn C/C++ API - [
     fvrtools.html#cfn_002 "CFvrtools_AddToSeq" "AddToSeq"
-    fvrtools.html#cfn_001 "CFvrtools_FindIs" "FindIs"
-    fvrtools.html#cfn_000 "CFvrtools_FromFst" "FromFst"
-    fvrtools.html#cfn_003 "CFvrtools_ParseSeq" "ParseSeq"
-    fvrtools.html#cfn_005 "CFvrtools_SeqToFvr" "SeqToFvr"
-    fvrtools.html#cfn_004 "CFvrtools_StrToSeq" "StrToSeq"
+    fvrtools.html#cfn_003 "CFvrtools_CheckSeq" "CheckSeq"
+    fvrtools.html#cfn_000 "CFvrtools_FindIs" "FindIs"
+    fvrtools.html#cfn_001 "CFvrtools_FindOs" "FindOs"
+    fvrtools.html#cfn_007 "CFvrtools_ParseFsgCheck" "ParseFsgCheck"
+    fvrtools.html#cfn_004 "CFvrtools_ParseSeq" "ParseSeq"
+    fvrtools.html#cfn_006 "CFvrtools_SeqToFvr" "SeqToFvr"
+    fvrtools.html#cfn_005 "CFvrtools_StrToSeq" "StrToSeq"
   ]
   fvrtools.html#err Errors - [
     fvrtools.html#err_FVRT_SEQSYNTAX "fvrtools1001" "FVRT_SEQSYNTAX"
@@ -72,16 +77,21 @@ fvrtools.html fvrtools CFvrtools [
 ]
 }} END_SITEMAP
 //{{ BEGIN_TOC
+        top.TC1.InsertItem("-from_fst","&lt;fst itSeq&gt; &lt;fst itFvr&gt; &lt;fvrtools this&gt; -from_fst     Creates a (weighted) FVR from an FST containing a single path.",27,27,0,"automatic/fvrtools.html#mth_-from_fst","CONT",nCls);
         top.TC1.InsertItem("-from_string","&lt;string src&gt; &lt;fst itFvr&gt; &lt;fvrtools this&gt; -from_string     Creates a (weighted) FVR from a string representation",27,27,0,"automatic/fvrtools.html#mth_-from_string","CONT",nCls);
+        top.TC1.InsertItem("-fsg_fvr_check","&lt;fst itFsg&gt; &lt;fst itErr&gt; &lt;fvrtools this&gt; -fsg_fvr_check     Check square bracket parity in the output language of a FVR grammar.",27,27,0,"automatic/fvrtools.html#mth_-fsg_fvr_check","CONT",nCls);
+        top.TC1.InsertItem("-fsg_normalize","&lt;fst itFsgSrc&gt; &lt;fst itFsgDst&gt; &lt;fvrtools this&gt; -fsg_normalize     ...",27,27,0,"automatic/fvrtools.html#mth_-fsg_normalize","CONT",nCls);
         top.TC1.InsertItem("-is_fvr","&lt;int nU&gt; &lt;fst itFvr&gt; &lt;fvrtools this&gt; -is_fvr     Determines if the argument is an FVR",27,27,0,"automatic/fvrtools.html#mth_-is_fvr","CONT",nCls);
-        top.TC1.InsertItem("-synthesize","&lt;fst itDst&gt; &lt;fst itFvr&gt; &lt;fvrtools this&gt; -synthesize     Creates a list of all possible combinations from a FVR",27,27,0,"automatic/fvrtools.html#mth_-synthesize","CONT",nCls);
+        top.TC1.InsertItem("-synthesize","&lt;fst itDst&gt; &lt;fst itFvr&gt; &lt;fvrtools this&gt; -synthesize     Creates a list of all possible combinations of a FVR",27,27,0,"automatic/fvrtools.html#mth_-synthesize","CONT",nCls);
         nCfn = top.TC1.InsertItem("C/C++ API","",8,9,0,"automatic/fvrtools.html#cfn","CONT",nCls);
         top.TC1.InsertItem("CFvrtools_AddToSeq","void CFvrtools_AddToSeq(CFvrtools _this, const char* lpsTok, INT32 nU, CFst* itSeq)     Adds a token to a sequence FST.",32,32,0,"automatic/fvrtools.html#cfn_002","CONT",nCfn);
-        top.TC1.InsertItem("CFvrtools_FindIs","FST_STYPE CFvrtools_FindIs(const char* lpsStr, BOOL bAdd, CFst* itFst)     Finds a string in an FST`s input symbol table.",32,32,0,"automatic/fvrtools.html#cfn_001","CONT",nCfn);
-        top.TC1.InsertItem("CFvrtools_FromFst","INT16 CFvrtools_FromFst(CFvrtools _this, CFst* itSrc, CFst* itFvr)    ",27,27,0,"automatic/fvrtools.html#cfn_000","CONT",nCfn);
-        top.TC1.InsertItem("CFvrtools_ParseSeq","INT16 CFvrtools_ParseSeq(CFvrtools _this, CFst* itSeq, FST_ITYPE nIni, FST_ITYPE nPar, CFst* itFvr)     Parses a sequence FST and recursively builds an FVR tree.",32,32,0,"automatic/fvrtools.html#cfn_003","CONT",nCfn);
-        top.TC1.InsertItem("CFvrtools_SeqToFvr","INT16 CFvrtools_SeqToFvr(CFvrtools _this, CFst* itSeq, CFst* itFvr)     Creates an FVR tree from a sequence FST.",32,32,0,"automatic/fvrtools.html#cfn_005","CONT",nCfn);
-        top.TC1.InsertItem("CFvrtools_StrToSeq","INT16 CFvrtools_StrToSeq(CFvrtools _this, const char* lpsSrc, CFst* itSeq)     Creates a sequence FST from a wFVR string.",32,32,0,"automatic/fvrtools.html#cfn_004","CONT",nCfn);
+        top.TC1.InsertItem("CFvrtools_CheckSeq","INT16 CFvrtools_CheckSeq(CFvrtools _this, CFst* itSeq, CData* idS, INT32* pBO, INT32* pBC)     Check a sequence FST symbol table.",32,32,0,"automatic/fvrtools.html#cfn_003","CONT",nCfn);
+        top.TC1.InsertItem("CFvrtools_FindIs","FST_STYPE CFvrtools_FindIs(const char* lpsStr, BOOL bAdd, CFst* itFst)     Finds a string in an FST`s input symbol table.",32,32,0,"automatic/fvrtools.html#cfn_000","CONT",nCfn);
+        top.TC1.InsertItem("CFvrtools_FindOs","FST_STYPE CFvrtools_FindOs(const char* lpsStr, BOOL bAdd, CFst* itFst)     Finds a string in an FST`s output symbol table.",32,32,0,"automatic/fvrtools.html#cfn_001","CONT",nCfn);
+        top.TC1.InsertItem("CFvrtools_ParseFsgCheck","BOOL CFvrtools_ParseFsgCheck(CFvrtools _this, CFst* itFsg, FST_ITYPE nMyIniState, CData* idVal)    ",32,32,0,"automatic/fvrtools.html#cfn_007","CONT",nCfn);
+        top.TC1.InsertItem("CFvrtools_ParseSeq","INT16 CFvrtools_ParseSeq(CFvrtools _this, CFst* itSeq, FST_ITYPE nIni, FST_ITYPE nPar, CFst* itFvr)     Parses a sequence FST and recursively builds an FVR tree.",32,32,0,"automatic/fvrtools.html#cfn_004","CONT",nCfn);
+        top.TC1.InsertItem("CFvrtools_SeqToFvr","INT16 CFvrtools_SeqToFvr(CFvrtools _this, CFst* itSeq, CFst* itFvr)     Creates an FVR tree from a sequence FST.",32,32,0,"automatic/fvrtools.html#cfn_006","CONT",nCfn);
+        top.TC1.InsertItem("CFvrtools_StrToSeq","INT16 CFvrtools_StrToSeq(CFvrtools _this, const char* lpsSrc, CFst* itSeq)     Creates a sequence FST from a wFVR string.",32,32,0,"automatic/fvrtools.html#cfn_005","CONT",nCfn);
         nErr = top.TC1.InsertItem("Errors","",8,9,0,"automatic/fvrtools.html#err","CONT",nCls);
         top.TC1.InsertItem("fvrtools1001","FVRT_SEQSYNTAX FVR string or sequence syntax error (%s)",30,30,0,"automatic/fvrtools.html#err_FVRT_SEQSYNTAX","CONT",nErr);
         top.TC1.InsertItem("fvrtools1002","FVRT_NOTFVR `%s` is not a feature-value relation",30,30,0,"automatic/fvrtools.html#err_FVRT_NOTFVR","CONT",nErr);
@@ -269,9 +279,12 @@ FST-based feature-value relation processing tools
         <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
+    <tr><td><a href="#mth_-from_fst"><code class="link">-from_fst</code></a></td><td><code>&lt;fst itSeq&gt; &lt;fst itFvr&gt; &lt;fvrtools this&gt; <b>-from_fst</b> </code><br> Creates a (weighted) FVR from an FST containing a single path.</td></tr>
     <tr><td><a href="#mth_-from_string"><code class="link">-from_string</code></a></td><td><code>&lt;string src&gt; &lt;fst itFvr&gt; &lt;fvrtools this&gt; <b>-from_string</b> </code><br> Creates a (weighted) FVR from a string representation</td></tr>
+    <tr><td><a href="#mth_-fsg_fvr_check"><code class="link">-fsg_fvr_check</code></a></td><td><code>&lt;fst itFsg&gt; &lt;fst itErr&gt; &lt;fvrtools this&gt; <b>-fsg_fvr_check</b> </code><br> Check square bracket parity in the output language of a FVR grammar.</td></tr>
+    <tr><td><a href="#mth_-fsg_normalize"><code class="link">-fsg_normalize</code></a></td><td><code>&lt;fst itFsgSrc&gt; &lt;fst itFsgDst&gt; &lt;fvrtools this&gt; <b>-fsg_normalize</b> </code><br> ...</td></tr>
     <tr><td><a href="#mth_-is_fvr"><code class="link">-is_fvr</code></a></td><td><code>&lt;int nU&gt; &lt;fst itFvr&gt; &lt;fvrtools this&gt; <b>-is_fvr</b> </code><br> Determines if the argument is an FVR</td></tr>
-    <tr><td><a href="#mth_-synthesize"><code class="link">-synthesize</code></a></td><td><code>&lt;fst itDst&gt; &lt;fst itFvr&gt; &lt;fvrtools this&gt; <b>-synthesize</b> </code><br> Creates a list of all possible combinations from a FVR</td></tr>
+    <tr><td><a href="#mth_-synthesize"><code class="link">-synthesize</code></a></td><td><code>&lt;fst itDst&gt; &lt;fst itFvr&gt; &lt;fvrtools this&gt; <b>-synthesize</b> </code><br> Creates a list of all possible combinations of a FVR</td></tr>
     <tr><td colspan="2" class="rowempty">&nbsp;</td></tr>
     <tr>
       <td class="rowgroup"><a name="cfn">C/C++ API</a></td>
@@ -290,11 +303,13 @@ FST-based feature-value relation processing tools
  for additional C/C++ functions)
 </td></tr>
     <tr><td><a href="#cfn_002"><code class="link">CFvrtools_AddToSeq</code></a></td><td><code>void <b>CFvrtools_AddToSeq</b>(CFvrtools _this, const char* lpsTok, INT32 nU, CFst* itSeq);<br>protected: void <b>CFvrtools::AddToSeq</b>(const char* lpsTok, INT32 nU, CFst* itSeq);<br></code><br>  Adds a token to a sequence FST.</td></tr>
-    <tr><td><a href="#cfn_001"><code class="link">CFvrtools_FindIs</code></a></td><td><code>FST_STYPE <b>CFvrtools_FindIs</b>(const char* lpsStr, BOOL bAdd, CFst* itFst);<br>protected: static FST_STYPE <b>CFvrtools::FindIs</b>(const char* lpsStr, BOOL bAdd, CFst* itFst);<br></code><br>  Finds a string in an FST's input symbol table.</td></tr>
-    <tr><td><a href="#cfn_000"><code class="link">CFvrtools_FromFst</code></a></td><td><code>INT16 <b>CFvrtools_FromFst</b>(CFvrtools _this, CFst* itSrc, CFst* itFvr);<br>public: INT16 <b>CFvrtools::FromFst</b>(CFst* itSrc, CFst* itFvr);<br></code><br> </td></tr>
-    <tr><td><a href="#cfn_003"><code class="link">CFvrtools_ParseSeq</code></a></td><td><code>INT16 <b>CFvrtools_ParseSeq</b>(CFvrtools _this, CFst* itSeq, FST_ITYPE nIni, FST_ITYPE nPar, CFst* itFvr);<br>protected: INT16 <b>CFvrtools::ParseSeq</b>(CFst* itSeq, FST_ITYPE nIni, FST_ITYPE nPar, CFst* itFvr);<br></code><br>  Parses a sequence FST and recursively builds an FVR tree.</td></tr>
-    <tr><td><a href="#cfn_005"><code class="link">CFvrtools_SeqToFvr</code></a></td><td><code>INT16 <b>CFvrtools_SeqToFvr</b>(CFvrtools _this, CFst* itSeq, CFst* itFvr);<br>protected: INT16 <b>CFvrtools::SeqToFvr</b>(CFst* itSeq, CFst* itFvr);<br></code><br>  Creates an FVR tree from a sequence FST.</td></tr>
-    <tr><td><a href="#cfn_004"><code class="link">CFvrtools_StrToSeq</code></a></td><td><code>INT16 <b>CFvrtools_StrToSeq</b>(CFvrtools _this, const char* lpsSrc, CFst* itSeq);<br>protected: INT16 <b>CFvrtools::StrToSeq</b>(const char* lpsSrc, CFst* itSeq);<br></code><br>  Creates a sequence FST from a wFVR string.</td></tr>
+    <tr><td><a href="#cfn_003"><code class="link">CFvrtools_CheckSeq</code></a></td><td><code>INT16 <b>CFvrtools_CheckSeq</b>(CFvrtools _this, CFst* itSeq, CData* idS, INT32* pBO, INT32* pBC);<br>protected: INT16 <b>CFvrtools::CheckSeq</b>(CFst* itSeq, CData* idS, INT32* pBO, INT32* pBC);<br></code><br>  Check a sequence FST symbol table.</td></tr>
+    <tr><td><a href="#cfn_000"><code class="link">CFvrtools_FindIs</code></a></td><td><code>FST_STYPE <b>CFvrtools_FindIs</b>(const char* lpsStr, BOOL bAdd, CFst* itFst);<br>protected: static FST_STYPE <b>CFvrtools::FindIs</b>(const char* lpsStr, BOOL bAdd, CFst* itFst);<br></code><br>  Finds a string in an FST's input symbol table.</td></tr>
+    <tr><td><a href="#cfn_001"><code class="link">CFvrtools_FindOs</code></a></td><td><code>FST_STYPE <b>CFvrtools_FindOs</b>(const char* lpsStr, BOOL bAdd, CFst* itFst);<br>protected: static FST_STYPE <b>CFvrtools::FindOs</b>(const char* lpsStr, BOOL bAdd, CFst* itFst);<br></code><br>  Finds a string in an FST's output symbol table.</td></tr>
+    <tr><td><a href="#cfn_007"><code class="link">CFvrtools_ParseFsgCheck</code></a></td><td><code>BOOL <b>CFvrtools_ParseFsgCheck</b>(CFvrtools _this, CFst* itFsg, FST_ITYPE nMyIniState, CData* idVal);<br>protected: BOOL <b>CFvrtools::ParseFsgCheck</b>(CFst* itFsg, FST_ITYPE nMyIniState, CData* idVal);<br></code><br> </td></tr>
+    <tr><td><a href="#cfn_004"><code class="link">CFvrtools_ParseSeq</code></a></td><td><code>INT16 <b>CFvrtools_ParseSeq</b>(CFvrtools _this, CFst* itSeq, FST_ITYPE nIni, FST_ITYPE nPar, CFst* itFvr);<br>protected: INT16 <b>CFvrtools::ParseSeq</b>(CFst* itSeq, FST_ITYPE nIni, FST_ITYPE nPar, CFst* itFvr);<br></code><br>  Parses a sequence FST and recursively builds an FVR tree.</td></tr>
+    <tr><td><a href="#cfn_006"><code class="link">CFvrtools_SeqToFvr</code></a></td><td><code>INT16 <b>CFvrtools_SeqToFvr</b>(CFvrtools _this, CFst* itSeq, CFst* itFvr);<br>protected: INT16 <b>CFvrtools::SeqToFvr</b>(CFst* itSeq, CFst* itFvr);<br></code><br>  Creates an FVR tree from a sequence FST.</td></tr>
+    <tr><td><a href="#cfn_005"><code class="link">CFvrtools_StrToSeq</code></a></td><td><code>INT16 <b>CFvrtools_StrToSeq</b>(CFvrtools _this, const char* lpsSrc, CFst* itSeq);<br>protected: INT16 <b>CFvrtools::StrToSeq</b>(const char* lpsSrc, CFst* itSeq);<br></code><br>  Creates a sequence FST from a wFVR string.</td></tr>
     <tr><td colspan="2" class="rowempty">&nbsp;</td></tr>
     <tr>
       <td class="rowgroup"><a name="err">Errors</a></td>
@@ -318,6 +333,115 @@ FST-based feature-value relation processing tools
   <img src="../resources/blank_stc.gif" height="10">
   </div>
 
+  <div id="mth_-from_fst">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td nowrap width="25%" class="navbar"><a 
+        name="mth_-from_fst"></a>Method <span 
+        class="mid">-from_fst</span></td>
+      <td nowrap width="75%" class="navbar" style="text-align:right;">
+        <a class="navbar" href="javascript:__PrintSection('mth_-from_fst','Class fvrtools');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
+  </table>
+  <div class="mframe"><table cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td class="hidden">dLabPro</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Identifier</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code><b>-from_fst</b></code></td>
+    </tr>
+    <tr>
+      <td class="hidden">&nbsp;</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Syntax</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code>
+&lt;fst itSeq&gt; &lt;fst itFvr&gt; &lt;fvrtools this&gt; <b>-from_fst</b> 
+</code></td>
+    </tr>
+    <tr>
+      <td class="hidden" colspan="5">&nbsp;</td>
+    </tr>
+    <tr>
+      <td class="hidden">C/C++</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Member function</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code>
+INT16 <b>CFvrtools_FromFst</b>(CFvrtools _this, CFst* itSeq, CFst* itFvr);<br>public: INT16 <b>CFvrtools::FromFst</b>(CFst* itSeq, CFst* itFvr);<br>
+</code></td>
+    </tr>
+    <tr>
+      <td class="hidden">&nbsp;</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Source</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">fvrt_iam.c(89)</td>
+    </tr>
+  </table></div>
+  <div class="mframe2">
+  <h3>Synopsis</h3>
+  <p>
+Creates a (weighted) FVR from an FST containing a single path.
+  </p>
+  <h3>Description</h3>
+  The FVR structure is built from the output symbol sequence of the only path in
+  <code>itSeq</code>. See documentation of method <a class="code"
+  href="#mth_-from_string">-from_string</a> for the format specification of FVR
+  strings.
+  <p>If the FVR string as FST contains comments, the method will store the space-separated string of comments in
+  <code>itFvr.<a class="code" href="fst.html#fld_ud">ud</a>.<a class="code"
+  href="data.html#fld_rtext">rtext</a></code>.</p>
+	<h3>Parameters</h3>
+	<table>
+		<tr>
+			<td class="hidden">&nbsp;&nbsp;</td>
+			<td class="hidden"><b><code>
+itSeg
+</code></b></td>
+			<td class="hidden">&nbsp;</td>
+			<td class="hidden">
+The source FST, must contain exactly one path.
+			</td>
+		</tr>
+		<tr>
+			<td class="hidden">&nbsp;&nbsp;</td>
+			<td class="hidden"><b><code>
+itFvr
+</code></b></td>
+			<td class="hidden">&nbsp;</td>
+			<td class="hidden">
+The target FST, must not be <code>NULL</code>.
+			</td>
+		</tr>
+	</table>
+	<h3>Return value</h3>
+	<p>
+void
+	</p>
+	<h3>See also</h3>
+	<table>
+		<tr>
+			<td class="hidden">&nbsp;&nbsp;</td>
+			<td class="hidden">
+<a href="#mth_-from_string"><code class="link">-from_string</code></a>
+			</td>
+		</tr>
+	</table>
+  <!--{{ CUSTOM_DOC -->
+  <!--}} CUSTOM_DOC -->
+  </div>
+  <img src="../resources/blank_stc.gif" height="10">
+  </div>
   <div id="mth_-from_string">
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
@@ -390,6 +514,9 @@ Creates a (weighted) FVR from a string representation
     weight   = &lt;numeric&gt; | "NaN"</pre>
   where <tt>&lt;alpha&gt;</tt> denotes an arbitrary string without white spaces and special characters and
   <tt>&lt;numeric&gt;</tt> denotes a floating point number in the English locale.</p>
+  <p>If the FVR string contains comments, the method will store the space-separated string of comments in
+  <code>itFvr.<a class="code" href="fst.html#fld_ud">ud</a>.<a class="code"
+  href="data.html#fld_rtext">rtext</a></code>.</p>
 
 	<h3>Parameters</h3>
 	<table>
@@ -418,6 +545,183 @@ The target FST, must not be <code>NULL</code>.
 	<p>
 void
 	</p>
+  <!--{{ CUSTOM_DOC -->
+  <!--}} CUSTOM_DOC -->
+  </div>
+  <img src="../resources/blank_stc.gif" height="10">
+  </div>
+  <div id="mth_-fsg_fvr_check">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td nowrap width="25%" class="navbar"><a 
+        name="mth_-fsg_fvr_check"></a>Method <span 
+        class="mid">-fsg_fvr_check</span></td>
+      <td nowrap width="75%" class="navbar" style="text-align:right;">
+        <a class="navbar" href="javascript:__PrintSection('mth_-fsg_fvr_check','Class fvrtools');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
+  </table>
+  <div class="mframe"><table cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td class="hidden">dLabPro</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Identifier</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code><b>-fsg_fvr_check</b></code></td>
+    </tr>
+    <tr>
+      <td class="hidden">&nbsp;</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Syntax</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code>
+&lt;fst itFsg&gt; &lt;fst itErr&gt; &lt;fvrtools this&gt; <b>-fsg_fvr_check</b> 
+</code></td>
+    </tr>
+    <tr>
+      <td class="hidden" colspan="5">&nbsp;</td>
+    </tr>
+    <tr>
+      <td class="hidden">C/C++</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Member function</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code>
+BOOL <b>CFvrtools_FsgFvrCheck</b>(CFvrtools _this, CFst* itFsg, CFst* itErr);<br>public: BOOL <b>CFvrtools::FsgFvrCheck</b>(CFst* itFsg, CFst* itErr);<br>
+</code></td>
+    </tr>
+    <tr>
+      <td class="hidden">&nbsp;</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Source</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">fvrt_fsg.c(18)</td>
+    </tr>
+  </table></div>
+  <div class="mframe2">
+  <h3>Synopsis</h3>
+  <p>
+Check square bracket parity in the output language of a FVR grammar.
+  </p>
+  <h3>Description</h3>
+  <p>Checks if the parity of opening and closing square brackes <code>'['</code>/<code>']'</code>
+  in an FVR finite state grammar is correct in all each consecutive paths. A grammar is
+  considered an FVR grammar, iff its <a href="fst.html#fld_os">output symbol table</a> contains
+  at least the symbols "FVR", "[", and "]".</p>
+
+  <p>Note: you must <a href="#mth_-fsg_normalize">normalize</a> the grammar before invoking this method!</p>
+
+	<h3>Parameters</h3>
+	<table>
+		<tr>
+			<td class="hidden">&nbsp;&nbsp;</td>
+			<td class="hidden"><b><code>
+itFsg
+</code></b></td>
+			<td class="hidden">&nbsp;</td>
+			<td class="hidden">
+Finite state grammer to check.
+			</td>
+		</tr>
+		<tr>
+			<td class="hidden">&nbsp;&nbsp;</td>
+			<td class="hidden"><b><code>
+itErr
+</code></b></td>
+			<td class="hidden">&nbsp;</td>
+			<td class="hidden">
+If the return value is <code>FALSE</code>: Filled with the beginning of
+the first path violating the bracket parity up to the erroneous transition,
+can be <code>NULL</code> or identical with <code>itFgs</code>.
+			</td>
+		</tr>
+	</table>
+	<h3>Return value</h3>
+	<p>
+<code>TRUE</code> if the bracket parity is ok or if the <code>itFsg</code> is
+<em>not</em> an FVR grammar, <code>FALSE</code> in all other cases.
+	</p>
+	<h3>See also</h3>
+	<table>
+		<tr>
+			<td class="hidden">&nbsp;&nbsp;</td>
+			<td class="hidden">
+<a href="#mth_-fsg_normalize"><code class="link">-fsg_normalize</code></a>
+			</td>
+		</tr>
+	</table>
+  <!--{{ CUSTOM_DOC -->
+  <!--}} CUSTOM_DOC -->
+  </div>
+  <img src="../resources/blank_stc.gif" height="10">
+  </div>
+  <div id="mth_-fsg_normalize">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td nowrap width="25%" class="navbar"><a 
+        name="mth_-fsg_normalize"></a>Method <span 
+        class="mid">-fsg_normalize</span></td>
+      <td nowrap width="75%" class="navbar" style="text-align:right;">
+        <a class="navbar" href="javascript:__PrintSection('mth_-fsg_normalize','Class fvrtools');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
+  </table>
+  <div class="mframe"><table cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td class="hidden">dLabPro</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Identifier</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code><b>-fsg_normalize</b></code></td>
+    </tr>
+    <tr>
+      <td class="hidden">&nbsp;</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Syntax</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code>
+&lt;fst itFsgSrc&gt; &lt;fst itFsgDst&gt; &lt;fvrtools this&gt; <b>-fsg_normalize</b> 
+</code></td>
+    </tr>
+    <tr>
+      <td class="hidden" colspan="5">&nbsp;</td>
+    </tr>
+    <tr>
+      <td class="hidden">C/C++</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Member function</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code>
+INT16 <b>CFvrtools_FsgNormalize</b>(CFvrtools _this, CFst* itFsgSrc, CFst* itFsgDst);<br>public: INT16 <b>CFvrtools::FsgNormalize</b>(CFst* itFsgSrc, CFst* itFsgDst);<br>
+</code></td>
+    </tr>
+    <tr>
+      <td class="hidden">&nbsp;</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Source</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">fvrt_fsg.c(10)</td>
+    </tr>
+  </table></div>
+  <div class="mframe2">
+  <h3>Synopsis</h3>
+  <p>
+...
+  </p>
   <!--{{ CUSTOM_DOC -->
   <!--}} CUSTOM_DOC -->
   </div>
@@ -575,13 +879,13 @@ INT16 <b>CFvrtools_Synthesize</b>(CFvrtools _this, CFst* itDst, CFst* itFvr);<br
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fvrt_iam.c(188)</td>
+      <td class="hidden">fvrt_iam.c(111)</td>
     </tr>
   </table></div>
   <div class="mframe2">
   <h3>Synopsis</h3>
   <p>
-Creates a list of all possible combinations from a FVR
+Creates a list of all possible combinations of a FVR
   </p>
   <h3>Description</h3>
 	<h3>Parameters</h3>
@@ -649,14 +953,14 @@ void <b>CFvrtools_AddToSeq</b>(CFvrtools _this, const char* lpsTok, INT32 nU, CF
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fvrt_compile.c(75)</td>
+      <td class="hidden">fvrt_compile.c(107)</td>
     </tr>
   </table></div>
   <div class="mframe2">
   <h3>Description</h3>
  Adds a token to a sequence FST. Adds one state and one transition from the previous last state to the new state,
  labels that transition with the name component of the token and weights it with the weight component. This member
- function is invoked by <a href="#cfn_004"><code class="link">CFvrtools_StrToSeq</code></a>. There are no checks performed!
+ function is invoked by <a href="#cfn_005"><code class="link">CFvrtools_StrToSeq</code></a>. There are no checks performed!
 
 	<h3>Parameters</h3>
 	<table>
@@ -710,14 +1014,126 @@ itSeq
   </div>
   <img src="../resources/blank_stc.gif" height="10">
   </div>
-  <div id="cfn_001">
+  <div id="cfn_003">
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_001"></a>C/C++ Function <span 
+        name="cfn_003"></a>C/C++ Function <span 
+        class="mid">CFvrtools_CheckSeq</span></td>
+      <td nowrap width="75%" class="navbar" style="text-align:right;">
+        <a class="navbar" href="javascript:__PrintSection('cfn_003','Class fvrtools');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
+  </table>
+  <div class="mframe"><table cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td class="hidden"></td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Signature</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code>
+INT16 <b>CFvrtools_CheckSeq</b>(CFvrtools _this, CFst* itSeq, CData* idS, INT32* pBO, INT32* pBC);<br>protected: INT16 <b>CFvrtools::CheckSeq</b>(CFst* itSeq, CData* idS, INT32* pBO, INT32* pBC);<br>
+</code></td>
+    </tr>
+    <tr>
+      <td class="hidden">&nbsp;</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Source</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">fvrt_compile.c(164)</td>
+    </tr>
+  </table></div>
+  <div class="mframe2">
+  <h3>Description</h3>
+ Check a sequence FST symbol table.
+ This function fails if there are input symbols containing a square bracket [ or ] and other characters.
+ Furthermore this function removes all strings in parentheses (XX) from the input symbols, concatenates
+ them and stores the concatenation in <code>itSeq.ud.rtext</code>.
+ All transitions with empty string as input symbol afterwards are converted to epsilon transitions.
+ If <code>itSeq</code> is <code>NULL</code>, no changes are mode to <code>idS</code>.
+
+	<h3>Parameters</h3>
+	<table>
+		<tr>
+			<td class="hidden">&nbsp;&nbsp;</td>
+			<td class="hidden"><b><code>
+_this
+
+</code></b></td>
+			<td class="hidden">&nbsp;</td>
+			<td class="hidden">
+         This instance of CFvrtools.
+			</td>
+		</tr>
+		<tr>
+			<td class="hidden">&nbsp;&nbsp;</td>
+			<td class="hidden"><b><code>
+itSeq
+
+</code></b></td>
+			<td class="hidden">&nbsp;</td>
+			<td class="hidden">
+         The sequence FST in unit 0 (maybe NULL for no changes).
+			</td>
+		</tr>
+		<tr>
+			<td class="hidden">&nbsp;&nbsp;</td>
+			<td class="hidden"><b><code>
+idS
+
+</code></b></td>
+			<td class="hidden">&nbsp;</td>
+			<td class="hidden">
+         The symbol table to check (maybe itSeq->is or itSeq->os).
+			</td>
+		</tr>
+		<tr>
+			<td class="hidden">&nbsp;&nbsp;</td>
+			<td class="hidden"><b><code>
+nBO
+
+</code></b></td>
+			<td class="hidden">&nbsp;</td>
+			<td class="hidden">
+         Return pointer for opening bracket index
+			</td>
+		</tr>
+		<tr>
+			<td class="hidden">&nbsp;&nbsp;</td>
+			<td class="hidden"><b><code>
+nBC
+
+</code></b></td>
+			<td class="hidden">&nbsp;</td>
+			<td class="hidden">
+         Return pointer for closing bracket index
+			</td>
+		</tr>
+	</table>
+	<h3>Return value</h3>
+	<p>
+<code>O_K</code> if successful, a (negative) error code otherwise.
+	</p>
+  <!--{{ CUSTOM_DOC -->
+  <!--}} CUSTOM_DOC -->
+  </div>
+  <img src="../resources/blank_stc.gif" height="10">
+  </div>
+  <div id="cfn_000">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td nowrap width="25%" class="navbar"><a 
+        name="cfn_000"></a>C/C++ Function <span 
         class="mid">CFvrtools_FindIs</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
-        <a class="navbar" href="javascript:__PrintSection('cfn_001','Class fvrtools');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
+        <a class="navbar" href="javascript:__PrintSection('cfn_000','Class fvrtools');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
         <a class="navbar" href="../home.html">Home</a>
         <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
@@ -795,14 +1211,14 @@ The zero-based index of the string in the input symbol table of <code>itFst</cod
   </div>
   <img src="../resources/blank_stc.gif" height="10">
   </div>
-  <div id="cfn_000">
+  <div id="cfn_001">
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_000"></a>C/C++ Function <span 
-        class="mid">CFvrtools_FromFst</span></td>
+        name="cfn_001"></a>C/C++ Function <span 
+        class="mid">CFvrtools_FindOs</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
-        <a class="navbar" href="javascript:__PrintSection('cfn_000','Class fvrtools');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
+        <a class="navbar" href="javascript:__PrintSection('cfn_001','Class fvrtools');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
         <a class="navbar" href="../home.html">Home</a>
         <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
@@ -820,7 +1236,7 @@ The zero-based index of the string in the input symbol table of <code>itFst</cod
       <td class="hidden">Signature</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden"><code>
-INT16 <b>CFvrtools_FromFst</b>(CFvrtools _this, CFst* itSrc, CFst* itFvr);<br>public: INT16 <b>CFvrtools::FromFst</b>(CFst* itSrc, CFst* itFvr);<br>
+FST_STYPE <b>CFvrtools_FindOs</b>(const char* lpsStr, BOOL bAdd, CFst* itFst);<br>protected: static FST_STYPE <b>CFvrtools::FindOs</b>(const char* lpsStr, BOOL bAdd, CFst* itFst);<br>
 </code></td>
     </tr>
     <tr>
@@ -828,7 +1244,92 @@ INT16 <b>CFvrtools_FromFst</b>(CFvrtools _this, CFst* itSrc, CFst* itFvr);<br>pu
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fvrt_iam.c(166)</td>
+      <td class="hidden">fvrt_compile.c(73)</td>
+    </tr>
+  </table></div>
+  <div class="mframe2">
+  <h3>Description</h3>
+ Finds a string in an FST's output symbol table.
+	<h3>Parameters</h3>
+	<table>
+		<tr>
+			<td class="hidden">&nbsp;&nbsp;</td>
+			<td class="hidden"><b><code>
+lpsStr
+
+</code></b></td>
+			<td class="hidden">&nbsp;</td>
+			<td class="hidden">
+         The string to search.
+			</td>
+		</tr>
+		<tr>
+			<td class="hidden">&nbsp;&nbsp;</td>
+			<td class="hidden"><b><code>
+bAdd
+
+</code></b></td>
+			<td class="hidden">&nbsp;</td>
+			<td class="hidden">
+         Add the string if not found.
+			</td>
+		</tr>
+		<tr>
+			<td class="hidden">&nbsp;&nbsp;</td>
+			<td class="hidden"><b><code>
+itFst
+
+</code></b></td>
+			<td class="hidden">&nbsp;</td>
+			<td class="hidden">
+         The FST to search the string in.
+			</td>
+		</tr>
+	</table>
+	<h3>Return value</h3>
+	<p>
+The zero-based index of the string in the input symbol table of <code>itFst</code>, or -1 if the string
+         was neither found nor added.
+	</p>
+  <!--{{ CUSTOM_DOC -->
+  <!--}} CUSTOM_DOC -->
+  </div>
+  <img src="../resources/blank_stc.gif" height="10">
+  </div>
+  <div id="cfn_007">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td nowrap width="25%" class="navbar"><a 
+        name="cfn_007"></a>C/C++ Function <span 
+        class="mid">CFvrtools_ParseFsgCheck</span></td>
+      <td nowrap width="75%" class="navbar" style="text-align:right;">
+        <a class="navbar" href="javascript:__PrintSection('cfn_007','Class fvrtools');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
+  </table>
+  <div class="mframe"><table cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td class="hidden"></td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Signature</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code>
+BOOL <b>CFvrtools_ParseFsgCheck</b>(CFvrtools _this, CFst* itFsg, FST_ITYPE nMyIniState, CData* idVal);<br>protected: BOOL <b>CFvrtools::ParseFsgCheck</b>(CFst* itFsg, FST_ITYPE nMyIniState, CData* idVal);<br>
+</code></td>
+    </tr>
+    <tr>
+      <td class="hidden">&nbsp;</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Source</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">fvrt_fsg.c(48)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -837,14 +1338,14 @@ INT16 <b>CFvrtools_FromFst</b>(CFvrtools _this, CFst* itSrc, CFst* itFvr);<br>pu
   </div>
   <img src="../resources/blank_stc.gif" height="10">
   </div>
-  <div id="cfn_003">
+  <div id="cfn_004">
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_003"></a>C/C++ Function <span 
+        name="cfn_004"></a>C/C++ Function <span 
         class="mid">CFvrtools_ParseSeq</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
-        <a class="navbar" href="javascript:__PrintSection('cfn_003','Class fvrtools');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
+        <a class="navbar" href="javascript:__PrintSection('cfn_004','Class fvrtools');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
         <a class="navbar" href="../home.html">Home</a>
         <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
@@ -870,13 +1371,13 @@ INT16 <b>CFvrtools_ParseSeq</b>(CFvrtools _this, CFst* itSeq, FST_ITYPE nIni, FS
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fvrt_compile.c(130)</td>
+      <td class="hidden">fvrt_compile.c(294)</td>
     </tr>
   </table></div>
   <div class="mframe2">
   <h3>Description</h3>
  Parses a sequence FST and recursively builds an FVR tree. This member function is invoked by
- <a href="#cfn_005"><code class="link">CFvrtools_SeqToFvr</code></a>.
+ <a href="#cfn_006"><code class="link">CFvrtools_SeqToFvr</code></a>.
 
 	<h3>Parameters</h3>
 	<table>
@@ -899,7 +1400,7 @@ itSeq
 </code></b></td>
 			<td class="hidden">&nbsp;</td>
 			<td class="hidden">
-         The (normalized) sequence FST as obtained through <a href="#cfn_004"><code class="link">CFvrtools_StrToSeq</code></a> in unit 0.
+         The (normalized) sequence FST as obtained through <a href="#cfn_005"><code class="link">CFvrtools_StrToSeq</code></a> in unit 0.
 			</td>
 		</tr>
 		<tr>
@@ -945,13 +1446,13 @@ itFvr
 		<tr>
 			<td class="hidden">&nbsp;&nbsp;</td>
 			<td class="hidden">
-<a href="#cfn_004"><code class="link">CFvrtools_StrToSeq</code></a>
+<a href="#cfn_005"><code class="link">CFvrtools_StrToSeq</code></a>
 			</td>
 		</tr>
 		<tr>
 			<td class="hidden">&nbsp;&nbsp;</td>
 			<td class="hidden">
-<a href="#cfn_005"><code class="link">CFvrtools_SeqToFvr</code></a>
+<a href="#cfn_006"><code class="link">CFvrtools_SeqToFvr</code></a>
 			</td>
 		</tr>
 	</table>
@@ -960,14 +1461,14 @@ itFvr
   </div>
   <img src="../resources/blank_stc.gif" height="10">
   </div>
-  <div id="cfn_005">
+  <div id="cfn_006">
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_005"></a>C/C++ Function <span 
+        name="cfn_006"></a>C/C++ Function <span 
         class="mid">CFvrtools_SeqToFvr</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
-        <a class="navbar" href="javascript:__PrintSection('cfn_005','Class fvrtools');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
+        <a class="navbar" href="javascript:__PrintSection('cfn_006','Class fvrtools');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
         <a class="navbar" href="../home.html">Home</a>
         <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
@@ -993,7 +1494,7 @@ INT16 <b>CFvrtools_SeqToFvr</b>(CFvrtools _this, CFst* itSeq, CFst* itFvr);<br>p
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fvrt_compile.c(351)</td>
+      <td class="hidden">fvrt_compile.c(517)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -1020,7 +1521,7 @@ itSeq
 </code></b></td>
 			<td class="hidden">&nbsp;</td>
 			<td class="hidden">
-         The (normalized) sequence FST as obtained through <a href="#cfn_004"><code class="link">CFvrtools_StrToSeq</code></a>.
+         The (normalized) sequence FST as obtained through <a href="#cfn_005"><code class="link">CFvrtools_StrToSeq</code></a>.
 			</td>
 		</tr>
 		<tr>
@@ -1044,7 +1545,7 @@ itFvr
 		<tr>
 			<td class="hidden">&nbsp;&nbsp;</td>
 			<td class="hidden">
-<a href="#cfn_004"><code class="link">CFvrtools_StrToSeq</code></a>
+<a href="#cfn_005"><code class="link">CFvrtools_StrToSeq</code></a>
 			</td>
 		</tr>
 	</table>
@@ -1053,14 +1554,14 @@ itFvr
   </div>
   <img src="../resources/blank_stc.gif" height="10">
   </div>
-  <div id="cfn_004">
+  <div id="cfn_005">
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_004"></a>C/C++ Function <span 
+        name="cfn_005"></a>C/C++ Function <span 
         class="mid">CFvrtools_StrToSeq</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
-        <a class="navbar" href="javascript:__PrintSection('cfn_004','Class fvrtools');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
+        <a class="navbar" href="javascript:__PrintSection('cfn_005','Class fvrtools');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
         <a class="navbar" href="../home.html">Home</a>
         <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
@@ -1086,7 +1587,7 @@ INT16 <b>CFvrtools_StrToSeq</b>(CFvrtools _this, const char* lpsSrc, CFst* itSeq
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fvrt_compile.c(261)</td>
+      <td class="hidden">fvrt_compile.c(425)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -1141,7 +1642,7 @@ itSeq
 		<tr>
 			<td class="hidden">&nbsp;&nbsp;</td>
 			<td class="hidden">
-<a href="#cfn_005"><code class="link">CFvrtools_SeqToFvr</code></a>
+<a href="#cfn_006"><code class="link">CFvrtools_SeqToFvr</code></a>
 			</td>
 		</tr>
 	</table>
@@ -1200,7 +1701,7 @@ itSeq
 FVR string or sequence syntax error (%s)
   </p>
   <h3>Description</h3>
-  <p>An FST string or sequence contained a syntax error. Details are given in
+  <p>An FVR string or sequence contained a syntax error. Details are given in
   parentheses.</p>
   <!--{{ CUSTOM_DOC -->
   <!--}} CUSTOM_DOC -->

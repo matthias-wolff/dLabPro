@@ -42,6 +42,10 @@
  * @param lpSseq  A pointer to a <code>FST_SEQ_TYPE</code> structure defining
  *                the symbols of the sequence to store. The items of the
  *                sequence must be of type <code>FST_STYPE</code>.
+ * @param lpTseq  A pointer to a <code>FST_SEQ_TYPE</code> structure defining
+ *                the terminal states of the sequence to store, can be
+ *                <code>NULL</code>. The items of the sequence must be of type
+ *                <code>FST_ITYPE</code>.
  * @param lpCseq  A pointer to a <code>FST_SEQ_TYPE</code> structure defining
  *                increment values for transition reference counters in the
  *                n-multigram (may be <code>NULL</code>). The items of the
@@ -59,6 +63,7 @@ INT32 CGEN_PROTECTED CFst_Nmg_StoreSeq
   INT32          nUnit,
   FST_ITYPE     nSeqId,
   FST_SEQ_TYPE* lpSseq,
+  FST_SEQ_TYPE* lpTseq,
   FST_SEQ_TYPE* lpCseq,
   BOOL          bSubSeq
 )
@@ -66,10 +71,11 @@ INT32 CGEN_PROTECTED CFst_Nmg_StoreSeq
   FST_TID_TYPE* lpTI         = NULL;                                            /* Transducer iterator data structure*/
   BYTE*         lpT          = NULL;                                            /* Pointer to current transition     */
   BYTE*         lpSymb       = NULL;                                            /* Pointer to current symbol in seq. */
+  FST_ITYPE     nTer         = 0;                                               /* Current terminal state in seq.    */
   FST_ITYPE     nS           = 0;                                               /* Current state                     */
   FST_ITYPE     nT           = 0;                                               /* Current transition                */
-  INT32          nFirst       = 0;                                               /* First symbol                      */
-  INT32          nSymb        = 0;                                               /* Current symbol                    */
+  INT32         nFirst       = 0;                                               /* First symbol                      */
+  INT32         nSymb        = 0;                                               /* Current symbol                    */
   BOOL          bBranch      = FALSE;                                           /* Branch flag                       */
   BOOL          bUnitChanged = FALSE;                                           /* Unit changed flag                 */
   BOOL          bFinal       = FALSE;                                           /* Make final state flag             */
@@ -119,26 +125,41 @@ INT32 CGEN_PROTECTED CFst_Nmg_StoreSeq
 
       /* Seek transition from state nS with input symbol lpSeq[i] */
       lpT = NULL;
-      if (!bBranch)
-      {
-        while ((lpT=CFst_STI_TfromS(lpTI,nS,lpT))!=NULL)
-          if (*(FST_STYPE*)lpSymb == *CFst_STI_TTis(lpTI,lpT)) break;
-      }
+      nTer = -1;
+      if (!lpTseq)                                                              /*     No terminal state sequence    */
+      {                                                                         /*     >>                            */
+        if (!bBranch)                                                           /*       Not yet branched            */
+        {                                                                       /*       >>                          */
+          while ((lpT=CFst_STI_TfromS(lpTI,nS,lpT))!=NULL)                      /*         Seek matching trans.      */
+            if (*(FST_STYPE*)lpSymb == *CFst_STI_TTis(lpTI,lpT)) break;         /*         ...                       */
+        }                                                                       /*       <<                          */
+      }                                                                         /*     <<                            */
+      else                                                                      /*     Have terminal state sequence  */
+      {                                                                         /*     >>                            */
+        nTer = *(FST_ITYPE*)(lpTseq->lpItm+(lpTseq->nOfs*(nFirst+nSymb)));      /*       Get terminal state index    */
+        while ((lpT=CFst_STI_TfromS(lpTI,nS,lpT))!=NULL)                        /*       Seek matching trans.        */
+          if (*(FST_STYPE*)lpSymb == *CFst_STI_TTis(lpTI,lpT) &&                /*       ...                         */
+              nTer == *CFst_STI_TTer(lpTI,lpT)) break;                          /*       ...                         */
+      }                                                                         /*     <<                            */
 
       /* No matching transition found or already branched */
       if (!lpT)                                                                 /*     Found usable n-gram?          */
       {                                                                         /*     >> NO:                        */
         /* Add one new state and one new transition and store input symbol */   /*       - - - - - - - - - - - - - - */
-        IFCHECK printf("*");                                                    /*       Protocol (verbose level 1)  */
-        bBranch      = TRUE;                                                    /*       Remember new branch stated  */
+        bBranch      = TRUE;                                                    /*       Remember new branch started */
         bUnitChanged = TRUE;                                                    /*       Remember unit changed       */
         /* WARNING: THIS INVALIDATES ALL POINTERS IN lpTI! --> */               /*                                   */
-        nT = CFst_Addtrans(_this,nUnit,nS,                                      /*       Add state and transition    */
-          CFst_Addstates(_this,nUnit,1,bFinal)-UD_FS(_this,nUnit));             /*       |                           */
+        if (nTer<0 || nTer>=UD_XS(_this,nUnit))                                 /*       Have no valid term. state   */
+        {                                                                       /*       >>                          */
+          IFCHECK printf("*");                                                  /*         Protocol (verbose level 1)*/
+          nTer = CFst_Addstates(_this,nUnit,1,bFinal)-UD_FS(_this,nUnit);       /*         Create new terminal state */
+          /* TODO: Replace all occurrences of current state index in lpTSeq by nTer! */
+        }                                                                       /*       <<                          */
+        nT = CFst_Addtrans(_this,nUnit,nS,nTer);                                /*       Add transition              */
         /* <-- */                                                               /*                                   */
         lpT = CData_XAddr(AS(CData,_this->td),nT,0);                            /*       Calculate correct trans.ptr.*/
         *CFst_STI_TTis(lpTI,lpT) = *(FST_STYPE*)lpSymb;                         /*       Store input symbol          */
-        if(lpTI->nOfTRc) *CFst_STI_TRc(lpTI,lpT) = 0;                           /*       Initializie ref. counter    */
+        if(lpTI->nOfTRc) *CFst_STI_TRc(lpTI,lpT) = 0;                           /*       Initialize ref. counter     */
       }                                                                         /*     <<                            */
       else                                                                      /*     YES:                          */
       {                                                                         /*     >>                            */
@@ -188,9 +209,10 @@ INT16 CGEN_PUBLIC CFst_Addseq
 )
 {
   FST_SEQ_TYPE Sseq;                                                            /* Symbol sequence                   */
+  FST_SEQ_TYPE Tseq;                                                            /* Terminal state sequence           */
   FST_SEQ_TYPE Cseq;                                                            /* Reference counter increment seq.  */
-  INT32         i    = 0;                                                        /* Loop counter                      */
-  INT32         nS   = -1;                                                       /* Final state of update sequence    */
+  INT32        i    = 0;                                                        /* Loop counter                      */
+  INT32        nS   = -1;                                                       /* Final state of update sequence    */
 
   /* Validate */
   CHECK_THIS_RV(NOT_EXEC);
@@ -213,10 +235,6 @@ INT16 CGEN_PUBLIC CFst_Addseq
   if (CData_FindComp(AS(CData,_this->td),NC_TD_TIS)<0)
     return IERROR(_this,FST_MISS,"component",NC_TD_TIS,"transition table");
 
-  /* MWX 2004-10-07 TODO: Implement or remove the following features --> */
-  DLPASSERT(nIcTer<0); /* MWX: Needed for lexicon training (formerly STRproc -add_sequence)! */
-  /* <-- */
-
   /* Fetch symbol sequence */
   if (CData_GetCompType(idSrc,nIcTis)==DLP_TYPE(FST_STYPE))
   {
@@ -235,30 +253,49 @@ INT16 CGEN_PUBLIC CFst_Addseq
   }
   else return IERROR(_this,FST_BADID,"source component",nIcTis,0);
 
+  /* Fetch terminal state sequence */
+  if (CData_GetCompType(idSrc,nIcTer)==DLP_TYPE(FST_ITYPE))
+  {
+    Tseq.lpItm = CData_XAddr(idSrc,0,nIcTer);
+    Tseq.nOfs  = CData_GetRecLen(idSrc);
+    Tseq.nCnt  = CData_GetNRecs(idSrc);
+  }
+  else if (dlp_is_numeric_type_code(CData_GetCompType(idSrc,nIcTer)))
+  {
+    Tseq.lpItm = (BYTE*)dlp_calloc(CData_GetNRecs(idSrc),sizeof(FST_ITYPE));
+    Tseq.nOfs  = sizeof(FST_ITYPE);
+    Tseq.nCnt  = CData_GetNRecs(idSrc);
+    for (i=0; i<Tseq.nCnt; i++)
+      *(FST_ITYPE*)(Tseq.lpItm+i*sizeof(FST_ITYPE)) =
+        (FST_ITYPE)CData_Dfetch(idSrc,i,nIcTer);
+  }
+  else Tseq.lpItm=NULL;
+
   /* Fetch reference counter increment sequence */
   if (CData_GetCompType(idSrc,nIcRci)==DLP_TYPE(FST_ITYPE))
   {
-    Cseq.lpItm = CData_XAddr(idSrc,0,nIcTis);
+    Cseq.lpItm = CData_XAddr(idSrc,0,nIcRci);
     Cseq.nOfs  = CData_GetRecLen(idSrc);
     Cseq.nCnt  = CData_GetNRecs(idSrc);
   }
   else if (dlp_is_numeric_type_code(CData_GetCompType(idSrc,nIcRci)))
   {
     Cseq.lpItm = (BYTE*)dlp_calloc(CData_GetNRecs(idSrc),sizeof(FST_ITYPE));
-    Cseq.nOfs  = sizeof(FST_STYPE);
+    Cseq.nOfs  = sizeof(FST_ITYPE);
     Cseq.nCnt  = CData_GetNRecs(idSrc);
     for (i=0; i<Cseq.nCnt; i++)
-      *(FST_STYPE*)(Cseq.lpItm+i*sizeof(FST_STYPE)) =
-        (FST_STYPE)CData_Dfetch(idSrc,i,nIcRci);
+      *(FST_ITYPE*)(Cseq.lpItm+i*sizeof(FST_ITYPE)) =
+        (FST_ITYPE)CData_Dfetch(idSrc,i,nIcRci);
   }
   else Cseq.lpItm=NULL;
 
   /* Store sequence */
-  nS = CFst_Nmg_StoreSeq(_this,nUnit,0,&Sseq,Cseq.lpItm?&Cseq:NULL,
-         _this->m_bMultigram);
+  nS = CFst_Nmg_StoreSeq(_this,nUnit,0,&Sseq,Tseq.lpItm?&Tseq:NULL,
+         Cseq.lpItm?&Cseq:NULL,_this->m_bMultigram);
 
   /* Clean up */
   if (Sseq.lpItm && Sseq.lpItm!=CData_XAddr(idSrc,0,nIcTis)) dlp_free(Sseq.lpItm);
+  if (Tseq.lpItm && Tseq.lpItm!=CData_XAddr(idSrc,0,nIcTer)) dlp_free(Tseq.lpItm);
   if (Cseq.lpItm && Cseq.lpItm!=CData_XAddr(idSrc,0,nIcRci)) dlp_free(Cseq.lpItm);
 
   return nS;

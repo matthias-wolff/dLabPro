@@ -79,6 +79,7 @@ END_MAN
 
 FILE:    fvrt_iam.c
 FILE:    fvrt_compile.c
+FILE:    fvrt_fsg.c
 
 INCLUDE: "dlp_data.h"
 INCLUDE: "dlp_fst.h"
@@ -93,7 +94,7 @@ DEFINE: FVRT_STIS(FST,TIS) (const char*)CData_XAddr(AS(CData,FST->is),TIS,0)
 ERROR:   FVRT_SEQSYNTAX
 COMMENT: FVR string or sequence syntax error (%s)
 /html MAN:
-  <p>An FST string or sequence contained a syntax error. Details are given in 
+  <p>An FVR string or sequence contained a syntax error. Details are given in 
   parentheses.</p>
 END_MAN
 
@@ -158,19 +159,63 @@ COMMENT: Creates a (weighted) FVR from a string representation
     weight   = &lt;numeric&gt; | "NaN"</pre>
   where <tt>&lt;alpha&gt;</tt> denotes an arbitrary string without white spaces and special characters and 
   <tt>&lt;numeric&gt;</tt> denotes a floating point number in the English locale.</p>
+  <p>If the FVR string contains comments, the method will store the space-separated string of comments in 
+  <code>itFvr.<a class="code" href="fst.html#fld_ud">ud</a>.<a class="code" 
+  href="data.html#fld_rtext">rtext</a></code>.</p>
 
   @param src The source string.
   @param itFvr The target FST, must not be <code>NULL</code>.
   @return void
 END_MAN
 
+METHOD:  -from_fst
+SYNTAX:  (INSTANCE(fst) itSeq, INSTANCE(fst) itFvr)
+COMMENT: Creates a (weighted) FVR from an FST containing a single path.
+/html MAN:
+  The FVR structure is built from the output symbol sequence of the only path in
+  <code>itSeq</code>. See documentation of method <a class="code" 
+  href="#mth_-from_string">-from_string</a> for the format specification of FVR
+  strings. 
+  <p>If the FVR string as FST contains comments, the method will store the space-separated string of comments in 
+  <code>itFvr.<a class="code" href="fst.html#fld_ud">ud</a>.<a class="code" 
+  href="data.html#fld_rtext">rtext</a></code>.</p>
+  @param itSeg The source FST, must contain exactly one path.
+  @param itFvr The target FST, must not be <code>NULL</code>.
+  @return void
+  @see -from_string
+END_MAN
+
 METHOD:  -synthesize
 SYNTAX:  (INSTANCE(fst) itDst, INSTANCE(fst) itFvr)
-COMMENT: Creates a list of all possible combinations from a FVR
+COMMENT: Creates a list of all possible combinations of a FVR
 /html MAN:
   @param itDst FST to be filled with the serializations.
   @param itFvr The feature-value relation to synthesize from.
   @return
+END_MAN
+
+METHOD:  -fsg_normalize
+SYNTAX:  (INSTANCE(fst) itFsgSrc, INSTANCE(fst) itFsgDst)
+COMMENT: ...
+
+METHOD:  -fsg_fvr_check
+SYNTAX:  BOOL (INSTANCE(fst) itFsg, INSTANCE(fst) itErr)
+COMMENT: Check square bracket parity in the output language of a FVR grammar.
+/html MAN:
+  <p>Checks if the parity of opening and closing square brackes <code>'['</code>/<code>']'</code>
+  in an FVR finite state grammar is correct in all each consecutive paths. A grammar is
+  considered an FVR grammar, iff its <a href="fst.html#fld_os">output symbol table</a> contains
+  at least the symbols "FVR", "[", and "]".</p>
+  
+  <p>Note: you must <a href="#mth_-fsg_normalize">normalize</a> the grammar before invoking this method!</p>
+
+  @param itFsg Finite state grammer to check.
+  @param itErr If the return value is <code>FALSE</code>: Filled with the beginning of
+               the first path violating the bracket parity up to the erroneous transition,
+               can be <code>NULL</code> or identical with <code>itFgs</code>.
+  @return <code>TRUE</code> if the bracket parity is ok or if the <code>itFsg</code> is 
+  <em>not</em> an FVR grammar, <code>FALSE</code> in all other cases. 
+  @see -fsg_normalize
 END_MAN
 
 ## -- Generate files --
