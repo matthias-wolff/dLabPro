@@ -342,7 +342,7 @@ FLOAT32 confidence_phn(CFst* itDC, CFst* itDCr){
             else rerror("FVR confidence: no output symbol at certained bracket level");
             li--;
           }else rerror("FVR confidence: too many closing brackets ']'");
-        }else li->tcnf=(FLOAT32*)(rt+orc);
+        }else if(!li->tcnf) li->tcnf=(FLOAT32*)(rt+orc);
       }
       if((rp=*(FST_STYPE*)(rt+orp))>=0) break;
     }
