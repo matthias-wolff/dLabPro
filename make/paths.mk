@@ -29,8 +29,14 @@ ifeq ($(PROGRAM),)
 endif
 
 ## Set all paths
-BIN_PATH = $(DLABPRO_HOME)/bin.${TRG_DIR}${MEXT}
-BLD_PATH = $(DLABPRO_HOME)/build/$(PROGRAM)
+ifeq ($(PRG_PATH),)
+  PRG_PATH = $(DLABPRO_HOME)/programs/$(PROGRAM)
+  BIN_PATH = $(DLABPRO_HOME)/bin.${TRG_DIR}${MEXT}
+  BLD_PATH = $(DLABPRO_HOME)/build/$(PROGRAM)
+else
+  BIN_PATH = $(PRG_PATH)/bin.${TRG_DIR}${MEXT}
+  BLD_PATH = $(PRG_PATH)/build/$(PROGRAM)
+endif
 LIB_PATH = $(BLD_PATH)/lib.${TRG_DIR}${MEXT}
 OBJ_PATH = $(BLD_PATH)/obj.${TRG_DIR}${MEXT}
 DEP_PATH = $(BLD_PATH)/dep.${TRG_DIR}${MEXT}
@@ -40,7 +46,6 @@ EXT_PATH = $(DLABPRO_HOME)/ext
 SDK_PATH = $(DLABPRO_HOME)/sdk
 INC_PATH = $(DLABPRO_HOME)/include
 MAN_PATH = $(DLABPRO_HOME)/manual
-PRG_PATH = $(DLABPRO_HOME)/programs/$(PROGRAM)
 
 ## Target settings
 ifeq ($(LIBFILE),)
