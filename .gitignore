@@ -1,0 +1,9 @@
+/bin.debug*
+/bin.release*
+/build
+*.swp
+*.swo
+/.cproject
+/.project
+/_work
+/.settings
