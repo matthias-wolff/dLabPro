@@ -167,6 +167,7 @@ public:
 //{{CGEN_PMIC
 	INT16 OnArgv();
 	INT16 OnCd();
+	INT16 OnCwd();
 	INT16 OnEcho();
 	INT16 OnLoad();
 	INT16 OnPid();
@@ -301,6 +302,7 @@ public:
 	protected: INT16 Parent();
 	protected: INT16 This();
 	public: INT16 Cd(const char* lpsDir);
+	public: const char* Cwd();
 	public: INT32 System(const char* lpsCmd);
 	public: BOOL Platform(const char* lpsPlatformId);
 	public: BOOL IsInstance(const char* sInstanceId, const char* sClassId);

@@ -74,6 +74,7 @@ function.html function CFunction [
     function.html#mth_-cd "-cd" "-cd"
     function.html#mth_-check "-check" "-check"
     function.html#mth_-copy "-copy" "-copy"
+    function.html#mth_-cwd "-cwd" "-cwd"
     function.html#mth_-destroy "-destroy" "-destroy"
     function.html#mth_-dup "-dup" "-dup"
     function.html#mth_-echo "-echo" "-echo"
@@ -252,6 +253,7 @@ function.html function CFunction [
         top.TC1.InsertItem("-cd","&lt;string sDir&gt; &lt;function this&gt; -cd     Change directory.",27,27,0,"automatic/function.html#mth_-cd","CONT",nCls);
         top.TC1.InsertItem("-check","&lt;function this&gt; -check     Self check of session.",27,27,0,"automatic/function.html#mth_-check","CONT",nCls);
         top.TC1.InsertItem("-copy","&lt;instance iSrc&gt; &lt;instance iDst&gt; -copy     Copies an instance.",27,27,0,"automatic/function.html#mth_-copy","CONT",nCls);
+        top.TC1.InsertItem("-cwd","&lt;function this&gt; -cwd     Get the current working directory.",27,27,0,"automatic/function.html#mth_-cwd","CONT",nCls);
         top.TC1.InsertItem("-destroy","&lt;instance iInst&gt; -destroy     Destroys an instance",27,27,0,"automatic/function.html#mth_-destroy","CONT",nCls);
         top.TC1.InsertItem("-dup","&lt;function this&gt; -dup     Duplicates the top stack element.",27,27,0,"automatic/function.html#mth_-dup","CONT",nCls);
         top.TC1.InsertItem("-echo","&lt;string sMessage&gt; &lt;function this&gt; -echo     Prints a message.",27,27,0,"automatic/function.html#mth_-echo","CONT",nCls);
@@ -694,6 +696,7 @@ Using <code>CDlpTable</code> for token sequence and source table will save enorm
     <tr><td><a href="#mth_-cd"><code class="link">-cd</code></a></td><td><code>&lt;string sDir&gt; &lt;function this&gt; <b>-cd</b> </code><br> Change directory.</td></tr>
     <tr><td><a href="#mth_-check"><code class="link">-check</code></a></td><td><code>&lt;function this&gt; <b>-check</b> </code><br> Self check of session.</td></tr>
     <tr><td><a href="#mth_-copy"><code class="link">-copy</code></a></td><td><code>&lt;instance iSrc&gt; &lt;instance iDst&gt; <b>-copy</b> </code><br> Copies an instance.</td></tr>
+    <tr><td><a href="#mth_-cwd"><code class="link">-cwd</code></a></td><td><code>&lt;function this&gt; <b>-cwd</b> </code><br> Get the current working directory.</td></tr>
     <tr><td><a href="#mth_-destroy"><code class="link">-destroy</code></a></td><td><code>&lt;instance iInst&gt; <b>-destroy</b> </code><br> Destroys an instance</td></tr>
     <tr><td><a href="#mth_-dup"><code class="link">-dup</code></a></td><td><code>&lt;function this&gt; <b>-dup</b> </code><br> Duplicates the top stack element.</td></tr>
     <tr><td><a href="#mth_-echo"><code class="link">-echo</code></a></td><td><code>&lt;string sMessage&gt; &lt;function this&gt; <b>-echo</b> </code><br> Prints a message.</td></tr>
@@ -1971,6 +1974,77 @@ Copies an instance.
 			</td>
 		</tr>
 	</table>
+  <!--{{ CUSTOM_DOC -->
+  <!--}} CUSTOM_DOC -->
+  </div>
+  <img src="../resources/blank_stc.gif" height="10">
+  </div>
+  <div id="mth_-cwd">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td nowrap width="25%" class="navbar"><a 
+        name="mth_-cwd"></a>Method <span 
+        class="mid">-cwd</span></td>
+      <td nowrap width="75%" class="navbar" style="text-align:right;">
+        <a class="navbar" href="javascript:__PrintSection('mth_-cwd','Class function');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
+  </table>
+  <div class="mframe"><table cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td class="hidden">dLabPro</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Identifier</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code><b>-cwd</b></code></td>
+    </tr>
+    <tr>
+      <td class="hidden">&nbsp;</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Syntax</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code>
+&lt;function this&gt; <b>-cwd</b> 
+</code></td>
+    </tr>
+    <tr>
+      <td class="hidden" colspan="5">&nbsp;</td>
+    </tr>
+    <tr>
+      <td class="hidden">C/C++</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Member function</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code>
+public: const char* <b>CFunction::Cwd</b>();<br>
+</code></td>
+    </tr>
+    <tr>
+      <td class="hidden">&nbsp;</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Source</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">fnc_iam.cpp(541)</td>
+    </tr>
+  </table></div>
+  <div class="mframe2">
+  <h3>Synopsis</h3>
+  <p>
+Get the current working directory.
+  </p>
+  <h3>Description</h3>
+  Gets the current working directory.
+	<h3>Return value</h3>
+	<p>
+The current working directory.
+	</p>
   <!--{{ CUSTOM_DOC -->
   <!--}} CUSTOM_DOC -->
   </div>
@@ -3815,7 +3889,7 @@ public: INT32 <b>CFunction::System</b>(const char* lpsCmd);<br>
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fnc_iam.cpp(541)</td>
+      <td class="hidden">fnc_iam.cpp(554)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -4268,7 +4342,7 @@ public: BOOL <b>CFunction::IsInstance</b>(const char* sInstanceId, const char* s
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fnc_iam.cpp(604)</td>
+      <td class="hidden">fnc_iam.cpp(617)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -4377,7 +4451,7 @@ public: BOOL <b>CFunction::Platform</b>(const char* lpsPlatformId);<br>
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fnc_iam.cpp(551)</td>
+      <td class="hidden">fnc_iam.cpp(564)</td>
     </tr>
   </table></div>
   <div class="mframe2">
