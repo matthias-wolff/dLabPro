@@ -538,6 +538,22 @@ INT16 CGEN_PUBLIC CFunction::Cd(const char* lpsDir)
 /*
  * Manual page at function.def
  */
+const char* CGEN_PUBLIC CFunction::Cwd()
+{
+  static char cwd[L_PATH];
+  if (getcwd(cwd, sizeof(cwd))!=NULL)
+  {
+    dlp_strreplace(cwd,"\\","/");
+    return cwd;
+  }
+  else
+    IERROR(this,ERR_GETCWD,0,0,0);
+  return NULL;
+}
+
+/*
+ * Manual page at function.def
+ */
 INT32 CGEN_PUBLIC CFunction::System(const char* lpsCmd)
 {
   char lpsBuf[L_INPUTLINE+1];                                                   // String manipulation buffer

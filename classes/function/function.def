@@ -1510,6 +1510,14 @@ SYNTAX:  (string sDir)
   @param sDir Relative or absolute directory path name.
 END_MAN
 
+METHOD:  -cwd
+COMMENT: Get the current working directory.
+SYNTAX:  cstring()
+/html MAN:
+  Gets the current working directory.
+  @return The current working directory.
+END_MAN
+
 METHOD:  -system
 SYNTAX:  int(string sCmd)
 COMMENT: Executes a shell command.

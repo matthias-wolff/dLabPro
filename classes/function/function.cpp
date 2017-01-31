@@ -72,6 +72,7 @@ INT16 CFunction::AutoRegisterWords()
 	REGISTER_METHOD("-cd","",LPMF(CFunction,OnCd),"Change directory.",0,"<string sDir> <function this>","")
 	REGISTER_METHOD("-check","",LPMF(CFunction,Check),"Self check of session.",0,"<function this>","")
 	REGISTER_METHOD("-copy","",LPMF(CFunction,OnCopy),"Copies an instance.",0,"<instance iSrc> <instance iDst>","")
+	REGISTER_METHOD("-cwd","",LPMF(CFunction,OnCwd),"Get the current working directory.",0,"<function this>","")
 	REGISTER_METHOD("-destroy","",LPMF(CFunction,OnDestroy),"Destroys an instance",0,"<instance iInst>","")
 	REGISTER_METHOD("-dup","",LPMF(CFunction,Dup),"Duplicates the top stack element.",0,"<function this>","")
 	REGISTER_METHOD("-echo","",LPMF(CFunction,OnEcho),"Prints a message.",0,"<string sMessage> <function this>","")
@@ -420,6 +421,19 @@ INT16 CFunction::OnCd()
 	char* sDir = MIC_GET_S(1,0);
 	if (CDlpObject_GetErrorCount()>__nErrCnt) return NOT_EXEC;
 	__nErr = Cd(sDir);
+	return __nErr;
+}
+
+INT16 CFunction::OnCwd()
+/* DO NOT CALL THIS FUNCTION FROM C++ SCOPE.     */
+/* IT MAY INTERFERE WITH THE INTERPRETER SESSION */
+{
+	INT16 __nErr    = O_K;
+	INT32  __nErrCnt = 0;
+	MIC_CHECK;
+	__nErrCnt = CDlpObject_GetErrorCount();
+	if (CDlpObject_GetErrorCount()>__nErrCnt) return NOT_EXEC;
+	MIC_PUT_S(Cwd());
 	return __nErr;
 }
 
