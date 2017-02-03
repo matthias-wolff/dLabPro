@@ -244,6 +244,7 @@ struct recocfg {
   struct recodvad   rDVAD;
   struct recoddlg   rDDlg;
   struct recoflst   rFlst;
+  char             *lpsIgn;
 };
 
 enum cfgload { CL_FEA,CL_SES,CL_GMM,CL_VAD,CL_DLG,CL_BIN,CL_N };
@@ -282,6 +283,7 @@ void dlg_upd(const char *lpsRes);
 BOOL setoption(char *lpsOpt,char *lpsVal,char bOnline);
 BOOL cfginit(int argc,char** argv);
 void cfgdone();
+void opt_tmpcfg(const char *sFN);
 void optdump();
 void searchload(INT32 nFstSel);
 
@@ -298,7 +300,7 @@ void cmdqueueget();
 #else /* _CFG_C_SETOPT */
 
 typedef void (*recosetopt)(const char*,const char*,void*);
-enum recoopttyp { OT_TRUE, OT_BOOL, OT_ENUM, OT_INT, OT_FLOAT, OT_STR, OT_LOAD, OT_NUM };
+enum recoopttyp { OT_TRUE, OT_BOOL, OT_ENUM, OT_INT, OT_FLOAT, OT_STR, OT_LOAD, OT_IGN, OT_NUM };
 struct {
   const char* lpsName;
   BOOL         bArg;
@@ -311,6 +313,7 @@ struct {
   { "float",    TRUE,  setoptfloat },
   { "string",   TRUE,  setoptstr   },
   { "filename", TRUE,  setoptload  },
+  { "ignore",   TRUE,  setoptignore},
 };
 struct recoopt {
   const char *lpsName;
@@ -372,6 +375,8 @@ struct recoopt {
   { "data.gmm",        OT_LOAD,  TRUE,  (void*)CL_GMM           },
   { "data.vadinfo",    OT_LOAD,  FALSE, (void*)CL_VAD           },
   { "data.dialog",     OT_LOAD,  FALSE, (void*)CL_DLG           },
+  { "ignore.*",        OT_IGN,   FALSE, &rCfg.lpsIgn            },
+  { "uasr.*",          OT_IGN,   FALSE, &rCfg.lpsIgn            },
   { NULL, NULL, FALSE, NULL },
 };
 

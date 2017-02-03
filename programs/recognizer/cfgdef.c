@@ -90,6 +90,7 @@ cache = yes\n\
 #  - Temporary filename of the audio signal\n\
 #  - Temporary filename of the fvr-fst or \"NULL\"\n\
 #  - Filename of the session info object\n\
+#  - Temporary filename of the current configuration (including all tags ignore.* and uasr.*)\n\
 postproc.cmd = \n\
 \n\
 # Search configuration\n\
@@ -157,7 +158,7 @@ rej.two.tnwd = 0\n\
 rej.fvr.ted  = 0.5\n\
 rej.fvr.lambda = 0.5\n\
 \n\
-# Force vad decission or selected fst\n\
+# Force vad decision or selected fst\n\
 #\n\
 # If you use one of these two options, you have to\n\
 # generate for every file \"XX.wav\" a file \"XX.wav.vadforce\".\n\
@@ -324,4 +325,12 @@ data.vadinfo = $UASR_HOME/data/vm/VM_vad_10/model/3_10_mod.vad\n\
 # an accepted recognition result the dialog switches the\n\
 # used vocabulary (= unit in itRN).\n\
 data.dialog = \n\
+\n\
+# Ignore tags\n\
+#\n\
+# Tags to ignore by recognizer\n\
+# and to bypass to postproc command\n\
+# in the temporary create configuration file\n\
+ignore.* =\n\
+uasr.* =\n\
 ";

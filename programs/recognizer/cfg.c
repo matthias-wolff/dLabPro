@@ -159,6 +159,16 @@ void setoptload(const char *lpsOpt,const char *lpsVal,void *lpDst){
   cfgload[(enum cfgload)lpDst][STR_LEN-1]='\0';
 }
 
+void setoptignore(const char *lpsOpt,const char *lpsVal,void *lpDst){
+  char **lpsDst=(char **)lpDst;
+  INT32 nOpt=strlen(lpsOpt);
+  INT32 nVal=strlen(lpsVal);
+  INT32 nDst=*lpsDst ? strlen(*lpsDst) :0;
+  if(!lpsVal[0]) return;
+  *lpsDst=realloc(*lpsDst,nDst+nOpt+3+nVal+2);
+  snprintf(*lpsDst+nDst,nOpt+3+nVal+2,"%s = %s\n",lpsOpt,lpsVal);
+}
+
 #define _CFG_C_SETOPT
 #include "recognizer.h"
 #undef _CFG_C_SETOPT
@@ -201,6 +211,35 @@ void options_list(){
     printf("%-15s: %-8s  %-5s %s%s\n",rRecoOpts[nI].lpsName,lpsTyp,rRecoOpts[nI].bOnline?"Yes":"No",lpsDesc?lpsDesc:"No description",lpsEnum);
   }
   usage(NULL);
+}
+
+/**
+ * Dumps the current values of all options to a temporary config file
+ */
+void opt_tmpcfg(const char *sFN){
+  struct recoopt *rOpt;
+  FILE *fd=fopen(sFN,"wb");
+  char  lpsBuf[STR_LEN];
+  for(rOpt=rRecoOpts;rOpt->lpsName;rOpt++){
+    /* Ignore shortcuts */
+    snprintf(lpsBuf,STR_LEN,"# Shortcut: -%s ",rOpt->lpsName);
+    if(strstr(cfgdef,lpsBuf)) continue;
+    /* Print option value */
+    switch (rOpt->eTyp){
+    case OT_TRUE: break;
+    case OT_BOOL:  fprintf(fd,"%s = %s\n",rOpt->lpsName,(*(BOOL*)rOpt->lpDst)?"yes":"no"); break;
+    case OT_ENUM:  fprintf(fd,"%s = %s\n",rOpt->lpsName,optenum_getstr(rOpt->lpDst)[*(enum recoout*)rOpt->lpDst]); break;
+    case OT_INT:   fprintf(fd,"%s = %d\n",rOpt->lpsName,*(INT32*)rOpt->lpDst); break;
+    case OT_FLOAT: fprintf(fd,"%s = %g\n",rOpt->lpsName,*(FLOAT32*)rOpt->lpDst); break;
+    case OT_STR:   fprintf(fd,"%s = %s\n",rOpt->lpsName,(char*)rOpt->lpDst); break;
+    case OT_LOAD:  fprintf(fd,"%s = %s\n",rOpt->lpsName,cfgload[(enum cfgload)rOpt->lpDst]); break;
+    case OT_IGN: break;
+    case OT_NUM: break;
+    }
+  }
+  if(rCfg.lpsIgn) fprintf(fd,"%s",rCfg.lpsIgn);
+  if(rTmp.sSigFname) fprintf(fd,"sig.file = %s\n",rTmp.sSigFname);
+  fclose(fd);
 }
 
 /**
@@ -251,9 +290,15 @@ void optdump()
   printf("\n"); fflush(stdout);
 }
 
+int optnamecmp(const char *lpsName,const char *lpsOpt){
+  const char *pos;
+  if((pos=strstr(lpsName,"*"))) return strncmp(lpsName,lpsOpt,pos-lpsName);
+  else return strcmp(lpsName,lpsOpt);
+}
+
 BOOL setoption(char *lpsOpt,char *lpsVal,char bOnline){
   INT32 nI;
-  for(nI=0;rRecoOpts[nI].lpsName;nI++) if(!strcmp(lpsOpt,rRecoOpts[nI].lpsName)){
+  for(nI=0;rRecoOpts[nI].lpsName;nI++) if(!optnamecmp(rRecoOpts[nI].lpsName,lpsOpt)){
     if(bOnline && !rRecoOpts[nI].bOnline){
       rerror("Option %s may not been set online",lpsOpt);
       return FALSE;

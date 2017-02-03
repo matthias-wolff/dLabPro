@@ -465,18 +465,22 @@ CFst* fvrgen(CFst* itDC)
 void postprocess(CFst* itDC, CFst* itDCr, CFst *itFvr)
 {
   routput(O_sta,1,"rec post (fst: %i)\n",rTmp.nFstSel);
+  char *sTmp=dlp_tempnam(NULL,"recognizer");
   char sTmpDC[L_PATH];
   char sTmpDCr[L_PATH];
   char sTmpNld[L_PATH];
   char sTmpSig[L_PATH];
   char sTmpFvr[L_PATH];
+  char sTmpCfg[L_PATH];
   char sCmd[L_PATH*4];
   CData *idColSig;
-  snprintf(sTmpDC, L_PATH,"%s-dc.fst", dlp_tempnam(NULL,"recognizer")); dlp_strreplace(sTmpDC ,"\\","/");
-  snprintf(sTmpDCr,L_PATH,"%s-dcr.fst",dlp_tempnam(NULL,"recognizer")); dlp_strreplace(sTmpDCr,"\\","/");
-  snprintf(sTmpNld,L_PATH,"%s-nld.fst",dlp_tempnam(NULL,"recognizer")); dlp_strreplace(sTmpNld,"\\","/");
-  snprintf(sTmpSig,L_PATH,"%s-sig.wav",dlp_tempnam(NULL,"recognizer")); dlp_strreplace(sTmpSig,"\\","/");
-  snprintf(sTmpFvr,L_PATH,"%s-fvr.fst",dlp_tempnam(NULL,"recognizer")); dlp_strreplace(sTmpSig,"\\","/");
+  unlink(sTmp);
+  snprintf(sTmpDC, L_PATH,"%s-dc.fst", sTmp); dlp_strreplace(sTmpDC ,"\\","/");
+  snprintf(sTmpDCr,L_PATH,"%s-dcr.fst",sTmp); dlp_strreplace(sTmpDCr,"\\","/");
+  snprintf(sTmpNld,L_PATH,"%s-nld.fst",sTmp); dlp_strreplace(sTmpNld,"\\","/");
+  snprintf(sTmpSig,L_PATH,"%s-sig.wav",sTmp); dlp_strreplace(sTmpSig,"\\","/");
+  snprintf(sTmpFvr,L_PATH,"%s-fvr.fst",sTmp); dlp_strreplace(sTmpSig,"\\","/");
+  snprintf(sTmpCfg,L_PATH,"%s.cfg",    sTmp); dlp_strreplace(sTmpSig,"\\","/");
   rTmp.idNld->m_lpTable->m_fsr = 1000./rCfg.nSigSampleRate*rCfg.rPfa.lpFba.nCrate;
   CDlpObject_Save(BASEINST(itDC),      sTmpDC, SV_XML);
   CDlpObject_Save(BASEINST(itDCr),     sTmpDCr,SV_XML);
@@ -489,14 +493,16 @@ void postprocess(CFst* itDC, CFst* itDCr, CFst *itFvr)
   IDESTROY(idColSig);
   if(itFvr) CDlpObject_Save(BASEINST(itFvr),sTmpFvr,SV_XML);
   else snprintf(sTmpFvr,L_PATH,"NULL");
-  snprintf(sCmd,L_PATH*4,"%s \"%s\" \"%s\" \"%s\" \"%s\" \"%s\" \"%s\"",
-          rCfg.sPostProc,sTmpDC,sTmpDCr,sTmpNld,sTmpSig,sTmpFvr,cfgload[CL_SES]);
+  opt_tmpcfg(sTmpCfg);
+  snprintf(sCmd,L_PATH*4,"%s \"%s\" \"%s\" \"%s\" \"%s\" \"%s\" \"%s\" \"%s\"",
+          rCfg.sPostProc,sTmpDC,sTmpDCr,sTmpNld,sTmpSig,sTmpFvr,cfgload[CL_SES],sTmpCfg);
   system(sCmd);
   unlink(sTmpDC);
   unlink(sTmpDCr);
   unlink(sTmpNld);
   unlink(sTmpSig);
   if(itFvr) unlink(sTmpFvr);
+  unlink(sTmpCfg);
 }
 
 INT32 decode(CFst* itGP, CFst* itRN, CFstsearch *itSP, CFst* itDC)
