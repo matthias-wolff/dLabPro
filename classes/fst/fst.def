@@ -382,13 +382,13 @@ FLAGS:   /hidden /noset /nosave
 
 FIELD:   ic_sd_aux
 TYPE:    int
-COMMENT: Internal use: First component of auxilary state data
+COMMENT: Internal use: First component of auxiliary state data
 INIT:    -1L
 FLAGS:   /hidden /noset /nosave
 
 FIELD:   ic_td_aux
 TYPE:    int
-COMMENT: Internal use: First component of auxilary transition data
+COMMENT: Internal use: First component of auxiliary transition data
 INIT:    -1L
 FLAGS:   /hidden /noset /nosave
 

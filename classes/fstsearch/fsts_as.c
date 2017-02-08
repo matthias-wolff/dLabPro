@@ -132,7 +132,7 @@ const char *fsts_as_isearch(struct fsts_glob *glob,struct fsts_w *w){
   FLOAT64 *wmin;
   INT32 f;
   UINT16 nres=0;
-  if(glob->src.maxstk && !glob->cfg.stkprn) fprintf(stderr,"WARN: algo=as decoder with be slow with stkprn=FALSE\n");
+  if(glob->src.maxstk && !glob->cfg.stkprn) fprintf(stderr,"WARN: algo=as decoder will be slow with stkprn=FALSE\n");
   algo->ls.h.schg[0]=(void**)&s1;
   fsts_as_mapinit(algo->ls.map,(w->nf+1)*glob->src.units[0].ns); /* TODO: increase map by stk bits */
   if(glob->cfg.as.sheu==AS_SH_MIN) fsts_as_sheumin(w);

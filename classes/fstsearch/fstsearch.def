@@ -175,7 +175,7 @@ END_CODE
   There is no change for transducers without pushdown symbols
   (~STK component in transition table td).
   If activated all hypothesis will be recombined
-  while decoding regardless of thier stack content.</p>
+  while decoding regardless of their stack content.</p>
 END_MAN
 
 FIELD:   latprn
