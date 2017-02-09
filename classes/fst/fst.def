@@ -732,7 +732,8 @@ COMMENT: Lazy minimization
   only one outgoing transition. Such transition are eliminated if
   the symbols (input, output, phonem, stack) and weight can be shifted
   to the outgoing respectively the ingoing transitions of the
-  the prospected state. The followning two graphs show a example
+  the prospected state. Additionally in unweighted automatons self-loops
+  without any symbols are removed. The followning two graphs show a example
   who this minimization works.</p>
   <object data="../resources/fst/fst_lazymin1.svg" type="image/svg+xml" width="609" height="312"
      alt="UASR system concept" viewastext="viewastext">
