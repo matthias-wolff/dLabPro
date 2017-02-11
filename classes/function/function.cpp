@@ -124,6 +124,7 @@ INT16 CFunction::AutoRegisterWords()
 	REGISTER_OPTION("/inline","",LPMV(m_bInline),LPMF(CFunction,OnInlineSet),"Define an inline function.",0)
 	REGISTER_OPTION("/noerror","",LPMV(m_bNoerror),NULL,"Suppress error messages.",0)
 	REGISTER_OPTION("/nonstop","",LPMV(m_bNonstop),LPMF(CFunction,OnNonstopSet),"Never stop running.",OF_NONAUTOMATIC)
+	REGISTER_OPTION("/stderr","",LPMV(m_bStderr),NULL,"Use standard error stream.",0)
 	REGISTER_OPTION("/stop","",LPMV(m_bStop),LPMF(CFunction,OnStopSet),"Stop at break points and long listings.",OF_NONAUTOMATIC)
 	REGISTER_OPTION("/time","",LPMV(m_bTime),NULL,"Measures and outputs elapsed time to process one line of input.",0)
 	REGISTER_OPTION("/xml","",LPMV(m_bXml),NULL,"(De)serialize from/to XML file.",0)
@@ -383,6 +384,7 @@ INT16 CFunction::ResetAllOptions(BOOL bInit)
 	_this->m_bInline = FALSE;
 	_this->m_bNoerror = FALSE;
 	if (bInit) _this->m_bNonstop = FALSE;
+	_this->m_bStderr = FALSE;
 	if (bInit) _this->m_bStop = FALSE;
 	_this->m_bTime = FALSE;
 	_this->m_bXml = FALSE;

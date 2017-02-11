@@ -62,6 +62,7 @@ function.html function CFunction [
     function.html#opt__inline "/inline" "m_bInline"
     function.html#opt__noerror "/noerror" "m_bNoerror"
     function.html#opt__nonstop "/nonstop" "m_bNonstop"
+    function.html#opt__stderr "/stderr" "m_bStderr"
     function.html#opt__stop "/stop" "m_bStop"
     function.html#opt__time "/time" "m_bTime"
     function.html#opt__xml "/xml" "m_bXml"
@@ -243,6 +244,7 @@ function.html function CFunction [
         top.TC1.InsertItem("/inline","Define an inline function.",29,29,0,"automatic/function.html#opt__inline","CONT",nCls);
         top.TC1.InsertItem("/noerror","Suppress error messages.",29,29,0,"automatic/function.html#opt__noerror","CONT",nCls);
         top.TC1.InsertItem("/nonstop","Never stop running.",29,29,0,"automatic/function.html#opt__nonstop","CONT",nCls);
+        top.TC1.InsertItem("/stderr","Use standard error stream.",29,29,0,"automatic/function.html#opt__stderr","CONT",nCls);
         top.TC1.InsertItem("/stop","Stop at break points and long listings.",29,29,0,"automatic/function.html#opt__stop","CONT",nCls);
         top.TC1.InsertItem("/time","Measures and outputs elapsed time to process one line of input.",29,29,0,"automatic/function.html#opt__time","CONT",nCls);
         top.TC1.InsertItem("/xml","(De)serialize from/to XML file.",29,29,0,"automatic/function.html#opt__xml","CONT",nCls);
@@ -673,6 +675,7 @@ Using <code>CDlpTable</code> for token sequence and source table will save enorm
     <tr><td><a href="#opt__inline"><code class="link">/inline</code></a></td><td> Define an inline function.</td></tr>
     <tr><td><a href="#opt__noerror"><code class="link">/noerror</code></a></td><td> Suppress error messages.</td></tr>
     <tr><td><a href="#opt__nonstop"><code class="link">/nonstop</code></a></td><td> Never stop running.</td></tr>
+    <tr><td><a href="#opt__stderr"><code class="link">/stderr</code></a></td><td> Use standard error stream.</td></tr>
     <tr><td><a href="#opt__stop"><code class="link">/stop</code></a></td><td> Stop at break points and long listings.</td></tr>
     <tr><td><a href="#opt__time"><code class="link">/time</code></a></td><td> Measures and outputs elapsed time to process one line of input.</td></tr>
     <tr><td><a href="#opt__xml"><code class="link">/xml</code></a></td><td> (De)serialize from/to XML file.</td></tr>
@@ -1329,6 +1332,58 @@ Never stop running.
   </div>
   <img src="../resources/blank_stc.gif" height="10">
   </div>
+  <div id="opt__stderr">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td nowrap width="25%" class="navbar"><a 
+        name="opt__stderr"></a>Option <span 
+        class="mid">/stderr</span></td>
+      <td nowrap width="75%" class="navbar" style="text-align:right;">
+        <a class="navbar" href="javascript:__PrintSection('opt__stderr','Class function');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
+  </table>
+  <div class="mframe"><table cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td class="hidden">dLabPro</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Identifier</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code><b>/stderr</b></code></td>
+    </tr>
+    <tr>
+      <td class="hidden" colspan="5">&nbsp;</td>
+    </tr>
+    <tr>
+      <td class="hidden">C/C++</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Member variable</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code>BOOL <b>
+m_bStderr
+</b>;</code></td>
+    </tr>
+  </table></div>
+  <div class="mframe2">
+  <h3>Synopsis</h3>
+  <p>
+Use standard error stream.
+  </p>
+  <h3>Description</h3>
+  <p><a href="#opt__stderr"><code class="link">/stderr</code></a> <b><a href="#mth_-echo"><code class="link">-echo</code></a></b><br>
+  Writes message to standard error stream (rather than to standard output).</p>
+  <!--{{ CUSTOM_DOC -->
+  <!--}} CUSTOM_DOC -->
+  </div>
+  <img src="../resources/blank_stc.gif" height="10">
+  </div>
   <div id="opt__stop">
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
@@ -1599,7 +1654,7 @@ Compress file during serialization.
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">function.def(559)</td>
+      <td class="hidden">function.def(566)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -1664,7 +1719,7 @@ Ignored, to be used for better legibility of UPN code
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">function.def(567)</td>
+      <td class="hidden">function.def(574)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -1797,7 +1852,7 @@ public: INT16 <b>CFunction::Cd</b>(const char* lpsDir);<br>
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fnc_iam.cpp(532)</td>
+      <td class="hidden">fnc_iam.cpp(533)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -2031,7 +2086,7 @@ public: const char* <b>CFunction::Cwd</b>();<br>
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fnc_iam.cpp(541)</td>
+      <td class="hidden">fnc_iam.cpp(542)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -2288,6 +2343,20 @@ sMessage
 			<td class="hidden">&nbsp;</td>
 			<td class="hidden">
 Message to be printed.
+			</td>
+		</tr>
+	</table>
+	<h3>Options</h3>
+	<table>
+		<tr>
+			<td class="hidden">&nbsp;&nbsp;</td>
+			<td class="hidden">
+<a href="#opt__stderr"><code class="link">/stderr</code></a>
+</td>
+			<td class="hidden">&nbsp;</td>
+			<td class="hidden">
+Writes message to standard error stream (rather than to
+standard output)
 			</td>
 		</tr>
 	</table>
@@ -2898,7 +2967,7 @@ Name of source file to be loaded
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">function.def(1246)</td>
+      <td class="hidden">function.def(1253)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -2963,7 +3032,7 @@ public: INT16 <b>CFunction::Prompt</b>(const char* lpsMessage);<br>
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fnc_iam.cpp(485)</td>
+      <td class="hidden">fnc_iam.cpp(486)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -3889,7 +3958,7 @@ public: INT32 <b>CFunction::System</b>(const char* lpsCmd);<br>
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fnc_iam.cpp(557)</td>
+      <td class="hidden">fnc_iam.cpp(558)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -3979,7 +4048,7 @@ The return code of the shell command.
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">function.def(1389)</td>
+      <td class="hidden">function.def(1396)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -4187,7 +4256,7 @@ The numeric type code for <code>typename</code>.
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">function.def(1239)</td>
+      <td class="hidden">function.def(1246)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -4252,7 +4321,7 @@ Returns the dLabPro build identifier.
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">function.def(1281)</td>
+      <td class="hidden">function.def(1288)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -4342,7 +4411,7 @@ public: BOOL <b>CFunction::IsInstance</b>(const char* sInstanceId, const char* s
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fnc_iam.cpp(620)</td>
+      <td class="hidden">fnc_iam.cpp(621)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -4451,7 +4520,7 @@ public: BOOL <b>CFunction::Platform</b>(const char* lpsPlatformId);<br>
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fnc_iam.cpp(567)</td>
+      <td class="hidden">fnc_iam.cpp(568)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -5061,7 +5130,7 @@ Conditional jump (negative control path).
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">function.def(705)</td>
+      <td class="hidden">function.def(712)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -5459,7 +5528,7 @@ Includes a source file.
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">function.def(812)</td>
+      <td class="hidden">function.def(819)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -5650,7 +5719,7 @@ protected: INT16 <b>CFunction::Parent</b>();<br>
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fnc_iam.cpp(500)</td>
+      <td class="hidden">fnc_iam.cpp(501)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -6007,7 +6076,7 @@ protected: INT16 <b>CFunction::This</b>();<br>
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fnc_iam.cpp(520)</td>
+      <td class="hidden">fnc_iam.cpp(521)</td>
     </tr>
   </table></div>
   <div class="mframe2">

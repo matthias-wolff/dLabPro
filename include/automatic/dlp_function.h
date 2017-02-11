@@ -406,6 +406,7 @@ public:
 	BOOL m_bInline;
 	BOOL m_bNoerror;
 	BOOL m_bNonstop;
+	BOOL m_bStderr;
 	BOOL m_bStop;
 	BOOL m_bTime;
 	BOOL m_bXml;

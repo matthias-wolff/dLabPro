@@ -473,9 +473,10 @@ const char* CGEN_PROTECTED CFunction::Argv(INT32 nArg)
  */
 INT16 CGEN_PUBLIC CFunction::Echo(const char* lpsMessage)
 {
-//  char lpsBuf[L_INPUTLINE];
-//  printf("%s",dlp_strconvert(SC_UNESCAPE,lpsBuf,dlp_strcpy(lpsBuf,lpsMessage)));
-  printf("%s",lpsMessage);
+  if (m_bStderr)
+    dlp_error_message(NULL,0,"%s",lpsMessage);
+  else
+    printf("%s",lpsMessage);
   return O_K;
 }
 

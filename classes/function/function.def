@@ -518,6 +518,13 @@ CODE:
   dlp_set_nonstop_mode(TRUE);
 END_CODE
 
+OPTION:  /stderr
+COMMENT: Use standard error stream.
+/html MAN:
+  <p>{@link /stderr} <b>{@link -echo}</b><br>
+  Writes message to standard error stream (rather than to standard output).</p>
+END_MAN
+
 OPTION:  /stop
 COMMENT: Stop at break points and long listings.
 FLAGS:   /nonautomatic
@@ -1443,6 +1450,8 @@ SYNTAX:   (string sMessage)
   "Hello world!" {@link -echo};
   </pre>
   @param sMessage Message to be printed.
+  @cgen:option /stderr Writes message to standard error stream (rather than to 
+  standard output)
 END_MAN
 
 METHOD:   -prompt
