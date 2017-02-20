@@ -931,7 +931,7 @@ INT16 CGEN_PROTECTED CFst_Lazymin(CFst* _this)
     FST_ITYPE nTer=*CFst_STI_TTer(lpTI,lpT);                   /* Terminal state */
     FST_ITYPE nIni=*CFst_STI_TIni(lpTI,lpT);                   /* Initial state */
     /* Ignore empty loops in unweighted automaton */
-    if(lpTI->nOfTW<0 && nIni==nTer){
+    if(lpTI->nOfTW<=0 && nIni==nTer){
       for(nS=0;nS<NS;nS++) if(lpSOf[nS]>=0 && *(FST_STYPE*)(lpT+lpSOf[nS])!=lpSDef[nS]) break;
       if(nS==NS){
         *CFst_STI_TIni(lpTI,lpT)=-1;
