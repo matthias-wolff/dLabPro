@@ -40,7 +40,7 @@ INT16 CGEN_PUBLIC CFst_Stp_checkArgs
 )
 {
 
-  if (idWeights == NULL) return IERROR(_this, FST_EMPTY, "Synchroneous weights array", NULL, NULL);
+  if (idWeights == NULL) return IERROR(_this, FST_EMPTY, "Synchronous weights array", NULL, NULL);
 
   return O_K;
 }
@@ -48,7 +48,7 @@ INT16 CGEN_PUBLIC CFst_Stp_checkArgs
 void CGEN_PRIVATE CFst_Stp_printWLR(FST_WLR_TYPE* lpWLR)
 {
   printf("\n -------------------WLR------------------------");
-  printf("\n id:              %lx", (unsigned long)lpWLR);
+  printf("\n id:              %llx", (UINT64)lpWLR);
   printf("\n weight:          %lf", (double)lpWLR->nWeight);
   printf("\n terminal symbol: %ld", (long)lpWLR->sTerminal);
   printf("\n associated time: %ld", (long)lpWLR->t);

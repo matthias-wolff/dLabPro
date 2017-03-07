@@ -52,7 +52,7 @@ void CGEN_PRIVATE CFst_Cps_HashPrint(CFst* _this)
   hash_scan_begin(&hs,(hash_t*)_this->m_lpCpsHash);
   while ((hn = hash_scan_next(&hs))!=NULL)
   {
-  	nS = (FST_ITYPE)((int)((long)hnode_get(hn)&0xffffffff));
+  	nS = (FST_ITYPE)((int)((UINT64)hnode_get(hn)&0xffffffff));
   	printf("\n   %ld",nS);
   }
   printf("\n -------------------------------------");
@@ -84,7 +84,7 @@ void CGEN_PRIVATE CFst_Cps_HashResolveKey
   BYTE*       lpFlagXY
 )
 {
-  FST_ITYPE nS = (FST_ITYPE)((int)((long)lpKey & 0xffffffff));
+  FST_ITYPE nS = (FST_ITYPE)((int)((UINT64)lpKey & 0xffffffff));
 
   if (nS>=0)
   {
@@ -362,7 +362,7 @@ FST_ITYPE CGEN_PRIVATE CFst_Cps_FindState
 
   lpKey = CFst_Cps_HashMakeTmpKey(_this,nSX,nSY,nFlagXY);
   lpHn  = hash_lookup((hash_t*)_this->m_lpCpsHash,lpKey);
-  nS    = lpHn ? (FST_ITYPE)((int)((long)hnode_get(lpHn)&0xffffffff)) : -1;
+  nS    = lpHn ? (FST_ITYPE)((int)((UINT64)hnode_get(lpHn)&0xffffffff)) : -1;
   IFCHECKEX(2)
     printf("\n       Get [X=%ld, Y=%ld, Flg=%ld]: nS=%ld",(long)nSX,(long)nSY,(long)nFlagXY,(long)nS);
 

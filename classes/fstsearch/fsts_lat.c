@@ -195,7 +195,7 @@ UINT64 fsts_lathash(struct fsts_latres *res,FLOAT64 woff){
   UINT64 hash=0;
   for(;res;res=res->nxt){
     res->w-=woff;
-    hash=((hash<<5)|(hash>>(8*sizeof(UINT64)-5)))^(((unsigned long)res->as)>>5)^((UINT64)res->w);
+    hash=((hash<<5)|(hash>>(8*sizeof(UINT64)-5)))^(((UINT64)res->as)>>5)^((UINT64)res->w);
   }
   return hash;
 }
@@ -259,7 +259,7 @@ const char *fsts_latasprop(struct fsts_latas *as,FLOAT64 w,FLOAT64 wa,struct fst
   INT32 ashch;
   const char *err;
   if(!as) return NULL;
-  ashch=(((unsigned long)as)>>5)&ASHMASK;
+  ashch=(((UINT64)as)>>5)&ASHMASK;
   for(ash1=ash[ashch];ash1 && ash1->as!=as;) ash1=ash1->nxt;
   if(!ash1){
     if(!(ash1=(struct fsts_latash *)fsts_memget(ashmem))) return FSTSERR("out of memory");

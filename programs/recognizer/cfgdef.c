@@ -90,7 +90,8 @@ cache = yes\n\
 #  - Temporary filename of the audio signal\n\
 #  - Temporary filename of the fvr-fst or \"NULL\"\n\
 #  - Filename of the session info object\n\
-#  - Temporary filename of the current configuration (including all tags ignore.* and uasr.*)\n\
+#  - Temporary filename of the current configuration\n\
+#      (including all tags ignore.* and uasr.* and sig.file = current signal file name)\n\
 postproc.cmd = \n\
 \n\
 # Search configuration\n\

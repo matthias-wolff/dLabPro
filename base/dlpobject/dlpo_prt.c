@@ -121,7 +121,7 @@ INT16 CDlpObject_PrintField(CDlpObject* _this, const char* lpsName, BOOL bInline
 #ifdef _MSC_VER
           case T_PTR     : printf("0x%0p",(__int64)*(void**)lpField->lpData); break;
 #else
-          case T_PTR     : printf("0x%0p",(long)*(void**)lpField->lpData); break;
+          case T_PTR     : printf("0x%0p",(UINT64)*(void**)lpField->lpData); break;
 #endif
           case T_INSTANCE:
           {
