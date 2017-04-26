@@ -187,8 +187,9 @@ END_MAN
 
 METHOD:  -synthesize
 SYNTAX:  (INSTANCE(fst) itDst, INSTANCE(fst) itFvr)
-COMMENT: Creates a list of all possible combinations of a FVR
+COMMENT: Creates a FST list of all possible combinations of branches of a FVR
 /html MAN:
+  <p>The collocation of branches be effected with observance that branches with same names are stay in the same order of itFvr.</p>
   @param itDst FST to be filled with the serializations.
   @param itFvr The feature-value relation to synthesize from.
   @return
@@ -218,7 +219,48 @@ COMMENT: Check square bracket parity in the output language of a FVR grammar.
   @see -fsg_normalize
 END_MAN
 
-## -- Generate files --
+METHOD:  -union
+SYNTAX:  (INSTANCE(fst) itDst, INSTANCE(fst) itFvr)
+COMMENT: Combinates two FVRs
+/html MAN:
+  Union of two FVRs
+  @param itDst First FVR and Output.
+  @param itFvr Second FVR.
+  @return
+END_MAN
+
+METHOD:  -adjust
+SYNTAX:  BOOL (INSTANCE(fst) itWom, INSTANCE(fst) itInp)
+COMMENT: Adjust a FVR with a given model of FVR and update both.
+/html MAN:
+  Compare a input FVR <code>itInp</code> with a given world model FVR <code>itWom</code>. 
+  The <code>itWom</code> shouldn't contain values. Values of <code>itInp</code> added to <code>itWom</code>, while the same path exist. 
+  Added paths are delete from <code>itInp</code>.
+  While the path in <code>itInp</code> not exist or is incomplete, it would be added from <code>itWom</code> without a value.
+  @param itWom Worldmodel.
+  @param itInp Input/Given FVR.
+  @return <code>TRUE</code> if both FVRs are identic, <code>FALSE</code> in a case of edit one.
+END_MAN
+
+METHOD:  -compare
+SYNTAX:  BOOL (INSTANCE(fst) itOne, INSTANCE(fst) itTwo, string sOpname)
+COMMENT: Compare two FVR each other.
+/html MAN:
+  @param itOne First FVR.
+  @param itTwo Second FVR.
+  @param sOpname String for option. <code>"ALL"</code> for a complete check (symbol and weight) or <code>"symbol"</code> for only check of symbols. 
+END_MAN
+
+METHOD:  -is_complete
+SYNTAX:  BOOL (int nU, INSTANCE(fst) itFvr)
+COMMENT: Check itFvr is complete. All values are given.
+/html MAN:
+  This function is searched for the feature "INT" in <code>itFvr</code> and checked there is only one more value after this feature. 
+  @param nU    The unit of <code>itFvr</code> to test.
+  @param itFvr The <a href="fst.html" class="code">fst</a> to check.
+  @return <code>TRUE</code> if the unit is complete, <code>FALSE</code> otherwise.
+END_MAN
+
 -cgen
 quit
 
