@@ -510,7 +510,7 @@ INT16 CGEN_PUBLIC CFvrtools_Union(CFvrtools* _this, CFst* itDst, CFst* itFvr)
         lpTrFvr = NULL;                                                         /*  Reset lpTrFvr for next iteration */
         lpTrDst = NULL;                                                         /*  Reset lpTrDst for next iteration */
       }                                                                         /*                                   */
-    }/* while ((lpTrFvr=CFst_STI_TfromS(iSeTrFvr, nIniStFvr, lpTrFvr))!=NULL){*//* End of lpTrFvr for all Fvr-node   */
+    }/* while((lpTrFvr=CFst_STI_TfromS(iSeTrFvr, nIniStFvr, lpTrFvr))!=NULL){*/ /* End of lpTrFvr for all Fvr-node   */
     lpTrFvr = CFst_STI_TtoS(iSeTrFvr, nIniStFvr, NULL);                         /* Take prev edge to ini node of Fvr */
     lpTrDst = CFst_STI_TtoS(iSeTrDst, nIniStDst, NULL);                         /* Take prev edge to ini node of Dst */
     if (lpTrFvr == NULL){                                                       /* is prev edge empty? (root)        */
@@ -636,7 +636,7 @@ BOOL CGEN_PUBLIC CFvrtools_Adjust(CFvrtools* _this, CFst* itWom, CFst* itInp){
           }                                                                     /*                                   */
         }                                                                       /*                                   */
       }                                                                         /*                                   */
-    }// End of while(bSearchFwd && !bAddWom && !bAddInp){                       /*                                   */
+    }/* End of while(bSearchFwd && !bAddWom && !bAddInp){ */                    /*                                   */
     /* Execute add transition and state to itInp */
     if (bAddInp == TRUE){                                                       /* While trans on itWom exist        */
       nRet = FALSE;                                                             /*   FVR changed so not identic      */
@@ -676,12 +676,12 @@ BOOL CGEN_PUBLIC CFvrtools_Adjust(CFvrtools* _this, CFst* itWom, CFst* itInp){
         CFst_Delstate(itInp, 0, nTerStInp);                                     /*     Delete last node              */
         CFst_STI_UnitChanged(iSeTrInp,FSTI_CANY);                               /*     Update iterator               */
       }                                                                         /*                                   */
-      if (CFst_STI_TfromS(iSeTrWom,nIniStWom,NULL)!=lpTrWom) bDelete = FALSE;   /*   Stop delete, other branch exist */
-      if (CFst_STI_TfromS(iSeTrWom,nIniStWom,lpTrWom) != NULL){                 /*   Other branch not visited before */
+      if (CFst_STI_TfromS(iSeTrInp,nIniStInp,NULL)!=lpTrInp) bDelete = FALSE;   /*   Stop delete, other branch exist */
+      if (CFst_STI_TfromS(iSeTrInp,nIniStInp,lpTrInp) != NULL){                 /*   Other branch not visited before */
         bSearchFwd = TRUE; bDelete = FALSE;                                     /*   Stop delete and search forward  */
       }                                                                         /*                                   */
     }                                                                           /*                                   */
-  } // END OF while(!bSearchCompl)                                              /*                                   */
+  } /* END OF while(!bSearchCompl) */                                           /*                                   */
 
   /* Clean-up */                                                                /* --------------------------------- */
 L_EXCEPTION:                                                                    /* : Clean exit label                */
