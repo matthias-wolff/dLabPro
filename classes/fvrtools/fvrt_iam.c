@@ -582,8 +582,8 @@ BOOL CGEN_PUBLIC CFvrtools_Adjust(CFvrtools* _this, CFst* itWom, CFst* itInp){
   nCLsrWom = CData_FindComp(AS(CData,itWom->td),NC_TD_LSR);                     /* Get comp. index of weight         */
   nCLsrInp = CData_FindComp(AS(CData,itInp->td),NC_TD_LSR);                     /* Get comp. index of weight         */
 
-  iSeTrWom    = CFst_STI_Init(itWom,0,FSTI_SORTTER);                            /* find trans. of first itWom        */
-  iSeTrInp    = CFst_STI_Init(itInp,0,FSTI_SORTTER);                            /* find trans. of second itInp       */
+  iSeTrWom = CFst_STI_Init(itWom,0,FSTI_SORTTER);                               /* find trans. of first itWom        */
+  iSeTrInp = CFst_STI_Init(itInp,0,FSTI_SORTTER);                               /* find trans. of second itInp       */
 
   /* Start function */                                                          /* --------------------------------- */
   while(!bSearchCompl){                                                         /* Complete if itWom searched        */
@@ -599,7 +599,8 @@ BOOL CGEN_PUBLIC CFvrtools_Adjust(CFvrtools* _this, CFst* itWom, CFst* itInp){
         nIsWom = *CFst_STI_TTis(iSeTrWom, lpTrWom);                             /*   Get TIS of Wom transition       */
       }                                                                         /*                                   */
       lpTrInp = NULL;                                                           /* Reset lpTrans of itInp            */
-      while ((lpTrInp=CFst_STI_TfromS(iSeTrInp, nIniStInp, lpTrInp)) != NULL && lpTrWom != NULL){  /* For all transition of itInp-node  */
+      while ((lpTrInp=CFst_STI_TfromS(iSeTrInp, nIniStInp, lpTrInp)) != NULL    /* For all transition of itInp-node  */
+          && lpTrWom != NULL){                                                  /*  and lpTrWom exist                */
         nIsInp = *CFst_STI_TTis(iSeTrInp, lpTrInp);                             /* Get input symbol of itInp         */
         if (strcmp(CData_Sfetch(idInpIs,nIsInp,0), CData_Sfetch(idWomIs,nIsWom,0)) == 0){ /* Compare both symbols    */
           nAux = CFst_STI_GetTransId(iSeTrInp, lpTrInp);                        /*   Get transition index of itInp   */
@@ -612,7 +613,6 @@ BOOL CGEN_PUBLIC CFvrtools_Adjust(CFvrtools* _this, CFst* itWom, CFst* itInp){
           break;                                                                /*   Break, only one symbol possible */
         }                                                                       /*                                   */
       }                                                                         /*                                   */
-                                                                                /*                                   */
       if (lpTrWom == NULL && lpTrInp == NULL) bSearchFwd = FALSE;               /* No trans. on both FVR? -->Go Back */
       if (lpTrWom == NULL && lpTrInp != NULL){                                  /* No trans on itWom but on itInp    */
         bAddWom = TRUE;                                                         /*   Add value (transition) to itWom */
@@ -626,20 +626,23 @@ BOOL CGEN_PUBLIC CFvrtools_Adjust(CFvrtools* _this, CFst* itWom, CFst* itInp){
         }                                                                       /*                                   */
       }                                                                         /*                                   */
       else if (lpTrWom != NULL && lpTrInp == NULL){                             /* No trans on itInp but on itWom    */
-        bAddInp = TRUE;                                                         /*   Add transition to itInp         */
-        lpTrAux = NULL;                                                         /*   Reset auxiliary variable        */
         nIsWom = *CFst_STI_TTis(iSeTrWom, lpTrWom);                             /*   Get input symbol of itWom       */
-        while ((lpTrAux=CFst_STI_TfromS(iSeTrInp, nIniStInp, lpTrAux)) != NULL){/*   Check maybe symbol already exist*/
-          nIsInp = *CFst_STI_TTis(iSeTrInp, lpTrAux);                           /*     Get input symbol of itInp     */
-          if (strcmp(CData_Sfetch(idInpIs,nIsInp,0), CData_Sfetch(idWomIs,nIsWom,0)) == 0){/* Compare both symbols   */
-            bAddInp = FALSE;                                                    /*        If exist reset bool        */
+        nRet = FALSE;                                                           /*   FVR changed so not identic      */
+        if (strcmp("INT", CData_Sfetch(idWomIs,nIsWom,0)) != 0){                /*   Must not be "INT"               */
+          bAddInp = TRUE;                                                       /*   Add transition to itInp         */
+          lpTrAux = NULL;                                                       /*   Reset auxiliary variable        */
+          while ((lpTrAux=CFst_STI_TfromS(iSeTrInp, nIniStInp, lpTrAux)) != NULL){/* Check maybe symbol already exist*/
+            nIsInp = *CFst_STI_TTis(iSeTrInp, lpTrAux);                         /*     Get input symbol of itInp     */
+            if (strcmp(CData_Sfetch(idInpIs,nIsInp,0), CData_Sfetch(idWomIs,nIsWom,0)) == 0){/* Compare both symbols */
+              bAddInp = FALSE;                                                  /*        If exist reset bool        */
+              nRet = TRUE;                                                      /*        ... and return value       */
+            }                                                                   /*                                   */
           }                                                                     /*                                   */
         }                                                                       /*                                   */
       }                                                                         /*                                   */
     }/* End of while(bSearchFwd && !bAddWom && !bAddInp){ */                    /*                                   */
     /* Execute add transition and state to itInp */
     if (bAddInp == TRUE){                                                       /* While trans on itWom exist        */
-      nRet = FALSE;                                                             /*   FVR changed so not identic      */
       nTerStInp = CFst_Addstates(itInp,0,1,0);                                  /*   Add one node to itInp           */
       nAux = CFst_Addtrans(itInp, 0, nIniStInp, nTerStInp);                     /*   Add transition to this node     */
       nIsWom = *CFst_STI_TTis(iSeTrWom, lpTrWom);                               /*   Get input symbol of itWom       */
@@ -675,6 +678,7 @@ BOOL CGEN_PUBLIC CFvrtools_Adjust(CFvrtools* _this, CFst* itWom, CFst* itInp){
         CFst_Deltrans(itInp,0,CFst_STI_GetTransId(iSeTrInp, lpTrInp));          /*     Delete last transition        */
         CFst_Delstate(itInp, 0, nTerStInp);                                     /*     Delete last node              */
         CFst_STI_UnitChanged(iSeTrInp,FSTI_CANY);                               /*     Update iterator               */
+        lpTrInp = NULL;                                                         /*     lpTrInp not more exist        */
       }                                                                         /*                                   */
       if (CFst_STI_TfromS(iSeTrInp,nIniStInp,NULL)!=lpTrInp) bDelete = FALSE;   /*   Stop delete, other branch exist */
       if (CFst_STI_TfromS(iSeTrInp,nIniStInp,lpTrInp) != NULL){                 /*   Other branch not visited before */
