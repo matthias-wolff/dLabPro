@@ -61,10 +61,14 @@ BOOL CGEN_PROTECTED CFvrtools_ParseFsgCheck(CFvrtools* _this, CFst* itFsg, FST_I
   FST_STYPE     nOsBc     = -1;                                                 /* Symbol index of closing brace     */
   FST_ITYPE     nBrace    = (FST_ITYPE)CData_Dfetch(idVal,nMyIniState,0);       /* Counter for braces                */
   FST_ITYPE     nState    = -1;                                                 /* Next state                        */
+  FST_ITYPE     nCNamFsg  = NULL;                                               /* comp. index of name               */
+  CData*        idSdFsg   = NULL;                                               /* Input symbol table of Fsg         */
   CData*        idState   = NULL;                                               /* Data for state Excerpt error      */
   ICREATEEX(CData,idState,"CFvrtools_Synthesize~idState",NULL);                 /*                                   */
   CData_AddComp(idState,"Sta",T_INT);                                           /*                                   */
   CData_Allocate(idState,1);                                                    /* Allocate memory for               */
+  idSdFsg = AS(CData,itFsg->sd);                                                /* InputSymbol table of itFsg        */
+  nCNamFsg = CData_FindComp(idSdFsg,"~NAM");                                    /* Get comp. index of name           */
   
   nOsBo = CFvrtools_FindOs("[",FALSE,itFsg);                                    /* Find opening brace symbol         */
   nOsBc = CFvrtools_FindOs("]",FALSE,itFsg);                                    /* Find closing brace symbol         */
@@ -81,6 +85,7 @@ BOOL CGEN_PROTECTED CFvrtools_ParseFsgCheck(CFvrtools* _this, CFst* itFsg, FST_I
     if (CData_Dfetch(idVal,nState,1) == TRUE){                                  /* Check is already visited          */
       if ((FST_ITYPE)CData_Dfetch(idVal,nState,0) != nBrace){                   /*   ...Check is count of brace same */
         printf("\n ERROR: Wrong count of brace on State: %d", nMyIniState);     /* Error Message                     */
+        CData_Sstore(idSdFsg,"BRACE ERROR",nMyIniState,nCNamFsg);               /* Mark node with wrong parity       */
         goto FALSE_RENDER_AND_RETURN;                                           /* Clean exit with false return      */
       }
       if (CFst_STI_TfromS(lpTI,nMyIniState,lpT)==NULL){                         /*   ...and no more transitions left */
@@ -98,7 +103,7 @@ BOOL CGEN_PROTECTED CFvrtools_ParseFsgCheck(CFvrtools* _this, CFst* itFsg, FST_I
         bRet = CFvrtools_ParseFsgCheck(_this, itFsg, nState, idVal);            /* Is no selfloop start recursion    */
       }
       if (!bRet){                                                               /* Check wrong return                */
-        printf("\n |-> ERROR: Backtracking closing state %d", nMyIniState);     /* Error Message                     */
+        /* printf("\n |-> ERROR: Backtracking closing state %d", nMyIniState);     Error Message                     */
         goto FALSE_RETURN;                                                      /* Clean exit with false return      */
       }                                                                         /*                                   */
     }                                                                           /*                                   */
