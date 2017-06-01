@@ -144,6 +144,16 @@ COMMENT: Determines if the argument is an FVR
   @return <code>TRUE</code> if the unit is a FVR, <code>FALSE</code> otherwise.
 END_MAN
 
+METHOD:  -is_complete
+SYNTAX:  BOOL (int nU, INSTANCE(fst) itFvr)
+COMMENT: Check itFvr is complete. All values are given.
+/html MAN:
+  This function is searched for the feature "INT" in <code>itFvr</code> and checked there is only one more value after this feature. 
+  @param nU    The unit of <code>itFvr</code> to test.
+  @param itFvr The <a href="fst.html" class="code">fst</a> to check.
+  @return <code>TRUE</code> if the unit is complete, <code>FALSE</code> otherwise.
+END_MAN
+
 METHOD:  -from_string
 SYNTAX:  (string src, INSTANCE(fst) itFvr)
 COMMENT: Creates a (weighted) FVR from a string representation
@@ -242,23 +252,14 @@ COMMENT: Adjust a FVR with a given model of FVR and update both.
   @return <code>TRUE</code> if both FVRs are identic, <code>FALSE</code> in a case of edit one.
 END_MAN
 
-METHOD:  -compare
-SYNTAX:  BOOL (INSTANCE(fst) itOne, INSTANCE(fst) itTwo, string sOpname)
-COMMENT: Compare two FVR each other.
+METHOD:  -compare_with_model
+SYNTAX:  double (INSTANCE(fst) itWom, INSTANCE(fst) itInp)
+COMMENT: Compare two FVRs each other.
 /html MAN:
-  @param itOne First FVR.
-  @param itTwo Second FVR.
-  @param sOpname String for option. <code>"ALL"</code> for a complete check (symbol and weight) or <code>"symbol"</code> for only check of symbols. 
-END_MAN
-
-METHOD:  -is_complete
-SYNTAX:  BOOL (int nU, INSTANCE(fst) itFvr)
-COMMENT: Check itFvr is complete. All values are given.
-/html MAN:
-  This function is searched for the feature "INT" in <code>itFvr</code> and checked there is only one more value after this feature. 
-  @param nU    The unit of <code>itFvr</code> to test.
-  @param itFvr The <a href="fst.html" class="code">fst</a> to check.
-  @return <code>TRUE</code> if the unit is complete, <code>FALSE</code> otherwise.
+  One input FVR are checked with a world model FVR. The return value is the percent congruence of the input to the world model.
+  The feature "INT" are not consider. This features marks the point of a value in a FVR.
+  @param itWom World Model FVR.
+  @param itInp FVR input. 
 END_MAN
 
 -cgen
