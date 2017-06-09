@@ -103,12 +103,16 @@ public:
 #ifndef __NOITP
 public:
 /*{{CGEN_PMIC */
+	INT16 OnAdjust();
+	INT16 OnCompare();
 	INT16 OnFromFst();
 	INT16 OnFromString();
 	INT16 OnFsgFvrCheck();
 	INT16 OnFsgNormalize();
+	INT16 OnIsComplete();
 	INT16 OnIsFvr();
 	INT16 OnSynthesize();
+	INT16 OnUnion();
 /*}}CGEN_PMIC */
 #endif /* #ifndef __NOITP */
 
@@ -132,9 +136,13 @@ public:
 
 /* Taken from 'fvrt_iam.c' */
 	public: BOOL IsFvr(INT32 nU, CFst* itFvr);
+	public: BOOL IsComplete(INT32 nU, CFst* itFvr);
 	public: INT16 FromString(const char* lpsSrc, CFst* itFvr);
 	public: INT16 FromFst(CFst* itSeq, CFst* itFvr);
 	public: INT16 Synthesize(CFst* itDst, CFst* itFvr);
+	public: INT16 Union(CFst* itDst, CFst* itFvr);
+	public: BOOL Adjust(CFst* itWom, CFst* itInp);
+	public: BOOL Compare(CFst* itFvrOne, CFst* itFvrTwo, const char* sOpname);
 
 /* Taken from 'fvrt_compile.c' */
 	protected: static FST_STYPE FindIs(const char* lpsStr, BOOL bAdd, CFst* itFst);
@@ -206,12 +214,16 @@ INT16 CFvrtools_ResetAllOptions(CDlpObject*, BOOL bInit);
 /* THEY MAY INTERFERE WITH THE INTERPRETER SESSION */
 #ifndef __NOITP
 /*{{CGEN_CPMIC */
+INT16 CFvrtools_OnAdjust(CDlpObject*);
+INT16 CFvrtools_OnCompare(CDlpObject*);
 INT16 CFvrtools_OnFromFst(CDlpObject*);
 INT16 CFvrtools_OnFromString(CDlpObject*);
 INT16 CFvrtools_OnFsgFvrCheck(CDlpObject*);
 INT16 CFvrtools_OnFsgNormalize(CDlpObject*);
+INT16 CFvrtools_OnIsComplete(CDlpObject*);
 INT16 CFvrtools_OnIsFvr(CDlpObject*);
 INT16 CFvrtools_OnSynthesize(CDlpObject*);
+INT16 CFvrtools_OnUnion(CDlpObject*);
 /*}}CGEN_CPMIC */
 #endif /* #ifndef __NOITP */
 
@@ -232,9 +244,13 @@ INT16 CFvrtools_OnSynthesize(CDlpObject*);
 
 /* Taken from 'fvrt_iam.c' */
 BOOL CFvrtools_IsFvr(CFvrtools*, INT32 nU, CFst* itFvr);
+BOOL CFvrtools_IsComplete(CFvrtools*, INT32 nU, CFst* itFvr);
 INT16 CFvrtools_FromString(CFvrtools*, const char* lpsSrc, CFst* itFvr);
 INT16 CFvrtools_FromFst(CFvrtools*, CFst* itSeq, CFst* itFvr);
 INT16 CFvrtools_Synthesize(CFvrtools*, CFst* itDst, CFst* itFvr);
+INT16 CFvrtools_Union(CFvrtools*, CFst* itDst, CFst* itFvr);
+BOOL CFvrtools_Adjust(CFvrtools*, CFst* itWom, CFst* itInp);
+BOOL CFvrtools_Compare(CFvrtools*, CFst* itFvrOne, CFst* itFvrTwo, const char* sOpname);
 
 /* Taken from 'fvrt_compile.c' */
 FST_STYPE CFvrtools_FindIs(const char* lpsStr, BOOL bAdd, CFst* itFst);

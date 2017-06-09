@@ -187,7 +187,7 @@ INT16 CGEN_PROTECTED CFunction::IncludeEx
     dlp_splitpath(lpsCurrFn,lpsDir,NULL);                                       //   Get directory of current file
     sprintf(lpsPath,"%s%c%s",lpsDir,C_DIR,lpsFilename);                         //   Make relative path to include
     if (!dlp_fullpath(lpsInclFn,lpsPath,L_PATH))                                //   Try converting to abs. path
-      return IERROR(this,ERR_FILEOPEN,lpsInclFn,"reading",0);                 //     Failed: error message
+      return IERROR(this,ERR_FILEOPEN,lpsFilename,"reading",0);                 //     Failed: error message
   }                                                                             // <<
 
   // Validate                                                                   // ------------------------------------

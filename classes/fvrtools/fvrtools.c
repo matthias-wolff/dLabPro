@@ -111,12 +111,16 @@ INT16 CFvrtools_AutoRegisterWords(CDlpObject* __this)
 	/*{{CGEN_REGISTERWORDS */
 
 	/* Register methods */
+	REGISTER_METHOD("-adjust","",LPMF(CFvrtools,OnAdjust),"Adjust a FVR with a given model of FVR and update both.",0,"<fst itWom> <fst itInp> <fvrtools this>","")
+	REGISTER_METHOD("-compare","",LPMF(CFvrtools,OnCompare),"Compare two FVR each other.",0,"<fst itOne> <fst itTwo> <string sOpname> <fvrtools this>","")
 	REGISTER_METHOD("-from_fst","",LPMF(CFvrtools,OnFromFst),"Creates a (weighted) FVR from an FST containing a single path.",0,"<fst itSeq> <fst itFvr> <fvrtools this>","")
 	REGISTER_METHOD("-from_string","",LPMF(CFvrtools,OnFromString),"Creates a (weighted) FVR from a string representation",0,"<string src> <fst itFvr> <fvrtools this>","")
 	REGISTER_METHOD("-fsg_fvr_check","",LPMF(CFvrtools,OnFsgFvrCheck),"Check square bracket parity in the output language of a FVR grammar.",0,"<fst itFsg> <fst itErr> <fvrtools this>","")
 	REGISTER_METHOD("-fsg_normalize","",LPMF(CFvrtools,OnFsgNormalize),"...",0,"<fst itFsgSrc> <fst itFsgDst> <fvrtools this>","")
+	REGISTER_METHOD("-is_complete","",LPMF(CFvrtools,OnIsComplete),"Check itFvr is complete. All values are given.",0,"<int nU> <fst itFvr> <fvrtools this>","")
 	REGISTER_METHOD("-is_fvr","",LPMF(CFvrtools,OnIsFvr),"Determines if the argument is an FVR",0,"<int nU> <fst itFvr> <fvrtools this>","")
-	REGISTER_METHOD("-synthesize","",LPMF(CFvrtools,OnSynthesize),"Creates a list of all possible combinations of a FVR",0,"<fst itDst> <fst itFvr> <fvrtools this>","")
+	REGISTER_METHOD("-synthesize","",LPMF(CFvrtools,OnSynthesize),"Creates a FST list of all possible combinations of branches of a FVR",0,"<fst itDst> <fst itFvr> <fvrtools this>","")
+	REGISTER_METHOD("-union","",LPMF(CFvrtools,OnUnion),"Combinates two FVRs",0,"<fst itDst> <fst itFvr> <fvrtools this>","")
 
 	/* Register errors */
 	REGISTER_ERROR("~e1_0_0__1",EL_ERROR,FVRT_SEQSYNTAX,"FVR string or sequence syntax error (%s)")
@@ -328,6 +332,44 @@ INT16 CFvrtools_ResetAllOptions(CDlpObject* __this, BOOL bInit)
 
 #ifndef __NOITP
 /*{{CGEN_CPMIC */
+INT16 CFvrtools_OnAdjust(CDlpObject* __this)
+/* DO NOT CALL THIS FUNCTION FROM C++ SCOPE.     */
+/* IT MAY INTERFERE WITH THE INTERPRETER SESSION */
+{
+	INT16 __nErr    = O_K;
+	INT32  __nErrCnt = 0;
+	fst* itWom;
+	fst* itInp;
+	GET_THIS_VIRTUAL_RV(CFvrtools,NOT_EXEC);
+	MIC_CHECK;
+	__nErrCnt = CDlpObject_GetErrorCount();
+	itInp = MIC_GET_I_EX(itInp,fst,1,1);
+	itWom = MIC_GET_I_EX(itWom,fst,2,2);
+	if (CDlpObject_GetErrorCount()>__nErrCnt) return NOT_EXEC;
+	MIC_PUT_B(CFvrtools_Adjust(_this, itWom, itInp));
+	return __nErr;
+}
+
+INT16 CFvrtools_OnCompare(CDlpObject* __this)
+/* DO NOT CALL THIS FUNCTION FROM C++ SCOPE.     */
+/* IT MAY INTERFERE WITH THE INTERPRETER SESSION */
+{
+	INT16 __nErr    = O_K;
+	INT32  __nErrCnt = 0;
+	fst* itOne;
+	fst* itTwo;
+	char* sOpname;
+	GET_THIS_VIRTUAL_RV(CFvrtools,NOT_EXEC);
+	MIC_CHECK;
+	__nErrCnt = CDlpObject_GetErrorCount();
+	sOpname = MIC_GET_S(1,0);
+	itTwo = MIC_GET_I_EX(itTwo,fst,2,1);
+	itOne = MIC_GET_I_EX(itOne,fst,3,2);
+	if (CDlpObject_GetErrorCount()>__nErrCnt) return NOT_EXEC;
+	MIC_PUT_B(CFvrtools_Compare(_this, itOne, itTwo, sOpname));
+	return __nErr;
+}
+
 INT16 CFvrtools_OnFromFst(CDlpObject* __this)
 /* DO NOT CALL THIS FUNCTION FROM C++ SCOPE.     */
 /* IT MAY INTERFERE WITH THE INTERPRETER SESSION */
@@ -400,6 +442,24 @@ INT16 CFvrtools_OnFsgNormalize(CDlpObject* __this)
 	return __nErr;
 }
 
+INT16 CFvrtools_OnIsComplete(CDlpObject* __this)
+/* DO NOT CALL THIS FUNCTION FROM C++ SCOPE.     */
+/* IT MAY INTERFERE WITH THE INTERPRETER SESSION */
+{
+	INT16 __nErr    = O_K;
+	INT32  __nErrCnt = 0;
+	INT32 nU;
+	fst* itFvr;
+	GET_THIS_VIRTUAL_RV(CFvrtools,NOT_EXEC);
+	MIC_CHECK;
+	__nErrCnt = CDlpObject_GetErrorCount();
+	itFvr = MIC_GET_I_EX(itFvr,fst,1,1);
+	nU = (INT32)MIC_GET_N(2,0);
+	if (CDlpObject_GetErrorCount()>__nErrCnt) return NOT_EXEC;
+	MIC_PUT_B(CFvrtools_IsComplete(_this, nU, itFvr));
+	return __nErr;
+}
+
 INT16 CFvrtools_OnIsFvr(CDlpObject* __this)
 /* DO NOT CALL THIS FUNCTION FROM C++ SCOPE.     */
 /* IT MAY INTERFERE WITH THE INTERPRETER SESSION */
@@ -433,6 +493,24 @@ INT16 CFvrtools_OnSynthesize(CDlpObject* __this)
 	itDst = MIC_GET_I_EX(itDst,fst,2,2);
 	if (CDlpObject_GetErrorCount()>__nErrCnt) return NOT_EXEC;
 	__nErr = CFvrtools_Synthesize(_this, itDst, itFvr);
+	return __nErr;
+}
+
+INT16 CFvrtools_OnUnion(CDlpObject* __this)
+/* DO NOT CALL THIS FUNCTION FROM C++ SCOPE.     */
+/* IT MAY INTERFERE WITH THE INTERPRETER SESSION */
+{
+	INT16 __nErr    = O_K;
+	INT32  __nErrCnt = 0;
+	fst* itDst;
+	fst* itFvr;
+	GET_THIS_VIRTUAL_RV(CFvrtools,NOT_EXEC);
+	MIC_CHECK;
+	__nErrCnt = CDlpObject_GetErrorCount();
+	itFvr = MIC_GET_I_EX(itFvr,fst,1,1);
+	itDst = MIC_GET_I_EX(itDst,fst,2,2);
+	if (CDlpObject_GetErrorCount()>__nErrCnt) return NOT_EXEC;
+	__nErr = CFvrtools_Union(_this, itDst, itFvr);
 	return __nErr;
 }
 
@@ -550,6 +628,20 @@ INT16 CFvrtools::ResetAllOptions(BOOL bInit)
 
 #ifndef __NOITP
 /*{{CGEN_PMIC */
+INT16 CFvrtools::OnAdjust()
+/* DO NOT CALL THIS FUNCTION FROM C++ SCOPE.     */
+/* IT MAY INTERFERE WITH THE INTERPRETER SESSION */
+{
+	return CFvrtools_OnAdjust(this);
+}
+
+INT16 CFvrtools::OnCompare()
+/* DO NOT CALL THIS FUNCTION FROM C++ SCOPE.     */
+/* IT MAY INTERFERE WITH THE INTERPRETER SESSION */
+{
+	return CFvrtools_OnCompare(this);
+}
+
 INT16 CFvrtools::OnFromFst()
 /* DO NOT CALL THIS FUNCTION FROM C++ SCOPE.     */
 /* IT MAY INTERFERE WITH THE INTERPRETER SESSION */
@@ -578,6 +670,13 @@ INT16 CFvrtools::OnFsgNormalize()
 	return CFvrtools_OnFsgNormalize(this);
 }
 
+INT16 CFvrtools::OnIsComplete()
+/* DO NOT CALL THIS FUNCTION FROM C++ SCOPE.     */
+/* IT MAY INTERFERE WITH THE INTERPRETER SESSION */
+{
+	return CFvrtools_OnIsComplete(this);
+}
+
 INT16 CFvrtools::OnIsFvr()
 /* DO NOT CALL THIS FUNCTION FROM C++ SCOPE.     */
 /* IT MAY INTERFERE WITH THE INTERPRETER SESSION */
@@ -590,6 +689,13 @@ INT16 CFvrtools::OnSynthesize()
 /* IT MAY INTERFERE WITH THE INTERPRETER SESSION */
 {
 	return CFvrtools_OnSynthesize(this);
+}
+
+INT16 CFvrtools::OnUnion()
+/* DO NOT CALL THIS FUNCTION FROM C++ SCOPE.     */
+/* IT MAY INTERFERE WITH THE INTERPRETER SESSION */
+{
+	return CFvrtools_OnUnion(this);
 }
 
 /*}}CGEN_PMIC */
@@ -610,6 +716,11 @@ BOOL CFvrtools::IsFvr(INT32 nU, CFst* itFvr)
 	return CFvrtools_IsFvr(this, nU, itFvr);
 }
 
+BOOL CFvrtools::IsComplete(INT32 nU, CFst* itFvr)
+{
+	return CFvrtools_IsComplete(this, nU, itFvr);
+}
+
 INT16 CFvrtools::FromString(const char* lpsSrc, CFst* itFvr)
 {
 	return CFvrtools_FromString(this, lpsSrc, itFvr);
@@ -623,6 +734,21 @@ INT16 CFvrtools::FromFst(CFst* itSeq, CFst* itFvr)
 INT16 CFvrtools::Synthesize(CFst* itDst, CFst* itFvr)
 {
 	return CFvrtools_Synthesize(this, itDst, itFvr);
+}
+
+INT16 CFvrtools::Union(CFst* itDst, CFst* itFvr)
+{
+	return CFvrtools_Union(this, itDst, itFvr);
+}
+
+BOOL CFvrtools::Adjust(CFst* itWom, CFst* itInp)
+{
+	return CFvrtools_Adjust(this, itWom, itInp);
+}
+
+BOOL CFvrtools::Compare(CFst* itFvrOne, CFst* itFvrTwo, const char* sOpname)
+{
+	return CFvrtools_Compare(this, itFvrOne, itFvrTwo, sOpname);
 }
 
 FST_STYPE CFvrtools::FindIs(const char* lpsStr, BOOL bAdd, CFst* itFst)
