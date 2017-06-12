@@ -52,7 +52,7 @@
 fvrtools.html fvrtools CFvrtools [
   fvrtools.html#mth Methods - [
     fvrtools.html#mth_-adjust "-adjust" "-adjust"
-    fvrtools.html#mth_-compare "-compare" "-compare"
+    fvrtools.html#mth_-compare_with_model "-compare_with_model" "-compare_with_model"
     fvrtools.html#mth_-from_fst "-from_fst" "-from_fst"
     fvrtools.html#mth_-from_string "-from_string" "-from_string"
     fvrtools.html#mth_-fsg_fvr_check "-fsg_fvr_check" "-fsg_fvr_check"
@@ -82,7 +82,7 @@ fvrtools.html fvrtools CFvrtools [
 }} END_SITEMAP
 //{{ BEGIN_TOC
         top.TC1.InsertItem("-adjust","&lt;fst itWom&gt; &lt;fst itInp&gt; &lt;fvrtools this&gt; -adjust     Adjust a FVR with a given model of FVR and update both.",27,27,0,"automatic/fvrtools.html#mth_-adjust","CONT",nCls);
-        top.TC1.InsertItem("-compare","&lt;fst itOne&gt; &lt;fst itTwo&gt; &lt;string sOpname&gt; &lt;fvrtools this&gt; -compare     Compare two FVR each other.",27,27,0,"automatic/fvrtools.html#mth_-compare","CONT",nCls);
+        top.TC1.InsertItem("-compare_with_model","&lt;fst itWom&gt; &lt;fst itInp&gt; &lt;fvrtools this&gt; -compare_with_model     Compare two FVRs each other.",27,27,0,"automatic/fvrtools.html#mth_-compare_with_model","CONT",nCls);
         top.TC1.InsertItem("-from_fst","&lt;fst itSeq&gt; &lt;fst itFvr&gt; &lt;fvrtools this&gt; -from_fst     Creates a (weighted) FVR from an FST containing a single path.",27,27,0,"automatic/fvrtools.html#mth_-from_fst","CONT",nCls);
         top.TC1.InsertItem("-from_string","&lt;string src&gt; &lt;fst itFvr&gt; &lt;fvrtools this&gt; -from_string     Creates a (weighted) FVR from a string representation",27,27,0,"automatic/fvrtools.html#mth_-from_string","CONT",nCls);
         top.TC1.InsertItem("-fsg_fvr_check","&lt;fst itFsg&gt; &lt;fst itErr&gt; &lt;fvrtools this&gt; -fsg_fvr_check     Check square bracket parity in the output language of a FVR grammar.",27,27,0,"automatic/fvrtools.html#mth_-fsg_fvr_check","CONT",nCls);
@@ -288,7 +288,7 @@ FST-based feature-value relation processing tools
       </td>
     </tr>
     <tr><td><a href="#mth_-adjust"><code class="link">-adjust</code></a></td><td><code>&lt;fst itWom&gt; &lt;fst itInp&gt; &lt;fvrtools this&gt; <b>-adjust</b> </code><br> Adjust a FVR with a given model of FVR and update both.</td></tr>
-    <tr><td><a href="#mth_-compare"><code class="link">-compare</code></a></td><td><code>&lt;fst itOne&gt; &lt;fst itTwo&gt; &lt;string sOpname&gt; &lt;fvrtools this&gt; <b>-compare</b> </code><br> Compare two FVR each other.</td></tr>
+    <tr><td><a href="#mth_-compare_with_model"><code class="link">-compare_with_model</code></a></td><td><code>&lt;fst itWom&gt; &lt;fst itInp&gt; &lt;fvrtools this&gt; <b>-compare_with_model</b> </code><br> Compare two FVRs each other.</td></tr>
     <tr><td><a href="#mth_-from_fst"><code class="link">-from_fst</code></a></td><td><code>&lt;fst itSeq&gt; &lt;fst itFvr&gt; &lt;fvrtools this&gt; <b>-from_fst</b> </code><br> Creates a (weighted) FVR from an FST containing a single path.</td></tr>
     <tr><td><a href="#mth_-from_string"><code class="link">-from_string</code></a></td><td><code>&lt;string src&gt; &lt;fst itFvr&gt; &lt;fvrtools this&gt; <b>-from_string</b> </code><br> Creates a (weighted) FVR from a string representation</td></tr>
     <tr><td><a href="#mth_-fsg_fvr_check"><code class="link">-fsg_fvr_check</code></a></td><td><code>&lt;fst itFsg&gt; &lt;fst itErr&gt; &lt;fvrtools this&gt; <b>-fsg_fvr_check</b> </code><br> Check square bracket parity in the output language of a FVR grammar.</td></tr>
@@ -397,7 +397,7 @@ BOOL <b>CFvrtools_Adjust</b>(CFvrtools _this, CFst* itWom, CFst* itInp);<br>publ
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fvrt_iam.c(535)</td>
+      <td class="hidden">fvrt_iam.c(538)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -442,14 +442,14 @@ Input/Given FVR.
   </div>
   <img src="../resources/blank_stc.gif" height="10">
   </div>
-  <div id="mth_-compare">
+  <div id="mth_-compare_with_model">
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="mth_-compare"></a>Method <span 
-        class="mid">-compare</span></td>
+        name="mth_-compare_with_model"></a>Method <span 
+        class="mid">-compare_with_model</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
-        <a class="navbar" href="javascript:__PrintSection('mth_-compare','Class fvrtools');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
+        <a class="navbar" href="javascript:__PrintSection('mth_-compare_with_model','Class fvrtools');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
         <a class="navbar" href="../home.html">Home</a>
         <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
@@ -466,7 +466,7 @@ Input/Given FVR.
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Identifier</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden"><code><b>-compare</b></code></td>
+      <td class="hidden"><code><b>-compare_with_model</b></code></td>
     </tr>
     <tr>
       <td class="hidden">&nbsp;</td>
@@ -474,7 +474,7 @@ Input/Given FVR.
       <td class="hidden">Syntax</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden"><code>
-&lt;fst itOne&gt; &lt;fst itTwo&gt; &lt;string sOpname&gt; &lt;fvrtools this&gt; <b>-compare</b> 
+&lt;fst itWom&gt; &lt;fst itInp&gt; &lt;fvrtools this&gt; <b>-compare_with_model</b> 
 </code></td>
     </tr>
     <tr>
@@ -486,7 +486,7 @@ Input/Given FVR.
       <td class="hidden">Member function</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden"><code>
-BOOL <b>CFvrtools_Compare</b>(CFvrtools _this, CFst* itFvrOne, CFst* itFvrTwo, const char* sOpname);<br>public: BOOL <b>CFvrtools::Compare</b>(CFst* itFvrOne, CFst* itFvrTwo, const char* sOpname);<br>
+FLOAT64 <b>CFvrtools_CompareWithModel</b>(CFvrtools _this, CFst* itWom, CFst* itInp);<br>public: FLOAT64 <b>CFvrtools::CompareWithModel</b>(CFst* itWom, CFst* itInp);<br>
 </code></td>
     </tr>
     <tr>
@@ -494,45 +494,37 @@ BOOL <b>CFvrtools_Compare</b>(CFvrtools _this, CFst* itFvrOne, CFst* itFvrTwo, c
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fvrt_iam.c(700)</td>
+      <td class="hidden">fvrt_iam.c(703)</td>
     </tr>
   </table></div>
   <div class="mframe2">
   <h3>Synopsis</h3>
   <p>
-Compare two FVR each other.
+Compare two FVRs each other.
   </p>
   <h3>Description</h3>
+  One input FVR are checked with a world model FVR. The return value is the percent congruence of the input to the world model.
+  The feature "INT" are not consider. This features marks the point of a value in a FVR.
 	<h3>Parameters</h3>
 	<table>
 		<tr>
 			<td class="hidden">&nbsp;&nbsp;</td>
 			<td class="hidden"><b><code>
-itOne
+itWom
 </code></b></td>
 			<td class="hidden">&nbsp;</td>
 			<td class="hidden">
-First FVR.
+World Model FVR.
 			</td>
 		</tr>
 		<tr>
 			<td class="hidden">&nbsp;&nbsp;</td>
 			<td class="hidden"><b><code>
-itTwo
+itInp
 </code></b></td>
 			<td class="hidden">&nbsp;</td>
 			<td class="hidden">
-Second FVR.
-			</td>
-		</tr>
-		<tr>
-			<td class="hidden">&nbsp;&nbsp;</td>
-			<td class="hidden"><b><code>
-sOpname
-</code></b></td>
-			<td class="hidden">&nbsp;</td>
-			<td class="hidden">
-String for option. <code>"ALL"</code> for a complete check (symbol and weight) or <code>"symbol"</code> for only check of symbols.
+FVR input.
 			</td>
 		</tr>
 	</table>
@@ -593,7 +585,7 @@ INT16 <b>CFvrtools_FromFst</b>(CFvrtools _this, CFst* itSeq, CFst* itFvr);<br>pu
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fvrt_iam.c(144)</td>
+      <td class="hidden">fvrt_iam.c(147)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -702,7 +694,7 @@ INT16 <b>CFvrtools_FromString</b>(CFvrtools _this, const char* lpsSrc, CFst* itF
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fvrt_iam.c(123)</td>
+      <td class="hidden">fvrt_iam.c(126)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -1181,7 +1173,7 @@ INT16 <b>CFvrtools_Synthesize</b>(CFvrtools _this, CFst* itDst, CFst* itFvr);<br
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fvrt_iam.c(166)</td>
+      <td class="hidden">fvrt_iam.c(169)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -1275,7 +1267,7 @@ INT16 <b>CFvrtools_Union</b>(CFvrtools _this, CFst* itDst, CFst* itFvr);<br>publ
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fvrt_iam.c(437)</td>
+      <td class="hidden">fvrt_iam.c(440)</td>
     </tr>
   </table></div>
   <div class="mframe2">
