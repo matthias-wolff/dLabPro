@@ -172,7 +172,7 @@ INT16 CGEN_PROTECTED CFunction::ArgCommit()
           IFCHECKEX(2) printf(" S \"%s\"",iCaller->m_aStack[0].val.s);          //         Protocol (verbose level 2)
           break;                                                                //         .
         case T_INSTANCE:                                                        //       Instance
-          iArgVar->Iset(iCaller->m_aStack[0].val.i);                            //         Set variable
+          iArgVar->Iset(iCaller->StackInstance(0,nArg));                        //         Set variable
           IFCHECKEX(2)                                                          //         On verbose level 2
             printf(" I %s",CDlpObject_GetFQName(iCaller->m_aStack[0].val.i,     //           Protocol
               dlp_get_a_buffer(),FALSE));                                       //           |

@@ -112,7 +112,7 @@ INT16 CFvrtools_AutoRegisterWords(CDlpObject* __this)
 
 	/* Register methods */
 	REGISTER_METHOD("-adjust","",LPMF(CFvrtools,OnAdjust),"Adjust a FVR with a given model of FVR and update both.",0,"<fst itWom> <fst itInp> <fvrtools this>","")
-	REGISTER_METHOD("-compare","",LPMF(CFvrtools,OnCompare),"Compare two FVR each other.",0,"<fst itOne> <fst itTwo> <string sOpname> <fvrtools this>","")
+	REGISTER_METHOD("-compare_with_model","",LPMF(CFvrtools,OnCompareWithModel),"Compare two FVRs each other.",0,"<fst itWom> <fst itInp> <fvrtools this>","")
 	REGISTER_METHOD("-from_fst","",LPMF(CFvrtools,OnFromFst),"Creates a (weighted) FVR from an FST containing a single path.",0,"<fst itSeq> <fst itFvr> <fvrtools this>","")
 	REGISTER_METHOD("-from_string","",LPMF(CFvrtools,OnFromString),"Creates a (weighted) FVR from a string representation",0,"<string src> <fst itFvr> <fvrtools this>","")
 	REGISTER_METHOD("-fsg_fvr_check","",LPMF(CFvrtools,OnFsgFvrCheck),"Check square bracket parity in the output language of a FVR grammar.",0,"<fst itFsg> <fst itErr> <fvrtools this>","")
@@ -350,23 +350,21 @@ INT16 CFvrtools_OnAdjust(CDlpObject* __this)
 	return __nErr;
 }
 
-INT16 CFvrtools_OnCompare(CDlpObject* __this)
+INT16 CFvrtools_OnCompareWithModel(CDlpObject* __this)
 /* DO NOT CALL THIS FUNCTION FROM C++ SCOPE.     */
 /* IT MAY INTERFERE WITH THE INTERPRETER SESSION */
 {
 	INT16 __nErr    = O_K;
 	INT32  __nErrCnt = 0;
-	fst* itOne;
-	fst* itTwo;
-	char* sOpname;
+	fst* itWom;
+	fst* itInp;
 	GET_THIS_VIRTUAL_RV(CFvrtools,NOT_EXEC);
 	MIC_CHECK;
 	__nErrCnt = CDlpObject_GetErrorCount();
-	sOpname = MIC_GET_S(1,0);
-	itTwo = MIC_GET_I_EX(itTwo,fst,2,1);
-	itOne = MIC_GET_I_EX(itOne,fst,3,2);
+	itInp = MIC_GET_I_EX(itInp,fst,1,1);
+	itWom = MIC_GET_I_EX(itWom,fst,2,2);
 	if (CDlpObject_GetErrorCount()>__nErrCnt) return NOT_EXEC;
-	MIC_PUT_B(CFvrtools_Compare(_this, itOne, itTwo, sOpname));
+	MIC_PUT_N(CFvrtools_CompareWithModel(_this, itWom, itInp));
 	return __nErr;
 }
 
@@ -635,11 +633,11 @@ INT16 CFvrtools::OnAdjust()
 	return CFvrtools_OnAdjust(this);
 }
 
-INT16 CFvrtools::OnCompare()
+INT16 CFvrtools::OnCompareWithModel()
 /* DO NOT CALL THIS FUNCTION FROM C++ SCOPE.     */
 /* IT MAY INTERFERE WITH THE INTERPRETER SESSION */
 {
-	return CFvrtools_OnCompare(this);
+	return CFvrtools_OnCompareWithModel(this);
 }
 
 INT16 CFvrtools::OnFromFst()
@@ -746,9 +744,9 @@ BOOL CFvrtools::Adjust(CFst* itWom, CFst* itInp)
 	return CFvrtools_Adjust(this, itWom, itInp);
 }
 
-BOOL CFvrtools::Compare(CFst* itFvrOne, CFst* itFvrTwo, const char* sOpname)
+FLOAT64 CFvrtools::CompareWithModel(CFst* itWom, CFst* itInp)
 {
-	return CFvrtools_Compare(this, itFvrOne, itFvrTwo, sOpname);
+	return CFvrtools_CompareWithModel(this, itWom, itInp);
 }
 
 FST_STYPE CFvrtools::FindIs(const char* lpsStr, BOOL bAdd, CFst* itFst)
