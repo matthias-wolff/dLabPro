@@ -142,21 +142,22 @@ INT16 CGEN_PROTECTED CFunction::ArgCommit()
   }                                                                             // <<
 
   // Go get actual arguments (in reverse order)                                 // ------------------------------------
-  for (INT32 nArg=m_idArg->GetNRecs()-1; nArg>=0; nArg--)                        // Loop over formal arguments
+  for (INT32 nArg=m_idArg->GetNRecs()-1; nArg>=0; nArg--)                       // Loop over formal arguments
   {                                                                             // >>
     // Create variable instance for  argument                                   //   - - - - - - - - - - - - - - - - - 
+    CDlpObject* iArg     = NULL;                                                //   Instance argument
     CVar*       iArgVar  = NULL;                                                //   Variable instance for argument
     const char* lpsArgId = (const char*)m_idArg->XAddr(nArg,0);                 //   Get argument(=variable) identifier
     DLPASSERT(dlp_strlen(lpsArgId));                                            //   Handle error on parsing arg. list!
     IFCHECKEX(2) printf("\n   %02ld %-20s:",nArg,lpsArgId);                     //   Protocol (verbose lebel 2)
     ICREATEEX(CVar,iArgVar,lpsArgId,NULL);                                      //   Create variable
-    m_idArg->Dstore(T_INSTANCE            ,nArg,FNC_ALIC_TYPE);                 //   Store argument type in arg. list
+    m_idArg->Dstore(T_INSTANCE,nArg,FNC_ALIC_TYPE);                             //   Store argument type in arg. list
     m_idArg->Pstore(iArgVar,nArg,FNC_ALIC_PTR );                                //   Store variable ptr in arg. list
 
     // Get actual value                                                         //   - - - - - - - - - - - - - - - - - 
     if (iCaller->m_nStackLen>0)                                                 //   Pop item from caller's stack
     {                                                                           //   >>
-      switch(iCaller->m_aStack[0].nType)                                        //     Depending in stk. item type
+      switch(iCaller->m_aStack[0].nType)                                        //     Depending on stk. item type
       {                                                                         //     >>
         case T_BOOL:                                                            //       Logic
           iArgVar->Bset(iCaller->m_aStack[0].val.b);                            //         Set variable
@@ -172,10 +173,27 @@ INT16 CGEN_PROTECTED CFunction::ArgCommit()
           IFCHECKEX(2) printf(" S \"%s\"",iCaller->m_aStack[0].val.s);          //         Protocol (verbose level 2)
           break;                                                                //         .
         case T_INSTANCE:                                                        //       Instance
-          iArgVar->Iset(iCaller->StackInstance(0,nArg));                        //         Set variable
+          iArg = iCaller->StackInstance(0,nArg);                                //         Get instance argument
+          if (iArg && !iArg->m_lpContainer)                                     //           Is temp.inst. (of caller!)
+          {                                                                     //           >>
+            // NOTE: This function must not destroy temporary instances of caller -> make local copy!
+            //IERROR(this,ERR_DANGEROUS,                                          //             Warning
+            //  "Committing temporary instances to functions","(fix pending)",0); //             |
+            char s[L_NAMES]; sprintf(s,"#%s",lpsArgId);                         //             Make local inst. name
+            CDlpObject* iArgCopy                                                //             Create local instance
+              = CDlpObject_Instantiate(this,iArg->m_lpClassName,s,FALSE);       //             |
+            iArgCopy->Copy(iArg);                                               //             Copy temp. instance
+            iArgVar->Iset(iArgCopy);                                            //             Set instance variable
+          }                                                                     //           <<
+          else                                                                  //           Is ordinary instance
+            iArgVar->Iset(iArg);                                                //             Set variable
           IFCHECKEX(2)                                                          //         On verbose level 2
+          {                                                                     //         >>
             printf(" I %s",CDlpObject_GetFQName(iCaller->m_aStack[0].val.i,     //           Protocol
               dlp_get_a_buffer(),FALSE));                                       //           |
+            if (iArg && !iArg->m_lpContainer)                                   //           Is temp.inst. (of caller!)
+              printf(" (temporary)");                                           //             Protocol
+          }                                                                     //         <<
           break;                                                                //         .
         default:                                                                //       Unknown type
           DLPASSERT(FMSG("Unknown stack item type"));                           //         Assertion failure
