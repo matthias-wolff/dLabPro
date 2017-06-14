@@ -32,44 +32,44 @@
 
 static const char __sSlaveScript[][L_SSTR] =
 {
-  "#!/usr/bin/env dlabpro",                                                     // For dLabPro 2.5.3
-  " ",                                                                          //
-  "process ~iP;",                                                               // A process manager
-  "object  ~iDto;",                                                             // The data transfer object
-  "var     ~i;",                                                                // Loop counter
-  " ",                                                                          //
-  "\"$1\" ~iDto -restore;",                                                     // Restore data transfer object
-  "\"~iDto."PRC_S_IDINCL"\" \"\" ?instance if",                                 // Included transferred >>
-  "  :~i=0; :~i<~iDto."PRC_S_IDINCL".nrec: while",                              //   Loop over incl. table >>
-  "    \"${~iDto."PRC_S_IDINCL"[~i,0]}\" include;",                             //     Include file
-  "  end",                                                                      //   <<
-  "end",                                                                        // <<
-  "\"~iDto."PRC_S_IDGLOB"\" \"\" ?instance if",                                 // Globals transferred >>
-  "  :~i=0; :~i<~iDto."PRC_S_IDGLOB".nrec: while",                              //   Loop over globals table >>
-  "    \"${~iDto."PRC_S_IDGLOB"[~i,1]}\" \"\" ?instance not if",                //     No equally name inst. >>
-  "      ${~iDto."PRC_S_IDGLOB"[~i,0]} ${~iDto."PRC_S_IDGLOB"[~i,1]};",         //       Create global instance
-  "      \"${~iDto."PRC_S_IDGLOB"[~i,0]}\" \"function\" == if",                 //         It's a function >>
+  "#!/usr/bin/env dlabpro",                                                     //  1| For dLabPro 2.5.3
+  " ",                                                                          //  2|
+  "process ~iP;",                                                               //  3| A process manager
+  "object  ~iDto;",                                                             //  4| The data transfer object
+  "var     ~i;",                                                                //  5| Loop counter
+  " ",                                                                          //  6|
+  "\"$1\" ~iDto /noerror -restore;",                                            //  7| Restore data transfer object
+  "\"~iDto."PRC_S_IDINCL"\" \"\" ?instance if",                                 //  8| Included transferred >>
+  "  :~i=0; :~i<~iDto."PRC_S_IDINCL".nrec: while",                              //  9|   Loop over incl. table >>
+  "    \"${~iDto."PRC_S_IDINCL"[~i,0]}\" include;",                             // 10|     Include file
+  "  end",                                                                      // 11|   <<
+  "end",                                                                        // 12| <<
+  "\"~iDto."PRC_S_IDGLOB"\" \"\" ?instance if",                                 // 13| Globals transferred >>
+  "  :~i=0; :~i<~iDto."PRC_S_IDGLOB".nrec: while",                              // 14|   Loop over globals table >>
+  "    \"${~iDto."PRC_S_IDGLOB"[~i,1]}\" \"\" ?instance not if",                // 15|     No equally name inst. >>
+  "      ${~iDto."PRC_S_IDGLOB"[~i,0]} ${~iDto."PRC_S_IDGLOB"[~i,1]};",         // 16|       Create global instance
+  "      \"${~iDto."PRC_S_IDGLOB"[~i,0]}\" \"function\" == if",                 // 17|         It's a function >>
   "        /disarm ~iDto.${~iDto."PRC_S_IDGLOB"[~i,1]} "
-          "/disarm ${~iDto."PRC_S_IDGLOB"[~i,1]} =;",                           //         Copy
+          "/disarm ${~iDto."PRC_S_IDGLOB"[~i,1]} =;",                           // 18|         Copy
 // TODO: will cause a crash at session end -->
 //  "        /disarm ~iDto.${~iDto."PRC_S_IDGLOB"[~i,1]} -destroy;",              //         Save memory
 // <--
-  "       else",                                                                //       << It's not a fnc >>
-  "        ~iDto.${~iDto."PRC_S_IDGLOB"[~i,1]} ${~iDto."PRC_S_IDGLOB"[~i,1]} =;",//         Copy
-  "       end",                                                                 //       <<
-  "    end",                                                                    //     <<
-  "    ~i ++=;",                                                                //     Next global
-  "  end",                                                                      //   <<
-  "end",                                                                        // <<
-  ":~i=~iDto."PRC_S_IDSIGN".nrec-1; :~i>0: while",                              // Loop over signature table >>
-  "  ~iDto.${~iDto."PRC_S_IDSIGN"[~i,0]}",                                      //   Push argument
-  "  ~i --=",                                                                   //   Next argument
-  "end",                                                                        // <<
-  "~iDto.${~iDto."PRC_S_IDSIGN"[0,0]} ~iDto ~iP -marshal_retval;",              // Call function
-  "\"$1\" ~iDto /xml /zip -save;",                                              // Save data transfer object
-  " ",                                                                          //
-  "0 return;",                                                                  // Everything ok
-  "\0"                                                                          // End of script
+  "       else",                                                                // 19|       << It's not a fnc >>
+  "        ~iDto.${~iDto."PRC_S_IDGLOB"[~i,1]} ${~iDto."PRC_S_IDGLOB"[~i,1]} =;",//20|         Copy
+  "       end",                                                                 // 21|       <<
+  "    end",                                                                    // 22|     <<
+  "    ~i ++=;",                                                                // 23|     Next global
+  "  end",                                                                      // 24|   <<
+  "end",                                                                        // 25| <<
+  ":~i=~iDto."PRC_S_IDSIGN".nrec-1; :~i>0: while",                              // 26| Loop over signature table >>
+  "  ~iDto.${~iDto."PRC_S_IDSIGN"[~i,0]}",                                      // 27|   Push argument
+  "  ~i --=",                                                                   // 28|   Next argument
+  "end",                                                                        // 29| <<
+  "~iDto.${~iDto."PRC_S_IDSIGN"[0,0]} ~iDto ~iP -marshal_retval;",              // 30| Call function
+  "\"$1\" ~iDto /xml /zip -save;",                                              // 31| Save data transfer object
+  " ",                                                                          // 32|
+  "0 return;",                                                                  // 33| Everything ok
+  "\0"                                                                          // 34| End of script
 };
 
 // == Thread functions ==                                                       // ====================================
@@ -358,7 +358,9 @@ void CGEN_PROTECTED CProcess::ReceiveData()
   {                                                                             // >>
     sprintf(sScrFn,"%s.xtp",m_psTmpFile);                                       //   Get slave script file name
     sprintf(sDtoFn,"%s.xml",m_psTmpFile);                                       //   Get data transfer fine name
+    INT16 nElv = CDlpObject_SetErrorLevel(1);
     CDlpObject_Restore(m_iDto,sDtoFn,SV_XML|SV_ZIP);                            //   Restore data transfer object
+    CDlpObject_SetErrorLevel(nElv);
     remove(sDtoFn);                                                             //   Remove temporary file
     remove(sScrFn);                                                             //   Remove temporary file
   }                                                                             // <<
