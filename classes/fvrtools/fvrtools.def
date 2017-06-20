@@ -249,7 +249,7 @@ COMMENT: Adjust a FVR with a given model of FVR and update both.
   While the path in <code>itInp</code> not exist or is incomplete, it would be added from <code>itWom</code> without a value.
   @param itWom Worldmodel.
   @param itInp Input/Given FVR.
-  @return <code>TRUE</code> if both FVRs are identic, <code>FALSE</code> in a case of edit one.
+  @return <code>TRUE</code> if input FVR <code>itInp</code> compatible with world model FVR <code>itWom</code>, <code>FALSE</code> in a case of edit one or missing value in <code>itInp</code>.
 END_MAN
 
 METHOD:  -compare_with_model

@@ -634,13 +634,6 @@ BOOL CGEN_PUBLIC CFvrtools_Adjust(CFvrtools* _this, CFst* itWom, CFst* itInp){
         if (strcmp("INT", CData_Sfetch(idWomIs,nIsWom,0)) != 0){                /*   Must not be "INT"               */
           bAddInp = TRUE;                                                       /*   Add transition to itInp         */
           lpTrAux = NULL;                                                       /*   Reset auxiliary variable        */
-          while ((lpTrAux=CFst_STI_TfromS(iSeTrInp, nIniStInp, lpTrAux)) != NULL){/* Check maybe symbol already exist*/
-            nIsInp = *CFst_STI_TTis(iSeTrInp, lpTrAux);                         /*     Get input symbol of itInp     */
-            if (strcmp(CData_Sfetch(idInpIs,nIsInp,0), CData_Sfetch(idWomIs,nIsWom,0)) == 0){/* Compare both symbols */
-              bAddInp = FALSE;                                                  /*        If exist reset bool        */
-              nRet = TRUE;                                                      /*        ... and return value       */
-            }                                                                   /*                                   */
-          }                                                                     /*                                   */
         }                                                                       /*                                   */
       }                                                                         /*                                   */
     }/* End of while(bSearchFwd && !bAddWom && !bAddInp){ */                    /*                                   */
