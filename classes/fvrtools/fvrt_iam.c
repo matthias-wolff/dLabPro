@@ -103,9 +103,9 @@ BOOL CGEN_PUBLIC CFvrtools_IsComplete(CFvrtools* _this, INT32 nU, CFst* itFvr){
         lpTr=CFst_STI_TtoS(iSeTr, nState, NULL);                                /*   Take prev. transition "INT"     */
         nState = *CFst_STI_TIni(iSeTr, lpTr);                                   /*   Take Ini node of lpTr           */
       }                                                                         /*                                   */
-      else if(CFst_STI_TfromS(iSeTr, nState, NULL)==NULL){                      /* */
-        nRet = FALSE; break;                                                    /* */
-      }                                                                         /* */
+      else if(CFst_STI_TfromS(iSeTr, nState, NULL)==NULL){                      /*   found leaf without feature "INT"*/
+        nRet = FALSE; break;                                                    /*     FVR is not complete           */
+      }                                                                         /*                                   */
     }                                                                           /*                                   */
     lpTr = CFst_STI_TtoS(iSeTr, nState, NULL);                                  /* Take prev. trans to go back       */
     if (lpTr == NULL || !nRet)                                                  /* If no trans exist? root reached   */

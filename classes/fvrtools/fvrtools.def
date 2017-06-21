@@ -151,7 +151,7 @@ COMMENT: Check itFvr is complete. All values are given.
   This function is searched for the feature "INT" in <code>itFvr</code> and checked there is only one more value after this feature. 
   @param nU    The unit of <code>itFvr</code> to test.
   @param itFvr The <a href="fst.html" class="code">fst</a> to check.
-  @return <code>TRUE</code> if the unit is complete, <code>FALSE</code> otherwise.
+  @return <code>TRUE</code> if the unit is complete and on every leaf is the feature "INT" with a value, <code>FALSE</code> otherwise.
 END_MAN
 
 METHOD:  -from_string
