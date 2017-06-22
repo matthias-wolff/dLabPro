@@ -677,7 +677,7 @@ BOOL CGEN_PUBLIC CFvrtools_Adjust(CFvrtools* _this, CFst* itWom, CFst* itInp){
         lpTrInp = NULL;                                                         /*     lpTrInp not more exist        */
       }                                                                         /*                                   */
       if (CFst_STI_TfromS(iSeTrInp,nIniStInp,NULL)!=lpTrInp) bDelete = FALSE;   /*   Stop delete, other branch exist */
-      if (CFst_STI_TfromS(iSeTrInp,nIniStInp,lpTrInp) != NULL){                 /*   Other branch not visited before */
+      if (CFst_STI_TfromS(iSeTrWom,nIniStWom,lpTrWom) != NULL){                 /*   Other branch not visited before */
         bSearchFwd = TRUE; bDelete = FALSE;                                     /*   Stop delete and search forward  */
       }                                                                         /*                                   */
     }                                                                           /*                                   */
