@@ -764,10 +764,28 @@ FLOAT64 CGEN_PUBLIC CFvrtools_CompareWithModel(CFvrtools* _this, CFst* itWom, CF
       }                                                                         /*                                   */
       lpTrWom = CFst_STI_TfromS(iSeTrWom, nIniStWom, lpTrWom);                  /* Get next transition of itWom      */
       if (lpTrWom){                                                             /* Trans of itWom exist              */
-        nTerStWom = *CFst_STI_TTer(iSeTrWom, lpTrWom);                          /*   take next node of itInp         */
+        nTerStWom = *CFst_STI_TTer(iSeTrWom, lpTrWom);                          /*   take next node of itWom         */
         nIsWom = *CFst_STI_TTis(iSeTrWom, lpTrWom);                             /*   Get TIS of Wom transition       */
-        if (strcmp(CData_Sfetch(idWomIs, nIsWom, 0), "INT") == 0){              /*   Found "INT" in world model      */
-          bSearchFwd = FALSE; continue;                                         /*     Set bool FALSE and continue   */
+        if (strcmp(CData_Sfetch(idWomIs, nIsWom, 0), "INT") == 0){              /*   Found "INT" in world model and no number behind "INT"     */
+          if (CFst_STI_TfromS(iSeTrWom, nTerStWom, NULL) == NULL){
+            bSearchFwd = FALSE; continue;                                         /*     Set bool FALSE and continue   */
+          }
+          else{
+            lpTrInp=CFst_STI_TfromS(iSeTrInp, nTerStInp, NULL);
+            nIsInp = *CFst_STI_TTis(iSeTrInp, lpTrInp);
+            if (strcmp(CData_Sfetch(idInpIs, nIsInp, 0), "INT") == 0){
+              nTerStInp = *CFst_STI_TTer(iSeTrInp, lpTrInp);
+              lpTrInp=CFst_STI_TfromS(iSeTrInp, nTerStInp, NULL);
+              nIsInp = *CFst_STI_TTis(iSeTrInp, lpTrInp);
+              if (strcmp(CData_Sfetch(idInpIs,nIsInp,0),CData_Sfetch(idWomIs, *CFst_STI_TTis(iSeTrWom, CFst_STI_TfromS(iSeTrWom, nTerStWom, NULL)), 0)) != 0){
+                nRet = 0;
+                goto L_EXCEPTION;
+              }
+            }else{
+              nRet = 0;
+              goto L_EXCEPTION;
+            }
+          }
         }                                                                       /*                                   */
       }                                                                         /*                                   */
       lpTrInp = NULL;                                                           /* Reset lpTrans of itInp            */
