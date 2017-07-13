@@ -233,7 +233,7 @@ METHOD:  -union
 SYNTAX:  (INSTANCE(fst) itDst, INSTANCE(fst) itFvr)
 COMMENT: Combinates two FVRs
 /html MAN:
-  Union of two FVRs
+  Union of two FVRs. Are there different values behind the feature "INT" the value and the feature "INT" will be delete.
   @param itDst First FVR and Output.
   @param itFvr Second FVR.
   @return
@@ -256,8 +256,9 @@ METHOD:  -compare_with_model
 SYNTAX:  double (INSTANCE(fst) itWom, INSTANCE(fst) itInp)
 COMMENT: Compare two FVRs each other.
 /html MAN:
-  One input FVR are checked with a world model FVR. The return value is the percent congruence of the input to the world model.
-  The feature "INT" are not consider. This features marks the point of a value in a FVR.
+  One input FVR are checked with a world model FVR. The return value is a absolute number of congruence features of the input to the world model.
+  The feature "INT" are not consider. This features marks the point of a value in a FVR. 
+  Is a value given in the world model FVR, then it must be the same value given in the input FVR otherwise the return value is 0.
   @param itWom World Model FVR.
   @param itInp FVR input. 
 END_MAN

@@ -444,6 +444,7 @@ INT16 CGEN_PUBLIC CFvrtools_Union(CFvrtools* _this, CFst* itDst, CFst* itFvr)
   FST_ITYPE     nIniStDst   = 0;                                                /* Ini state of itDst                */
   FST_ITYPE     nTerStFvr   = NULL;                                             /* State iterator of original Fvr    */
   FST_ITYPE     nTerStDst   = NULL;                                             /* State iterator of original Dst    */
+  FST_ITYPE     nStAux      = NULL;                                             /* Auxiliary state index             */
   FST_ITYPE     nIsFvr;                                                         /* Input symbol of Fvr node          */
   FST_ITYPE     nIsDst;                                                         /* Input symbol of Dst node          */
   FST_ITYPE     nAux;                                                           /* Auxilary value                    */
@@ -456,7 +457,9 @@ INT16 CGEN_PUBLIC CFvrtools_Union(CFvrtools* _this, CFst* itDst, CFst* itFvr)
   FST_TID_TYPE* iSeTrDst    = CFst_STI_Init(itDst,0,FSTI_SORTTER);              /* find trans. of second itDst       */
   BYTE*         lpTrFvr     = NULL;                                             /* Transition of itFvr               */
   BYTE*         lpTrDst     = NULL;                                             /* Transition of itDst               */
+  BYTE*         lpTrAux     = NULL;                                             /* Auxiliary transition              */
   BOOL          SearchCompl = NULL;                                             /* State of search                   */
+  BOOL          bIntFound   = NULL;                                             /* Exception of feature INT          */
   CData*        idFvrIs     = NULL;                                             /* InputSymbol table of itFvr        */
   CData*        idDstIs     = NULL;                                             /* InputSymbol table of itDst        */
   CData*        idTFvr      = NULL;                                             /* Transition table of Fvr           */
@@ -488,23 +491,45 @@ INT16 CGEN_PUBLIC CFvrtools_Union(CFvrtools* _this, CFst* itDst, CFst* itFvr)
       while ((lpTrDst=CFst_STI_TfromS(iSeTrDst, nIniStDst, lpTrDst)) != NULL){  /* For all transition of Dst-node    */
         nIsDst = *CFst_STI_TTis(iSeTrDst, lpTrDst);                             /* Get input symbol of Dst transition*/
         if (strcmp(CData_Sfetch(idDstIs,nIsDst,0), CData_Sfetch(idFvrIs,nIsFvr,0)) == 0){  /* compare both symbols   */
-          nTerStDst = *CFst_STI_TTer(iSeTrDst, lpTrDst);                        /* take next node of itDst           */
+          if (bIntFound==TRUE) bIntFound=FALSE;                                 /* Reset bool when value are conform */
+          if (strcmp(CData_Sfetch(idDstIs,nIsDst,0),"INT")==0) bIntFound=TRUE;  /* Set bool when found feature INT   */
+          nTerStDst = *CFst_STI_TTer(iSeTrDst, lpTrDst);                        /* Take next node of itDst           */
+          nTerStFvr = *CFst_STI_TTer(iSeTrFvr, lpTrFvr);                        /* Take next node of itFvr           */
           nWFvr = CData_Dfetch(idTFvr, CFst_STI_GetTransId(iSeTrFvr, lpTrFvr), nCLsrFvr);  /* Get weight of itFvrtr  */
           nAux = CFst_STI_GetTransId(iSeTrDst, lpTrDst);                        /* Transition index of itDst         */
           nWDst = CData_Dfetch(idTDst, nAux, nCLsrDst);                         /* Get weight of itDst-transition    */
           CData_Dstore(idTDst,nWFvr + nWDst - nWFvr*nWDst,nAux,nCLsrDst);       /* Store new weight                  */
-          break;                                                                /* cancel-> only one symbol possible */
+          break;                                                                /* Cancel-> only one symbol possible */
         }                                                                       /*                                   */
       }                                                                         /*                                   */
-      nTerStFvr = *CFst_STI_TTer(iSeTrFvr, lpTrFvr);                            /* take next node of itFvr           */
-      if (lpTrDst == NULL){                                                     /* if input symbol not exist         */
-        nTerStDst = CFst_Addstates(itDst,0,1,0);                                /* ... add new node                  */
-        nAux = CFst_Addtrans(itDst, 0 , nIniStDst, nTerStDst);                  /* ... add new transition to new node*/
-        *(FST_ITYPE*)CData_XAddr(idTDst, nAux, nCTIS) = CFvrtools_FindIs(CData_Sfetch(idFvrIs,nIsFvr,0),TRUE,itDst);
-        *(FST_WTYPE*)CData_XAddr(idTDst, nAux, nCLsrDst) = CData_Dfetch(idTFvr, CFst_STI_GetTransId(iSeTrFvr, lpTrFvr), nCLsrFvr);
-        CFst_STI_UnitChanged(iSeTrDst,FSTI_CANY);                               /* ^-- store new Is and weight       */
-                                                                                /* update transducer iterator        */
+
+      if (lpTrDst == NULL){                                                     /* If input symbol not exist         */
+        if (bIntFound == TRUE){                                                 /*   And before is feature INT       */
+          bIntFound = FALSE;                                                    /*     Reset bool                    */
+          lpTrAux = CFst_STI_TfromS(iSeTrDst, nTerStDst, NULL);                 /*     Get transition behind INT     */
+          nStAux = *CFst_STI_TTer(iSeTrDst, lpTrAux);                           /*     Get terminal node to delete   */
+          CFst_Deltrans(itDst, 0, CFst_STI_GetTransId(iSeTrDst, lpTrAux));      /*     Delete transition after INT   */
+          CFst_Delstate(itDst, 0, nStAux);                                      /*     Delete last node              */
+          lpTrAux = CFst_STI_TtoS(iSeTrDst, nTerStDst, NULL);                   /*     Get transition of feature INT */
+          nIniStDst = *CFst_STI_TIni(iSeTrDst, lpTrAux);                        /*     Get previous node of itDst    */
+          CFst_Deltrans(itDst, 0, CFst_STI_GetTransId(iSeTrDst, lpTrAux));      /*     Delete feature INT            */
+          CFst_Delstate(itDst, 0, nTerStDst);                                   /*     Delete last node              */
+          CFst_STI_UnitChanged(iSeTrDst,FSTI_CANY);                             /*     Update iterator               */
+          lpTrFvr = CFst_STI_TtoS(iSeTrFvr, nIniStFvr, NULL);                   /*     Get previous trans. of itFVR  */
+          nIniStFvr = *CFst_STI_TIni(iSeTrFvr, lpTrFvr);                        /*     Get previous node of itFvr    */
+          break;                                                                /*     Take next iteration step      */
+        }                                                                       /*                                   */
+        else{                                                                   /*   Otherwise feature is not INT    */
+          nTerStDst = CFst_Addstates(itDst,0,1,0);                              /* ... add new node                  */
+          nAux = CFst_Addtrans(itDst, 0 , nIniStDst, nTerStDst);                /* ... add new transition to new node*/
+          *(FST_ITYPE*)CData_XAddr(idTDst, nAux, nCTIS) = CFvrtools_FindIs(CData_Sfetch(idFvrIs,nIsFvr,0),TRUE,itDst);
+          *(FST_WTYPE*)CData_XAddr(idTDst, nAux, nCLsrDst) = CData_Dfetch(idTFvr, CFst_STI_GetTransId(iSeTrFvr, lpTrFvr), nCLsrFvr);
+                                                                                /* ^-- store new Is and weight       */
+          CFst_STI_UnitChanged(iSeTrDst,FSTI_CANY);                             /* update transducer iterator        */
+          nTerStFvr = *CFst_STI_TTer(iSeTrFvr, lpTrFvr);                        /* Take next node of itFvr           */
+        }                                                                       /*                                   */
       }                                                                         /*                                   */
+
       if (CFst_STI_TfromS(iSeTrFvr,nTerStFvr, NULL)==NULL){                     /* Check is next node a leaf         */
         continue;                                                               /*   ...take next iteration step     */
       }else{                                                                    /* New node is not a leaf...         */
@@ -520,6 +545,7 @@ INT16 CGEN_PUBLIC CFvrtools_Union(CFvrtools* _this, CFst* itDst, CFst* itFvr)
       SearchCompl = TRUE;                                                       /*   ...set search complete          */
     }
     else{                                                                       /* otherwise                         */
+      bIntFound = FALSE;                                                        /*   Reset bool                      */
       nIniStFvr = *CFst_STI_TIni(iSeTrFvr, lpTrFvr);                            /*   ...Take prev node to go back    */
       nIniStDst = *CFst_STI_TIni(iSeTrDst, lpTrDst);                            /*   ...Take prev node to go back    */
     }                                                                           /*                                   */
@@ -606,6 +632,7 @@ BOOL CGEN_PUBLIC CFvrtools_Adjust(CFvrtools* _this, CFst* itWom, CFst* itInp){
           && lpTrWom != NULL){                                                  /*  and lpTrWom exist                */
         nIsInp = *CFst_STI_TTis(iSeTrInp, lpTrInp);                             /* Get input symbol of itInp         */
         if (strcmp(CData_Sfetch(idInpIs,nIsInp,0), CData_Sfetch(idWomIs,nIsWom,0)) == 0){ /* Compare both symbols    */
+          if (strcmp(CData_Sfetch(idInpIs,nIsInp,0), "INT") == 0) bDelete=TRUE; /*   Delete path with 'INT' in itInp */
           nAux = CFst_STI_GetTransId(iSeTrInp, lpTrInp);                        /*   Get transition index of itInp   */
           CData_Dstore(idTWom, CData_Dfetch(idTInp, nAux, nCLsrInp), CFst_STI_GetTransId(iSeTrWom, lpTrWom),nCLsrWom);
                                                                                 /*   ^--Store new weight in itWom    */
@@ -633,7 +660,6 @@ BOOL CGEN_PUBLIC CFvrtools_Adjust(CFvrtools* _this, CFst* itWom, CFst* itInp){
         nRet = FALSE;                                                           /*   FVR changed so not identic      */
         if (strcmp("INT", CData_Sfetch(idWomIs,nIsWom,0)) != 0){                /*   Must not be "INT"               */
           bAddInp = TRUE;                                                       /*   Add transition to itInp         */
-          lpTrAux = NULL;                                                       /*   Reset auxiliary variable        */
         }                                                                       /*                                   */
       }                                                                         /*                                   */
     }/* End of while(bSearchFwd && !bAddWom && !bAddInp){ */                    /*                                   */
@@ -706,6 +732,8 @@ FLOAT64 CGEN_PUBLIC CFvrtools_CompareWithModel(CFvrtools* _this, CFst* itWom, CF
   FST_ITYPE     nIsInp       = 0;                                               /* Input symbol of itInp             */
   FST_ITYPE     nTisWom      = NULL;                                            /* Input symbol Comp of itWom        */
   FST_ITYPE     nTisInp      = NULL;                                            /* Input symbol Comp of itInp        */
+  FST_ITYPE     nTerWom      = NULL;                                            /* Input symbol Comp of itInp        */
+  FST_ITYPE     nIniWom      = NULL;                                            /* Input symbol Comp of itInp        */
   FST_TID_TYPE* iSeTrWom     = NULL;                                            /* find trans. of first itWom        */
   FST_TID_TYPE* iSeTrInp     = NULL;                                            /* find trans. of second itInp       */
   BYTE*         lpTrWom      = NULL;                                            /* Transition of itWom               */
@@ -717,9 +745,12 @@ FLOAT64 CGEN_PUBLIC CFvrtools_CompareWithModel(CFvrtools* _this, CFst* itWom, CF
   FST_ITYPE     nCountWom    = 0;                                               /* Counter of itWom                  */
   FST_ITYPE     nCountInp    = 0;                                               /* Counter of itInp                  */
   FST_ITYPE     nAux;                                                           /* Auxiliary value                   */
+  FST_ITYPE     nAux2;                                                          /* Auxiliary value2                  */
 
-  nTisWom = CData_FindComp(AS(CData,itWom->td),NC_TD_TIS);                      /* Get comp. index of weight         */
-  nTisInp = CData_FindComp(AS(CData,itInp->td),NC_TD_TIS);                      /* Get comp. index of weight         */
+  nTisWom = CData_FindComp(AS(CData,itWom->td),NC_TD_TIS);                      /* Get comp. index of input symbol   */
+  nTerWom = CData_FindComp(AS(CData,itWom->td),"~TER");                         /* Get comp. index of terminal state */
+  nIniWom = CData_FindComp(AS(CData,itWom->td),"~INI");                         /* Get comp. index of Ini state      */
+  nTisInp = CData_FindComp(AS(CData,itInp->td),NC_TD_TIS);                      /* Get comp. index of input symbol   */
 
   CHECK_THIS_RV(NOT_EXEC);                                                      /* Check this instance               */
   /* Simple tests */                                                            /* --------------------------------- */
@@ -741,8 +772,12 @@ FLOAT64 CGEN_PUBLIC CFvrtools_CompareWithModel(CFvrtools* _this, CFst* itWom, CF
   iSeTrInp = CFst_STI_Init(itInp,0,FSTI_SORTTER);                               /* Find trans. of second itInp       */
 
   for (nAux=0;nAux<CData_GetNRecs(idWomTd);nAux++){                             /* Search trans. with symbol "INT"   */
-    if(strcmp(CData_Sfetch(idWomIs,CData_Dfetch(idWomTd,nAux,nTisWom),0),"INT")==0)/* When found in world model      */
+    if(strcmp(CData_Sfetch(idWomIs,CData_Dfetch(idWomTd,nAux,nTisWom),0),"INT")==0){/* When found in world model     */
       nCountWom++;                                                              /*   Increase counter                */
+      nTerStWom = CData_Dfetch(idWomTd,nAux,nTerWom);                           /*   Take Ter state to check value   */
+      for (nAux2=0;nAux2<CData_GetNRecs(idWomTd);nAux2++)                       /*   Check is Ter state Ini state too*/
+        if(nTerStWom == CData_Dfetch(idWomTd,nAux2,nIniWom)) nCountWom++;       /*   There is a value behind 'INT'   */
+    }
   }
   for (nAux=0;nAux<CData_GetNRecs(idInpTd);nAux++){                             /* Search trans. with symbol "INT"   */
     if(strcmp(CData_Sfetch(idInpIs,CData_Dfetch(idInpTd,nAux,nTisInp),0),"INT")==0)/* When found in input            */
@@ -766,26 +801,25 @@ FLOAT64 CGEN_PUBLIC CFvrtools_CompareWithModel(CFvrtools* _this, CFst* itWom, CF
       if (lpTrWom){                                                             /* Trans of itWom exist              */
         nTerStWom = *CFst_STI_TTer(iSeTrWom, lpTrWom);                          /*   take next node of itWom         */
         nIsWom = *CFst_STI_TTis(iSeTrWom, lpTrWom);                             /*   Get TIS of Wom transition       */
-        if (strcmp(CData_Sfetch(idWomIs, nIsWom, 0), "INT") == 0){              /*   Found "INT" in world model and no number behind "INT"     */
-          if (CFst_STI_TfromS(iSeTrWom, nTerStWom, NULL) == NULL){
-            bSearchFwd = FALSE; continue;                                         /*     Set bool FALSE and continue   */
-          }
-          else{
-            lpTrInp=CFst_STI_TfromS(iSeTrInp, nTerStInp, NULL);
-            nIsInp = *CFst_STI_TTis(iSeTrInp, lpTrInp);
-            if (strcmp(CData_Sfetch(idInpIs, nIsInp, 0), "INT") == 0){
-              nTerStInp = *CFst_STI_TTer(iSeTrInp, lpTrInp);
-              lpTrInp=CFst_STI_TfromS(iSeTrInp, nTerStInp, NULL);
-              nIsInp = *CFst_STI_TTis(iSeTrInp, lpTrInp);
+        if (strcmp(CData_Sfetch(idWomIs, nIsWom, 0), "INT") == 0){              /*   Found "INT" in world model      */
+          if (CFst_STI_TfromS(iSeTrWom, nTerStWom, NULL) == NULL){              /*     no value behind "INT"         */
+            bSearchFwd = FALSE; continue;                                       /*       Set bool FALSE and continue */
+          }                                                                     /*                                   */
+          else{                                                                 /*     otherwise value behind 'INT'  */
+            lpTrInp=CFst_STI_TfromS(iSeTrInp, nTerStInp, NULL);                 /*       take next transition of Inp */
+            nIsInp = *CFst_STI_TTis(iSeTrInp, lpTrInp);                         /*       get input symbol (value)    */
+            if (strcmp(CData_Sfetch(idInpIs, nIsInp, 0), "INT") == 0){          /*       Check is it feature 'INT'   */
+              nTerStInp = *CFst_STI_TTer(iSeTrInp, lpTrInp);                    /*         Take next Ter state       */
+              lpTrInp=CFst_STI_TfromS(iSeTrInp, nTerStInp, NULL);               /*         take next transition      */
+              nIsInp = *CFst_STI_TTis(iSeTrInp, lpTrInp);                       /*         get input symbol          */
+                                                                                /* Compare symbol with symbol of Wom */
               if (strcmp(CData_Sfetch(idInpIs,nIsInp,0),CData_Sfetch(idWomIs, *CFst_STI_TTis(iSeTrWom, CFst_STI_TfromS(iSeTrWom, nTerStWom, NULL)), 0)) != 0){
-                nRet = 0;
-                goto L_EXCEPTION;
-              }
-            }else{
-              nRet = 0;
-              goto L_EXCEPTION;
-            }
-          }
+                nRet = 0; goto L_EXCEPTION;                                     /* Different value with model break  */
+              }                                                                 /*                                   */
+            }else{                                                              /*       otherwise 'INT' not exist   */
+              nRet = 0; goto L_EXCEPTION;                                       /*         but there must be one     */
+            }                                                                   /*                                   */
+          }                                                                     /*                                   */
         }                                                                       /*                                   */
       }                                                                         /*                                   */
       lpTrInp = NULL;                                                           /* Reset lpTrans of itInp            */
@@ -822,7 +856,8 @@ FLOAT64 CGEN_PUBLIC CFvrtools_CompareWithModel(CFvrtools* _this, CFst* itWom, CF
     }                                                                           /*                                   */
   } /* END OF while(!bSearchCompl) */                                           /*                                   */
 
-  nRet = (FLOAT64) nCountInp / (FLOAT64) (CData_GetNRecs(AS(CData,itWom->td))-nCountWom); /* (FLOAT64) nCountWom;   */
+  nRet = nCountInp;                                                             /* absolut number of matched feature */
+      /*(FLOAT64) nCountInp / (FLOAT64) (CData_GetNRecs(AS(CData,itWom->td))-nCountWom); */
 
   /* Clean-up */                                                                /* --------------------------------- */
 L_EXCEPTION:                                                                    /* : Clean exit label                */
