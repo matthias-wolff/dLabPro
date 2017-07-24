@@ -856,8 +856,8 @@ FLOAT64 CGEN_PUBLIC CFvrtools_CompareWithModel(CFvrtools* _this, CFst* itWom, CF
     }                                                                           /*                                   */
   } /* END OF while(!bSearchCompl) */                                           /*                                   */
 
-  nRet = nCountInp;                                                             /* absolut number of matched feature */
-      /*(FLOAT64) nCountInp / (FLOAT64) (CData_GetNRecs(AS(CData,itWom->td))-nCountWom); */
+  nRet = (FLOAT64) nCountInp / (FLOAT64) (CData_GetNRecs(AS(CData,itWom->td))-nCountWom); /* Relative number of      */
+                                                                                /*           matched feature         */
 
   /* Clean-up */                                                                /* --------------------------------- */
 L_EXCEPTION:                                                                    /* : Clean exit label                */
