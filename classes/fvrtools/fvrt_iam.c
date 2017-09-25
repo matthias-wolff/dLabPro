@@ -597,7 +597,7 @@ BOOL CGEN_PUBLIC CFvrtools_Adjust(CFvrtools* _this, CFst* itWom, CFst* itInp){
   /* Start function */                                                          /* --------------------------------- */
   while(!bSearchCompl){                                                         /* Complete if itWom searched        */
     /* Start iteration over all transition of itWom compare with itInp and take right adjustment                     */
-    while(bSearchFwd && !bAddWom){ // && !bAddInp){                             /* Start search in itWom             */
+    while(bSearchFwd && !bAddWom){                                              /* Start search in itWom             */
       if (bTrFound){                                                            /* If before trans in itInp found    */
         bTrFound = FALSE;                                                       /* ... reset to FALSE for next edge  */
         lpTrWom = NULL;                                                         /* ... reset lptrans for next node   */
