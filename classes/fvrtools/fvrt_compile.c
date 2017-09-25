@@ -307,6 +307,7 @@ INT16 CGEN_PROTECTED CFvrtools_ParseSeq
   BYTE*         lpFvrT    = NULL;                                               /* Transition pointer in itFvr       */
   FST_STYPE     nIsBo     = -1;                                                 /* Symbol index of opening brace     */
   FST_STYPE     nIsBc     = -1;                                                 /* Symbol index of closing brace     */
+  FST_STYPE     nIsFs     = -1;                                                 /* Symbol index of final state       */
   INT32         nXIS      = NULL;                                               /* Number input symbols              */
   INT32         nBCnt     = 0;                                                  /* Brace counter                     */
   FST_STYPE     nTis      = -1;                                                 /* Input symbol index in itSeq       */
@@ -317,6 +318,7 @@ INT16 CGEN_PROTECTED CFvrtools_ParseSeq
   FST_ITYPE     nChd      = -1;                                                 /* Child state index in itFvr        */
   FST_ITYPE     nFvrT     = -1;                                                 /* Transition index in itFvr         */
   BOOL          bTis      = FALSE;                                              /* Input symbol found                */
+  BOOL          bFs       = FALSE;                                              /* Final state found                 */
   FST_ITYPE*    lpnTisPar = NULL;                                               /* Next parent state for input symbs.*/
   INT32         i         = 0;                                                  /* Just a loop counter               */
   INT16         nRet      = O_K;                                                /* Return value                      */
@@ -324,6 +326,7 @@ INT16 CGEN_PROTECTED CFvrtools_ParseSeq
   /* Initialize */                                                              /* --------------------------------- */
   nIsBo = CFvrtools_FindIs("[",FALSE,itSeq);                                    /* Find opening brace symbol         */
   nIsBc = CFvrtools_FindIs("]",FALSE,itSeq);                                    /* Find closing brace symbol         */
+  nIsFs = CFvrtools_FindIs("$",FALSE,itSeq);                                    /* Find closing brace symbol         */
   idFvrTd = AS(CData,itFvr->td);                                                /* Get transition table of itFvr     */
   nXIS = CData_GetNRecs(AS(CData,itFvr->is));                                   /* Get number of input symbols       */
 
@@ -361,6 +364,10 @@ INT16 CGEN_PROTECTED CFvrtools_ParseSeq
         break;                                                                  /*       Parsing complete            */
       nBCnt--;                                                                  /*     Count braces                  */
     }                                                                           /*   <<                              */
+    else if (nTis==nIsFs)                                                       /*   Top-level finite state symbol($)*/
+    {                                                                           /*   >>                              */
+      bFs=TRUE;                                                                 /*     Finite state found true       */
+    }                                                                           /*   <<                              */
     else if (nBCnt==0 && nTis<0)                                                /*   Top-level epsilon symbol        */
     {                                                                           /*   >>                              */
       nWL=nW;                                                                   /*     Preserve weight for next iter.*/
@@ -373,6 +380,11 @@ INT16 CGEN_PROTECTED CFvrtools_ParseSeq
       {                                                                         /*     >>                            */
         CData_Dstore(idFvrTd,nTis,nFvrT,CData_FindComp(idFvrTd,NC_TD_TIS));     /*       Store input symbol          */
         CData_Dstore(idFvrTd,nW  ,nFvrT,CData_FindComp(idFvrTd,NC_TD_LSR));     /*       Store weight                */
+        if(bFs)                                                                 /*       Actual state is finite state*/
+        {                                                                       /*       >>                          */
+          CData_Dstore(AS(CData,itFvr->sd),1,nChd,0);                           /*         Mark finite state         */
+          bFs=FALSE;                                                            /*         Reset bool                */
+        }                                                                       /*       <<                          */
       }                                                                         /*     <<                            */
       bTis=TRUE;                                                                /*     Remember had input symbol     */
     }                                                                           /*   <<                              */
@@ -463,6 +475,7 @@ INT16 CGEN_PROTECTED CFvrtools_StrToSeq(CFvrtools* _this, const char* lpsSrc, CF
       break;                                                                    /*     ==                            */
     case '[': /* Fall through */                                                /*   Begin of node                   */
     case ']': /* Fall through */                                                /*   End of node                     */
+    case '$': /* Fall through */                                                /*   End of node                     */
     case '\0':                                                                  /*   End of input                    */
       if (dlp_strlen(lpsTok)>0)                                                 /*     Non-empty token               */
       {                                                                         /*     >>                            */
@@ -471,6 +484,7 @@ INT16 CGEN_PROTECTED CFvrtools_StrToSeq(CFvrtools* _this, const char* lpsSrc, CF
       }                                                                         /*     <<                            */
       if (*x=='[') nBct++; else if (*x==']') nBct--;                            /*     Count brackets                */
       if (*x=='[') CFvrtools_AddToSeq(_this,"[",nU,itSeq);                      /*     Add begin node to sequence    */
+      if (*x=='$') CFvrtools_AddToSeq(_this,"$",nU,itSeq);                      /*     Add final node to sequence    */
       if (*x==']') CFvrtools_AddToSeq(_this,"]",nU,itSeq);                      /*     Add end node to sequence      */
       if (nBct<0)                                                               /*     Too many closing              */
         FVRT_EXCEPTION(FVRT_SEQSYNTAX,"too many \"]\"",0,0);                    /*       Syntax error (irrecoverable)*/
