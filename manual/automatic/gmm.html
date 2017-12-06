@@ -2504,7 +2504,7 @@ Use SSE2 optimization.
 </td>
 			<td class="hidden">&nbsp;</td>
 			<td class="hidden">
-Do not use mixture map
+Ignore mixture map and compute densities for the single Gaussians
 			</td>
 		</tr>
 	</table>
@@ -2652,6 +2652,16 @@ the table will contain one record of <i>M</i> distance values for each input rec
 			<td class="hidden">&nbsp;</td>
 			<td class="hidden">
 Use SSE2 optimization.
+			</td>
+		</tr>
+		<tr>
+			<td class="hidden">&nbsp;&nbsp;</td>
+			<td class="hidden">
+<a href="#opt__nomix"><code class="link">/nomix</code></a>
+</td>
+			<td class="hidden">&nbsp;</td>
+			<td class="hidden">
+Ignore mixture map and compute distances to the single Gaussians
 			</td>
 		</tr>
 	</table>
@@ -2959,7 +2969,7 @@ INT16 <b>CGmm_Noise</b>(CGmm _this, INT64 nDim, INT64 nRecs, data* idDest);<br> 
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">gmm.def(959)</td>
+      <td class="hidden">gmm.def(960)</td>
     </tr>
   </table></div>
   <div class="mframe2">

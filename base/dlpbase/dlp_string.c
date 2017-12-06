@@ -322,10 +322,10 @@ INT32 dlp_strnicmp(const char* lpsStr1, const char* lpsStr2, size_t nCount)
  */
 INT32 dlp_strpcmp(const char* lpsStr1, const char* lpsStr2)
 {
-#ifdef _WINDOWS                                                                 /* -- WINDOZE -->                    */
-	return dlp_stricmp(lpsStr1,lpsStr2);                                          /* Compare case independent          */
+#if defined _WINDOWS || defined __MINGW32__                                     /* -- WINDOZE -->                    */
+  return dlp_stricmp(lpsStr1,lpsStr2);                                          /* Compare case independent          */
 #else                                                                           /* <-- NOT WINDOZE -->               */
-	return dlp_strcmp(lpsStr1,lpsStr2);                                           /* Compare case dependent            */
+  return dlp_strcmp(lpsStr1,lpsStr2);                                           /* Compare case dependent            */
 #endif                                                                          /* <--                               */
 }
 

@@ -847,7 +847,7 @@ END_CODE
   @cgen:option /neglog Compute negative logarithmic probability densities. The computed values are limited to a
                     maximum of 0.5&middot;{@link dceil}.
   @cgen:option /sse2 Use SSE2 optimization.
-  @cgen:option /nomix Do not use mixture map
+  @cgen:option /nomix Ignore mixture map and compute densities for the single Gaussians
   @param idX    Set of feature vectors (input).
   @param idXmap Computation map (input). This map is expected to contain <code>idX.<a href="data.html#fld_nrec"
                 class="code">nrec</a></code> records and <i>M</i> (see above) components. A
@@ -879,6 +879,7 @@ END_CODE
   Gaussians) numeric components. The data type of the components of the output table depends on the floating point
   precision associated with this <code>gmm</code> instance (float and double are possible).</p>
   @cgen:option /sse2 Use SSE2 optimization.
+  @cgen:option /nomix Ignore mixture map and compute distances to the single Gaussians
   @param idX    Set of feature vectors (input).
   @param idXmap Computation map (input). This map is expected to contain <code>idX.<a href="data.html#fld_nrec"
                 class="code">nrec</a></code> records and <i>M</i> (see above) components. A non-zero value of

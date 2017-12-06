@@ -435,7 +435,7 @@ Input/Given FVR.
 	</table>
 	<h3>Return value</h3>
 	<p>
-<code>TRUE</code> if both FVRs are identic, <code>FALSE</code> in a case of edit one.
+<code>TRUE</code> if input FVR <code>itInp</code> compatible with world model FVR <code>itWom</code>, <code>FALSE</code> in a case of edit or missing value in <code>itInp</code>.
 	</p>
   <!--{{ CUSTOM_DOC -->
   <!--}} CUSTOM_DOC -->
@@ -494,7 +494,7 @@ FLOAT64 <b>CFvrtools_CompareWithModel</b>(CFvrtools _this, CFst* itWom, CFst* it
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fvrt_iam.c(703)</td>
+      <td class="hidden">fvrt_iam.c(696)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -1014,7 +1014,7 @@ The <a href="fst.html" class="code">fst</a> to check.
 	</table>
 	<h3>Return value</h3>
 	<p>
-<code>TRUE</code> if the unit is complete, <code>FALSE</code> otherwise.
+<code>TRUE</code> if the unit is complete and on every leaf is the feature "INT" with a value, <code>FALSE</code> otherwise.
 	</p>
   <!--{{ CUSTOM_DOC -->
   <!--}} CUSTOM_DOC -->
