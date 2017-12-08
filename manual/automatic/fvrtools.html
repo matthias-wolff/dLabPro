@@ -397,7 +397,7 @@ BOOL <b>CFvrtools_Adjust</b>(CFvrtools _this, CFst* itWom, CFst* itInp);<br>publ
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fvrt_iam.c(538)</td>
+      <td class="hidden">fvrt_iam.c(540)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -494,7 +494,7 @@ FLOAT64 <b>CFvrtools_CompareWithModel</b>(CFvrtools _this, CFst* itWom, CFst* it
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fvrt_iam.c(696)</td>
+      <td class="hidden">fvrt_iam.c(714)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -503,8 +503,10 @@ FLOAT64 <b>CFvrtools_CompareWithModel</b>(CFvrtools _this, CFst* itWom, CFst* it
 Compare two FVRs each other.
   </p>
   <h3>Description</h3>
-  One input FVR are checked with a world model FVR. The return value is the percent congruence of the input to the world model.
-  The feature "INT" are not consider. This features marks the point of a value in a FVR.
+  One input FVR are checked with a schema FVR. The return value behind the decimal point is a relative number of congruence features of the input with the schema.
+  The number in front of the decimal point indicate the congruence of values which are already given in the schema. A schema with a correlated value with the input FVR has a higher priority as a schema without correlated values.
+  The schema sign the point who should be a value of the input FVR with a finite state on the last feature.
+  Is a value given in the world model FVR, then it must be the same value given in the input FVR otherwise the return value is 0.
 	<h3>Parameters</h3>
 	<table>
 		<tr>
@@ -585,7 +587,7 @@ INT16 <b>CFvrtools_FromFst</b>(CFvrtools _this, CFst* itSeq, CFst* itFvr);<br>pu
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fvrt_iam.c(147)</td>
+      <td class="hidden">fvrt_iam.c(131)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -694,7 +696,7 @@ INT16 <b>CFvrtools_FromString</b>(CFvrtools _this, const char* lpsSrc, CFst* itF
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fvrt_iam.c(126)</td>
+      <td class="hidden">fvrt_iam.c(110)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -988,7 +990,7 @@ BOOL <b>CFvrtools_IsComplete</b>(CFvrtools _this, INT32 nU, CFst* itFvr);<br>pub
 Check itFvr is complete. All values are given.
   </p>
   <h3>Description</h3>
-  This function is searched for the feature "INT" in <code>itFvr</code> and checked there is only one more value after this feature.
+  This function is searched for finite state in <code>itFvr</code> and checked there is only one more value.
 	<h3>Parameters</h3>
 	<table>
 		<tr>
@@ -1014,7 +1016,7 @@ The <a href="fst.html" class="code">fst</a> to check.
 	</table>
 	<h3>Return value</h3>
 	<p>
-<code>TRUE</code> if the unit is complete and on every leaf is the feature "INT" with a value, <code>FALSE</code> otherwise.
+<code>TRUE</code> if the unit is complete and on every finite state is a value given, <code>FALSE</code> otherwise.
 	</p>
   <!--{{ CUSTOM_DOC -->
   <!--}} CUSTOM_DOC -->
@@ -1173,7 +1175,7 @@ INT16 <b>CFvrtools_Synthesize</b>(CFvrtools _this, CFst* itDst, CFst* itFvr);<br
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fvrt_iam.c(169)</td>
+      <td class="hidden">fvrt_iam.c(153)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -1267,7 +1269,7 @@ INT16 <b>CFvrtools_Union</b>(CFvrtools _this, CFst* itDst, CFst* itFvr);<br>publ
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fvrt_iam.c(440)</td>
+      <td class="hidden">fvrt_iam.c(424)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -1276,7 +1278,8 @@ INT16 <b>CFvrtools_Union</b>(CFvrtools _this, CFst* itDst, CFst* itFvr);<br>publ
 Combinates two FVRs
   </p>
   <h3>Description</h3>
-  Union of two FVRs
+  Union of two FVRs. Different values on same position in both instance will be delete.
+  TODO: Another option for different values. (Take both, take last, take first,...)
 	<h3>Parameters</h3>
 	<table>
 		<tr>
@@ -1883,7 +1886,7 @@ INT16 <b>CFvrtools_SeqToFvr</b>(CFvrtools _this, CFst* itSeq, CFst* itFvr);<br>p
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fvrt_compile.c(517)</td>
+      <td class="hidden">fvrt_compile.c(531)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -1976,7 +1979,7 @@ INT16 <b>CFvrtools_StrToSeq</b>(CFvrtools _this, const char* lpsSrc, CFst* itSeq
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fvrt_compile.c(425)</td>
+      <td class="hidden">fvrt_compile.c(437)</td>
     </tr>
   </table></div>
   <div class="mframe2">

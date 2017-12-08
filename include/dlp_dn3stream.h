@@ -35,6 +35,7 @@
 #define CDN3_READ  0
 #define CDN3_WRITE 1
 
+#undef COMP_DESCR_LEN
 #define COMP_DESCR_LEN          8
 #define CDN3_XFERBUFLEN         20000
 #define CDN3_MAXLEVEL           20

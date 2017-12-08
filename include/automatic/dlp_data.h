@@ -112,7 +112,6 @@
 #define CDATA_MARK_COMPS    1
 #define CDATA_MARK_BLOCKS   2
 #define CDATA_MARK_CELLS    3
-#define COMP_DESCR_LEN    8
 #define PRINTBREAK       -1
 #define PRINTNEXT        -2
 #define AXES_DESCRLEN    10

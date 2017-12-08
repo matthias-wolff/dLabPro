@@ -30,7 +30,7 @@
 #include "dlp_base.h"
 
 /* Defines */
-#define COMP_DESCR_LEN      8
+#define COMP_DESCR_LEN    255
 #define CDN3_XFERBUFLEN 20000
 #define COMP_ALLOC         20
 
