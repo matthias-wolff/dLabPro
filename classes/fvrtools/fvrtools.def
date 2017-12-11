@@ -241,7 +241,7 @@ COMMENT: Combinates two FVRs
 END_MAN
 
 METHOD:  -adjust
-SYNTAX:  BOOL (INSTANCE(fst) itWom, INSTANCE(fst) itInp)
+SYNTAX:  BOOL (INSTANCE(fst) itWom, INSTANCE(fst) itInp, INSTANCE(fst) itQry)
 COMMENT: Adjust a FVR with a given model of FVR and update both.
 /html MAN:
   Compare a input FVR <code>itInp</code> with a given world model FVR <code>itWom</code>. 
@@ -263,6 +263,13 @@ COMMENT: Compare two FVRs each other.
   Is a value given in the world model FVR, then it must be the same value given in the input FVR otherwise the return value is 0.
   @param itWom World Model FVR.
   @param itInp FVR input. 
+END_MAN
+
+METHOD:  -hash
+SYNTAX:  string (int nU, INSTANCE(fst) itFvr)
+COMMENT: Hashvalue for an FVR.
+/html MAN:
+TODO
 END_MAN
 
 -cgen

@@ -233,8 +233,6 @@ INT16 CGEN_PROTECTED CFvrtools_CheckSeq(CFvrtools* _this, CFst* itSeq, CData* id
       nS = *CFst_STI_TTer(lpTI,lpT);                                            /*     Get next state                */
     }                                                                           /*   <<                              */
     dlp_strtrimright(lpO);                                                      /*   Trim tailing space from comment */
-
-    CFst_STI_Done(lpTI);                                                        /*   Dispose of iterator             */
   }                                                                             /* <<                                */
 
   /* Remove (XX) in output symbols & check for singular [ or ] */               /* --------------------------------- */
@@ -261,15 +259,16 @@ INT16 CGEN_PROTECTED CFvrtools_CheckSeq(CFvrtools* _this, CFst* itSeq, CData* id
 
   /* Remove empty output symbols */
   lpI=(char*)CData_XAddr(idS,0,0);                                              /* Get symbol pointer                */
+  CFst_STI_Done(lpTI);                                                        /*   Dispose of iterator             */
   lpTI=CFst_STI_Init(itSeq,0,0);                                                /* Setup iterator without sorting    */
   for(lpT=lpTI->lpFT ; lpT<lpTI->lpFT+lpTI->nRlt*lpTI->nXT ; lpT+=lpTI->nRlt){  /* Loop over all transitions >>      */
     FST_STYPE *nTis=CFst_STI_TTis(lpTI,lpT);                                    /*   Get input symbol pointer        */
     if(*nTis>=0 && *nTis<nXI && !lpI[*nTis*nOI]) *nTis=-1;                      /*   Clear input sym. on empty string*/
   }                                                                             /* <<                                */
-  CFst_STI_Done(lpTI);                                                          /* Finalize iterator                 */
-
+  
   /* Clean-up */                                                                /* --------------------------------- */
 L_EXCEPTION:                                                                    /* : Clean exit label                */
+  CFst_STI_Done(lpTI);                                                          /* Finalize iterator                 */
   return nRet;                                                                  /* Return                            */
 }
 
@@ -391,8 +390,16 @@ INT16 CGEN_PROTECTED CFvrtools_ParseSeq
 
     nIni = nTer;                                                                /*   Next state in sequence          */
   }                                                                             /* <<                                */
-  if (!bTis)                                                                    /* Didn't get an input symbol        */
+
+  if (!bTis && !bFs)                                                            /* Didn't get an input symbol        */
+  {                                                                             /* >>                                */
     IERROR(_this,FVRT_NOTIS,nFvrT,0,0);                                         /*   Warning                         */
+  }                                                                             /* <<                                */
+  else if (!bTis && bFs)                                                        /* otherwise there is an input symbol*/
+  {                                                                             /* >>                                */
+    CData_Dstore(AS(CData,itFvr->sd),1,nChd,0);                                 /*   Mark finite state without symbol*/
+    bFs=FALSE;                                                                  /*   Reset bool                      */
+  }                                                                             /* <<                                */
 
   /* Weird wire: cascade equally labeled transitions */                         /* --------------------------------- */
   lpnTisPar = (FST_ITYPE*)dlp_calloc(nXIS,sizeof(FST_ITYPE));                   /* Parent state for inp.symb. list   */
