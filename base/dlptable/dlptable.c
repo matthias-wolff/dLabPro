@@ -223,8 +223,8 @@ INT16 CDlpTable_Copy(CDlpTable* _this, CDlpTable* lpiSrc, INT32 nFirstRec, INT32
   if(CDlpTable_Allocate(_this,nRecs)!=O_K) return NOT_EXEC;
 
   dlp_memmove(_this->m_theDataPointer,
-              lpiSrc->m_theDataPointer + (_this->m_reclen * nFirstRec),
-              nRecs * _this->m_reclen);
+              lpiSrc->m_theDataPointer + ((INT64)_this->m_reclen * (INT64)nFirstRec),
+              (INT64)nRecs * (INT64)_this->m_reclen);
 
   if((nFirstRec + nRecs) > CDlpTable_GetNRecs(lpiSrc))
     CDlpTable_SetNRecs(_this,CDlpTable_GetNRecs(lpiSrc) - nFirstRec);
@@ -1085,7 +1085,7 @@ INT16 CDlpTable_Cstore(CDlpTable* _this, COMPLEX64 nVal, INT32 nRec, INT32 nComp
 
   c = &_this->m_compDescrList[nComp];
   t = c->ctype;
-  p = _this->m_theDataPointer+nRec*_this->m_reclen+c->offset;
+  p = _this->m_theDataPointer+(INT64)nRec*(INT64)_this->m_reclen+(INT64)c->offset;
 
   return dlp_store(nVal,p,t);
 }
