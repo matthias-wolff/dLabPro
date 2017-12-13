@@ -979,8 +979,8 @@ BYTE* CDlpTable_XAddr(CDlpTable* _this, INT32 nRec, INT32 nComp)
   if((nRec>=0)&&(nRec<_this->m_maxrec)&&(nComp>=0)&&(nComp<_this->m_dim))
   {
     return _this->m_theDataPointer             +
-           nRec*_this->m_reclen                +
-           _this->m_compDescrList[nComp].offset;
+           (INT64)nRec*(INT64)_this->m_reclen  +
+           (INT64)_this->m_compDescrList[nComp].offset;
   }
 
   return NULL;
