@@ -1368,7 +1368,7 @@ INT16 CDlpTable_Join(CDlpTable* _this, CDlpTable* lpiSrc)
   nRlD   = nRlT+nRlS;                                                           /* Destination record length         */
 
   /* Assemble destination data */                                               /* --------------------------------- */
-  lpData = (BYTE*)dlp_malloc(nRlD*nXRD);                                        /* Get new data memory               */
+  lpData = (BYTE*)dlp_malloc((INT64)nRlD*(INT64)nXRD);                          /* Get new data memory               */
   for                                                                           /* Loop over destination records     */
   (                                                                             /* |                                 */
     nR=0, lpTd=lpData, lpSd=lpData+nRlT,                                        /* |                                 */
