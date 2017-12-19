@@ -564,7 +564,7 @@ BOOL CGEN_PUBLIC CFvrtools_Adjust(CFvrtools* _this, CFst* itWom, CFst* itInp, CF
   CData*        idQryIs      = NULL;                                            /* InputSymbol table of itInp        */
   CData*        idTInp       = NULL;                                            /* Transition table of Inp           */
   CData*        idTQry       = NULL;                                            /* Transition table of Qry           */
-  CData*        idWomS       = NULL;                                            /* Transition table of Inp           */
+  CData*        idInpS       = NULL;                                            /* Transition table of Inp           */
   CData*        idSymPath    = NULL;                                            /* Data for path of symbol           */
   FST_ITYPE     nCTISInp;                                                       /* Index line ~TIS of itInp          */
   FST_ITYPE     nCTISQry;                                                       /* Index line ~TIS of itInp          */
@@ -597,7 +597,7 @@ BOOL CGEN_PUBLIC CFvrtools_Adjust(CFvrtools* _this, CFst* itWom, CFst* itInp, CF
   idWomIs = AS(CData,itWom->is);                                                /* InputSymbol table of itWom        */
   idInpIs = AS(CData,itInp->is);                                                /* InputSymbol table of itInp        */
   idTInp  = AS(CData,itInp->td);                                                /* Sequence table of itInp           */
-  idWomS  = AS(CData,itWom->sd);                                                /* Sequence table of itFvr           */
+  idInpS  = AS(CData,itInp->sd);                                                /* Sequence table of itFvr           */
   idQryIs = AS(CData,itQry->is);                                                /* InputSymbol table of itQry        */
   idTQry  = AS(CData,itQry->td);                                                /* Transition table of itQry         */
 
@@ -622,12 +622,13 @@ BOOL CGEN_PUBLIC CFvrtools_Adjust(CFvrtools* _this, CFst* itWom, CFst* itInp, CF
       bTrFound = FALSE;                                                         /*   Found symbol of itWom           */
       if (nIsWom==-1){                                                          /*   Should be value in itInp        */
         if((lpTrInp=CFst_STI_TfromS(iSeTrInp, nIniStInp, NULL))!=NULL){         /*   Is there a value?               */
-          if(CData_Dfetch(idWomS,*CFst_STI_TTer(iSeTrInp, lpTrInp),0)==1) bTrFound = TRUE; /* Should be final state  */
+          if(CData_Dfetch(idInpS,*CFst_STI_TTer(iSeTrInp, lpTrInp),0)==1) bTrFound = TRUE; /* Should be final state  */
         }                                                                       /*     Value found, all right        */
       }                                                                         /*                                   */
       else{                                                                     /*   OTHERWISE                       */
         CData_Reallocate(idSymPath,CData_GetNRecs(idSymPath)+1);                /*     store sym to remember on path */
         CData_Dstore(idSymPath, nIsWom, CData_GetNRecs(idSymPath)-1, 0);        /*     ...to built up itQry          */
+        lpTrInp = NULL;
         while ((lpTrInp=CFst_STI_TfromS(iSeTrInp, nIniStInp, lpTrInp))!=NULL){  /*     find correct trans of itInp   */
           nIsInp = *CFst_STI_TTis(iSeTrInp, lpTrInp);                           /*     Get TIS of itInp transition   */
           if (dlp_strcmp(CData_Sfetch(idInpIs,nIsInp,0), CData_Sfetch(idWomIs,nIsWom,0)) == 0){/*Compare both symbols*/
@@ -757,12 +758,12 @@ FLOAT64 CGEN_PUBLIC CFvrtools_CompareWithModel(CFvrtools* _this, CFst* itWom, CF
 
   /* Count number of features, number of input features should not be bigger of number of schema features            */
   nCountWom = CData_GetNRecs(idWomTd);                                          /* Get number of Wom transitions     */
-  nAux = 0; while(nAux <= CData_GetNRecs(idWomS)){                              /* Iteration over ini states         */
+  nAux = 0; while(nAux < CData_GetNRecs(idWomS)){                               /* Iteration over ini states         */
     if(CData_Dfetch(idWomS,nAux,0)==1)                                          /* Found final state                 */
       nCountWom--;                                                              /*   Count                           */
     nAux++;                                                                     /* next state                        */
   }                                                                             /*                                   */
-  nAux = 0; while(nAux <= CData_GetNRecs(idInpS)){                              /* Iteration over states of itInp    */
+  nAux = 0; while(nAux < CData_GetNRecs(idInpS)){                               /* Iteration over states of itInp    */
     if(CData_Dfetch(idInpS,nAux,0)==1)                                          /* Found final state                 */
       nCountInp++;                                                              /*   Count value (final state)       */
     nAux++;                                                                     /* next state                        */
@@ -793,7 +794,7 @@ FLOAT64 CGEN_PUBLIC CFvrtools_CompareWithModel(CFvrtools* _this, CFst* itWom, CF
       if(bTrFound==TRUE){                                                       /*   When trans. found in itInp >>   */
         nIniStInp = *CFst_STI_TTer(iSeTrInp, lpTrInp);                          /*     Take next state of itInp      */
         nIniStWom = *CFst_STI_TTer(iSeTrWom, lpTrWom);                          /*     Take next state of itWom      */
-        if(bValFound==FALSE) { nCountInp++; }                                   /*     No value --> count feature    */
+        if(bValFound==FALSE) nCountInp++;                                       /*     No value --> count feature    */
         else{                                                                   /*     Otherwise                     */
           if (CData_Dfetch(idInpS,nIniStInp,0)==1) nCountVal++;                 /*       final state? count value    */
           else { nRet = 0; goto L_EXCEPTION; }                                  /*       otherwise error, there has  */
