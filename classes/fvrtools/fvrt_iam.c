@@ -732,6 +732,8 @@ FLOAT64 CGEN_PUBLIC CFvrtools_CompareWithModel(CFvrtools* _this, CFst* itWom, CF
   FST_ITYPE     nCountInp    = 0;                                               /* Counter of itInp                  */
   FST_ITYPE     nCountVal    = 0;                                               /* Counter of abs. congruence value  */
   FST_ITYPE     nAux;                                                           /* Auxiliary value                   */
+  FST_ITYPE     nCountWomFin = 0;                                               /* Counter for values in itWom       */
+  FST_ITYPE     nDifCount    = 0;                                               /* Counter for different path search */
 
   ICREATEEX(CData,idAux,"CFvrtools_CompareWithModel~idAux",NULL);               /*                                   */
 
@@ -759,8 +761,7 @@ FLOAT64 CGEN_PUBLIC CFvrtools_CompareWithModel(CFvrtools* _this, CFst* itWom, CF
   /* Count number of features, number of input features should not be bigger of number of schema features            */
   nCountWom = CData_GetNRecs(idWomTd);                                          /* Get number of Wom transitions     */
   nAux = 0; while(nAux < CData_GetNRecs(idWomS)){                               /* Iteration over ini states         */
-    if(CData_Dfetch(idWomS,nAux,0)==1)                                          /* Found final state                 */
-      nCountWom--;                                                              /*   Count                           */
+    if(CData_Dfetch(idWomS,nAux,0)==1) nCountWomFin++;                          /* Count final state                 */
     nAux++;                                                                     /* next state                        */
   }                                                                             /*                                   */
   nAux = 0; while(nAux < CData_GetNRecs(idInpS)){                               /* Iteration over states of itInp    */
@@ -768,7 +769,8 @@ FLOAT64 CGEN_PUBLIC CFvrtools_CompareWithModel(CFvrtools* _this, CFst* itWom, CF
       nCountInp++;                                                              /*   Count value (final state)       */
     nAux++;                                                                     /* next state                        */
   }                                                                             /*                                   */
-  if(nCountWom < CData_GetNRecs(idInpTd)-nCountInp){                            /* Compare time of features          */
+  /* Compare time of features and final state                                                                        */
+  if ((nCountWom - nCountWomFin< CData_GetNRecs(idInpTd)-nCountInp)){           /*                                   */
     nRet = 0;                                                                   /*   to less features in itInp       */
     goto L_EXCEPTION;                                                           /*   breakup                         */
   }                                                                             /*                                   */
@@ -783,14 +785,15 @@ FLOAT64 CGEN_PUBLIC CFvrtools_CompareWithModel(CFvrtools* _this, CFst* itWom, CF
       if(nIsWom!=-1 && CData_Dfetch(idWomS,nTerStWom,0)==1) bValFound = TRUE;   /*   to check is final state         */
                                                                                 /*                                   */
       lpTrInp = NULL; bTrFound = FALSE;                                         /*   Reset iterator and bool         */
-      while ((lpTrInp=CFst_STI_TfromS(iSeTrInp, nIniStInp, lpTrInp))!=NULL){    /*     find correct trans of itInp   */
-        nIsInp = *CFst_STI_TTis(iSeTrInp, lpTrInp);                             /*     Get TIS of itInp transition   */
-        if (dlp_strcmp(CData_Sfetch(idInpIs,nIsInp,0), CData_Sfetch(idWomIs,nIsWom,0)) == 0){/*Compare both symbols  */
-          bTrFound = TRUE;                                                      /*       bool nothing to add in itQry*/
-          break;                                                                /*       no more transitions possible*/
-        }                                                                       /*     <<                            */
-      }                                                                         /*   <<                              */
-                                                                                /*                                   */
+      if (nDifCount == 0){                                                      /*   Use itInp only on same rank     */
+        while ((lpTrInp=CFst_STI_TfromS(iSeTrInp, nIniStInp, lpTrInp))!=NULL){  /*     find correct trans of itInp   */
+          nIsInp = *CFst_STI_TTis(iSeTrInp, lpTrInp);                           /*     Get TIS of itInp transition   */
+          if (dlp_strcmp(CData_Sfetch(idInpIs,nIsInp,0), CData_Sfetch(idWomIs,nIsWom,0)) == 0){/*Compare both symbols*/
+            bTrFound = TRUE;                                                    /*       bool nothing to add in itQry*/
+            break;                                                              /*       no more transitions possible*/
+          }                                                                     /*     <<                            */
+        }                                                                       /*   <<                              */
+      }                                                                         /*                                   */
       if(bTrFound==TRUE){                                                       /*   When trans. found in itInp >>   */
         nIniStInp = *CFst_STI_TTer(iSeTrInp, lpTrInp);                          /*     Take next state of itInp      */
         nIniStWom = *CFst_STI_TTer(iSeTrWom, lpTrWom);                          /*     Take next state of itWom      */
@@ -800,22 +803,27 @@ FLOAT64 CGEN_PUBLIC CFvrtools_CompareWithModel(CFvrtools* _this, CFst* itWom, CF
           else { nRet = 0; goto L_EXCEPTION; }                                  /*       otherwise error, there has  */
         }                                                                       /*         ... to be a value in itInp*/
         lpTrWom = NULL;                                                         /*     Reset for next iteration step */
-      }else{                                                                    /*   << When transition not found >> */
-        if(bValFound) { nRet = 0; goto L_EXCEPTION; }                           /*     Missing value in itInp        */
+      }else if(bValFound) {                                                     /*   << When transition not found >> */
+        nRet = 0; goto L_EXCEPTION;                                             /*     Missing value in itInp        */
+      }else{                                                                    /*   << Check only itWom for value >>*/
+        nDifCount++; nIniStWom = nTerStWom; lpTrWom = NULL;                     /*     Next rank, next state...search*/
       }                                                                         /*   <<                              */
     }                                                                           /* <<                                */
                                                                                 /*                                   */
     if (lpTrWom==NULL){                                                         /* No trans in itWom go back >>      */
       lpTrWom = CFst_STI_TtoS(iSeTrWom, nIniStWom, NULL);                       /*   Get previous transition of itWom*/
-      lpTrInp = CFst_STI_TtoS(iSeTrInp, nIniStInp, NULL);                       /*   Get previous transition of itInp*/
       if (lpTrWom==NULL){ break; }                                              /*   Root reached -> leaf main func. */
       nIniStWom = *CFst_STI_TIni(iSeTrWom, lpTrWom);                            /*   Get previous Ini state of itWom */
-      nIniStInp = *CFst_STI_TIni(iSeTrInp, lpTrInp);                            /*   Get previous Ini state of itInp */
+      if (nDifCount > 0) nDifCount--;                                           /*   Not same rank, search only itWom*/
+      else {                                                                    /*   Same rank...                    */
+        lpTrInp = CFst_STI_TtoS(iSeTrInp, nIniStInp, NULL);                     /*   Get previous transition of itInp*/
+        nIniStInp = *CFst_STI_TIni(iSeTrInp, lpTrInp);                          /*   Get previous Ini state of itInp */
+      }                                                                         /*                                   */
     }                                                                           /* <<                                */
   }                                                                             /* END of while(TRUE)                */
 
   /* Relative number of matched feature + absolute congruence value                                                  */
-  nRet = nCountVal + (FLOAT64) nCountInp / (FLOAT64) nCountWom;
+  nRet = nCountVal + (FLOAT64) nCountInp / (FLOAT64) (nCountWom - nCountWomFin);
 
   /* Clean-up */                                                                /* --------------------------------- */
 L_EXCEPTION:                                                                    /* : Clean exit label                */
