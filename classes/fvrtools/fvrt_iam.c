@@ -41,8 +41,9 @@ BOOL CGEN_PUBLIC CFvrtools_IsFvr(CFvrtools* _this, INT32 nU, CFst* itFvr)
     return OK(IERROR(_this,ERR_NULLINST,"itFvr",0,0));                          /*   but must not be                 */
   if (nU<0 || nU>=UD_XXU(itFvr))                                                /* Unit index is invalid             */
     return OK(IERROR(itFvr,FST_BADID,"unit",nU,0));                             /*   but must not be                 */
-  if ((nIsFvr = CFvrtools_FindIs("FVR",FALSE,itFvr))<0)                         /* Find input symbol "FVR"           */
-    return FALSE;                                                               /*   Not found -> not an FVR         */
+  if (!_this->m_bNofvrcheck)                                                    /* "FVR[...]" checking enabled       */
+    if ((nIsFvr = CFvrtools_FindIs("FVR",FALSE,itFvr))<0)                       /*   Find input symbol "FVR"         */
+      return FALSE;                                                             /*     Not found -> not an FVR       */
 
   /* Structure test */                                                          /* --------------------------------- */
   if (CFst_Analyze(itFvr,nU,FST_FWDTREE)==0) return FALSE;                      /* Not a forward tree -> not an FVR  */

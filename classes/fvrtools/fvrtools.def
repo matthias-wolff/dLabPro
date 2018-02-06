@@ -126,6 +126,11 @@ LEVEL:   EL_WARNING
   <p>will produce this warning.</p> 
 END_MAN
 
+## -- Options --
+
+OPTION:  /nofvrcheck
+COMMENT: Do not check for enclosing <code>'FVR[...]'</code>.
+
 ## -- Methods --
 
 METHOD:  -is_fvr
@@ -142,6 +147,7 @@ COMMENT: Determines if the argument is an FVR
   @param nU    The unit of <code>itFvr</code> to test.
   @param itFvr The <a href="fst.html" class="code">fst</a> to test.
   @return <code>TRUE</code> if the unit is a FVR, <code>FALSE</code> otherwise.
+  @cgen:option /nofvrcheck Do not check for enclosing "FVR[...]".
 END_MAN
 
 METHOD:  -is_complete
@@ -175,6 +181,7 @@ COMMENT: Creates a (weighted) FVR from a string representation
 
   @param src The source string.
   @param itFvr The target FST, must not be <code>NULL</code>.
+  @cgen:option /nofvrcheck Do not check for enclosing "FVR[...]".
   @return void
 END_MAN
 
@@ -192,6 +199,7 @@ COMMENT: Creates a (weighted) FVR from an FST containing a single path.
   @param itSeg The source FST, must contain exactly one path.
   @param itFvr The target FST, must not be <code>NULL</code>.
   @return void
+  @cgen:option /nofvrcheck Do not check for enclosing "FVR[...]".
   @see -from_string
 END_MAN
 
