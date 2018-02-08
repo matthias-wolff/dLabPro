@@ -180,10 +180,10 @@ INT16 CGEN_PUBLIC CFunction::Status()
  */
 INT16 CGEN_PUBLIC CFunction::PrintStackTrace()
 {
-	for(CFunction* f = this; f; f = f->GetCaller())
- 		printf("\nat %s(%ld)",f->GetSrcFile(f->m_nPp),__LINE_EX(f->m_idTsq,f->m_nPp));
-	printf("\n");
-	return O_K;
+  for(CFunction* f = this; f; f = f->GetCaller())
+    printf("\nat %s(%ld)",f->GetSrcFile(f->m_nPp),__LINE_EX(f->m_idTsq,f->m_nPp));
+  printf("\n");
+  return O_K;
 }
 
 /**

@@ -627,4 +627,23 @@ BOOL CGEN_PUBLIC CFunction::IsInstance(const char* sInstanceId, const char* sCla
   return ((CDlpObject*)lpWord->lpData)->IsKindOf(sClassId);
 }
 
+/*
+ * Manual page at function.def
+ */
+INT16 CGEN_PUBLIC CFunction::Stacktrace(CData* idTrace)
+{
+  char s[L_INPUTLINE];
+  if (idTrace==NULL)
+	return NOT_EXEC;
+  idTrace->Reset(TRUE);
+  idTrace->AddComp("stack",255);
+  for(CFunction* f = this; f; f = f->GetCaller())
+  {
+    snprintf(s,L_INPUTLINE,"%s(%d)",f->GetSrcFile(f->m_nPp),__LINE_EX(f->m_idTsq,f->m_nPp));
+    s[L_INPUTLINE-1]='\0';
+    idTrace->Sstore(s,idTrace->AddRecs(1,10),0);
+  }
+  return O_K;
+}
+
 // EOF

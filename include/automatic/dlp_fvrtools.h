@@ -109,6 +109,7 @@ public:
 	INT16 OnFromString();
 	INT16 OnFsgFvrCheck();
 	INT16 OnFsgNormalize();
+	INT16 OnHash();
 	INT16 OnIsComplete();
 	INT16 OnIsFvr();
 	INT16 OnSynthesize();
@@ -141,8 +142,9 @@ public:
 	public: INT16 FromFst(CFst* itSeq, CFst* itFvr);
 	public: INT16 Synthesize(CFst* itDst, CFst* itFvr);
 	public: INT16 Union(CFst* itDst, CFst* itFvr);
-	public: BOOL Adjust(CFst* itWom, CFst* itInp);
+	public: BOOL Adjust(CFst* itWom, CFst* itInp, CFst* itQry);
 	public: FLOAT64 CompareWithModel(CFst* itWom, CFst* itInp);
+	public: const char* Hash(INT32 nU, CFst* itFvr);
 
 /* Taken from 'fvrt_compile.c' */
 	protected: static FST_STYPE FindIs(const char* lpsStr, BOOL bAdd, CFst* itFst);
@@ -180,6 +182,7 @@ typedef struct CFvrtools
 /*}}CGEN_FIELDS */
 
 /*{{CGEN_OPTIONS */
+	BOOL m_bNofvrcheck;
 /*}}CGEN_OPTIONS */
 }
 
@@ -220,6 +223,7 @@ INT16 CFvrtools_OnFromFst(CDlpObject*);
 INT16 CFvrtools_OnFromString(CDlpObject*);
 INT16 CFvrtools_OnFsgFvrCheck(CDlpObject*);
 INT16 CFvrtools_OnFsgNormalize(CDlpObject*);
+INT16 CFvrtools_OnHash(CDlpObject*);
 INT16 CFvrtools_OnIsComplete(CDlpObject*);
 INT16 CFvrtools_OnIsFvr(CDlpObject*);
 INT16 CFvrtools_OnSynthesize(CDlpObject*);
@@ -249,8 +253,9 @@ INT16 CFvrtools_FromString(CFvrtools*, const char* lpsSrc, CFst* itFvr);
 INT16 CFvrtools_FromFst(CFvrtools*, CFst* itSeq, CFst* itFvr);
 INT16 CFvrtools_Synthesize(CFvrtools*, CFst* itDst, CFst* itFvr);
 INT16 CFvrtools_Union(CFvrtools*, CFst* itDst, CFst* itFvr);
-BOOL CFvrtools_Adjust(CFvrtools*, CFst* itWom, CFst* itInp);
+BOOL CFvrtools_Adjust(CFvrtools*, CFst* itWom, CFst* itInp, CFst* itQry);
 FLOAT64 CFvrtools_CompareWithModel(CFvrtools*, CFst* itWom, CFst* itInp);
+const char* CFvrtools_Hash(CFvrtools*, INT32 nU, CFst* itFvr);
 
 /* Taken from 'fvrt_compile.c' */
 FST_STYPE CFvrtools_FindIs(const char* lpsStr, BOOL bAdd, CFst* itFst);

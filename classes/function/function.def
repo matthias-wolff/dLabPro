@@ -1430,6 +1430,10 @@ END_CODE
   @param lpsError dLabPro error code in the format "&lt;classname&gt;&lt;errornumber&gt;", e.g. "function1007"
 END_MAN
 
+METHOD:  -stacktrace
+SYNTAX:  (data idTrace)
+COMMENT: Dumps the stack trace to a data table.
+
 ## Methods - Miscellaneous
 METHOD:   -argv
 COMMENT:  Gets a command line argument.

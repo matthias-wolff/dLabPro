@@ -90,6 +90,7 @@ INT16 CFunction::AutoRegisterWords()
 	REGISTER_METHOD("-save","",LPMF(CFunction,OnSave),"Saves an instance to a file.",0,"<string filename> <instance iInst>","")
 	REGISTER_METHOD("-see","see",LPMF(CFunction,OnSee),"Prints field(s) of an instance.",0,"<instance iInst>","<field_id>|*")
 	REGISTER_METHOD("-set","set",LPMF(CFunction,OnSet),"Writes a field of an instance.",0,"<value> <instance iInst>","<field_id>")
+	REGISTER_METHOD("-stacktrace","",LPMF(CFunction,OnStacktrace),"Dumps the stack trace to a data table.",0,"<data idTrace> <function this>","")
 	REGISTER_METHOD("-status","",LPMF(CFunction,Status),"Prints status information of the function.",0,"<function this>","")
 	REGISTER_METHOD("-swap","",LPMF(CFunction,Swap),"Exchanges the two top stack elements.",0,"<function this>","")
 	REGISTER_METHOD("-system","",LPMF(CFunction,OnSystem),"Executes a shell command.",0,"<string sCmd> <function this>","")
@@ -491,6 +492,20 @@ INT16 CFunction::OnPrompt()
 	char* sMessage = MIC_GET_S(1,0);
 	if (CDlpObject_GetErrorCount()>__nErrCnt) return NOT_EXEC;
 	__nErr = Prompt(sMessage);
+	return __nErr;
+}
+
+INT16 CFunction::OnStacktrace()
+/* DO NOT CALL THIS FUNCTION FROM C++ SCOPE.     */
+/* IT MAY INTERFERE WITH THE INTERPRETER SESSION */
+{
+	INT16 __nErr    = O_K;
+	INT32  __nErrCnt = 0;
+	MIC_CHECK;
+	__nErrCnt = CDlpObject_GetErrorCount();
+	data* idTrace = MIC_GET_I_EX(idTrace,data,1,1);
+	if (CDlpObject_GetErrorCount()>__nErrCnt) return NOT_EXEC;
+	__nErr = Stacktrace(idTrace);
 	return __nErr;
 }
 

@@ -172,6 +172,7 @@ public:
 	INT16 OnLoad();
 	INT16 OnPid();
 	INT16 OnPrompt();
+	INT16 OnStacktrace();
 	INT16 OnSystem();
 	INT16 OnTraceError();
 	INT16 OnVersion();
@@ -306,6 +307,7 @@ public:
 	public: INT32 System(const char* lpsCmd);
 	public: BOOL Platform(const char* lpsPlatformId);
 	public: BOOL IsInstance(const char* sInstanceId, const char* sClassId);
+	public: INT16 Stacktrace(CData* idTrace);
 
 // Taken from 'fnc_itp.cpp'
 	protected: INT16 ItpAsFormula(const char* lpsToken);
