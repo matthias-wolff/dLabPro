@@ -425,116 +425,132 @@ L_EXCEPTION:                                                                    
 /*
  * Documentation in fvrtools.def
  */
-INT16 CGEN_PUBLIC CFvrtools_Union(CFvrtools* _this, CFst* itDst, CFst* itFvr)
+BOOL CGEN_PUBLIC CFvrtools_Union(CFvrtools* _this, CFst* itExp, CFst* itInp)
 {
-  INT16         nRet        = O_K;                                              /* The return value                  */
-  FST_ITYPE     nIniStFvr   = 0;                                                /* Ini state of itFvr                */
-  FST_ITYPE     nIniStDst   = 0;                                                /* Ini state of itDst                */
-  FST_ITYPE     nTerStFvr   = NULL;                                             /* State iterator of original Fvr    */
-  FST_ITYPE     nTerStDst   = NULL;                                             /* State iterator of original Dst    */
-  FST_ITYPE     nIsFvr;                                                         /* Input symbol of Fvr node          */
-  FST_ITYPE     nIsDst;                                                         /* Input symbol of Dst node          */
+  BOOL          nRet        = TRUE;                                              /* The return value                  */
+  FST_ITYPE     nIniStInp   = 0;                                                /* Ini state of itInp                */
+  FST_ITYPE     nIniStExp   = 0;                                                /* Ini state of itExp                */
+  FST_ITYPE     nTerStInp   = NULL;                                             /* State iterator of original Fvr    */
+  FST_ITYPE     nTerStExp   = NULL;                                             /* State iterator of original Dst    */
+  FST_ITYPE     nIsInp;                                                         /* Input symbol of Fvr node          */
+  FST_ITYPE     nIsExp;                                                         /* Input symbol of Dst node          */
   FST_ITYPE     nAux;                                                           /* Auxilary value                    */
   FST_ITYPE     nCTIS;                                                          /* Index line ~TIS                   */
-  FST_ITYPE     nCLsrFvr;                                                       /* Index line ~LSR of itFvr          */
-  FST_ITYPE     nCLsrDst;                                                       /* Index line ~LSR of itDst          */
-  FST_WTYPE     nWFvr;                                                          /* Weight of first Fvr               */
-  FST_WTYPE     nWDst;                                                          /* Weight of second Fvr (Dst)        */
-  FST_TID_TYPE* iSeTrFvr    = CFst_STI_Init(itFvr,0,FSTI_SORTTER);              /* find trans. of first itFvr        */
-  FST_TID_TYPE* iSeTrDst    = CFst_STI_Init(itDst,0,FSTI_SORTTER);              /* find trans. of second itDst       */
-  BYTE*         lpTrFvr     = NULL;                                             /* Transition of itFvr               */
-  BYTE*         lpTrDst     = NULL;                                             /* Transition of itDst               */
+  FST_ITYPE     nCLsrInp;                                                       /* Index line ~LSR of itInp          */
+  FST_ITYPE     nCLsrExp;                                                       /* Index line ~LSR of itExp          */
+  FST_WTYPE     nWInp;                                                          /* Weight of first Fvr               */
+  FST_WTYPE     nWExp;                                                          /* Weight of second Fvr (Dst)        */
+  FST_TID_TYPE* iSeTrInp    = CFst_STI_Init(itInp,0,FSTI_SORTTER);              /* find trans. of first itInp        */
+  FST_TID_TYPE* iSeTrExp    = CFst_STI_Init(itExp,0,FSTI_SORTTER);              /* find trans. of second itExp       */
+  BYTE*         lpTrInp     = NULL;                                             /* Transition of itInp               */
+  BYTE*         lpTrExp     = NULL;                                             /* Transition of itExp               */
   BOOL          SearchCompl = FALSE;                                            /* State of search                   */
-  CData*        idFvrIs     = NULL;                                             /* InputSymbol table of itFvr        */
-  CData*        idDstIs     = NULL;                                             /* InputSymbol table of itDst        */
-  CData*        idTFvr      = NULL;                                             /* Transition table of Fvr           */
-  CData*        idTDst      = NULL;                                             /* Transition table of Dst           */
-  CData*        idSFvr      = NULL;                                             /* State table of Fvr                */
-  CData*        idSDst      = NULL;                                             /* State table of Dst                */
+  CData*        idInpIs     = NULL;                                             /* InputSymbol table of itInp        */
+  CData*        idExpIs     = NULL;                                             /* InputSymbol table of itExp        */
+  CData*        idTInp      = NULL;                                             /* Transition table of Fvr           */
+  CData*        idTExp      = NULL;                                             /* Transition table of Dst           */
+  CData*        idSInp      = NULL;                                             /* State table of Fvr                */
+  CData*        idSExp      = NULL;                                             /* State table of Dst                */
 
   /* Initialization */                                                          /* --------------------------------- */
   CHECK_THIS_RV(NOT_EXEC);                                                      /* Check this instance               */
-  if (itDst==NULL)                                                              /* Output not correct instance       */
-    FVRT_EXCEPTION(ERR_NULLINST,"itDst is NULL",0,0);                           /*   Error message and exit          */
-  if (itFvr==NULL)                                                              /* Output not correct instance       */
-    FVRT_EXCEPTION(ERR_NULLINST,"itFvr is NULL",0,0);                           /*   Error message and exit          */
-  if (!CFvrtools_IsFvr(_this,0,itDst))                                          /* Check Input is an FVR?            */
-    FVRT_EXCEPTION(FVRT_NOTFVR,BASEINST(itDst)->m_lpInstanceName,0,0);          /*   Error message and exit          */
-  if (!CFvrtools_IsFvr(_this,0,itFvr))                                          /* Check Input is an FVR?            */
-    FVRT_EXCEPTION(FVRT_NOTFVR,BASEINST(itFvr)->m_lpInstanceName,0,0);          /*   Error message and exit          */
-  idFvrIs = AS(CData,itFvr->is);                                                /* InputSymbol table of itFvr        */
-  idDstIs = AS(CData,itDst->is);                                                /* InputSymbol table of itDst        */
-  idTFvr = AS(CData, itFvr->td);                                                /* Sequence table of itFvr           */
-  idTDst = AS(CData, itDst->td);                                                /* Sequence table of itDst           */
-  idSFvr = AS(CData, itFvr->sd);                                                /* Sequence table of itFvr           */
-  idSDst = AS(CData, itDst->sd);                                                /* Sequence table of itDst           */
-  nCTIS = CData_FindComp(AS(CData,itDst->td),NC_TD_TIS);                        /* Get comp. index of input symbol   */
-  nCLsrFvr = CData_FindComp(AS(CData,itFvr->td),NC_TD_LSR);                     /* Get comp. index of weight         */
-  nCLsrDst = CData_FindComp(AS(CData,itDst->td),NC_TD_LSR);                     /* Get comp. index of weight         */
+  if (itExp==NULL)                                                              /* Output not correct instance       */
+    FVRT_EXCEPTION(ERR_NULLINST,"itExp is NULL",0,0);                           /*   Error message and exit          */
+  if (itInp==NULL)                                                              /* Output not correct instance       */
+    FVRT_EXCEPTION(ERR_NULLINST,"itInp is NULL",0,0);                           /*   Error message and exit          */
+  if (!CFvrtools_IsFvr(_this,0,itExp))                                          /* Check Input is an FVR?            */
+    FVRT_EXCEPTION(FVRT_NOTFVR,BASEINST(itExp)->m_lpInstanceName,0,0);          /*   Error message and exit          */
+  if (!CFvrtools_IsFvr(_this,0,itInp))                                          /* Check Input is an FVR?            */
+    FVRT_EXCEPTION(FVRT_NOTFVR,BASEINST(itInp)->m_lpInstanceName,0,0);          /*   Error message and exit          */
+  idInpIs = AS(CData,itInp->is);                                                /* InputSymbol table of itInp        */
+  idExpIs = AS(CData,itExp->is);                                                /* InputSymbol table of itExp        */
+  idTInp = AS(CData, itInp->td);                                                /* Sequence table of itInp           */
+  idTExp = AS(CData, itExp->td);                                                /* Sequence table of itExp           */
+  idSInp = AS(CData, itInp->sd);                                                /* Sequence table of itInp           */
+  idSExp = AS(CData, itExp->sd);                                                /* Sequence table of itExp           */
+  nCTIS = CData_FindComp(AS(CData,itExp->td),NC_TD_TIS);                        /* Get comp. index of input symbol   */
+  nCLsrInp = CData_FindComp(AS(CData,itInp->td),NC_TD_LSR);                     /* Get comp. index of weight         */
+  nCLsrExp = CData_FindComp(AS(CData,itExp->td),NC_TD_LSR);                     /* Get comp. index of weight         */
 
   /* Start iteration over all transition of Fvr */
   while (SearchCompl == FALSE){                                                 /* only on root is TtoS empty->TRUE  */
-    while ((lpTrFvr=CFst_STI_TfromS(iSeTrFvr, nIniStFvr, lpTrFvr)) != NULL){    /* For all transition of Fvr-node    */
-      nIsFvr = *CFst_STI_TTis(iSeTrFvr, lpTrFvr);                               /* Get input symbol of Fvr transition*/
-      nTerStFvr = *CFst_STI_TTer(iSeTrFvr, lpTrFvr);                            /* Take next node of itFvr           */
-      lpTrDst = NULL;
-      while ((lpTrDst=CFst_STI_TfromS(iSeTrDst, nIniStDst, lpTrDst)) != NULL){  /* For all transition of Dst-node    */
-        nIsDst = *CFst_STI_TTis(iSeTrDst, lpTrDst);                             /* Get input symbol of Dst transition*/
-        nTerStDst = *CFst_STI_TTer(iSeTrDst, lpTrDst);                          /* Take next node of itDst           */
-        if (strcmp(CData_Sfetch(idDstIs,nIsDst,0), CData_Sfetch(idFvrIs,nIsFvr,0)) == 0){  /* compare both symbols   */
-          nIniStFvr = nTerStFvr;                                                /*  Next node is new ini node of Fvr */
-          nIniStDst = nTerStDst;                                                /*  Next node is new ini node of Dst */
-          nWFvr = CData_Dfetch(idTFvr, CFst_STI_GetTransId(iSeTrFvr, lpTrFvr), nCLsrFvr);  /* Get weight of itFvrtr  */
-          nAux = CFst_STI_GetTransId(iSeTrDst, lpTrDst);                        /* Transition index of itDst         */
-          nWDst = CData_Dfetch(idTDst, nAux, nCLsrDst);                         /* Get weight of itDst-transition    */
-          CData_Dstore(idTDst,nWFvr + nWDst - nWFvr*nWDst,nAux,nCLsrDst);       /* Store new weight                  */
+    while ((lpTrInp=CFst_STI_TfromS(iSeTrInp, nIniStInp, lpTrInp)) != NULL){    /* For all transition of Fvr-node    */
+      nIsInp = *CFst_STI_TTis(iSeTrInp, lpTrInp);                               /* Get input symbol of Fvr transition*/
+      nTerStInp = *CFst_STI_TTer(iSeTrInp, lpTrInp);                            /* Take next node of itInp           */
+      lpTrExp = NULL;
+      while ((lpTrExp=CFst_STI_TfromS(iSeTrExp, nIniStExp, lpTrExp)) != NULL){  /* For all transition of Dst-node    */
+        nIsExp = *CFst_STI_TTis(iSeTrExp, lpTrExp);                             /* Get input symbol of Dst transition*/
+        nTerStExp = *CFst_STI_TTer(iSeTrExp, lpTrExp);                          /* Take next node of itExp           */
+        if (strcmp(CData_Sfetch(idExpIs,nIsExp,0), CData_Sfetch(idInpIs,nIsInp,0)) == 0){  /* compare both symbols   */
+          nIniStInp = nTerStInp;                                                /*  Next node is new ini node of Fvr */
+          nIniStExp = nTerStExp;                                                /*  Next node is new ini node of Dst */
+          nWInp = CData_Dfetch(idTInp, CFst_STI_GetTransId(iSeTrInp, lpTrInp), nCLsrInp);  /* Get weight of itInptr  */
+          nAux = CFst_STI_GetTransId(iSeTrExp, lpTrExp);                        /* Transition index of itExp         */
+          nWExp = CData_Dfetch(idTExp, nAux, nCLsrExp);                         /* Get weight of itExp-transition    */
+          CData_Dstore(idTExp,nWInp + nWExp - nWInp*nWExp,nAux,nCLsrExp);       /* Store new weight                  */
           break;                                                                /* Cancel-> only one symbol possible */
         }                                                                       /*                                   */
-        else if(CData_Dfetch(idSFvr,nTerStFvr,0)==1 && CData_Dfetch(idSDst,nTerStDst,0)==1){/* Value on finale state */
-          CFst_Deltrans(itDst, 0, CFst_STI_GetTransId(iSeTrDst, lpTrDst));      /*     Delete tr. after final state  */
-          CFst_Delstate(itDst, 0, nTerStDst);                                   /*     Delete last node              */
-          CFst_STI_UnitChanged(iSeTrDst,FSTI_CANY);                             /*     Update iterator               */
-          if ((lpTrDst=CFst_STI_TfromS(iSeTrDst, nIniStDst, NULL)) == NULL)     /*     No more transitions?          */
-            lpTrDst=CFst_STI_TtoS(iSeTrDst, nIniStDst, NULL);                   /*        than take prev. trans      */
-          else nTerStDst = *CFst_STI_TTer(iSeTrDst, lpTrDst);                   /*     otherwise take terminal state */
-          break;
-        }
-      }                                                                         /*                                   */
-      if (lpTrDst == NULL){                                                     /* If input symbol not exist         */
-        nTerStDst = CFst_Addstates(itDst,0,1,0);                                /* ... add new node                  */
-        if(CData_Dfetch(idSFvr,nTerStFvr,0)==1){
-          CData_Dstore(idSDst, 1, nTerStDst, 0);
-        }
-        nAux = CFst_Addtrans(itDst, 0 , nIniStDst, nTerStDst);                  /* ... add new transition to new node*/
-        *(FST_ITYPE*)CData_XAddr(idTDst, nAux, nCTIS) = CFvrtools_FindIs(CData_Sfetch(idFvrIs,nIsFvr,0),TRUE,itDst);
-        *(FST_WTYPE*)CData_XAddr(idTDst, nAux, nCLsrDst) = CData_Dfetch(idTFvr, CFst_STI_GetTransId(iSeTrFvr, lpTrFvr), nCLsrFvr);
+        else if(CData_Dfetch(idSInp,nTerStInp,0)==1 && CData_Dfetch(idSExp,nTerStExp,0)==1){/* Value on finale state */
+          if (_this->m_bKeepexpectation){ break; }                              /*   Change nothing on expectation   */
+          else if (_this->m_bKeepboth){                                         /*   Keep both values                */
+            nTerStExp = CFst_Addstates(itExp,0,1,1);                            /*   New node for input value        */
+            nAux = CFst_Addtrans(itExp, 0 , nIniStExp, nTerStExp);              /*   ... add new trans to new node   */
+            CData_Reallocate(idExpIs,CData_GetNRecs(idExpIs)+1);                /*   Memory in Is for new value      */
+            CData_Sstore(idExpIs,CData_Sfetch(idInpIs,nIsInp,0),CData_GetNRecs(idExpIs)-1,0);/* Store new Value in symbole table */
+            *(FST_ITYPE*)CData_XAddr(idTExp, nAux, nCTIS) = CData_GetNRecs(idExpIs)-1;  /* Store symbole ID in trans table*/
+            *(FST_WTYPE*)CData_XAddr(idTExp, nAux, nCLsrExp) = CData_Dfetch(idTInp, CFst_STI_GetTransId(iSeTrInp, lpTrInp), nCLsrInp);
                                                                                 /* ^-- store new Is and weight       */
-        CFst_STI_UnitChanged(iSeTrDst,FSTI_CANY);                               /* update transducer iterator        */
-        nIniStFvr = *CFst_STI_TTer(iSeTrFvr, lpTrFvr);                          /* Take next node of itFvr           */
-        nIniStDst = nTerStDst;                                                  /*  Next node is new ini node of Dst */
-        lpTrFvr = NULL;                                                         /*  Reset lpTrFvr for next iteration */
+            CFst_STI_UnitChanged(iSeTrExp,FSTI_CANY);                           /*   update iterator                 */
+          }                                                                     /*                                   */
+          else if (_this->m_bKeepnothing){                                      /*   Delete expectation value        */
+            CFst_Deltrans(itExp, 0, CFst_STI_GetTransId(iSeTrExp, lpTrExp));    /*   Delete tr. after final state    */
+            CFst_Delstate(itExp, 0, nTerStExp);                                 /*   Delete last node                */
+            CFst_STI_UnitChanged(iSeTrExp,FSTI_CANY);                           /*   Update iterator                 */
+          }                                                                     /*                                   */
+          else{                                                                 /*   Take only input value           */
+            CData_Reallocate(idExpIs,CData_GetNRecs(idExpIs)+1);                /*   Memory in Is for new value      */
+            CData_Sstore(idExpIs,CData_Sfetch(idInpIs,nIsInp,0),CData_GetNRecs(idExpIs)-1,0);/* Store new Value in symbole table */
+            nAux = CFst_STI_GetTransId(iSeTrExp, lpTrExp);                      /*   Trans ID                        */
+            *(FST_ITYPE*)CData_XAddr(idTExp, nAux, nCTIS) = CData_GetNRecs(idExpIs)-1;  /* Store symbole ID in trans table*/
+            *(FST_WTYPE*)CData_XAddr(idTExp, nAux, nCLsrExp) = CData_Dfetch(idTInp, CFst_STI_GetTransId(iSeTrInp, lpTrInp), nCLsrInp);
+                                                                                /* ^-- store new Is and weight       */
+          }                                                                     /*                                   */
+          break;                                                                /*                                   */
+        }                                                                       /*                                   */
       }                                                                         /*                                   */
-      if (CFst_STI_TfromS(iSeTrFvr,nTerStFvr, NULL)==NULL){                     /* Check is next node a leaf         */
-        continue;                                                               /*   ...take next iteration step     */
-      }else{                                                                    /* New node is not a leaf...         */
-        lpTrFvr = NULL;                                                         /*  Reset lpTrFvr for next iteration */
-      }                                                                         /*                                   */
-    }/* while((lpTrFvr=CFst_STI_TfromS(iSeTrFvr, nIniStFvr, lpTrFvr))!=NULL){*/ /* End of lpTrFvr for all Fvr-node  */
-    lpTrFvr = CFst_STI_TtoS(iSeTrFvr, nIniStFvr, NULL);                         /* Take prev edge to ini node of Fvr */
-    lpTrDst = CFst_STI_TtoS(iSeTrDst, nIniStDst, NULL);                         /* Take prev edge to ini node of Dst */
-    if (lpTrFvr == NULL){                                                       /* is prev edge empty? (root)        */
+      /* If input symbol not exist */
+      if (lpTrExp == NULL && CData_Dfetch(idSInp,nTerStInp,0)==1 && CData_Dfetch(idSExp,nTerStExp,0)!=1){
+        nTerStExp = CFst_Addstates(itExp,0,1,1);                                /* */
+        nAux = CFst_Addtrans(itExp, 0 , nIniStExp, nTerStExp);                  /* ... add new transition to new node*/
+        CData_Reallocate(idExpIs,CData_GetNRecs(idExpIs)+1);                    /* Reserve memory for new value */
+        CData_Sstore(idExpIs,CData_Sfetch(idInpIs,nIsInp,0),CData_GetNRecs(idExpIs)-1,0); /* Store new Value in symbole table */
+        *(FST_ITYPE*)CData_XAddr(idTExp, nAux, nCTIS) = CData_GetNRecs(idExpIs)-1;  /* Store symbole ID */
+        *(FST_WTYPE*)CData_XAddr(idTExp, nAux, nCLsrExp) = CData_Dfetch(idTInp, CFst_STI_GetTransId(iSeTrInp, lpTrInp), nCLsrInp);
+                                                                                /* ^-- store new Is and weight       */
+        CFst_STI_UnitChanged(iSeTrExp,FSTI_CANY);
+      }
+      else if(lpTrExp == NULL && CData_Dfetch(idSInp,nTerStInp,0)!=1){
+        nRet = FALSE;
+        goto L_EXCEPTION;
+      }
+    }/* while((lpTrInp=CFst_STI_TfromS(iSeTrInp, nIniStInp, lpTrInp))!=NULL){*/ /* End of lpTrInp for all Fvr-node   */
+    lpTrInp = CFst_STI_TtoS(iSeTrInp, nIniStInp, NULL);                         /* Take prev edge to ini node of Fvr */
+    lpTrExp = CFst_STI_TtoS(iSeTrExp, nIniStExp, NULL);                         /* Take prev edge to ini node of Dst */
+    if (lpTrInp == NULL){                                                       /* is prev edge empty? (root)        */
       SearchCompl = TRUE;                                                       /*   ...set search complete          */
     }
     else{                                                                       /* otherwise                         */
-      nIniStFvr = *CFst_STI_TIni(iSeTrFvr, lpTrFvr);                            /*   ...Take prev node to go back    */
-      nIniStDst = *CFst_STI_TIni(iSeTrDst, lpTrDst);                            /*   ...Take prev node to go back    */
+      nIniStInp = *CFst_STI_TIni(iSeTrInp, lpTrInp);                            /*   ...Take prev node to go back    */
+      nIniStExp = *CFst_STI_TIni(iSeTrExp, lpTrExp);                            /*   ...Take prev node to go back    */
     }                                                                           /*                                   */
   } /* while (SearchCompl == NULL){ */                                          /* End of search                     */
 
+  CFst_CopyUi(itInp, itExp, NULL, 0);                                           /* End reached, expectation can used */
+
   /* Clean-up */                                                                /* --------------------------------- */
 L_EXCEPTION:                                                                    /* : Clean exit label                */
-  CFst_STI_Done(iSeTrFvr);                                                      /*                                   */
-  CFst_STI_Done(iSeTrDst);                                                      /*                                   */
+  CFst_STI_Done(iSeTrInp);                                                      /*                                   */
+  CFst_STI_Done(iSeTrExp);                                                      /*                                   */
   return nRet;                                                                  /* Return                            */
 }
 

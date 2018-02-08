@@ -131,6 +131,15 @@ END_MAN
 OPTION:  /nofvrcheck
 COMMENT: Do not check for enclosing <code>'FVR[...]'</code>.
 
+OPTION:  /keepexpectation
+COMMENT: Keep only expectation on double value entry by function union.
+
+OPTION:  /keepboth	
+COMMENT: Keep both (expectation and input) on double value entry by function union.
+
+OPTION:  /keepnothing
+COMMENT: Keep nothing on double value entry by function union.
+
 ## -- Methods --
 
 METHOD:  -is_fvr
@@ -238,7 +247,7 @@ COMMENT: Check square bracket parity in the output language of a FVR grammar.
 END_MAN
 
 METHOD:  -union
-SYNTAX:  (INSTANCE(fst) itDst, INSTANCE(fst) itFvr)
+SYNTAX:  BOOL (INSTANCE(fst) itDst, INSTANCE(fst) itFvr)
 COMMENT: Combinates two FVRs
 /html MAN:
   Union of two FVRs. Different values on same position in both instance will be delete.
@@ -246,6 +255,9 @@ COMMENT: Combinates two FVRs
   @param itDst First FVR and Output.
   @param itFvr Second FVR.
   @return
+  @cgen:option /keepexpectation On double value entry keep only expectation.
+  @cgen:option /keepboth On double value entry keep both (expectation and input).
+  @cgen:option /keepnothing On double value entry keep nothing.
 END_MAN
 
 METHOD:  -adjust
