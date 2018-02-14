@@ -111,12 +111,13 @@ INT16 CFvrtools_AutoRegisterWords(CDlpObject* __this)
 	/*{{CGEN_REGISTERWORDS */
 
 	/* Register methods */
-	REGISTER_METHOD("-adjust","",LPMF(CFvrtools,OnAdjust),"Adjust a FVR with a given model of FVR and update both.",0,"<fst itWom> <fst itInp> <fvrtools this>","")
+	REGISTER_METHOD("-adjust","",LPMF(CFvrtools,OnAdjust),"Adjust a FVR with a given model of FVR and update both.",0,"<fst itWom> <fst itInp> <fst itQry> <fvrtools this>","")
 	REGISTER_METHOD("-compare_with_model","",LPMF(CFvrtools,OnCompareWithModel),"Compare two FVRs each other.",0,"<fst itWom> <fst itInp> <fvrtools this>","")
 	REGISTER_METHOD("-from_fst","",LPMF(CFvrtools,OnFromFst),"Creates a (weighted) FVR from an FST containing a single path.",0,"<fst itSeq> <fst itFvr> <fvrtools this>","")
 	REGISTER_METHOD("-from_string","",LPMF(CFvrtools,OnFromString),"Creates a (weighted) FVR from a string representation",0,"<string src> <fst itFvr> <fvrtools this>","")
 	REGISTER_METHOD("-fsg_fvr_check","",LPMF(CFvrtools,OnFsgFvrCheck),"Check square bracket parity in the output language of a FVR grammar.",0,"<fst itFsg> <fst itErr> <fvrtools this>","")
 	REGISTER_METHOD("-fsg_normalize","",LPMF(CFvrtools,OnFsgNormalize),"...",0,"<fst itFsgSrc> <fst itFsgDst> <fvrtools this>","")
+	REGISTER_METHOD("-hash","",LPMF(CFvrtools,OnHash),"Hashvalue for an FVR.",0,"<int nU> <fst itFvr> <fvrtools this>","")
 	REGISTER_METHOD("-is_complete","",LPMF(CFvrtools,OnIsComplete),"Check itFvr is complete. All values are given.",0,"<int nU> <fst itFvr> <fvrtools this>","")
 	REGISTER_METHOD("-is_fvr","",LPMF(CFvrtools,OnIsFvr),"Determines if the argument is an FVR",0,"<int nU> <fst itFvr> <fvrtools this>","")
 	REGISTER_METHOD("-synthesize","",LPMF(CFvrtools,OnSynthesize),"Creates a FST list of all possible combinations of branches of a FVR",0,"<fst itDst> <fst itFvr> <fvrtools this>","")
@@ -340,13 +341,15 @@ INT16 CFvrtools_OnAdjust(CDlpObject* __this)
 	INT32  __nErrCnt = 0;
 	fst* itWom;
 	fst* itInp;
+	fst* itQry;
 	GET_THIS_VIRTUAL_RV(CFvrtools,NOT_EXEC);
 	MIC_CHECK;
 	__nErrCnt = CDlpObject_GetErrorCount();
-	itInp = MIC_GET_I_EX(itInp,fst,1,1);
-	itWom = MIC_GET_I_EX(itWom,fst,2,2);
+	itQry = MIC_GET_I_EX(itQry,fst,1,1);
+	itInp = MIC_GET_I_EX(itInp,fst,2,2);
+	itWom = MIC_GET_I_EX(itWom,fst,3,3);
 	if (CDlpObject_GetErrorCount()>__nErrCnt) return NOT_EXEC;
-	MIC_PUT_B(CFvrtools_Adjust(_this, itWom, itInp));
+	MIC_PUT_B(CFvrtools_Adjust(_this, itWom, itInp, itQry));
 	return __nErr;
 }
 
@@ -437,6 +440,24 @@ INT16 CFvrtools_OnFsgNormalize(CDlpObject* __this)
 	itFsgSrc = MIC_GET_I_EX(itFsgSrc,fst,2,2);
 	if (CDlpObject_GetErrorCount()>__nErrCnt) return NOT_EXEC;
 	__nErr = CFvrtools_FsgNormalize(_this, itFsgSrc, itFsgDst);
+	return __nErr;
+}
+
+INT16 CFvrtools_OnHash(CDlpObject* __this)
+/* DO NOT CALL THIS FUNCTION FROM C++ SCOPE.     */
+/* IT MAY INTERFERE WITH THE INTERPRETER SESSION */
+{
+	INT16 __nErr    = O_K;
+	INT32  __nErrCnt = 0;
+	INT32 nU;
+	fst* itFvr;
+	GET_THIS_VIRTUAL_RV(CFvrtools,NOT_EXEC);
+	MIC_CHECK;
+	__nErrCnt = CDlpObject_GetErrorCount();
+	itFvr = MIC_GET_I_EX(itFvr,fst,1,1);
+	nU = (INT32)MIC_GET_N(2,0);
+	if (CDlpObject_GetErrorCount()>__nErrCnt) return NOT_EXEC;
+	MIC_PUT_S(CFvrtools_Hash(_this, nU, itFvr));
 	return __nErr;
 }
 
@@ -668,6 +689,13 @@ INT16 CFvrtools::OnFsgNormalize()
 	return CFvrtools_OnFsgNormalize(this);
 }
 
+INT16 CFvrtools::OnHash()
+/* DO NOT CALL THIS FUNCTION FROM C++ SCOPE.     */
+/* IT MAY INTERFERE WITH THE INTERPRETER SESSION */
+{
+	return CFvrtools_OnHash(this);
+}
+
 INT16 CFvrtools::OnIsComplete()
 /* DO NOT CALL THIS FUNCTION FROM C++ SCOPE.     */
 /* IT MAY INTERFERE WITH THE INTERPRETER SESSION */
@@ -739,14 +767,19 @@ INT16 CFvrtools::Union(CFst* itDst, CFst* itFvr)
 	return CFvrtools_Union(this, itDst, itFvr);
 }
 
-BOOL CFvrtools::Adjust(CFst* itWom, CFst* itInp)
+BOOL CFvrtools::Adjust(CFst* itWom, CFst* itInp, CFst* itQry)
 {
-	return CFvrtools_Adjust(this, itWom, itInp);
+	return CFvrtools_Adjust(this, itWom, itInp, itQry);
 }
 
 FLOAT64 CFvrtools::CompareWithModel(CFst* itWom, CFst* itInp)
 {
 	return CFvrtools_CompareWithModel(this, itWom, itInp);
+}
+
+const char* CFvrtools::Hash(INT32 nU, CFst* itFvr)
+{
+	return CFvrtools_Hash(this, nU, itFvr);
 }
 
 FST_STYPE CFvrtools::FindIs(const char* lpsStr, BOOL bAdd, CFst* itFst)
