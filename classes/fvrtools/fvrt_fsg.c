@@ -61,14 +61,14 @@ BOOL CGEN_PROTECTED CFvrtools_ParseFsgCheck(CFvrtools* _this, CFst* itFsg, FST_I
   FST_STYPE     nOsBc     = -1;                                                 /* Symbol index of closing brace     */
   FST_ITYPE     nBrace    = (FST_ITYPE)CData_Dfetch(idVal,nMyIniState,0);       /* Counter for braces                */
   FST_ITYPE     nState    = -1;                                                 /* Next state                        */
-  FST_ITYPE     nCNamFsg  = NULL;                                               /* comp. index of name               */
+  FST_ITYPE     nTerState = NULL;                                               /* Used when wrong brace detect      */
   CData*        idSdFsg   = NULL;                                               /* Input symbol table of Fsg         */
   CData*        idState   = NULL;                                               /* Data for state Excerpt error      */
+
   ICREATEEX(CData,idState,"CFvrtools_Synthesize~idState",NULL);                 /*                                   */
   CData_AddComp(idState,"Sta",T_INT);                                           /*                                   */
   CData_Allocate(idState,1);                                                    /* Allocate memory for               */
-  idSdFsg = AS(CData,itFsg->sd);                                                /* InputSymbol table of itFsg        */
-  nCNamFsg = CData_FindComp(idSdFsg,"~NAM");                                    /* Get comp. index of name           */
+  idSdFsg = AS(CData,itFsg->is);                                                /* InputSymbol table of itFsg        */
   
   nOsBo = CFvrtools_FindOs("[",FALSE,itFsg);                                    /* Find opening brace symbol         */
   nOsBc = CFvrtools_FindOs("]",FALSE,itFsg);                                    /* Find closing brace symbol         */
@@ -84,10 +84,19 @@ BOOL CGEN_PROTECTED CFvrtools_ParseFsgCheck(CFvrtools* _this, CFst* itFsg, FST_I
     nState = *CFst_STI_TTer(lpTI,lpT);                                          /* Get next terminal state           */
     if (CData_Dfetch(idVal,nState,1) == TRUE){                                  /* Check is already visited          */
       if ((FST_ITYPE)CData_Dfetch(idVal,nState,0) != nBrace){                   /*   ...Check is count of brace same */
-        printf("\n ERROR: Wrong count of brace on State: %d", nMyIniState);     /* Error Message                     */
-        CData_Sstore(idSdFsg,"BRACE ERROR",nMyIniState,nCNamFsg);               /* Mark node with wrong parity       */
+        printf("\n   Warning: Wrong count of brace on State: %d", nMyIniState); /* Error Message                     */
+        lpT = NULL;                                                             /* Reset transition iterator         */
+        while ((lpT=CFst_STI_TtoS(lpTI,nMyIniState,lpT))!=NULL){                /* Backtracked input symbol >>       */
+          nTos = *CFst_STI_TTis(lpTI, lpT);                                     /*   Take input symbol               */
+          printf(" %s", CData_Sfetch(idSdFsg,nTos,0));                          /*   Output of input symbol          */
+          nTerState = *CFst_STI_TIni(lpTI, lpT);                                /*   Prev. state for next iteration  */
+          if (nTerState != nMyIniState){                                        /*   Check transition is not a loop>>*/
+            nMyIniState = nTerState;                                            /*     Set prev. state as new state  */
+            lpT = NULL;                                                         /*     Reset transition iterator     */
+          }                                                                     /*   <<                              */
+        }                                                                       /* <<                                */
         goto FALSE_RENDER_AND_RETURN;                                           /* Clean exit with false return      */
-      }
+      }                                                                         /*                                   */
       if (CFst_STI_TfromS(lpTI,nMyIniState,lpT)==NULL){                         /*   ...and no more transitions left */
         goto TRUE_RETURN;                                                       /* Clean exit with true return       */
       }                                                                         /*                                   */

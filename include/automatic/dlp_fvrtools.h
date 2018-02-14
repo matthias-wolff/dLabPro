@@ -182,6 +182,7 @@ typedef struct CFvrtools
 /*}}CGEN_FIELDS */
 
 /*{{CGEN_OPTIONS */
+	BOOL m_bNofvrcheck;
 /*}}CGEN_OPTIONS */
 }
 

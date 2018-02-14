@@ -123,6 +123,9 @@ INT16 CFvrtools_AutoRegisterWords(CDlpObject* __this)
 	REGISTER_METHOD("-synthesize","",LPMF(CFvrtools,OnSynthesize),"Creates a FST list of all possible combinations of branches of a FVR",0,"<fst itDst> <fst itFvr> <fvrtools this>","")
 	REGISTER_METHOD("-union","",LPMF(CFvrtools,OnUnion),"Combinates two FVRs",0,"<fst itDst> <fst itFvr> <fvrtools this>","")
 
+	/* Register options */
+	REGISTER_OPTION("/nofvrcheck","",LPMV(m_bNofvrcheck),NULL,"Do not check for enclosing <code>'FVR[...]'</code>.",0)
+
 	/* Register errors */
 	REGISTER_ERROR("~e1_0_0__1",EL_ERROR,FVRT_SEQSYNTAX,"FVR string or sequence syntax error (%s)")
 	REGISTER_ERROR("~e2_0_0__1",EL_ERROR,FVRT_NOTFVR,"'%s' is not a feature-value relation")
@@ -323,6 +326,7 @@ INT16 CFvrtools_ResetAllOptions(CDlpObject* __this, BOOL bInit)
 	DEBUGMSG(-1,"CFvrtools_ResetAllOptions;",0,0,0);
 	{
 	/*{{CGEN_RESETALLOPTIONS*/
+	_this->m_bNofvrcheck = FALSE;
 	/*}}CGEN_RESETALLOPTIONS*/
 	}
 

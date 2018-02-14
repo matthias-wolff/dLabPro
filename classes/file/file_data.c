@@ -1789,8 +1789,8 @@ INT16 CGEN_PROTECTED CDlpFile_ImportRawToData
   const char*   sFiletype
 )
 {
-  INT32  i      = 0;
-  INT32  n      = 0;
+  INT64  i      = 0;
+  INT64  n      = 0;
   FILE* lpFile = NULL;
   BYTE* lpDest = NULL;
   CData* dDest = NULL;

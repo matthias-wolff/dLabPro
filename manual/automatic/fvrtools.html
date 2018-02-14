@@ -50,6 +50,9 @@
 <!--
 {{ BEGIN_SITEMAP
 fvrtools.html fvrtools CFvrtools [
+  fvrtools.html#opt Options - [
+    fvrtools.html#opt__nofvrcheck "/nofvrcheck" "m_bNofvrcheck"
+  ]
   fvrtools.html#mth Methods - [
     fvrtools.html#mth_-adjust "-adjust" "-adjust"
     fvrtools.html#mth_-compare_with_model "-compare_with_model" "-compare_with_model"
@@ -57,6 +60,7 @@ fvrtools.html fvrtools CFvrtools [
     fvrtools.html#mth_-from_string "-from_string" "-from_string"
     fvrtools.html#mth_-fsg_fvr_check "-fsg_fvr_check" "-fsg_fvr_check"
     fvrtools.html#mth_-fsg_normalize "-fsg_normalize" "-fsg_normalize"
+    fvrtools.html#mth_-hash "-hash" "-hash"
     fvrtools.html#mth_-is_complete "-is_complete" "-is_complete"
     fvrtools.html#mth_-is_fvr "-is_fvr" "-is_fvr"
     fvrtools.html#mth_-synthesize "-synthesize" "-synthesize"
@@ -81,12 +85,14 @@ fvrtools.html fvrtools CFvrtools [
 ]
 }} END_SITEMAP
 //{{ BEGIN_TOC
-        top.TC1.InsertItem("-adjust","&lt;fst itWom&gt; &lt;fst itInp&gt; &lt;fvrtools this&gt; -adjust     Adjust a FVR with a given model of FVR and update both.",27,27,0,"automatic/fvrtools.html#mth_-adjust","CONT",nCls);
+        top.TC1.InsertItem("/nofvrcheck","Do not check for enclosing &lt;code&gt;`FVR[...]`&lt;/code&gt;.",29,29,0,"automatic/fvrtools.html#opt__nofvrcheck","CONT",nCls);
+        top.TC1.InsertItem("-adjust","&lt;fst itWom&gt; &lt;fst itInp&gt; &lt;fst itQry&gt; &lt;fvrtools this&gt; -adjust     Adjust a FVR with a given model of FVR and update both.",27,27,0,"automatic/fvrtools.html#mth_-adjust","CONT",nCls);
         top.TC1.InsertItem("-compare_with_model","&lt;fst itWom&gt; &lt;fst itInp&gt; &lt;fvrtools this&gt; -compare_with_model     Compare two FVRs each other.",27,27,0,"automatic/fvrtools.html#mth_-compare_with_model","CONT",nCls);
         top.TC1.InsertItem("-from_fst","&lt;fst itSeq&gt; &lt;fst itFvr&gt; &lt;fvrtools this&gt; -from_fst     Creates a (weighted) FVR from an FST containing a single path.",27,27,0,"automatic/fvrtools.html#mth_-from_fst","CONT",nCls);
         top.TC1.InsertItem("-from_string","&lt;string src&gt; &lt;fst itFvr&gt; &lt;fvrtools this&gt; -from_string     Creates a (weighted) FVR from a string representation",27,27,0,"automatic/fvrtools.html#mth_-from_string","CONT",nCls);
         top.TC1.InsertItem("-fsg_fvr_check","&lt;fst itFsg&gt; &lt;fst itErr&gt; &lt;fvrtools this&gt; -fsg_fvr_check     Check square bracket parity in the output language of a FVR grammar.",27,27,0,"automatic/fvrtools.html#mth_-fsg_fvr_check","CONT",nCls);
         top.TC1.InsertItem("-fsg_normalize","&lt;fst itFsgSrc&gt; &lt;fst itFsgDst&gt; &lt;fvrtools this&gt; -fsg_normalize     ...",27,27,0,"automatic/fvrtools.html#mth_-fsg_normalize","CONT",nCls);
+        top.TC1.InsertItem("-hash","&lt;int nU&gt; &lt;fst itFvr&gt; &lt;fvrtools this&gt; -hash     Hashvalue for an FVR.",27,27,0,"automatic/fvrtools.html#mth_-hash","CONT",nCls);
         top.TC1.InsertItem("-is_complete","&lt;int nU&gt; &lt;fst itFvr&gt; &lt;fvrtools this&gt; -is_complete     Check itFvr is complete. All values are given.",27,27,0,"automatic/fvrtools.html#mth_-is_complete","CONT",nCls);
         top.TC1.InsertItem("-is_fvr","&lt;int nU&gt; &lt;fst itFvr&gt; &lt;fvrtools this&gt; -is_fvr     Determines if the argument is an FVR",27,27,0,"automatic/fvrtools.html#mth_-is_fvr","CONT",nCls);
         top.TC1.InsertItem("-synthesize","&lt;fst itDst&gt; &lt;fst itFvr&gt; &lt;fvrtools this&gt; -synthesize     Creates a FST list of all possible combinations of branches of a FVR",27,27,0,"automatic/fvrtools.html#mth_-synthesize","CONT",nCls);
@@ -273,7 +279,7 @@ FST-based feature-value relation processing tools
         <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
-    <tr><td colspan="2">This class does not have options.</td></tr>
+    <tr><td><a href="#opt__nofvrcheck"><code class="link">/nofvrcheck</code></a></td><td> Do not check for enclosing &lt;code&gt;'FVR[...]'&lt;/code&gt;.</td></tr>
     <tr><td colspan="2" class="rowempty">&nbsp;</td></tr>
     <tr>
       <td class="rowgroup"><a name="mth">Methods</a></td>
@@ -287,12 +293,13 @@ FST-based feature-value relation processing tools
         <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
-    <tr><td><a href="#mth_-adjust"><code class="link">-adjust</code></a></td><td><code>&lt;fst itWom&gt; &lt;fst itInp&gt; &lt;fvrtools this&gt; <b>-adjust</b> </code><br> Adjust a FVR with a given model of FVR and update both.</td></tr>
+    <tr><td><a href="#mth_-adjust"><code class="link">-adjust</code></a></td><td><code>&lt;fst itWom&gt; &lt;fst itInp&gt; &lt;fst itQry&gt; &lt;fvrtools this&gt; <b>-adjust</b> </code><br> Adjust a FVR with a given model of FVR and update both.</td></tr>
     <tr><td><a href="#mth_-compare_with_model"><code class="link">-compare_with_model</code></a></td><td><code>&lt;fst itWom&gt; &lt;fst itInp&gt; &lt;fvrtools this&gt; <b>-compare_with_model</b> </code><br> Compare two FVRs each other.</td></tr>
     <tr><td><a href="#mth_-from_fst"><code class="link">-from_fst</code></a></td><td><code>&lt;fst itSeq&gt; &lt;fst itFvr&gt; &lt;fvrtools this&gt; <b>-from_fst</b> </code><br> Creates a (weighted) FVR from an FST containing a single path.</td></tr>
     <tr><td><a href="#mth_-from_string"><code class="link">-from_string</code></a></td><td><code>&lt;string src&gt; &lt;fst itFvr&gt; &lt;fvrtools this&gt; <b>-from_string</b> </code><br> Creates a (weighted) FVR from a string representation</td></tr>
     <tr><td><a href="#mth_-fsg_fvr_check"><code class="link">-fsg_fvr_check</code></a></td><td><code>&lt;fst itFsg&gt; &lt;fst itErr&gt; &lt;fvrtools this&gt; <b>-fsg_fvr_check</b> </code><br> Check square bracket parity in the output language of a FVR grammar.</td></tr>
     <tr><td><a href="#mth_-fsg_normalize"><code class="link">-fsg_normalize</code></a></td><td><code>&lt;fst itFsgSrc&gt; &lt;fst itFsgDst&gt; &lt;fvrtools this&gt; <b>-fsg_normalize</b> </code><br> ...</td></tr>
+    <tr><td><a href="#mth_-hash"><code class="link">-hash</code></a></td><td><code>&lt;int nU&gt; &lt;fst itFvr&gt; &lt;fvrtools this&gt; <b>-hash</b> </code><br> Hashvalue for an FVR.</td></tr>
     <tr><td><a href="#mth_-is_complete"><code class="link">-is_complete</code></a></td><td><code>&lt;int nU&gt; &lt;fst itFvr&gt; &lt;fvrtools this&gt; <b>-is_complete</b> </code><br> Check itFvr is complete. All values are given.</td></tr>
     <tr><td><a href="#mth_-is_fvr"><code class="link">-is_fvr</code></a></td><td><code>&lt;int nU&gt; &lt;fst itFvr&gt; &lt;fvrtools this&gt; <b>-is_fvr</b> </code><br> Determines if the argument is an FVR</td></tr>
     <tr><td><a href="#mth_-synthesize"><code class="link">-synthesize</code></a></td><td><code>&lt;fst itDst&gt; &lt;fst itFvr&gt; &lt;fvrtools this&gt; <b>-synthesize</b> </code><br> Creates a FST list of all possible combinations of branches of a FVR</td></tr>
@@ -345,6 +352,55 @@ FST-based feature-value relation processing tools
   <img src="../resources/blank_stc.gif" height="10">
   </div>
 
+  <div id="opt__nofvrcheck">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td nowrap width="25%" class="navbar"><a 
+        name="opt__nofvrcheck"></a>Option <span 
+        class="mid">/nofvrcheck</span></td>
+      <td nowrap width="75%" class="navbar" style="text-align:right;">
+        <a class="navbar" href="javascript:__PrintSection('opt__nofvrcheck','Class fvrtools');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
+  </table>
+  <div class="mframe"><table cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td class="hidden">dLabPro</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Identifier</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code><b>/nofvrcheck</b></code></td>
+    </tr>
+    <tr>
+      <td class="hidden" colspan="5">&nbsp;</td>
+    </tr>
+    <tr>
+      <td class="hidden">C/C++</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Member variable</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code>BOOL <b>
+m_bNofvrcheck
+</b>;</code></td>
+    </tr>
+  </table></div>
+  <div class="mframe2">
+  <h3>Synopsis</h3>
+  <p>
+Do not check for enclosing &lt;code&gt;'FVR[...]'&lt;/code&gt;.
+  </p>
+  <!--{{ CUSTOM_DOC -->
+  <!--}} CUSTOM_DOC -->
+  </div>
+  <img src="../resources/blank_stc.gif" height="10">
+  </div>
   <div id="mth_-adjust">
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
@@ -377,7 +433,7 @@ FST-based feature-value relation processing tools
       <td class="hidden">Syntax</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden"><code>
-&lt;fst itWom&gt; &lt;fst itInp&gt; &lt;fvrtools this&gt; <b>-adjust</b> 
+&lt;fst itWom&gt; &lt;fst itInp&gt; &lt;fst itQry&gt; &lt;fvrtools this&gt; <b>-adjust</b> 
 </code></td>
     </tr>
     <tr>
@@ -389,7 +445,7 @@ FST-based feature-value relation processing tools
       <td class="hidden">Member function</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden"><code>
-BOOL <b>CFvrtools_Adjust</b>(CFvrtools _this, CFst* itWom, CFst* itInp);<br>public: BOOL <b>CFvrtools::Adjust</b>(CFst* itWom, CFst* itInp);<br>
+BOOL <b>CFvrtools_Adjust</b>(CFvrtools _this, CFst* itWom, CFst* itInp, CFst* itQry);<br>public: BOOL <b>CFvrtools::Adjust</b>(CFst* itWom, CFst* itInp, CFst* itQry);<br>
 </code></td>
     </tr>
     <tr>
@@ -397,7 +453,7 @@ BOOL <b>CFvrtools_Adjust</b>(CFvrtools _this, CFst* itWom, CFst* itInp);<br>publ
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fvrt_iam.c(540)</td>
+      <td class="hidden">fvrt_iam.c(544)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -494,7 +550,7 @@ FLOAT64 <b>CFvrtools_CompareWithModel</b>(CFvrtools _this, CFst* itWom, CFst* it
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fvrt_iam.c(714)</td>
+      <td class="hidden">fvrt_iam.c(712)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -587,7 +643,7 @@ INT16 <b>CFvrtools_FromFst</b>(CFvrtools _this, CFst* itSeq, CFst* itFvr);<br>pu
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fvrt_iam.c(131)</td>
+      <td class="hidden">fvrt_iam.c(129)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -623,6 +679,19 @@ itFvr
 			<td class="hidden">&nbsp;</td>
 			<td class="hidden">
 The target FST, must not be <code>NULL</code>.
+			</td>
+		</tr>
+	</table>
+	<h3>Options</h3>
+	<table>
+		<tr>
+			<td class="hidden">&nbsp;&nbsp;</td>
+			<td class="hidden">
+<a href="#opt__nofvrcheck"><code class="link">/nofvrcheck</code></a>
+</td>
+			<td class="hidden">&nbsp;</td>
+			<td class="hidden">
+Do not check for enclosing "FVR[...]".
 			</td>
 		</tr>
 	</table>
@@ -696,7 +765,7 @@ INT16 <b>CFvrtools_FromString</b>(CFvrtools _this, const char* lpsSrc, CFst* itF
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fvrt_iam.c(110)</td>
+      <td class="hidden">fvrt_iam.c(108)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -740,6 +809,19 @@ itFvr
 			<td class="hidden">&nbsp;</td>
 			<td class="hidden">
 The target FST, must not be <code>NULL</code>.
+			</td>
+		</tr>
+	</table>
+	<h3>Options</h3>
+	<table>
+		<tr>
+			<td class="hidden">&nbsp;&nbsp;</td>
+			<td class="hidden">
+<a href="#opt__nofvrcheck"><code class="link">/nofvrcheck</code></a>
+</td>
+			<td class="hidden">&nbsp;</td>
+			<td class="hidden">
+Do not check for enclosing "FVR[...]".
 			</td>
 		</tr>
 	</table>
@@ -929,6 +1011,73 @@ INT16 <b>CFvrtools_FsgNormalize</b>(CFvrtools _this, CFst* itFsgSrc, CFst* itFsg
   </div>
   <img src="../resources/blank_stc.gif" height="10">
   </div>
+  <div id="mth_-hash">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td nowrap width="25%" class="navbar"><a 
+        name="mth_-hash"></a>Method <span 
+        class="mid">-hash</span></td>
+      <td nowrap width="75%" class="navbar" style="text-align:right;">
+        <a class="navbar" href="javascript:__PrintSection('mth_-hash','Class fvrtools');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
+  </table>
+  <div class="mframe"><table cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td class="hidden">dLabPro</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Identifier</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code><b>-hash</b></code></td>
+    </tr>
+    <tr>
+      <td class="hidden">&nbsp;</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Syntax</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code>
+&lt;int nU&gt; &lt;fst itFvr&gt; &lt;fvrtools this&gt; <b>-hash</b> 
+</code></td>
+    </tr>
+    <tr>
+      <td class="hidden" colspan="5">&nbsp;</td>
+    </tr>
+    <tr>
+      <td class="hidden">C/C++</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Member function</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code>
+char* <b>CFvrtools_Hash</b>(CFvrtools _this, INT32 nU, CFst* itFvr);<br>public: char* <b>CFvrtools::Hash</b>(INT32 nU, CFst* itFvr);<br>
+</code></td>
+    </tr>
+    <tr>
+      <td class="hidden">&nbsp;</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Source</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">fvrt_iam.c(840)</td>
+    </tr>
+  </table></div>
+  <div class="mframe2">
+  <h3>Synopsis</h3>
+  <p>
+Hashvalue for an FVR.
+  </p>
+  <h3>Description</h3>
+TODO
+  <!--{{ CUSTOM_DOC -->
+  <!--}} CUSTOM_DOC -->
+  </div>
+  <img src="../resources/blank_stc.gif" height="10">
+  </div>
   <div id="mth_-is_complete">
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
@@ -981,7 +1130,7 @@ BOOL <b>CFvrtools_IsComplete</b>(CFvrtools _this, INT32 nU, CFst* itFvr);<br>pub
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fvrt_iam.c(68)</td>
+      <td class="hidden">fvrt_iam.c(69)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -1114,6 +1263,19 @@ The <a href="fst.html" class="code">fst</a> to test.
 			</td>
 		</tr>
 	</table>
+	<h3>Options</h3>
+	<table>
+		<tr>
+			<td class="hidden">&nbsp;&nbsp;</td>
+			<td class="hidden">
+<a href="#opt__nofvrcheck"><code class="link">/nofvrcheck</code></a>
+</td>
+			<td class="hidden">&nbsp;</td>
+			<td class="hidden">
+Do not check for enclosing "FVR[...]".
+			</td>
+		</tr>
+	</table>
 	<h3>Return value</h3>
 	<p>
 <code>TRUE</code> if the unit is a FVR, <code>FALSE</code> otherwise.
@@ -1175,7 +1337,7 @@ INT16 <b>CFvrtools_Synthesize</b>(CFvrtools _this, CFst* itDst, CFst* itFvr);<br
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fvrt_iam.c(153)</td>
+      <td class="hidden">fvrt_iam.c(156)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -1269,7 +1431,7 @@ INT16 <b>CFvrtools_Union</b>(CFvrtools _this, CFst* itDst, CFst* itFvr);<br>publ
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fvrt_iam.c(424)</td>
+      <td class="hidden">fvrt_iam.c(428)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -1763,7 +1925,7 @@ INT16 <b>CFvrtools_ParseSeq</b>(CFvrtools _this, CFst* itSeq, FST_ITYPE nIni, FS
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fvrt_compile.c(294)</td>
+      <td class="hidden">fvrt_compile.c(293)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -1886,7 +2048,7 @@ INT16 <b>CFvrtools_SeqToFvr</b>(CFvrtools _this, CFst* itSeq, CFst* itFvr);<br>p
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fvrt_compile.c(531)</td>
+      <td class="hidden">fvrt_compile.c(538)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -1979,7 +2141,7 @@ INT16 <b>CFvrtools_StrToSeq</b>(CFvrtools _this, const char* lpsSrc, CFst* itSeq
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fvrt_compile.c(437)</td>
+      <td class="hidden">fvrt_compile.c(444)</td>
     </tr>
   </table></div>
   <div class="mframe2">
