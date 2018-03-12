@@ -227,7 +227,7 @@ INT16 CGEN_PUBLIC CFvrtools_Synthesize(CFvrtools* _this, CFst* itDst, CFst* itFv
   if ((nU=CFst_Addstates(itDst,0,2,0))<0)                                       /* Add first 2 states in target      */
     return IERROR(itDst,FST_INTERNAL,__FILE__,__LINE__,"");                     /* Check added state                 */
   CFst_AddtransIam(itDst, 0, nU, nU+1);                                         /* Add transition between both states*/
-  CData_Dstore(idDstTd, 0, 0, nCTIS);                                           /* Store 0 for first input symbol    */
+  CData_Dstore(idDstTd, CFvrtools_FindIs("FVR",TRUE,itDst), 0, nCTIS);         /* Store 0 for first input symbol    */
   CData_Dstore(idDstTd, CData_Dfetch(idRank,1,0), 0, nCTOS);                    /* save rank of trans. from source   */
   CData_AddComp(idSym,"Sym",T_LONG);    CData_Allocate(idSym,1);                /* Allocate memory for symbol(s)     */
   CData_AddComp(idSymRef,"Ref",T_LONG); CData_Allocate(idSymRef,1);             /* Allocate memory for Ref to symbol */
