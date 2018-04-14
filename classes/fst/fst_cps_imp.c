@@ -150,6 +150,7 @@ const char *fstc_fload(struct fstc_f *f,CFst *c,INT32 ui,char epsout){
   INT32 ci;
   char psr;
   const char *err;
+  struct fstc_d **dp;
   f->ns=UD_XS(c,ui);
   f->nt=UD_XT(c,ui)+f->ns;
   psr=CFst_Wsr_GetType(c,NULL)==FST_WSR_PROB;
@@ -175,12 +176,13 @@ const char *fstc_fload(struct fstc_f *f,CFst *c,INT32 ui,char epsout){
     f->s[si].fin=SD_FLG(c,si+tit->nFS)&SD_FLG_FINAL;
   }
   f->d=NULL;
+  dp=&f->d;
   for(ci=IC_TD_DATA;ci<CData_GetNComps(AS(CData,c->td));ci++){
     INT32 off=CData_GetCompOffset(AS(CData,c->td),ci);
     struct fstc_d *d;
     if(off==tit->nOfTTis || off==tit->nOfTTos || off==tit->nOfTW) continue;
     if(!(d=(struct fstc_d*)malloc(sizeof(struct fstc_d)))) return FSTCERR("Ouf of memory");
-    f->d=d; d->nxt=NULL;
+    *dp=d; d->nxt=NULL; dp=&d->nxt;
     d->name=CData_GetCname(AS(CData,c->td),ci);
     d->dat=tit->lpFT+off;
     d->size=CData_GetCompSize(AS(CData,c->td),ci);
