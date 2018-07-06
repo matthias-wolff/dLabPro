@@ -47,3 +47,43 @@ void numpy2data(PyObject *np,CData *dat){
   memcpy(CData_XAddr(dat,0,0),na->data,na->dimensions[0]*na->strides[0]);
 }
 
+PyObject* data2numpy(CData *dat){
+  int t=CData_IsHomogen(dat);
+  int nd,nt;
+  npy_intp dims[3];
+  int b,c,r;
+  PyObject *np;
+  if(!t) return NULL; /* TODO: PyNone */
+  switch(t){
+  case T_DOUBLE: nt=NPY_DOUBLE; break;
+  case T_FLOAT:  nt=NPY_FLOAT; break;
+  case T_LONG:   nt=NPY_LONG; break;
+  case T_INT:    nt=NPY_INT; break;
+  case T_SHORT:  nt=NPY_SHORT; break;
+  default: return NULL;
+  }
+  b=CData_GetNBlocks(dat);
+  r=CData_GetNRecs(dat);
+  c=CData_GetNComps(dat);
+  if(b>1){
+    nd=3;
+    dims[0]=b;
+    dims[1]=r/b;
+    dims[2]=c;
+  }else if(c>1){
+    nd=2;
+    dims[0]=r;
+    dims[1]=c;
+    dims[2]=0;
+  }else{
+    nd=1;
+    dims[0]=r;
+    dims[1]=0;
+    dims[2]=0;
+  }
+  import_array();
+  np=PyArray_SimpleNew(nd,dims,nt);
+  PyArrayObject *na=(PyArrayObject*)np;
+  memcpy(na->data,CData_XAddr(dat,0,0),na->dimensions[0]*na->strides[0]);
+  return np;
+}
