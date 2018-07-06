@@ -17,8 +17,13 @@ setup(
     author='Frank Duckhorn',
 
     ext_modules=[Extension("dlabpro",
-        sources=["dlabpro.pyx","dlabpro_init.cpp"],
-        include_dirs=['.',os.path.join(basedir,'include'),os.path.join(basedir,'include/automatic')],
+        sources=["dlabpro.pyx","dlabpro_numpy.cpp","dlabpro_init.cpp"],
+        include_dirs=[
+            '.',
+            os.path.join(basedir,'include'),
+            os.path.join(basedir,'include/automatic'),
+            '/usr/lib/python3/dist-packages/numpy/core/include/numpy'
+        ],
         extra_objects=[
             os.path.join(bld_dlabpro,'hmm.a'),
             os.path.join(bld_dlabpro,'fst.a'),

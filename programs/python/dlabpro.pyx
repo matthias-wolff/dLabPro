@@ -30,6 +30,9 @@ cdef extern from "dlp_data.h":
         short AddNcomps(short,int)
         short InsertNcomps(short,int,int)
 
+cdef extern from "dlabpro_numpy.hpp":
+    cdef void numpy2data(object,CData*)
+
 cdef class PData(PObject):
     cdef CData *dptr
     def __cinit__(self,str name=""):
@@ -41,6 +44,9 @@ cdef class PData(PObject):
     def AddNcomps(self,int ctype,int count): return self.dptr.AddNcomps(ctype,count)
     def InsertNcomps(self,int ctype,int insertat,int count): return self.dptr.InsertNcomps(ctype,insertat,count)
     def Array(self,int ctype,int comps,int recs): return self.dptr.Array(ctype,comps,recs)
+    def fromnumpy(self,object n):
+        pass
+        numpy2data(n,self.dptr)
 
 cdef extern from "dlp_fst.h":
     cdef cppclass CFst(CDlpObject):
