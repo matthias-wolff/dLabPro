@@ -65,10 +65,10 @@ cdef class PData(PObject):
 
 cdef extern from "dlp_fst.h":
     cdef cppclass CFst(CDlpObject):
+        CFst(char *,char)
         CData *ud
         CData *sd
         CData *td
-        CFst(char *,char)
         short Status()
         short Print()
         short Probs(int)
@@ -82,14 +82,16 @@ cdef class PFst(PObject):
     def __cinit__(self,str name=""):
         if type(self) is PFst:
             self.fptr=self.optr=new CFst(name.encode(),1)
-            self.udptr=PData("",init=False)
-            self.sdptr=PData("",init=False)
-            self.tdptr=PData("",init=False)
-            self.udptr.optr=self.udptr.dptr=self.fptr.ud
-            self.sdptr.optr=self.sdptr.dptr=self.fptr.sd
-            self.tdptr.optr=self.tdptr.dptr=self.fptr.td
+            self.init_fst_fields()
     def __dealloc__(self):
         if type(self) is PFst: del self.fptr
+    def init_fst_fields(self):
+        self.udptr=PData("",init=False)
+        self.sdptr=PData("",init=False)
+        self.tdptr=PData("",init=False)
+        self.udptr.optr=self.udptr.dptr=self.fptr.ud
+        self.sdptr.optr=self.sdptr.dptr=self.fptr.sd
+        self.tdptr.optr=self.tdptr.dptr=self.fptr.td
     def Status(self): return self.fptr.Status()
     def Print(self): return self.fptr.Print()
     def Probs(self,int unit): return self.fptr.Probs(unit)
@@ -101,8 +103,9 @@ cdef class PFst(PObject):
 cdef extern from "dlp_gmm.h":
     cdef cppclass CGmm(CDlpObject):
         CGmm(char *,char)
-        short Density(CData*,CData*,CData*)
         short Status()
+        int GetNGauss()
+        short Density(CData*,CData*,CData*)
 
 cdef class PGmm(PObject):
     cdef CGmm *gptr
@@ -113,6 +116,7 @@ cdef class PGmm(PObject):
     def __dealloc__(self):
         if type(self) is PGmm and self._init: del self.gptr
     def Status(self): return self.gptr.Status()
+    def GetNGauss(self): return self.gptr.GetNGauss()
     def Density(self,PData x,PData xmap,PData dens):
         return self.gptr.Density(x.dptr,xmap.dptr if not xmap is None else NULL,dens.dptr)
 
@@ -132,6 +136,7 @@ cdef class PHmm(PFst):
     def __cinit__(self,str name=""):
         if type(self) is PHmm:
             self.hptr=self.fptr=self.optr=new CHmm(name.encode(),1)
+            self.init_fst_fields()
     def __dealloc__(self):
         if type(self) is PHmm: del self.hptr
     def Setup(self,int mfs,PData hmms): return self.hptr.Setup(mfs,hmms.dptr)
@@ -147,3 +152,17 @@ cdef class PHmm(PFst):
         ret=PGmm("",init=False)
         ret.optr=ret.gptr=self.hptr.m_iGm
         return ret
+
+cdef extern from "dlp_fstsearch.h":
+    cdef cppclass CFstsearch(CDlpObject):
+        CFstsearch(char *,char)
+        short Search(CFst*,long,CData*,CFst*)
+
+cdef class PFstsearch(PObject):
+    cdef CFstsearch *fptr
+    def __cinit__(self,str name=""):
+        if type(self) is PFstsearch: self.fptr=self.optr=new CFstsearch(name.encode(),1)
+    def __dealloc__(self):
+        if type(self) is PFstsearch: del self.fptr
+    def Search(self,PFst src,int unit,PData weights,PFst dst):
+        return self.fptr.Search(src.fptr,unit,weights.dptr if not weights is None else NULL,dst.fptr)

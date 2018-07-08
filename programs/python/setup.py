@@ -26,6 +26,7 @@ setup(
         ],
         extra_objects=[
             os.path.join(bld_dlabpro,'hmm.a'),
+            os.path.join(bld_dlabpro,'fstsearch.a'),
             os.path.join(bld_dlabpro,'fst.a'),
             os.path.join(bld_dlabpro,'gmm.a'),
             os.path.join(bld_dlabpro,'vmap.a'),
