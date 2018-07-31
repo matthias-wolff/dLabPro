@@ -22,7 +22,8 @@ setup(
             '.',
             os.path.join(basedir,'include'),
             os.path.join(basedir,'include/automatic'),
-            '/usr/lib/python3/dist-packages/numpy/core/include/numpy'
+            '/usr/lib/python3/dist-packages/numpy/core/include/numpy',
+            '/usr/lib/python3.6/site-packages/numpy/core/include/numpy'
         ],
         extra_objects=[
             os.path.join(bld_dlabpro,'hmm.a'),
@@ -43,6 +44,8 @@ setup(
             os.path.join(bld_dlabpro,'dlpmath.a'),
             os.path.join(bld_dlabpro,'kazlib.a'),
             os.path.join(bld_dlabpro,'clapack.a'),
+            os.path.join(bld_dlabpro,'zlib.a'),
+            os.path.join(bld_dlabpro,'xpat.a'),
       ],
       language="c++",)],
 
