@@ -93,7 +93,7 @@ endif
 
 ## Compiler flags for GCC
 ifneq ($(or $(findstring mingw,$(OS)),$(findstring cygwin,$(OS)),$(findstring lin,$(OS))),)
-  CFLAGS  += -Wall $(CFLAGS_GCC)
+  CFLAGS  += -Wall -fPIC $(CFLAGS_GCC)
   ARFLAGS  = rvs
   LFLAGS  += -lm
   ifeq ($(TRG_BASE),RELEASE)
