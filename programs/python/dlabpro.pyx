@@ -18,7 +18,7 @@ cdef extern from "dlp_object.h":
 cdef class PObject:
     cdef CDlpObject *optr
     cdef char _init
-    def __cinit__(self,str name="",init=True):
+    def __cinit__(self,str name="object",init=True):
         self._init=False
         if type(self) is PObject and init:
             self._init=True
@@ -47,7 +47,7 @@ cdef extern from "dlabpro_numpy.hpp":
 
 cdef class PData(PObject):
     cdef CData *dptr
-    def __cinit__(self,str name="",init=True):
+    def __cinit__(self,str name="data",init=True):
         if type(self) is PData and init:
             self._init=True
             self.optr=self.dptr=new CData(name.encode(),1)
@@ -79,7 +79,7 @@ cdef class PFst(PObject):
     cdef PData udptr
     cdef PData sdptr
     cdef PData tdptr
-    def __cinit__(self,str name=""):
+    def __cinit__(self,str name="fst"):
         if type(self) is PFst:
             self.fptr=self.optr=new CFst(name.encode(),1)
             self.init_fst_fields()
@@ -109,7 +109,7 @@ cdef extern from "dlp_gmm.h":
 
 cdef class PGmm(PObject):
     cdef CGmm *gptr
-    def __cinit__(self,str name="",init=True):
+    def __cinit__(self,str name="gmm",init=True):
         if type(self) is PGmm and init:
             self._init=True
             self.optr=self.gptr=new CGmm(name.encode(),1)
@@ -133,7 +133,7 @@ cdef extern from "dlp_hmm.h":
 
 cdef class PHmm(PFst):
     cdef CHmm *hptr
-    def __cinit__(self,str name=""):
+    def __cinit__(self,str name="hmm"):
         if type(self) is PHmm:
             self.hptr=self.fptr=self.optr=new CHmm(name.encode(),1)
             self.init_fst_fields()
@@ -160,7 +160,7 @@ cdef extern from "dlp_fstsearch.h":
 
 cdef class PFstsearch(PObject):
     cdef CFstsearch *fptr
-    def __cinit__(self,str name=""):
+    def __cinit__(self,str name="fstsearch"):
         if type(self) is PFstsearch: self.fptr=self.optr=new CFstsearch(name.encode(),1)
     def __dealloc__(self):
         if type(self) is PFstsearch: del self.fptr
