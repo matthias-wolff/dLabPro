@@ -1,3 +1,6 @@
+#include <locale.h>
+#include <stdio.h>
+
 #include "dlp_base.h"
 #include "dlp_object.h"
 #include "dlp_data.h"
@@ -19,5 +22,6 @@ void dlabpro_init(){
   REGISTER_CLASS(CFst);
   REGISTER_CLASS(CGmm);
   REGISTER_CLASS(CHmm);
+  setlocale(LC_NUMERIC,"C");
 }
 
