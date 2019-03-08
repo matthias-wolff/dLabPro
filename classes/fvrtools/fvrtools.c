@@ -124,6 +124,9 @@ INT16 CFvrtools_AutoRegisterWords(CDlpObject* __this)
 	REGISTER_METHOD("-union","",LPMF(CFvrtools,OnUnion),"Combinates two FVRs",0,"<fst itDst> <fst itFvr> <fvrtools this>","")
 
 	/* Register options */
+	REGISTER_OPTION("/keepboth","",LPMV(m_bKeepboth),NULL,"Keep both (expectation and input) on double value entry by function union.",0)
+	REGISTER_OPTION("/keepexpectation","",LPMV(m_bKeepexpectation),NULL,"Keep only expectation on double value entry by function union.",0)
+	REGISTER_OPTION("/keepnothing","",LPMV(m_bKeepnothing),NULL,"Keep nothing on double value entry by function union.",0)
 	REGISTER_OPTION("/nofvrcheck","",LPMV(m_bNofvrcheck),NULL,"Do not check for enclosing <code>'FVR[...]'</code>.",0)
 
 	/* Register errors */
@@ -326,6 +329,9 @@ INT16 CFvrtools_ResetAllOptions(CDlpObject* __this, BOOL bInit)
 	DEBUGMSG(-1,"CFvrtools_ResetAllOptions;",0,0,0);
 	{
 	/*{{CGEN_RESETALLOPTIONS*/
+	_this->m_bKeepboth = FALSE;
+	_this->m_bKeepexpectation = FALSE;
+	_this->m_bKeepnothing = FALSE;
 	_this->m_bNofvrcheck = FALSE;
 	/*}}CGEN_RESETALLOPTIONS*/
 	}
@@ -533,7 +539,7 @@ INT16 CFvrtools_OnUnion(CDlpObject* __this)
 	itFvr = MIC_GET_I_EX(itFvr,fst,1,1);
 	itDst = MIC_GET_I_EX(itDst,fst,2,2);
 	if (CDlpObject_GetErrorCount()>__nErrCnt) return NOT_EXEC;
-	__nErr = CFvrtools_Union(_this, itDst, itFvr);
+	MIC_PUT_B(CFvrtools_Union(_this, itDst, itFvr));
 	return __nErr;
 }
 
@@ -766,9 +772,9 @@ INT16 CFvrtools::Synthesize(CFst* itDst, CFst* itFvr)
 	return CFvrtools_Synthesize(this, itDst, itFvr);
 }
 
-INT16 CFvrtools::Union(CFst* itDst, CFst* itFvr)
+BOOL CFvrtools::Union(CFst* itExp, CFst* itInp)
 {
-	return CFvrtools_Union(this, itDst, itFvr);
+	return CFvrtools_Union(this, itExp, itInp);
 }
 
 BOOL CFvrtools::Adjust(CFst* itWom, CFst* itInp, CFst* itQry)
