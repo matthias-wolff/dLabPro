@@ -126,7 +126,7 @@ cdef extern from "dlp_hmm.h":
         CGmm *m_iGm
         short Setup(int,CData*)
         short Update(CData*,int,int,CData*,CData*,int)
-        short SetupGmm(int)
+        short SetupGmm(double)
         short Bwalpha(int,CData*,CData*)
         short Bwupdate(CData*,CData*,CData*,int)
         short Split(double,int,CData*)
@@ -142,7 +142,7 @@ cdef class PHmm(PFst):
     def Setup(self,int mfs,PData hmms): return self.hptr.Setup(mfs,hmms.dptr)
     def Update(self,PData src,int ictis,int icter,PData msf,PData lsf,int unit):
         return self.hptr.Update(src.dptr,ictis,icter,msf.dptr,lsf.dptr if not lsf is None else NULL,unit)
-    def SetupGmm(self,int mindet): return self.hptr.SetupGmm(mindet)
+    def SetupGmm(self,double mindet): return self.hptr.SetupGmm(mindet)
     def Bwalpha(self,int unit,PData weights,PData alpha): return self.hptr.Bwalpha(unit,weights.dptr,alpha.dptr)
     def Bwupdate(self,PData alpha,PData msf,PData lsf,int unit):
         return self.hptr.Bwupdate(alpha.dptr,msf.dptr,lsf.dptr if not lsf is None else NULL,unit)
