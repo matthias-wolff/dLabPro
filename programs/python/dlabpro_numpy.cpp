@@ -40,7 +40,12 @@ void numpy2data(PyObject *np,CData *dat){
   d=na->strides[na->nd-1];
   for(i=na->nd-1;i;i--){
     d=d*na->dimensions[i];
-    if(na->strides[i-1]!=d){ printf("ERROR: no compact array"); return; }
+    if(na->strides[i-1]!=d){
+      np=PyArray_Copy(na);
+      numpy2data(np,dat);
+      PyArray_free(np);
+      return;
+    }
   }
   CData_Array(dat,t,c,r);
   CData_SetNBlocks(dat,b);
