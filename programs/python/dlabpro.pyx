@@ -60,7 +60,9 @@ cdef class PData(PObject):
     def AddNcomps(self,int ctype,int count): return self.dptr.AddNcomps(ctype,count)
     def InsertNcomps(self,int ctype,int insertat,int count): return self.dptr.InsertNcomps(ctype,insertat,count)
     def Array(self,int ctype,int comps,int recs): return self.dptr.Array(ctype,comps,recs)
-    def fromnumpy(self,object n): numpy2data(n,self.dptr)
+    def fromnumpy(self,object n):
+        if not n.flags['C_CONTIGUOUS']: n=n.copy(order='C')
+        numpy2data(n,self.dptr)
     def tonumpy(self): return data2numpy(self.dptr)
 
 cdef extern from "dlp_fst.h":

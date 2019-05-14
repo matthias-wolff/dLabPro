@@ -51,6 +51,9 @@
 {{ BEGIN_SITEMAP
 fvrtools.html fvrtools CFvrtools [
   fvrtools.html#opt Options - [
+    fvrtools.html#opt__keepboth "/keepboth" "m_bKeepboth"
+    fvrtools.html#opt__keepexpectation "/keepexpectation" "m_bKeepexpectation"
+    fvrtools.html#opt__keepnothing "/keepnothing" "m_bKeepnothing"
     fvrtools.html#opt__nofvrcheck "/nofvrcheck" "m_bNofvrcheck"
   ]
   fvrtools.html#mth Methods - [
@@ -85,6 +88,9 @@ fvrtools.html fvrtools CFvrtools [
 ]
 }} END_SITEMAP
 //{{ BEGIN_TOC
+        top.TC1.InsertItem("/keepboth","Keep both (expectation and input) on double value entry by function union.",29,29,0,"automatic/fvrtools.html#opt__keepboth","CONT",nCls);
+        top.TC1.InsertItem("/keepexpectation","Keep only expectation on double value entry by function union.",29,29,0,"automatic/fvrtools.html#opt__keepexpectation","CONT",nCls);
+        top.TC1.InsertItem("/keepnothing","Keep nothing on double value entry by function union.",29,29,0,"automatic/fvrtools.html#opt__keepnothing","CONT",nCls);
         top.TC1.InsertItem("/nofvrcheck","Do not check for enclosing &lt;code&gt;`FVR[...]`&lt;/code&gt;.",29,29,0,"automatic/fvrtools.html#opt__nofvrcheck","CONT",nCls);
         top.TC1.InsertItem("-adjust","&lt;fst itWom&gt; &lt;fst itInp&gt; &lt;fst itQry&gt; &lt;fvrtools this&gt; -adjust     Adjust a FVR with a given model of FVR and update both.",27,27,0,"automatic/fvrtools.html#mth_-adjust","CONT",nCls);
         top.TC1.InsertItem("-compare_with_model","&lt;fst itWom&gt; &lt;fst itInp&gt; &lt;fvrtools this&gt; -compare_with_model     Compare two FVRs each other.",27,27,0,"automatic/fvrtools.html#mth_-compare_with_model","CONT",nCls);
@@ -279,6 +285,9 @@ FST-based feature-value relation processing tools
         <a class="navbar" href="#err">Errors</a>
       </td>
     </tr>
+    <tr><td><a href="#opt__keepboth"><code class="link">/keepboth</code></a></td><td> Keep both (expectation and input) on double value entry by function union.</td></tr>
+    <tr><td><a href="#opt__keepexpectation"><code class="link">/keepexpectation</code></a></td><td> Keep only expectation on double value entry by function union.</td></tr>
+    <tr><td><a href="#opt__keepnothing"><code class="link">/keepnothing</code></a></td><td> Keep nothing on double value entry by function union.</td></tr>
     <tr><td><a href="#opt__nofvrcheck"><code class="link">/nofvrcheck</code></a></td><td> Do not check for enclosing &lt;code&gt;'FVR[...]'&lt;/code&gt;.</td></tr>
     <tr><td colspan="2" class="rowempty">&nbsp;</td></tr>
     <tr>
@@ -352,6 +361,153 @@ FST-based feature-value relation processing tools
   <img src="../resources/blank_stc.gif" height="10">
   </div>
 
+  <div id="opt__keepboth">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td nowrap width="25%" class="navbar"><a 
+        name="opt__keepboth"></a>Option <span 
+        class="mid">/keepboth</span></td>
+      <td nowrap width="75%" class="navbar" style="text-align:right;">
+        <a class="navbar" href="javascript:__PrintSection('opt__keepboth','Class fvrtools');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
+  </table>
+  <div class="mframe"><table cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td class="hidden">dLabPro</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Identifier</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code><b>/keepboth</b></code></td>
+    </tr>
+    <tr>
+      <td class="hidden" colspan="5">&nbsp;</td>
+    </tr>
+    <tr>
+      <td class="hidden">C/C++</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Member variable</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code>BOOL <b>
+m_bKeepboth
+</b>;</code></td>
+    </tr>
+  </table></div>
+  <div class="mframe2">
+  <h3>Synopsis</h3>
+  <p>
+Keep both (expectation and input) on double value entry by function union.
+  </p>
+  <!--{{ CUSTOM_DOC -->
+  <!--}} CUSTOM_DOC -->
+  </div>
+  <img src="../resources/blank_stc.gif" height="10">
+  </div>
+  <div id="opt__keepexpectation">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td nowrap width="25%" class="navbar"><a 
+        name="opt__keepexpectation"></a>Option <span 
+        class="mid">/keepexpectation</span></td>
+      <td nowrap width="75%" class="navbar" style="text-align:right;">
+        <a class="navbar" href="javascript:__PrintSection('opt__keepexpectation','Class fvrtools');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
+  </table>
+  <div class="mframe"><table cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td class="hidden">dLabPro</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Identifier</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code><b>/keepexpectation</b></code></td>
+    </tr>
+    <tr>
+      <td class="hidden" colspan="5">&nbsp;</td>
+    </tr>
+    <tr>
+      <td class="hidden">C/C++</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Member variable</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code>BOOL <b>
+m_bKeepexpectation
+</b>;</code></td>
+    </tr>
+  </table></div>
+  <div class="mframe2">
+  <h3>Synopsis</h3>
+  <p>
+Keep only expectation on double value entry by function union.
+  </p>
+  <!--{{ CUSTOM_DOC -->
+  <!--}} CUSTOM_DOC -->
+  </div>
+  <img src="../resources/blank_stc.gif" height="10">
+  </div>
+  <div id="opt__keepnothing">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td nowrap width="25%" class="navbar"><a 
+        name="opt__keepnothing"></a>Option <span 
+        class="mid">/keepnothing</span></td>
+      <td nowrap width="75%" class="navbar" style="text-align:right;">
+        <a class="navbar" href="javascript:__PrintSection('opt__keepnothing','Class fvrtools');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
+  </table>
+  <div class="mframe"><table cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td class="hidden">dLabPro</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Identifier</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code><b>/keepnothing</b></code></td>
+    </tr>
+    <tr>
+      <td class="hidden" colspan="5">&nbsp;</td>
+    </tr>
+    <tr>
+      <td class="hidden">C/C++</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Member variable</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code>BOOL <b>
+m_bKeepnothing
+</b>;</code></td>
+    </tr>
+  </table></div>
+  <div class="mframe2">
+  <h3>Synopsis</h3>
+  <p>
+Keep nothing on double value entry by function union.
+  </p>
+  <!--{{ CUSTOM_DOC -->
+  <!--}} CUSTOM_DOC -->
+  </div>
+  <img src="../resources/blank_stc.gif" height="10">
+  </div>
   <div id="opt__nofvrcheck">
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
@@ -453,7 +609,7 @@ BOOL <b>CFvrtools_Adjust</b>(CFvrtools _this, CFst* itWom, CFst* itInp, CFst* it
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fvrt_iam.c(544)</td>
+      <td class="hidden">fvrt_iam.c(560)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -550,7 +706,7 @@ FLOAT64 <b>CFvrtools_CompareWithModel</b>(CFvrtools _this, CFst* itWom, CFst* it
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fvrt_iam.c(712)</td>
+      <td class="hidden">fvrt_iam.c(728)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -1063,7 +1219,7 @@ char* <b>CFvrtools_Hash</b>(CFvrtools _this, INT32 nU, CFst* itFvr);<br>public: 
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">fvrt_iam.c(840)</td>
+      <td class="hidden">fvrt_iam.c(856)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -1423,7 +1579,7 @@ The feature-value relation to synthesize from.
       <td class="hidden">Member function</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden"><code>
-INT16 <b>CFvrtools_Union</b>(CFvrtools _this, CFst* itDst, CFst* itFvr);<br>public: INT16 <b>CFvrtools::Union</b>(CFst* itDst, CFst* itFvr);<br>
+BOOL <b>CFvrtools_Union</b>(CFvrtools _this, CFst* itExp, CFst* itInp);<br>public: BOOL <b>CFvrtools::Union</b>(CFst* itExp, CFst* itInp);<br>
 </code></td>
     </tr>
     <tr>
@@ -1462,6 +1618,39 @@ itFvr
 			<td class="hidden">&nbsp;</td>
 			<td class="hidden">
 Second FVR.
+			</td>
+		</tr>
+	</table>
+	<h3>Options</h3>
+	<table>
+		<tr>
+			<td class="hidden">&nbsp;&nbsp;</td>
+			<td class="hidden">
+<a href="#opt__keepexpectation"><code class="link">/keepexpectation</code></a>
+</td>
+			<td class="hidden">&nbsp;</td>
+			<td class="hidden">
+On double value entry keep only expectation.
+			</td>
+		</tr>
+		<tr>
+			<td class="hidden">&nbsp;&nbsp;</td>
+			<td class="hidden">
+<a href="#opt__keepboth"><code class="link">/keepboth</code></a>
+</td>
+			<td class="hidden">&nbsp;</td>
+			<td class="hidden">
+On double value entry keep both (expectation and input).
+			</td>
+		</tr>
+		<tr>
+			<td class="hidden">&nbsp;&nbsp;</td>
+			<td class="hidden">
+<a href="#opt__keepnothing"><code class="link">/keepnothing</code></a>
+</td>
+			<td class="hidden">&nbsp;</td>
+			<td class="hidden">
+On double value entry keep nothing.
 			</td>
 		</tr>
 	</table>
