@@ -130,6 +130,7 @@ cdef extern from "dlp_hmm.h":
         short Bwalpha(int,CData*,CData*)
         short Bwupdate(CData*,CData*,CData*,int)
         short Split(double,int,CData*)
+        short GmmMix()
 
 cdef class PHmm(PFst):
     cdef CHmm *hptr
@@ -148,6 +149,7 @@ cdef class PHmm(PFst):
         return self.hptr.Bwupdate(alpha.dptr,msf.dptr,lsf.dptr if not lsf is None else NULL,unit)
     def Split(self,double minrc=-1,int maxcnt=0,PData map=None):
         return self.hptr.Split(minrc,maxcnt,map.dptr if not map is None else NULL)
+    def GmmMix(self): return self.hptr.GmmMix()
     def gm(self):
         ret=PGmm("",init=False)
         ret.optr=ret.gptr=self.hptr.m_iGm
@@ -166,3 +168,20 @@ cdef class PFstsearch(PObject):
         if type(self) is PFstsearch: del self.fptr
     def Search(self,PFst src,int unit,PData weights,PFst dst):
         return self.fptr.Search(src.fptr,unit,weights.dptr if not weights is None else NULL,dst.fptr)
+
+cdef extern from "dlp_file.h":
+    cdef cppclass CDlpFile(CDlpObject):
+        CDlpFile(char *,char)
+        short Export(char*,char*,CDlpObject*)
+        short Import(char*,char*,CDlpObject*)
+
+cdef class PFile(PObject):
+    cdef CDlpFile *fptr
+    def __cinit__(self,str name="file"):
+        if type(self) is PFile: self.fptr=self.optr=new CDlpFile(name.encode(),1)
+    def __dealloc__(self):
+        if type(self) is PFile: del self.fptr
+    def Export(self,str filename,str filter,PObject inst):
+        return self.fptr.Export(filename.encode(),filter.encode(),inst.optr)
+    def Import(self,str filename,str filter,PObject inst):
+        return self.fptr.Import(filename.encode(),filter.encode(),inst.optr)

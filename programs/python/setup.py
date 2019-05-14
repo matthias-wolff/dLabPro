@@ -23,9 +23,17 @@ setup(
             os.path.join(basedir,'include'),
             os.path.join(basedir,'include/automatic'),
             '/usr/lib/python3/dist-packages/numpy/core/include/numpy',
-            '/usr/lib/python3.6/site-packages/numpy/core/include/numpy'
+            '/usr/lib/python3.6/site-packages/numpy/core/include/numpy',
+            '/home/duckhfra/int/conda/anaconda3/lib/python3.6/site-packages/numpy/core/include/numpy'
         ],
         extra_objects=[
+            os.path.join(bld_dlabpro,'file.a'),
+            os.path.join(bld_dlabpro,'ipkclib.a'),
+            os.path.join(bld_dlabpro,'signal.a'),
+            os.path.join(bld_dlabpro,'var.a'),
+            os.path.join(bld_dlabpro,'dlpmath.a'),
+            os.path.join(bld_dlabpro,'sptk.a'),
+            os.path.join(bld_dlabpro,'libsndfile.a'),
             os.path.join(bld_dlabpro,'hmm.a'),
             os.path.join(bld_dlabpro,'fstsearch.a'),
             os.path.join(bld_dlabpro,'fst.a'),
