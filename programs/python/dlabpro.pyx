@@ -177,6 +177,30 @@ cdef class PGmm(PObject):
     def Density(self,PData x,PData xmap,PData dens):
         return self.gptr.Density(x.dptr,xmap.dptr if not xmap is None else NULL,dens.dptr)
 
+cdef extern from "dlp_statistics.h":
+    cdef cppclass CStatistics(CDlpObject):
+        CStatistics(char *,char)
+        short Status()
+        short Setup(int,int,int,CData*,int)
+        short Update(CData*,int,CData*)
+        short Mean(CData*)
+        short Cov(CData*)
+        short Var(CData*)
+
+cdef class PStatistics(PObject):
+    cdef CStatistics *sptr
+    def __cinit__(self,str name="hmm"):
+        if type(self) is PStatistics:
+            self.sptr=self.optr=new CStatistics(name.encode(),1)
+    def __dealloc__(self):
+        if type(self) is CStatistics: del self.sptr
+    def Status(self): return self.sptr.Status()
+    def Setup(self,int order,int dim,int cls,PData ltb,int icltb): return self.sptr.Setup(order,dim,cls,ltb.dptr if not ltb is None else NULL,icltb)
+    def Update(self,PData vec,int iclab,PData w): return self.sptr.Update(vec.dptr,iclab,w.dptr if not w is None else NULL)
+    def Mean(self,PData dst): return self.sptr.Mean(dst.dptr)
+    def Var(self,PData dst): return self.sptr.Var(dst.dptr)
+    def Cov(self,PData dst): return self.sptr.Cov(dst.dptr)
+
 cdef extern from "dlp_hmm.h":
     cdef cppclass CHmm(CFst):
         CHmm(char *,char)
