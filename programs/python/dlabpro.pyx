@@ -53,6 +53,7 @@ cdef extern from "dlp_data.h":
         int GetNComps()
         double Dfetch(int,int)
         short Dstore(double,int,int)
+        char Xstore(CData*,int,int,int)
     cdef short CData_ChecksumInt(CData*,char*,int)
 
 cdef extern from "dlabpro_numpy.hpp":
@@ -82,6 +83,7 @@ cdef class PData(PObject):
     def dim(self): return self.dptr.GetNComps()
     def Dfetch(self,int rec,int comp): return self.dptr.Dfetch(rec,comp)
     def Dstore(self,float val,int rec,int comp): return self.dptr.Dstore(val,rec,comp)
+    def Xstore(self,PData src,int first,int count,int pos): return self.dptr.Xstore(src.dptr,first,count,pos)
     def hash(self): return CData_ChecksumInt(self.dptr,'CRC-32'.encode(),-1)
 
 cdef extern from "dlp_fst.h":
@@ -214,6 +216,7 @@ cdef extern from "dlp_fstsearch.h":
     cdef cppclass CFstsearch(CDlpObject):
         CFstsearch(char *,char)
         char* m_lpsBt
+        double m_nTpPrnw
         short Status()
         short Search(CFst*,long,CData*,CFst*)
 
@@ -231,6 +234,9 @@ cdef class PFstsearch(PObject):
             self.fptr.m_lpsBt=<char*>dlp_malloc(32)
             strncpy(self.fptr.m_lpsBt,val.encode(),32)
         return self.fptr.m_lpsBt.decode('utf-8')
+    def prnw(self,val=None):
+        if not val is None: self.fptr.m_nTpPrnw=val
+        return self.fptr.m_nTpPrnw
 
 cdef extern from "dlp_file.h":
     cdef cppclass CDlpFile(CDlpObject):
