@@ -168,6 +168,8 @@ cdef extern from "dlp_gmm.h":
         short Status()
         int GetNGauss()
         short Density(CData*,CData*,CData*)
+        short Extract(CData*,CData*)
+        short Setup(CData*,CData*,CData*)
 
 cdef class PGmm(PObject):
     cdef CGmm *gptr
@@ -195,6 +197,10 @@ cdef class PGmm(PObject):
     def GetNGauss(self): return self.gptr.GetNGauss()
     def Density(self,PData x,PData xmap,PData dens):
         return self.gptr.Density(x.dptr,xmap.dptr if not xmap is None else NULL,dens.dptr)
+    def Extract(self,PData mean,PData icov): return self.gptr.Extract(mean.dptr,icov.dptr)
+    def Setup(self,PData mean,PData cov):
+        # TODO implement PVmap for mmap
+        return self.gptr.Setup(mean.dptr,cov.dptr,NULL)
 
 cdef extern from "dlp_statistics.h":
     cdef cppclass CStatistics(CDlpObject):
