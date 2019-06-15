@@ -54,6 +54,7 @@ cdef extern from "dlp_data.h":
         double Dfetch(int,int)
         short Dstore(double,int,int)
         char Xstore(CData*,int,int,int)
+        short Join(CData*)
     cdef short CData_ChecksumInt(CData*,char*,int)
 
 cdef extern from "dlabpro_numpy.hpp":
@@ -84,6 +85,7 @@ cdef class PData(PObject):
     def Dfetch(self,int rec,int comp): return self.dptr.Dfetch(rec,comp)
     def Dstore(self,float val,int rec,int comp): return self.dptr.Dstore(val,rec,comp)
     def Xstore(self,PData src,int first,int count,int pos): return self.dptr.Xstore(src.dptr,first,count,pos)
+    def Join(self,PData x): return self.dptr.Join(x.dptr)
     def hash(self): return CData_ChecksumInt(self.dptr,'CRC-32'.encode(),-1)
 
 cdef extern from "dlp_fst.h":
