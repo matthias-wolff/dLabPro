@@ -159,6 +159,9 @@ cdef class PFst(PObject):
 
 cdef extern from "dlp_gmm.h":
     cdef cppclass CGmm(CDlpObject):
+        CData *m_idMean
+        CData *m_idIvar
+        CData *m_idIcov
         CGmm(char *,char)
         short Status()
         int GetNGauss()
@@ -166,12 +169,26 @@ cdef extern from "dlp_gmm.h":
 
 cdef class PGmm(PObject):
     cdef CGmm *gptr
+    cdef PData meanptr
+    cdef PData ivarptr
+    cdef PData icovptr
     def __cinit__(self,str name="gmm",init=True):
         if type(self) is PGmm and init:
             self._init=True
             self.optr=self.gptr=new CGmm(name.encode(),1)
+            self.init_gmm_fields()
+    def init_gmm_fields(self):
+        self.meanptr=PData("",init=False)
+        self.ivarptr=PData("",init=False)
+        self.icovptr=PData("",init=False)
+        self.meanptr.optr=self.meanptr.dptr=self.gptr.m_idMean
+        self.ivarptr.optr=self.ivarptr.dptr=self.gptr.m_idIvar
+        self.icovptr.optr=self.icovptr.dptr=self.gptr.m_idIcov
     def __dealloc__(self):
         if type(self) is PGmm and self._init: del self.gptr
+    def mean(self): return self.meanptr
+    def ivar(self): return self.ivarptr
+    def icov(self): return self.icovptr
     def Status(self): return self.gptr.Status()
     def GetNGauss(self): return self.gptr.GetNGauss()
     def Density(self,PData x,PData xmap,PData dens):
@@ -193,7 +210,7 @@ cdef class PStatistics(PObject):
         if type(self) is PStatistics:
             self.sptr=self.optr=new CStatistics(name.encode(),1)
     def __dealloc__(self):
-        if type(self) is CStatistics: del self.sptr
+        if type(self) is PStatistics: del self.sptr
     def Status(self): return self.sptr.Status()
     def Setup(self,int order,int dim,int cls,PData ltb,int icltb): return self.sptr.Setup(order,dim,cls,ltb.dptr if not ltb is None else NULL,icltb)
     def Update(self,PData vec,int iclab,PData w): return self.sptr.Update(vec.dptr,iclab,w.dptr if not w is None else NULL)
@@ -234,6 +251,7 @@ cdef class PHmm(PFst):
     def gm(self):
         ret=PGmm("",init=False)
         ret.optr=ret.gptr=self.hptr.m_iGm
+        ret.init_gmm_fields()
         return ret
 
 cdef extern from "dlp_fstsearch.h":
