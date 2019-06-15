@@ -25,7 +25,7 @@ void numpy2data(PyObject *np,CData *dat){
     r=na->dimensions[0]*na->dimensions[1];
     b=na->dimensions[0];
   }else{ printf("ERROR: only up to dim 3"); return; }
-//  printf("%i %i %i %i\n",na->descr->byteorder,na->descr->kind,na->descr->type,na->strides[na->nd-1]);
+  //printf("\n%i %i %i %i\n",na->descr->byteorder,na->descr->kind,na->descr->type,na->strides[na->nd-1]);
   if(na->descr->byteorder!=61){ printf("ERROR: unknown dtype"); return; }
   if(na->descr->kind==102){
     if(na->descr->type==102 && na->strides[na->nd-1]==4) t=T_FLOAT;
@@ -33,6 +33,7 @@ void numpy2data(PyObject *np,CData *dat){
     else{ printf("ERROR: unknown dtype"); return; }
   }else if(na->descr->kind==105){
     if(na->descr->type==108 && na->strides[na->nd-1]==8) t=T_LONG;
+	else if(na->descr->type==113 && na->strides[na->nd-1]==8) t=T_LONG;
     else if(na->descr->type==105 && na->strides[na->nd-1]==4) t=T_INT;
     else if(na->descr->type==104 && na->strides[na->nd-1]==2) t=T_SHORT;
     else{ printf("ERROR: unknown dtype"); return; }

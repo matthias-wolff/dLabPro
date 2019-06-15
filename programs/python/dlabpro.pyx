@@ -216,9 +216,10 @@ cdef class PStatistics(PObject):
     cdef CStatistics *sptr
     def __cinit__(self,str name="hmm"):
         if type(self) is PStatistics:
+            self._init=True
             self.sptr=self.optr=new CStatistics(name.encode(),1)
     def __dealloc__(self):
-        if type(self) is PStatistics: del self.sptr
+        if type(self) is PStatistics and self._init: del self.sptr
     def Status(self): return self.sptr.Status()
     def Setup(self,int order,int dim,int cls,PData ltb,int icltb): return self.sptr.Setup(order,dim,cls,ltb.dptr if not ltb is None else NULL,icltb)
     def Update(self,PData vec,int iclab,PData w): return self.sptr.Update(vec.dptr,iclab,w.dptr if not w is None else NULL)
