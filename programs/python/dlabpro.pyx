@@ -211,6 +211,7 @@ cdef extern from "dlp_statistics.h":
         short Mean(CData*)
         short Cov(CData*)
         short Var(CData*)
+        short Freq(CData*)
 
 cdef class PStatistics(PObject):
     cdef CStatistics *sptr
@@ -226,6 +227,7 @@ cdef class PStatistics(PObject):
     def Mean(self,PData dst): return self.sptr.Mean(dst.dptr)
     def Var(self,PData dst): return self.sptr.Var(dst.dptr)
     def Cov(self,PData dst): return self.sptr.Cov(dst.dptr)
+    def Freq(self,PData dst): return self.sptr.Freq(dst.dptr)
 
 cdef extern from "dlp_hmm.h":
     cdef cppclass CHmm(CFst):
