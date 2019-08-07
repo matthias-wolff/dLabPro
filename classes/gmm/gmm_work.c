@@ -114,6 +114,8 @@ INT32 CGEN_PROTECTED CGmm_Icov(CGmm* _this, CData* idCov, BOOL bIcov)
     if (bIcov)                                                                  /*   idCov was already inverse       */
       CData_Dstore(AS(CData,_this->m_idCdet),                                   /*     det(inv(A))=1./det(A)!        */
         1./CData_Dfetch(AS(CData,_this->m_idCdet),c,0),c,0);                    /*     |                             */
+    CData_Dstore(AS(CData,_this->m_idCdet),                                     /*     abs of det                    */
+      fabs(CData_Dfetch(AS(CData,_this->m_idCdet),c,0)),c,0);                   /*     |                             */
     if                                                                          /*   Cov. matrix has no full rank    */
     (                                                                           /*   |                               */
       CData_Dfetch(AS(CData,_this->m_idCdet),c,0) < _this->m_nMindet   ||       /*   | (Det. is unreasonably small)  */
