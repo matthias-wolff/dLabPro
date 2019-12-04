@@ -55,6 +55,10 @@ cdef extern from "dlp_data.h":
         short Dstore(double,int,int)
         char Xstore(CData*,int,int,int)
         short Join(CData*)
+        short GetCompType(int)
+        short Tconvert(CData*,short)
+        short Quantize(CData*)
+        short Dequantize(CData*)
     cdef short CData_ChecksumInt(CData*,char*,int)
 
 cdef extern from "dlabpro_numpy.hpp":
@@ -87,6 +91,10 @@ cdef class PData(PObject):
     def Xstore(self,PData src,int first,int count,int pos): return self.dptr.Xstore(src.dptr,first,count,pos)
     def Join(self,PData x): return self.dptr.Join(x.dptr)
     def hash(self): return CData_ChecksumInt(self.dptr,'CRC-32'.encode(),-1)
+    def GetCompType(self,comp): return self.dptr.GetCompType(comp)
+    def Tconvert(self,PData src,short ctype): return self.dptr.Tconvert(src.dptr,ctype)
+    def Quantize(self,PData src): return self.dptr.Quantize(src.dptr)
+    def Dequantize(self,PData src): return self.dptr.Dequantize(src.dptr)
 
 cdef extern from "dlp_fst.h":
     cdef cppclass CFst(CDlpObject):
