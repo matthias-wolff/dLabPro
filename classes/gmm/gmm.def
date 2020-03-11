@@ -355,6 +355,21 @@ FLAGS:   /noset
   @see ivar
   @see icov
   @see cmap
+  @see cldet
+END_MAN
+
+FIELD:   cldet
+COMMENT: Logarithmic determinants of covariance matrices.
+TYPE:    INSTANCE(data)
+FLAGS:   /noset
+/html MAN:
+  <p>Logarithmic Determinants of the Gaussians' covariance matrices. This table contains <i>K</i> records and 1 component of type
+  {@link type}. A determinant of 0 indicates that the respective Gaussian is invalid (i.e. its covariance matrix has
+  no full rank).</p>
+  <h4>Remarks</h4>
+  <p>This field is write protected and can only be modified through the {@link -setup} or {@link -setup_ex} methods.</p>
+  <p>This field overwrite {@link cdet} if set.</p>
+  @see cdet
 END_MAN
 
 FIELD:   icov

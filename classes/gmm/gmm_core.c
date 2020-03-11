@@ -234,8 +234,12 @@ INT16 CGmm_PrecalcD(CGmm* _this, BOOL bCleanup)
   _this->m_lpDelta = dlp_calloc(K,sizeof(GMM_FTYPE));                           /* Allocate buffer                   */
   if (!_this->m_lpDelta) DLPTHROW(ERR_NOMEM);                                   /* Out of memory                     */
   for (k=0; k<K; k++)                                                           /* Loop over Gaussians               */
-    delta[k] = nDelta1-(GMM_FTYPE)(0.5*log(                                     /*   Calculate delta[k]              */
-      CData_Dfetch(AS(CData,_this->m_idCdet),k,0)));                            /*   |                               */
+    if(_this->m_idCldet)
+      delta[k] = nDelta1-(GMM_FTYPE)(0.5*                                       /*   Calculate delta[k]              */
+        CData_Dfetch(AS(CData,_this->m_idCldet),k,0));                          /*   |                               */
+    else
+      delta[k] = nDelta1-(GMM_FTYPE)(0.5*log(                                   /*   Calculate delta[k]              */
+        CData_Dfetch(AS(CData,_this->m_idCdet),k,0)));                          /*   |                               */
 
   /* SSE2 precalculated objects */                                              /* --------------------------------- */
 #ifdef GMM_SSE2                                                                 /* Use SSE2?                         */

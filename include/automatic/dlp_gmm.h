@@ -182,6 +182,7 @@ public:
 public:
 /*{{CGEN_ICXX_FIELDS */
 	data*            m_idCdet;
+	data*            m_idCldet;
 	data*            m_idCmap;
 	data*            m_idIcov;
 	data*            m_idIvar;
@@ -199,6 +200,7 @@ typedef struct CGmm
 
 /*{{CGEN_IC_FIELDS */
 	CDlpObject*      m_idCdet;
+	CDlpObject*      m_idCldet;
 	CDlpObject*      m_idCmap;
 	CDlpObject*      m_idIcov;
 	CDlpObject*      m_idIvar;

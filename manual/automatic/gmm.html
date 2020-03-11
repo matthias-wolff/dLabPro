@@ -56,6 +56,7 @@ gmm.html gmm CGmm [
   ]
   gmm.html#fld Fields - [
     gmm.html#fld_cdet "cdet" "m_idCdet"
+    gmm.html#fld_cldet "cldet" "m_idCldet"
     gmm.html#fld_cmap "cmap" "m_idCmap"
     gmm.html#fld_dceil "dceil" "m_nDceil"
     gmm.html#fld_icov "icov" "m_idIcov"
@@ -125,6 +126,7 @@ gmm.html gmm CGmm [
         top.TC1.InsertItem("Distance and Density Computation","",10,10,0,"automatic/gmm.html#rnt_000","CONT",nRnt);
         top.TC1.InsertItem("SSE2 Optimization","",10,10,0,"automatic/gmm.html#rnt_001","CONT",nRnt);
         top.TC1.InsertItem("cdet","data    Determinants of covariance matrices.",35,35,0,"automatic/gmm.html#fld_cdet","CONT",nCls);
+        top.TC1.InsertItem("cldet","data    Logarithmic determinants of covariance matrices.",35,35,0,"automatic/gmm.html#fld_cldet","CONT",nCls);
         top.TC1.InsertItem("cmap","data    (Co-)variance tying map.",35,35,0,"automatic/gmm.html#fld_cmap","CONT",nCls);
         top.TC1.InsertItem("dceil","double    Distance limit.",28,28,0,"automatic/gmm.html#fld_dceil","CONT",nCls);
         top.TC1.InsertItem("icov","data    Inverse covariance matrices w/o main diagonal.",35,35,0,"automatic/gmm.html#fld_icov","CONT",nCls);
@@ -442,6 +444,7 @@ Mahalanobis distance of invalid Gaussians !?
       </td>
     </tr>
     <tr><td><a href="#fld_cdet"><code class="link">cdet</code></a></td><td> Determinants of covariance matrices.</td></tr>
+    <tr><td><a href="#fld_cldet"><code class="link">cldet</code></a></td><td> Logarithmic determinants of covariance matrices.</td></tr>
     <tr><td><a href="#fld_cmap"><code class="link">cmap</code></a></td><td> (Co-)variance tying map.</td></tr>
     <tr><td><a href="#fld_dceil"><code class="link">dceil</code></a></td><td> Distance limit.</td></tr>
     <tr><td><a href="#fld_icov"><code class="link">icov</code></a></td><td> Inverse covariance matrices w/o main diagonal.</td></tr>
@@ -807,6 +810,104 @@ Determinants of covariance matrices.
 			<td class="hidden">&nbsp;&nbsp;</td>
 			<td class="hidden">
 <a href="#fld_cmap"><code class="link">cmap</code></a>
+			</td>
+		</tr>
+		<tr>
+			<td class="hidden">&nbsp;&nbsp;</td>
+			<td class="hidden">
+<a href="#fld_cldet"><code class="link">cldet</code></a>
+			</td>
+		</tr>
+	</table>
+  <!--{{ CUSTOM_DOC -->
+  <!--}} CUSTOM_DOC -->
+  </div>
+  <img src="../resources/blank_stc.gif" height="10">
+  </div>
+  <div id="fld_cldet">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td nowrap width="25%" class="navbar"><a 
+        name="fld_cldet"></a>Field <span 
+        class="mid">cldet</span></td>
+      <td nowrap width="75%" class="navbar" style="text-align:right;">
+        <a class="navbar" href="javascript:__PrintSection('fld_cldet','Class gmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
+  </table>
+  <div class="mframe"><table cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td class="hidden">dLabPro</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Identifier</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code><b>cldet</b></code></td>
+    </tr>
+    <tr>
+      <td class="hidden">&nbsp;</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Type</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">
+data
+</td>
+    </tr>
+    <tr>
+      <td class="hidden">&nbsp;</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Default</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">
+NULL
+</td>
+    </tr>
+    <tr>
+      <td class="hidden"> </td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Properties</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">
+FF_NOSET
+</td>
+    </tr>
+    <tr>
+      <td class="hidden" colspan="5">&nbsp;</td>
+    </tr>
+    <tr>
+      <td class="hidden">C/C++</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Member variable</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code>
+data* <b>m_idCldet</b>;
+</code></td>
+    </tr>
+  </table></div>
+  <div class="mframe2">
+  <h3>Synopsis</h3>
+  <p>
+Logarithmic determinants of covariance matrices.
+  </p>
+  <h3>Description</h3>
+  <p>Logarithmic Determinants of the Gaussians' covariance matrices. This table contains <i>K</i> records and 1 component of type
+  <a href="#fld_type"><code class="link">type</code></a>. A determinant of 0 indicates that the respective Gaussian is invalid (i.e. its covariance matrix has
+  no full rank).</p>
+  <h4>Remarks</h4>
+  <p>This field is write protected and can only be modified through the <a href="#mth_-setup"><code class="link">-setup</code></a> or <a href="#mth_-setup_ex"><code class="link">-setup_ex</code></a> methods.</p>
+  <p>This field overwrite <a href="#fld_cdet"><code class="link">cdet</code></a> if set.</p>
+	<h3>See also</h3>
+	<table>
+		<tr>
+			<td class="hidden">&nbsp;&nbsp;</td>
+			<td class="hidden">
+<a href="#fld_cdet"><code class="link">cdet</code></a>
 			</td>
 		</tr>
 	</table>
@@ -2406,7 +2507,7 @@ INT16 <b>CGmm_Density</b>(CGmm _this, data* idX, data* idXmap, data* idDens);<br
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">gmm.def(828)</td>
+      <td class="hidden">gmm.def(843)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -2586,7 +2687,7 @@ INT16 <b>CGmm_Distance</b>(CGmm _this, data* idX, data* idXmap, data* idDist);<b
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">gmm.def(866)</td>
+      <td class="hidden">gmm.def(881)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -2969,7 +3070,7 @@ INT16 <b>CGmm_Noise</b>(CGmm _this, INT64 nDim, INT64 nRecs, data* idDest);<br> 
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">gmm.def(960)</td>
+      <td class="hidden">gmm.def(975)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -3034,7 +3135,7 @@ INT16 <b>CGmm_Setup</b>(CGmm _this, data* idMean, data* idCov, vmap* iMmap);<br>
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">gmm.def(605)</td>
+      <td class="hidden">gmm.def(620)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -4297,7 +4398,7 @@ INT16 <b>CGmm_Gauss</b>(CGmm _this, CData* idX, CData* idXmap, CData* idDest, IN
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">gmm_work.c(199)</td>
+      <td class="hidden">gmm_work.c(198)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -5020,7 +5121,7 @@ INT16 <b>CGmm_Precalc</b>(CGmm _this, BOOL bCleanup);<br>protected: INT16 <b>CGm
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">gmm_work.c(184)</td>
+      <td class="hidden">gmm_work.c(183)</td>
     </tr>
   </table></div>
   <div class="mframe2">

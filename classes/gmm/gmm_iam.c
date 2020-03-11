@@ -71,6 +71,7 @@ INT16 CGEN_PUBLIC CGmm_SetupEx
   IDESTROY(_this->m_idIcov);                                                    /* Destroy covarince matrices        */
   IDESTROY(_this->m_idCmap);                                                    /* Destroy covariance tying map      */
   IDESTROY(_this->m_iMmap);                                                     /* Destroy mixture map               */
+  IDESTROY(_this->m_idCldet);
   
   /* Copy mean vectors */                                                       /* --------------------------------- */
   lpBuf = (FLOAT64*)dlp_calloc(N,sizeof(FLOAT64));                                /* Allocate copy buffer              */
@@ -142,15 +143,22 @@ INT16 CGEN_PUBLIC CGmm_SetupEx
       {                                                                         /*     >>                            */
         IFCHECK printf("\n   - One variance vector per Gaussian");              /*       Protocol (verbose level 1)  */
         CData_Aggregate(AS(CData,_this->m_idCdet),idCov,NULL,CMPLX(0),"prod");  /*       get cdet from variances     */
-        if (bIcov)                                                              /*       idCov is inverse            */
-          CData_Copy(_this->m_idIvar,BASEINST(idCov)),                          /*         Copy inv. var. vectors    */
+        IFIELD_RESET(CData,"cldet");
+        CData_Scalop(AS(CData,_this->m_idCldet),idCov,CMPLX(0),"ln");
+        CData_Aggregate(AS(CData,_this->m_idCldet),AS(CData,_this->m_idCldet),NULL,CMPLX(0),"sum");
+        if (bIcov){                                                              /*       idCov is inverse            */
+          CData_Copy(_this->m_idIvar,BASEINST(idCov));                          /*         Copy inv. var. vectors    */
           CData_Scalop(AS(CData,_this->m_idCdet),AS(CData,_this->m_idCdet),     /*         invert cdet               */
             CMPLX(0),".inv");                                                   /*         |                         */
-        else                                                                    /*       idCov is NOT inverse        */
+          CData_Scalop(AS(CData,_this->m_idCldet),AS(CData,_this->m_idCldet),   /*         invert cdet               */
+            CMPLX(0),"neg");                                                    /*         |                         */
+        }else                                                                    /*       idCov is NOT inverse        */
           CData_Scalop(AS(CData,_this->m_idIvar),idCov,CMPLX(0),"inv");         /*         Invert variance vectors   */
         CData_Tconvert(AS(CData,_this->m_idCdet),AS(CData,_this->m_idCdet),     /*         Convert type of cdet      */
             _this->m_nType);                                                    /*         |                         */
         CData_Tconvert(AS(CData,_this->m_idIvar),AS(CData,_this->m_idIvar),     /*         Convert type of ivar      */
+            _this->m_nType);                                                    /*         |                         */
+        CData_Tconvert(AS(CData,_this->m_idCldet),AS(CData,_this->m_idCldet),   /*         Convert type of cldet     */
             _this->m_nType);                                                    /*         |                         */
       }                                                                         /*     <<                            */
       else                                                                      /*     Shared covariance matrices    */
