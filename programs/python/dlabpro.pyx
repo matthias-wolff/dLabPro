@@ -172,6 +172,7 @@ cdef extern from "dlp_gmm.h":
         CData *m_idMean
         CData *m_idIvar
         CData *m_idIcov
+        double m_nDceil
         CGmm(char *,char)
         short Status()
         int GetNGauss()
@@ -209,6 +210,7 @@ cdef class PGmm(PObject):
     def Setup(self,PData mean,PData cov):
         # TODO implement PVmap for mmap
         return self.gptr.Setup(mean.dptr,cov.dptr,NULL)
+    def setdceil(self,dceil): self.gptr.m_nDceil=dceil
 
 cdef extern from "dlp_statistics.h":
     cdef cppclass CStatistics(CDlpObject):
