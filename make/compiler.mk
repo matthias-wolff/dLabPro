@@ -45,17 +45,17 @@ endif
 ## Compiler config for GCC
 ifneq ($(or $(findstring mingw,$(OS)),$(findstring cygwin,$(OS)),$(findstring lin,$(OS))),)
   TOOLBOX  = GCC
-  CC       = gcc
+  CC       = $(GCC)
   CCoO     = -o
   AR       = ar
   ARoO     =
-  LL       = g++
+  LL       = $(GPP)
   LLoO     = -o 
   OEXT     = o
   LEXT     = a
   DEXT     = d
   ifeq ($(TRG_EXT),C)
-    LL    = gcc
+    LL    = $(GCC)
   endif
 endif
 
