@@ -35,7 +35,9 @@ cdef class PObject:
         if type(self) is PObject and self._init: del self.optr
     def RESETOPTIONS(self): return self.optr.ResetAllOptions(0)
     def SETOPTION(self,str name): return self.optr.SetOption(self.optr.FindWord(name.encode(),0x4))
-    def Save(self,str filename,int fmt=0): return CDlpObject_Save(self.optr,filename.encode(),fmt)
+    def Save(self,str filename,int fmt=0,zip=False):
+        if zip: fmt=fmt|4
+        return CDlpObject_Save(self.optr,filename.encode(),fmt)
     def Restore(self,str filename,int fmt=0): return CDlpObject_Restore(self.optr,filename.encode(),fmt)
     def Copy(self,PObject src): return self.optr.Copy(src.optr)
 
@@ -167,18 +169,53 @@ cdef class PFst(PObject):
         self.Minimize(src,unit)
 
 
+cdef extern from "dlp_vmap.h":
+    cdef cppclass CVmap(CDlpObject):
+        CData* m_idTmx
+        CData* m_idWeakTmx
+        CVmap(char *,char)
+        short Status()
+        short Setup(CData*,char*,char*,float)
+        short Map(CData*,CData*)
+
+cdef class PVmap(PObject):
+    cdef CVmap *vptr
+    cdef PData tmxptr
+    cdef PData weaktmxptr
+    def __cinit__(self,str name="vmap",init=True):
+        if type(self) is PVmap and init:
+            self._init=True
+            self.optr=self.vptr=new CVmap(name.encode(),1)
+            self.init_vmap_fields()
+    def init_vmap_fields(self):
+        self.tmxptr=PData("",init=False)
+        self.weaktmxptr=PData("",init=False)
+        self.tmxptr.optr=self.tmxptr.dptr=self.vptr.m_idTmx
+        self.weaktmxptr.optr=self.weaktmxptr.dptr=self.vptr.m_idWeakTmx
+    def __dealloc__(self):
+        if type(self) is PVmap and self._init: del self.vptr
+    def tmx(self): return self.tmxptr
+    def weaktmx(self): return self.weaktmxptr
+    def Status(self): return self.vptr.Status()
+    def Setup(self,PData tmx,str aop,str wop,float zero):
+        import sys
+        if zero==float('inf'): zero=sys.float_info.max
+        return self.vptr.Setup(tmx.dptr,aop.encode(),wop.encode(),zero)
+    def Map(self,PData src,PData dst): return self.vptr.Map(src.dptr,dst.dptr)
+
 cdef extern from "dlp_gmm.h":
     cdef cppclass CGmm(CDlpObject):
         CData *m_idMean
         CData *m_idIvar
         CData *m_idIcov
+        CVmap *m_iMmap;
         double m_nDceil
         CGmm(char *,char)
         short Status()
         int GetNGauss()
         short Density(CData*,CData*,CData*)
         short Extract(CData*,CData*)
-        short Setup(CData*,CData*,CData*)
+        short Setup(CData*,CData*,CVmap*)
 
 cdef class PGmm(PObject):
     cdef CGmm *gptr
@@ -202,14 +239,18 @@ cdef class PGmm(PObject):
     def mean(self): return self.meanptr
     def ivar(self): return self.ivarptr
     def icov(self): return self.icovptr
+    def mmap(self):
+        ret=PVmap("",init=False)
+        ret.optr=ret.vptr=self.gptr.m_iMmap
+        ret.init_vmap_fields()
+        return ret
     def Status(self): return self.gptr.Status()
     def GetNGauss(self): return self.gptr.GetNGauss()
     def Density(self,PData x,PData xmap,PData dens):
         return self.gptr.Density(x.dptr,xmap.dptr if not xmap is None else NULL,dens.dptr)
     def Extract(self,PData mean,PData icov): return self.gptr.Extract(mean.dptr,icov.dptr)
-    def Setup(self,PData mean,PData cov):
-        # TODO implement PVmap for mmap
-        return self.gptr.Setup(mean.dptr,cov.dptr,NULL)
+    def Setup(self,PData mean,PData cov,PVmap mmap):
+        return self.gptr.Setup(mean.dptr,cov.dptr,mmap.vptr)
     def setdceil(self,dceil): self.gptr.m_nDceil=dceil
 
 cdef extern from "dlp_statistics.h":
