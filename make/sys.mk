@@ -23,6 +23,13 @@
 ## You should have received a copy of the GNU Lesser General Public License
 ## along with dLabPro. If not, see <http://www.gnu.org/licenses/>.
 
+ifeq ($(GCC),)
+  GCC=gcc
+endif
+ifeq ($(GPP),)
+  GPP=g++
+endif
+
 ## Common settings
 ifdef (${CGENPATH})
   DCG = ${CGENPATH}/dcg
@@ -55,7 +62,7 @@ ifneq (${DLABPRO_USE_MSVC},)
   endif
 else 
   # Test #2 for machine of gcc
-  OS := $(call lc,$(shell gcc -dumpmachine))
+  OS := $(call lc,$(shell $(GCC) -dumpmachine))
   ifneq ($(OS),)
     ifneq ($(and $(findstring -linux,$(OS)),$(findstring x86_64-,$(OS))),)
       OS = lin64

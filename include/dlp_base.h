@@ -159,6 +159,8 @@
 
 #if (defined __GNUC__)
   #include <stdint.h>
+#endif
+#if (defined __GNUC__ && !defined __MINGW32__)
   /* HACK: GCC/Eclipse --> */
   extern char* tempnam(const char*, const char*);
   extern int strcasecmp(const char*, const char*);
