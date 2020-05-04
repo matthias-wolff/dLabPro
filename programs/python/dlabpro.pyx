@@ -208,6 +208,7 @@ cdef extern from "dlp_gmm.h":
         CData *m_idMean
         CData *m_idIvar
         CData *m_idIcov
+        CData *m_idCdet
         CVmap *m_iMmap;
         double m_nDceil
         CGmm(char *,char)
@@ -222,6 +223,7 @@ cdef class PGmm(PObject):
     cdef PData meanptr
     cdef PData ivarptr
     cdef PData icovptr
+    cdef PData cdetptr
     def __cinit__(self,str name="gmm",init=True):
         if type(self) is PGmm and init:
             self._init=True
@@ -231,14 +233,17 @@ cdef class PGmm(PObject):
         self.meanptr=PData("",init=False)
         self.ivarptr=PData("",init=False)
         self.icovptr=PData("",init=False)
+        self.cdetptr=PData("",init=False)
         self.meanptr.optr=self.meanptr.dptr=self.gptr.m_idMean
         self.ivarptr.optr=self.ivarptr.dptr=self.gptr.m_idIvar
         self.icovptr.optr=self.icovptr.dptr=self.gptr.m_idIcov
+        self.cdetptr.optr=self.cdetptr.dptr=self.gptr.m_idCdet
     def __dealloc__(self):
         if type(self) is PGmm and self._init: del self.gptr
     def mean(self): return self.meanptr
     def ivar(self): return self.ivarptr
     def icov(self): return self.icovptr
+    def cdet(self): return self.cdetptr
     def mmap(self):
         ret=PVmap("",init=False)
         ret.optr=ret.vptr=self.gptr.m_iMmap
