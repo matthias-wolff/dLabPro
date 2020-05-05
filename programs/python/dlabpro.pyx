@@ -61,6 +61,7 @@ cdef extern from "dlp_data.h":
         short Tconvert(CData*,short)
         short Quantize(CData*)
         short Dequantize(CData*)
+        short Rindex(char*,int)
     cdef short CData_ChecksumInt(CData*,char*,int)
 
 cdef extern from "dlabpro_numpy.hpp":
@@ -97,6 +98,7 @@ cdef class PData(PObject):
     def Tconvert(self,PData src,short ctype): return self.dptr.Tconvert(src.dptr,ctype)
     def Quantize(self,PData src): return self.dptr.Quantize(src.dptr)
     def Dequantize(self,PData src): return self.dptr.Dequantize(src.dptr)
+    def Rindex(self,str cname,int ic): return self.dptr.Rindex(cname.encode(),ic)
 
 cdef extern from "dlp_fst.h":
     cdef cppclass CFst(CDlpObject):
