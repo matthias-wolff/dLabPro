@@ -1186,12 +1186,48 @@ INT16 CGEN_PROTECTED CFst_MarkConnected(CFst* _this, INT32 nUnit)
   {
     /* Forward pass */
     lpTI = CFst_STI_Init(_this,nU,FSTI_PTR);
+    #if 0
     CFst_Mc_Fwd(_this,lpTI,0);
 
     /* Backward pass */
     for (nS=0; nS<UD_XS(_this,nU); nS++)
       if (SD_FLG(_this,nS+UD_FS(_this,nU))&SD_FLG_FINAL)
         CFst_Mc_Bkw(_this,lpTI,nS);
+    #else
+    FST_ITYPE *queue=(FST_ITYPE*)dlp_malloc((size_t)UD_XS(_this,nUnit)*sizeof(FST_ITYPE));
+    FST_ITYPE qused=0;
+    BYTE* lpT = NULL;
+
+    /* Forward pass */
+    SD_FLG(_this,0+lpTI->nFS)|=SD_FLG_USER3;
+    queue[qused++]=0;
+    while(qused){
+      nS=queue[--qused];
+      while((lpT=CFst_STI_TfromS(lpTI,nS,lpT))){
+        FST_ITYPE nX=*CFst_STI_TTer(lpTI,lpT);
+        if(SD_FLG(_this,nX+lpTI->nFS)&SD_FLG_USER3) continue;
+        SD_FLG(_this,nX+lpTI->nFS)|=SD_FLG_USER3;
+        queue[qused++]=nX;
+      }
+    }
+
+    /* Backward pass */
+    for(nS=0;nS<UD_XS(_this,nUnit);nS++) if(SD_FLG(_this,nS+lpTI->nFS)&SD_FLG_FINAL){
+      SD_FLG(_this,nS+lpTI->nFS)|=SD_FLG_USER4;
+      queue[qused++]=nS;
+    }
+    while(qused){
+      nS=queue[--qused];
+      while((lpT=CFst_STI_TtoS(lpTI,nS,lpT))){
+        FST_ITYPE nX=*CFst_STI_TIni(lpTI,lpT);
+        if(SD_FLG(_this,nX+lpTI->nFS)&SD_FLG_USER4) continue;
+        SD_FLG(_this,nX+lpTI->nFS)|=SD_FLG_USER4;
+        queue[qused++]=nX;
+      }
+    }
+
+    dlp_free(queue);
+    #endif
     CFst_STI_Done(lpTI);
 
     /* Break in single unit mode */
