@@ -23,6 +23,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with dLabPro. If not, see <http://www.gnu.org/licenses/>.
  */
+#define _CPS_MAPHASH_
 
 /* These error macro produces a string containing file name and line number */
 #define STRINGIFY2(X) #X
@@ -30,6 +31,7 @@
 #define FSTCERR(TXT)  __FILE__ "(" STRINGIFY1(__LINE__) "): " TXT
 
 #include "fst_cps_mem.c"
+#include "fst_cps_map.c"
 
 /* These are all special epsion symbols used in composition */
 #define EPSSYM     0 /* Alias for any non-epsilon which matches in both operands */
@@ -81,11 +83,13 @@ struct fstc_f {
   struct fstc_d *d;     /* Extra transition components for operands */
 };
 
+#ifndef _CPS_MAPHASH_
 /* Internal done map structure */
 struct fstc_m {
   unsigned char *buf; /* Bitmap data */
   uint64_t ne,nb;     /* Number of states in epsilon filter and right operand */
 };
+#endif
 
 /* Internal algorithm structure */
 struct fstc_c {
@@ -105,6 +109,7 @@ struct fstc_c {
 #define HCH1(ia,ie,ib)  (((ia)+1)*((ie)+1)*((ib)+1))
 #define HCH(ia,ie,ib)   (((HCH1(ia,ie,ib)>>HBIT)^HCH1(ia,ie,ib))&HMASK)
 
+#ifndef _CPS_MAPHASH_
 /* Get map index from state indizies */
 #define MAPID(m,a,e,b)  (((uint64_t)(a)*(m).ne+(uint64_t)(e))*(m).nb+(uint64_t)(b))
 /* Done map set and get by map index */
@@ -118,6 +123,8 @@ struct fstc_c {
   if(!((m).buf=(unsigned char *)calloc((((uint64_t)(ans)*(ens)*(bns))>>3)+1,sizeof(unsigned char)))) return "Out of memory"; \
   (m).ne=(ens); (m).nb=(bns); \
 }
+#define MAPFREE(m)     free((m).buf)
+#endif
 
 /* Add a new transition to one of the operands
  *
@@ -280,8 +287,9 @@ struct fstc_s *fstc_news(struct fstc_c *c,struct fstc_f *fr,UINT32 ia,UINT32 ie,
  * @param fr  Destination transducer
  * @param s   State to free
  */
-void fstc_sfree(struct fstc_c *c,struct fstc_f *fr,struct fstc_s *s){
+const char *fstc_sfree(struct fstc_c *c,struct fstc_f *fr,struct fstc_s *s){
   struct fstc_t *t,*t2;
+  const char *err;
 	if(c->dbg) printf("sfree %i,%i,%i\n",s->ia,s->ie,s->ib);
   if(s->snxt) s->snxt->sprv=s->sprv;
   if(s->sprv) s->sprv->snxt=s->snxt;
@@ -291,7 +299,7 @@ void fstc_sfree(struct fstc_c *c,struct fstc_f *fr,struct fstc_s *s){
     if(t->nnxt) t->nnxt->nprv=t->nprv;
     if(t->nprv) t->nprv->nnxt=t->nnxt;
     else t->si->tn=t->nnxt;
-    if(!t->si->tn && !t->si->fin && t->si->qnxt==QNONE) fstc_sfree(c,fr,t->si);
+    if(!t->si->tn && !t->si->fin && t->si->qnxt==QNONE){ if((err=fstc_sfree(c,fr,t->si))) return err; }
     t2=t->bnxt;
     fstc_memput(&fr->tmem,t);
   }
@@ -303,6 +311,7 @@ void fstc_sfree(struct fstc_c *c,struct fstc_f *fr,struct fstc_s *s){
     c->h[ch]=s->hnxt;
   }
   fstc_memput(&fr->smem,s);
+  return NULL;
 }
 
 /* Perform internal composition
@@ -316,6 +325,7 @@ void fstc_sfree(struct fstc_c *c,struct fstc_f *fr,struct fstc_s *s){
  */
 const char *fstc_cps(struct fstc_f *fa,struct fstc_f *fe,struct fstc_f *fb,struct fstc_f *fr,char dbg){
   struct fstc_c c;
+  const char *err;
   memset(fr,0,sizeof(struct fstc_f));
   fstc_meminit(&fr->smem,sizeof(struct fstc_s),4096);
   fstc_meminit(&fr->tmem,sizeof(struct fstc_t),4096);
@@ -330,13 +340,13 @@ const char *fstc_cps(struct fstc_f *fa,struct fstc_f *fe,struct fstc_f *fb,struc
     struct fstc_s *sn;
     c.q=sb->qnxt; sb->qnxt=QNONE;
     if(fa->s[sb->ia].fin && fb->s[sb->ib].fin) sb->fin=1;
-		if(c.dbg) printf("sexp  %i,%i,%i%s\n",sb->ia,sb->ie,sb->ib,sb->fin?" (fin)":"");
+    if(c.dbg) printf("sexp  %i,%i,%i%s\n",sb->ia,sb->ie,sb->ib,sb->fin?" (fin)":"");
     for(ta=fa->s[sb->ia].tn;ta;ta=ta->nnxt)
       for(te=fe->s[sb->ie].tn;te;te=te->nnxt) if(ta->o==te->i || (te->i==EPSSYM && ta->o>0))
         for(tb=fb->s[sb->ib].tn;tb;tb=tb->nnxt) if((te->o!=EPSSYM && te->o==tb->i) || (te->o==EPSSYM && tb->i==ta->o))
           if((sn=fstc_news(&c,fr,ta->n,te->n,tb->n))){
             struct fstc_t *tr=(struct fstc_t *)fstc_memget(&fr->tmem);
-						if(c.dbg) printf("tadd  %i,%i,%i => %i/%i,%i/%i => %i,%i,%i\n",sb->ia,sb->ie,sb->ib,ta->o,te->i,te->o,tb->i,sn->ia,sn->ie,sn->ib);
+            if(c.dbg) printf("tadd  %i,%i,%i => %i/%i,%i/%i => %i,%i,%i\n",sb->ia,sb->ie,sb->ib,ta->o,te->i,te->o,tb->i,sn->ia,sn->ie,sn->ib);
             tr->si=sb; tr->st=sn;
             tr->i=ta->i; tr->o=tb->o;
             tr->w=ta->w+tb->w;
@@ -360,7 +370,7 @@ const char *fstc_cps(struct fstc_f *fa,struct fstc_f *fe,struct fstc_f *fb,struc
     if(fe->ns==4 && sb->ie==1 && sb->tfl0 && (!sb->l0 || !sb->tfl0->si->l0)){
       struct fstc_s *sd=sb->tfl0->si;
       struct fstc_t *tr=sb->tfl0;
-			if(c.dbg) printf("tskip %i,%i,%i => %i,%i,%i\n",sb->ia,sb->ie,sb->ib,sd->ia,sd->ie,sd->ib);
+      if(c.dbg) printf("tskip %i,%i,%i => %i,%i,%i\n",sb->ia,sb->ie,sb->ib,sd->ia,sd->ie,sd->ib);
       /* remove tr=tfl0 */
       if(tr->nprv) tr->nprv->nnxt=tr->nnxt;
       else tr->si->tn=tr->nnxt;
@@ -388,11 +398,11 @@ const char *fstc_cps(struct fstc_f *fa,struct fstc_f *fe,struct fstc_f *fb,struc
         sb->tl=NULL;
       }
       /* free sb */
-      fstc_sfree(&c,fr,sb);
-    }else if(!sb->fin && !sb->tn) fstc_sfree(&c,fr,sb);
+      if((err=fstc_sfree(&c,fr,sb))) return err;
+    }else if(!sb->fin && !sb->tn){ if((err=fstc_sfree(&c,fr,sb))) return err; }
   }
   free(c.h);
-  free(c.m.buf);
+  MAPFREE(c.m);
   return NULL;
 }
 
