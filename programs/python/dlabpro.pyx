@@ -62,6 +62,7 @@ cdef extern from "dlp_data.h":
         short Quantize(CData*)
         short Dequantize(CData*)
         short Rindex(char*,int)
+        const char* GetCname(int)
     cdef short CData_ChecksumInt(CData*,char*,int)
 
 cdef extern from "dlabpro_numpy.hpp":
@@ -99,6 +100,7 @@ cdef class PData(PObject):
     def Quantize(self,PData src): return self.dptr.Quantize(src.dptr)
     def Dequantize(self,PData src): return self.dptr.Dequantize(src.dptr)
     def Rindex(self,str cname,int ic): return self.dptr.Rindex(cname.encode(),ic)
+    def GetCname(self,int ic): return self.dptr.GetCname(ic).decode('utf-8')
 
 cdef extern from "dlp_fst.h":
     cdef cppclass CFst(CDlpObject):
