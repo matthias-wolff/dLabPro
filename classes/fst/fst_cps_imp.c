@@ -113,6 +113,11 @@ struct fstc_c {
 /* Done map set and get by state indizies */
 #define MAPGET(m,a,e,b) MAPGETI(m,MAPID(m,a,e,b))
 #define MAPSET(m,a,e,b) MAPSETI(m,MAPID(m,a,e,b))
+/* Done map initialize */
+#define MAPINIT(m,ans,ens,bns) { \
+  if(!((m).buf=(unsigned char *)calloc((((uint64_t)(ans)*(ens)*(bns))>>3)+1,sizeof(unsigned char)))) return "Out of memory"; \
+  (m).ne=(ens); (m).nb=(bns); \
+}
 
 /* Add a new transition to one of the operands
  *
@@ -315,8 +320,7 @@ const char *fstc_cps(struct fstc_f *fa,struct fstc_f *fe,struct fstc_f *fb,struc
   fstc_meminit(&fr->smem,sizeof(struct fstc_s),4096);
   fstc_meminit(&fr->tmem,sizeof(struct fstc_t),4096);
   if(!(c.h=(struct fstc_s **)calloc(HMASK+1,sizeof(struct fstc_s *)))) return "Out of memory";
-  if(!(c.m.buf=(unsigned char *)calloc((((uint64_t)fa->ns*fe->ns*fb->ns)>>3)+1,sizeof(unsigned char)))) return "Out of memory";
-  c.m.ne=fe->ns; c.m.nb=fb->ns;
+  MAPINIT(c.m,fa->ns,fe->ns,fb->ns);
   c.q=NULL;
   c.dbg=dbg;
   fr->s0=fstc_news(&c,fr,0,0,0);
