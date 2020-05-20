@@ -27,8 +27,8 @@
 #ifdef _CPS_MAPHASH_
 /* Fast internal done map structure */
 
-#define HASHBITS  25
-#define HASHXCH   (1<<20)
+#define HASHBITS  20
+#define HASHXCH   (1<<8)
 
 struct fstc_mch {
   struct fstc_mch *prv;
