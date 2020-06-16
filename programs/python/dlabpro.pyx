@@ -85,8 +85,12 @@ cdef class PData(PObject):
     def InsertNcomps(self,int ctype,int insertat,int count): return self.dptr.InsertNcomps(ctype,insertat,count)
     def Array(self,int ctype,int comps,int recs): return self.dptr.Array(ctype,comps,recs)
     def fromnumpy(self,object n):
+        import copy
         if not n.flags['C_CONTIGUOUS']: n=n.copy(order='C')
+        if not n.flags['OWNDATA']: n=copy.deepcopy(n)
         numpy2data(n,self.dptr)
+        import pdb
+        if self.dim()==0: pdb.set_trace()
     def tonumpy(self): return data2numpy(self.dptr)
     def nrec(self): return self.dptr.GetNRecs()
     def dim(self): return self.dptr.GetNComps()
