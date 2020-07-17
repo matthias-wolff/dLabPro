@@ -62,7 +62,8 @@ PyObject* data2numpy(CData *dat){
   case T_LONG:   nt=NPY_LONG; break;
   case T_INT:    nt=NPY_INT; break;
   case T_SHORT:  nt=NPY_SHORT; break;
-  default: return NULL;
+  default: 
+    if(t<=255) nt=NPY_STRING; else return NULL;
   }
   b=CData_GetNBlocks(dat);
   r=CData_GetNRecs(dat);
@@ -84,8 +85,7 @@ PyObject* data2numpy(CData *dat){
     dims[2]=0;
   }
   import_array();
-  np=PyArray_SimpleNew(nd,dims,nt);
-  PyArrayObject *na=(PyArrayObject*)np;
-  memcpy(na->data,CData_XAddr(dat,0,0),na->dimensions[0]*na->strides[0]);
+  if(nt==NPY_STRING) np=PyArray_New(&PyArray_Type,nd,dims,nt,NULL,CData_XAddr(dat,0,0),t,0,NULL);
+  else np=PyArray_SimpleNewFromData(nd,dims,nt,CData_XAddr(dat,0,0));
   return np;
 }
