@@ -25,9 +25,10 @@ void numpy2data(PyObject *np,CData *dat){
     r=na->dimensions[0]*na->dimensions[1];
     b=na->dimensions[0];
   }else{ printf("ERROR: only up to dim 3"); return; }
-  //printf("\n%i %i %i %i\n",na->descr->byteorder,na->descr->kind,na->descr->type,na->strides[na->nd-1]);
-  if(na->descr->byteorder!=61){ printf("ERROR: unknown dtype"); return; }
-  if(na->descr->kind==102){
+  /*printf("\n%i %i %i %i\n",na->descr->byteorder,na->descr->kind,na->descr->type,na->strides[na->nd-1]);*/
+  if(na->descr->byteorder==124 && na->descr->kind==83 && na->descr->type==83 && na->strides[na->nd-1]<=255) t=na->strides[na->nd-1]; /* bytes type */
+  else if(na->descr->byteorder!=61){ printf("ERROR: unknown dtype"); return; }
+  else if(na->descr->kind==102){
     if(na->descr->type==102 && na->strides[na->nd-1]==4) t=T_FLOAT;
     else if(na->descr->type==100 && na->strides[na->nd-1]==8) t=T_DOUBLE;
     else{ printf("ERROR: unknown dtype"); return; }
