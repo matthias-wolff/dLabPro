@@ -105,6 +105,11 @@ cdef class PData(PObject):
     def Dequantize(self,PData src): return self.dptr.Dequantize(src.dptr)
     def Rindex(self,str cname,int ic): return self.dptr.Rindex(cname.encode(),ic)
     def GetCname(self,int ic): return self.dptr.GetCname(ic).decode('utf-8')
+    @classmethod
+    def newfromnumpy(cls,object n):
+        self=cls()
+        self.fromnumpy(n)
+        return self
 
 cdef extern from "dlp_fst.h":
     cdef cppclass CFst(CDlpObject):
@@ -253,6 +258,7 @@ cdef class PGmm(PObject):
     def icov(self): return self.icovptr
     def cdet(self): return self.cdetptr
     def mmap(self):
+        if self.gptr.m_iMmap==NULL: return None
         ret=PVmap("",init=False)
         ret.optr=ret.vptr=self.gptr.m_iMmap
         ret.init_vmap_fields()
@@ -304,6 +310,7 @@ cdef extern from "dlp_hmm.h":
         short Bwupdate(CData*,CData*,CData*,int)
         short Split(double,int,CData*)
         short GmmMix()
+        short CopyFst(CFst*)
 
 cdef class PHmm(PFst):
     cdef CHmm *hptr
@@ -323,11 +330,14 @@ cdef class PHmm(PFst):
     def Split(self,double minrc=-1,int maxcnt=0,PData map=None):
         return self.hptr.Split(minrc,maxcnt,map.dptr if not map is None else NULL)
     def GmmMix(self): return self.hptr.GmmMix()
+    def CopyFst(self,PFst src): return self.hptr.CopyFst(src.fptr)
     def gm(self):
+        if self.hptr.m_iGm==NULL: return None
         ret=PGmm("",init=False)
         ret.optr=ret.gptr=self.hptr.m_iGm
         ret.init_gmm_fields()
         return ret
+    def addgm(self): self.hptr.m_iGm=new CGmm(b'gm',1)
 
 cdef extern from "dlp_fstsearch.h":
     cdef cppclass CFstsearch(CDlpObject):
