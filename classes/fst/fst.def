@@ -143,6 +143,8 @@ DEFINE: TD_TER(A,B) (*(FST_ITYPE*)(CData_XAddr(AS(CData,A->td),B,IC_TD_TER )))  
 DEFINE: IS_XXS(A)   (FST_ITYPE)CData_GetNComps(AS(CData,A->is))                 # Number of input symbol records
 DEFINE: OS_XXS(A)   (FST_ITYPE)CData_GetNComps(AS(CData,A->os))                 # Number of output symbol records
 
+DEFINE: isx is
+
 ## Additional files
 INCLUDE: "dlp_data.h"                                                           # Uses data (CData)
 FILE:    fst_aux.c                                                              # Auxilary methods

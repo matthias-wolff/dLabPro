@@ -156,6 +156,7 @@
 #define TD_TER(A,B) (*(FST_ITYPE*)(CData_XAddr(AS(CData,A->td),B,IC_TD_TER )))
 #define IS_XXS(A)   (FST_ITYPE)CData_GetNComps(AS(CData,A->is))
 #define OS_XXS(A)   (FST_ITYPE)CData_GetNComps(AS(CData,A->os))
+#define isx is
 /*}}CGEN_DEFINE */
 
 #ifndef __FST_H

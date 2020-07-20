@@ -49,6 +49,7 @@ cdef extern from "dlp_data.h":
         short Select(CData*,int,int)
         short Delete(CData*,int,int)
         short Array(short,int,int)
+        short Reallocate(int)
         short AddNcomps(short,int)
         short InsertNcomps(short,int,int)
         int GetNRecs()
@@ -84,6 +85,7 @@ cdef class PData(PObject):
     def AddNcomps(self,int ctype,int count): return self.dptr.AddNcomps(ctype,count)
     def InsertNcomps(self,int ctype,int insertat,int count): return self.dptr.InsertNcomps(ctype,insertat,count)
     def Array(self,int ctype,int comps,int recs): return self.dptr.Array(ctype,comps,recs)
+    def Reallocate(self,int nrecs): return self.dptr.Reallocate(nrecs)
     def fromnumpy(self,object n):
         import copy
         if not n.flags['C_CONTIGUOUS']: n=n.copy(order='C')
@@ -118,6 +120,7 @@ cdef extern from "dlp_fst.h":
         CData *sd
         CData *td
         CData *os
+        CData *isx
         short Status()
         short Print()
         short Probs(int)
@@ -136,6 +139,7 @@ cdef class PFst(PObject):
     cdef PData sdptr
     cdef PData tdptr
     cdef PData osptr
+    cdef PData isptr
     def __cinit__(self,str name="fst"):
         if type(self) is PFst:
             self.fptr=self.optr=new CFst(name.encode(),1)
@@ -147,14 +151,17 @@ cdef class PFst(PObject):
         self.sdptr=PData("",init=False)
         self.tdptr=PData("",init=False)
         self.osptr=PData("",init=False)
+        self.isptr=PData("",init=False)
         self.udptr.optr=self.udptr.dptr=self.fptr.ud
         self.sdptr.optr=self.sdptr.dptr=self.fptr.sd
         self.tdptr.optr=self.tdptr.dptr=self.fptr.td
         self.osptr.optr=self.osptr.dptr=self.fptr.os
+        self.isptr.optr=self.isptr.dptr=self.fptr.isx
     def ud(self): return self.udptr
     def sd(self): return self.sdptr
     def td(self): return self.tdptr
     def os(self): return self.osptr
+    def is_(self): return self.isptr
     def Status(self): return self.fptr.Status()
     def Print(self): return self.fptr.Print()
     def Probs(self,int unit): return self.fptr.Probs(unit)
