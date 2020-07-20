@@ -85,7 +85,9 @@ PyObject* data2numpy(CData *dat){
     dims[2]=0;
   }
   import_array();
-  if(nt==NPY_STRING) np=PyArray_New(&PyArray_Type,nd,dims,nt,NULL,CData_XAddr(dat,0,0),t,0,NULL);
-  else np=PyArray_SimpleNewFromData(nd,dims,nt,CData_XAddr(dat,0,0));
+  if(nt==NPY_STRING) np=PyArray_New(&PyArray_Type,nd,dims,nt,NULL,NULL,t,0,NULL);
+  else np=PyArray_SimpleNew(nd,dims,nt);
+  PyArrayObject *na=(PyArrayObject*)np;
+  memcpy(na->data,CData_XAddr(dat,0,0),na->dimensions[0]*na->strides[0]);
   return np;
 }
