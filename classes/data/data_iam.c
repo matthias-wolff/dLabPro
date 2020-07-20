@@ -1206,7 +1206,10 @@ BOOL CGEN_PUBLIC CData_Xstore(CData* _this,CData* idSrc, INT32 nFirst, INT32 nCo
     {
       buffer=(COMPLEX64*)dlp_malloc(nCount*CData_GetNRecs(idSrc)*sizeof(COMPLEX64)); /* Dynamic memory is allocated */
       for(i=0;i<nCount;i++)
-      {
+      if(CData_GetCompType(idSrc,nFirst+i)==CData_GetCompType(_this,nPos+i) && CData_GetNRecs(idSrc)==CData_GetNRecs(_this)) {
+        INT32 j;
+        for(j=0;j<CData_GetNRecs(_this);j++) memcpy(CData_XAddr(_this,j,nPos+i),CData_XAddr(idSrc,j,nFirst+i),CData_GetCompSize(idSrc,nFirst+i));
+      }else{
         CData_CcompFetch(idSrc,buffer,nFirst+i,CData_GetNRecs(idSrc));          /* Comp. nFirst + i is copied to buffer */
         CData_CcompStore(_this,buffer,nPos+i,CData_GetNRecs(_this));          /* Buffer is stored in comp. nPos+i */
       }
