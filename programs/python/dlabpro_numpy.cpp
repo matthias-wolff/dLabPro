@@ -62,6 +62,7 @@ PyObject* data2numpy(CData *dat){
   case T_LONG:   nt=NPY_LONG; break;
   case T_INT:    nt=NPY_INT; break;
   case T_SHORT:  nt=NPY_SHORT; break;
+  case T_UCHAR:  nt=NPY_UBYTE; break;
   default: 
     if(t<=255) nt=NPY_STRING; else return NULL;
   }
