@@ -37,6 +37,7 @@ void numpy2data(PyObject *np,CData *dat){
   }else if(na->descr->kind=='i'){
     if(na->descr->type=='l' && na->strides[na->nd-1]==8) t=T_LONG;
     else if(na->descr->type=='q' && na->strides[na->nd-1]==8) t=T_LONG;
+    else if(na->descr->type=='l' && na->strides[na->nd-1]==4) t=T_INT;
     else if(na->descr->type=='i' && na->strides[na->nd-1]==4) t=T_INT;
     else if(na->descr->type=='h' && na->strides[na->nd-1]==2) t=T_SHORT;
     else{ printf("ERROR: unknown dtype #3 (byteorder: %c kind: %c type: %c strides[-1]: %i\n",na->descr->byteorder,na->descr->kind,na->descr->type,na->strides[na->nd-1]); return; }
