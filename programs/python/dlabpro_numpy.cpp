@@ -25,24 +25,23 @@ void numpy2data(PyObject *np,CData *dat){
     r=na->dimensions[0]*na->dimensions[1];
     b=na->dimensions[0];
   }else{ printf("ERROR: only up to dim 3"); return; }
-  /*printf("\n%i %i %i %i\n",na->descr->byteorder,na->descr->kind,na->descr->type,na->strides[na->nd-1]);*/
   if(na->descr->byteorder==124 && na->descr->kind==83 && na->descr->type==83 && na->strides[na->nd-1]<=255) t=na->strides[na->nd-1]; /* bytes type */
-  else if(na->descr->byteorder!=61){ printf("ERROR: unknown dtype"); return; }
+  else if(na->descr->byteorder!=61){ printf("ERROR: unknown dtype #1 (byteorder: %i kind: %i type: %i strides[-1]: %i",na->descr->byteorder,na->descr->kind,na->descr->type,na->strides[na->nd-1]); return; }
   else if(na->descr->kind==102){
     if(na->descr->type==102 && na->strides[na->nd-1]==4) t=T_FLOAT;
     else if(na->descr->type==100 && na->strides[na->nd-1]==8) t=T_DOUBLE;
-    else{ printf("ERROR: unknown dtype"); return; }
+    else{ printf("ERROR: unknown dtype #2 (byteorder: %i kind: %i type: %i strides[-1]: %i",na->descr->byteorder,na->descr->kind,na->descr->type,na->strides[na->nd-1]); return; }
   }else if(na->descr->kind==105){
     if(na->descr->type==108 && na->strides[na->nd-1]==8) t=T_LONG;
 	else if(na->descr->type==113 && na->strides[na->nd-1]==8) t=T_LONG;
     else if(na->descr->type==105 && na->strides[na->nd-1]==4) t=T_INT;
     else if(na->descr->type==104 && na->strides[na->nd-1]==2) t=T_SHORT;
-    else{ printf("ERROR: unknown dtype"); return; }
-  }else{ printf("ERROR: unknown dtype"); return; }
+    else{ printf("ERROR: unknown dtype #3 (byteorder: %i kind: %i type: %i strides[-1]: %i",na->descr->byteorder,na->descr->kind,na->descr->type,na->strides[na->nd-1]); return; }
+  }else{ printf("ERROR: unknown dtype #4 (byteorder: %i kind: %i type: %i strides[-1]: %i",na->descr->byteorder,na->descr->kind,na->descr->type,na->strides[na->nd-1]); return; }
   d=na->strides[na->nd-1];
   for(i=na->nd-1;i;i--){
     d=d*na->dimensions[i];
-    if(na->strides[i-1]!=d){ printf("ERROR: no compact array"); return; }
+    if(na->strides[i-1]!=d){ printf("ERROR: no compact array (strides[%i]: %i!=%i)",i-1,na->strides[i-1],d); return; }
   }
   CData_Array(dat,t,c,r);
   CData_SetNBlocks(dat,b);
