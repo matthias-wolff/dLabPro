@@ -24,27 +24,27 @@ void numpy2data(PyObject *np,CData *dat){
     c=na->dimensions[2];
     r=na->dimensions[0]*na->dimensions[1];
     b=na->dimensions[0];
-  }else{ printf("ERROR: only up to dim 3"); return; }
+  }else{ printf("ERROR: only up to dim 3\n"); return; }
   /* https://docs.scipy.org/doc/numpy-1.17.0/reference/c-api.types-and-structures.html */
   /* [kind] b:bool, i:signed int, u:unsigned int, f:float, c:complex, S:bytes, U:string, V:arbitrary */
   /* [byteorder] >:big-endian <:little-endian =:native |:irrelevant */
   if(na->descr->byteorder=='|' && na->descr->kind=='S' && na->descr->type=='S' && na->strides[na->nd-1]<=255) t=na->strides[na->nd-1]; /* bytes type */
-  else if(na->descr->byteorder!='='){ printf("ERROR: unknown dtype #1 (byteorder: %c kind: %c type: %c strides[-1]: %i",na->descr->byteorder,na->descr->kind,na->descr->type,na->strides[na->nd-1]); return; }
+  else if(na->descr->byteorder!='='){ printf("ERROR: unknown dtype #1 (byteorder: %c kind: %c type: %c strides[-1]: %i\n",na->descr->byteorder,na->descr->kind,na->descr->type,na->strides[na->nd-1]); return; }
   else if(na->descr->kind=='f'){
     if(na->descr->type=='f' && na->strides[na->nd-1]==4) t=T_FLOAT;
     else if(na->descr->type=='d' && na->strides[na->nd-1]==8) t=T_DOUBLE;
-    else{ printf("ERROR: unknown dtype #2 (byteorder: %c kind: %c type: %c strides[-1]: %i",na->descr->byteorder,na->descr->kind,na->descr->type,na->strides[na->nd-1]); return; }
+    else{ printf("ERROR: unknown dtype #2 (byteorder: %c kind: %c type: %c strides[-1]: %i\n",na->descr->byteorder,na->descr->kind,na->descr->type,na->strides[na->nd-1]); return; }
   }else if(na->descr->kind=='i'){
     if(na->descr->type=='l' && na->strides[na->nd-1]==8) t=T_LONG;
     else if(na->descr->type=='q' && na->strides[na->nd-1]==8) t=T_LONG;
     else if(na->descr->type=='i' && na->strides[na->nd-1]==4) t=T_INT;
     else if(na->descr->type=='h' && na->strides[na->nd-1]==2) t=T_SHORT;
-    else{ printf("ERROR: unknown dtype #3 (byteorder: %c kind: %c type: %c strides[-1]: %i",na->descr->byteorder,na->descr->kind,na->descr->type,na->strides[na->nd-1]); return; }
-  }else{ printf("ERROR: unknown dtype #4 (byteorder: %c kind: %c type: %c strides[-1]: %i",na->descr->byteorder,na->descr->kind,na->descr->type,na->strides[na->nd-1]); return; }
+    else{ printf("ERROR: unknown dtype #3 (byteorder: %c kind: %c type: %c strides[-1]: %i\n",na->descr->byteorder,na->descr->kind,na->descr->type,na->strides[na->nd-1]); return; }
+  }else{ printf("ERROR: unknown dtype #4 (byteorder: %c kind: %c type: %c strides[-1]: %i\n",na->descr->byteorder,na->descr->kind,na->descr->type,na->strides[na->nd-1]); return; }
   d=na->strides[na->nd-1];
   for(i=na->nd-1;i;i--){
     d=d*na->dimensions[i];
-    if(na->strides[i-1]!=d){ printf("ERROR: no compact array (strides[%i]: %i!=%i)",i-1,na->strides[i-1],d); return; }
+    if(na->strides[i-1]!=d){ printf("ERROR: no compact array (strides[%i]: %i!=%i)\n",i-1,na->strides[i-1],d); return; }
   }
   CData_Array(dat,t,c,r);
   CData_SetNBlocks(dat,b);
