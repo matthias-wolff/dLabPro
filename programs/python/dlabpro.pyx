@@ -50,7 +50,9 @@ cdef extern from "dlp_data.h":
         short Delete(CData*,int,int)
         short Array(short,int,int)
         short Reallocate(int)
+        short AddComp(char*,short)
         short AddNcomps(short,int)
+        short InsertComp(char*,short,int)
         short InsertNcomps(short,int,int)
         int GetNRecs()
         int GetNComps()
@@ -64,6 +66,7 @@ cdef extern from "dlp_data.h":
         short Dequantize(CData*)
         short Rindex(char*,int)
         const char* GetCname(int)
+        short SetCname(int,char*)
     cdef short CData_ChecksumInt(CData*,char*,int)
 
 cdef extern from "dlabpro_numpy.hpp":
@@ -82,7 +85,9 @@ cdef class PData(PObject):
     def Status(self): return self.dptr.Status()
     def Select(self,PData src,int first,int count): return self.dptr.Select(src.dptr,first,count)
     def Delete(self,PData src,int first,int count): return self.dptr.Delete(src.dptr,first,count)
+    def AddComp(self,str name,int ctype): return self.dptr.AddComp(name.encode(),ctype)
     def AddNcomps(self,int ctype,int count): return self.dptr.AddNcomps(ctype,count)
+    def InsertComp(self,str name,int ctype,int insertat): return self.dptr.InsertComp(name.encode(),ctype,insertat)
     def InsertNcomps(self,int ctype,int insertat,int count): return self.dptr.InsertNcomps(ctype,insertat,count)
     def Array(self,int ctype,int comps,int recs): return self.dptr.Array(ctype,comps,recs)
     def Reallocate(self,int nrecs): return self.dptr.Reallocate(nrecs)
@@ -107,6 +112,7 @@ cdef class PData(PObject):
     def Dequantize(self,PData src): return self.dptr.Dequantize(src.dptr)
     def Rindex(self,str cname,int ic): return self.dptr.Rindex(cname.encode(),ic)
     def GetCname(self,int ic): return self.dptr.GetCname(ic).decode('utf-8')
+    def SetCname(self,int ic,str name): return self.dptr.SetCname(ic,name.encode())
     @classmethod
     def newfromnumpy(cls,object n):
         self=cls()
