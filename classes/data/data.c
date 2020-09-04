@@ -2192,7 +2192,7 @@ INT16 CData_Checksum(CData* _this, char* sAlgo, INT32 nIc)
 INT16 CData_Reallocate(CData* _this, INT32 nRecs)
 {
     CData_Realloc(_this,nRecs);
-    CData_IncNRecs(_this,nRecs);
+    CData_IncNRecs(_this,nRecs-CData_GetNRecs(_this));
 	return O_K;
 }
 
