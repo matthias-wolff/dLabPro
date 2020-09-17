@@ -138,6 +138,7 @@ cdef extern from "dlp_fst.h":
         short Close(CFst*,int)
         short Union(CFst*)
         short AddtransEx(int,int,int,int,int,double)
+        short CopyUi(CFst*,CData*,int)
 
 cdef class PFst(PObject):
     cdef CFst *fptr
@@ -193,6 +194,7 @@ cdef class PFst(PObject):
         if src is None: src=self
         self.SETOPTION('/lazy')
         self.Minimize(src,unit)
+    def CopyUi(self,PFst src,PData index,int par): return self.fptr.CopyUi(src.fptr,index.dptr,par)
 
 
 cdef extern from "dlp_vmap.h":
