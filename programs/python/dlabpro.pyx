@@ -283,8 +283,8 @@ cdef class PGmm(PObject):
     def Density(self,PData x,PData xmap,PData dens):
         return self.gptr.Density(x.dptr,xmap.dptr if not xmap is None else NULL,dens.dptr)
     def Extract(self,PData mean,PData icov): return self.gptr.Extract(mean.dptr,icov.dptr)
-    def Setup(self,PData mean,PData cov,PVmap mmap):
-        return self.gptr.Setup(mean.dptr,cov.dptr,mmap.vptr)
+    def Setup(self,PData mean,PData cov,PVmap mmap=None):
+        return self.gptr.Setup(mean.dptr,cov.dptr,mmap.vptr if not mmap is None else NULL)
     def setdceil(self,dceil): self.gptr.m_nDceil=dceil
 
 cdef extern from "dlp_statistics.h":
