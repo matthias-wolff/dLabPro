@@ -137,6 +137,7 @@ cdef extern from "dlp_fst.h":
         short Compose(CFst*,CFst*,int,int)
         short Close(CFst*,int)
         short Union(CFst*)
+        short Cat(CFst*)
         short AddtransEx(int,int,int,int,int,double)
         short CopyUi(CFst*,CData*,int)
 
@@ -179,6 +180,7 @@ cdef class PFst(PObject):
     def Compose(self,PFst src1,PFst src2,int unit1,int unit2): return self.fptr.Compose(src1.fptr,src2.fptr,unit1,unit2)
     def Close(self,PFst src,int unit): return self.fptr.Close(src.fptr,unit)
     def Union(self,PFst src): return self.fptr.Union(src.fptr)
+    def Cat(self,PFst src): return self.fptr.Cat(src.fptr)
     def AddtransEx(self,int unit,int ini,int ter,int tis,int tos,float w): return self.fptr.AddtransEx(unit,ini,ter,tis,tos,w)
     def LoopsEx(self,int unit,int tis,int tos,float w):
         xs=int(self.ud().Dfetch(unit,1))
