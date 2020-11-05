@@ -22,6 +22,7 @@ cdef extern from "dlp_object.h":
         short Copy(CDlpObject*)
     cdef short CDlpObject_Save(CDlpObject*,char*,short)
     cdef short CDlpObject_Restore(CDlpObject*,char*,short)
+    cdef CDlpObject* CDlpObject_FindInstanceWord(CDlpObject*,char*,char*)
 
 cdef class PObject:
     cdef CDlpObject *optr
@@ -40,6 +41,12 @@ cdef class PObject:
         return CDlpObject_Save(self.optr,filename.encode(),fmt)
     def Restore(self,str filename,int fmt=0): return CDlpObject_Restore(self.optr,filename.encode(),fmt)
     def Copy(self,PObject src): return self.optr.Copy(src.optr)
+    def FindDataWord(self,str name):
+        obj=CDlpObject_FindInstanceWord(self.optr,name.encode(),b'data')
+        if obj==NULL: return None
+        dat=PData("")
+        dat.optr.Copy(obj)
+        return dat
 
 cdef extern from "dlp_data.h":
     cdef cppclass CData(CDlpObject):
@@ -170,6 +177,7 @@ cdef class PFst(PObject):
     def td(self): return self.tdptr
     def os(self): return self.osptr
     def is_(self): return self.isptr
+    def stk(self): return self.FindDataWord('stk')
     def Status(self): return self.fptr.Status()
     def Print(self): return self.fptr.Print()
     def Probs(self,int unit): return self.fptr.Probs(unit)
