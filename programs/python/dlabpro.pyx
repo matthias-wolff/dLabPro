@@ -61,6 +61,7 @@ cdef extern from "dlp_data.h":
         short AddNcomps(short,int)
         short InsertComp(char*,short,int)
         short InsertNcomps(short,int,int)
+        int FindComp(char*)
         int GetNRecs()
         int GetNComps()
         double Dfetch(int,int)
@@ -96,6 +97,7 @@ cdef class PData(PObject):
     def AddNcomps(self,int ctype,int count): return self.dptr.AddNcomps(ctype,count)
     def InsertComp(self,str name,int ctype,int insertat): return self.dptr.InsertComp(name.encode(),ctype,insertat)
     def InsertNcomps(self,int ctype,int insertat,int count): return self.dptr.InsertNcomps(ctype,insertat,count)
+    def FindComp(self,str name): return self.dptr.FindComp(name.encode())
     def Array(self,int ctype,int comps,int recs): return self.dptr.Array(ctype,comps,recs)
     def Reallocate(self,int nrecs): return self.dptr.Reallocate(nrecs)
     def fromnumpy(self,object n):
