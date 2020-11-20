@@ -22,6 +22,7 @@ cdef extern from "dlp_object.h":
         short Copy(CDlpObject*)
     cdef short CDlpObject_Save(CDlpObject*,char*,short)
     cdef short CDlpObject_Restore(CDlpObject*,char*,short)
+    cdef CDlpObject* CDlpObject_FindInstanceWord(CDlpObject*,char*,char*)
 
 cdef class PObject:
     cdef CDlpObject *optr
@@ -40,6 +41,12 @@ cdef class PObject:
         return CDlpObject_Save(self.optr,filename.encode(),fmt)
     def Restore(self,str filename,int fmt=0): return CDlpObject_Restore(self.optr,filename.encode(),fmt)
     def Copy(self,PObject src): return self.optr.Copy(src.optr)
+    def FindDataWord(self,str name):
+        obj=CDlpObject_FindInstanceWord(self.optr,name.encode(),b'data')
+        if obj==NULL: return None
+        dat=PData("")
+        dat.optr.Copy(obj)
+        return dat
 
 cdef extern from "dlp_data.h":
     cdef cppclass CData(CDlpObject):
@@ -54,6 +61,7 @@ cdef extern from "dlp_data.h":
         short AddNcomps(short,int)
         short InsertComp(char*,short,int)
         short InsertNcomps(short,int,int)
+        int FindComp(char*)
         int GetNRecs()
         int GetNComps()
         double Dfetch(int,int)
@@ -89,6 +97,7 @@ cdef class PData(PObject):
     def AddNcomps(self,int ctype,int count): return self.dptr.AddNcomps(ctype,count)
     def InsertComp(self,str name,int ctype,int insertat): return self.dptr.InsertComp(name.encode(),ctype,insertat)
     def InsertNcomps(self,int ctype,int insertat,int count): return self.dptr.InsertNcomps(ctype,insertat,count)
+    def FindComp(self,str name): return self.dptr.FindComp(name.encode())
     def Array(self,int ctype,int comps,int recs): return self.dptr.Array(ctype,comps,recs)
     def Reallocate(self,int nrecs): return self.dptr.Reallocate(nrecs)
     def fromnumpy(self,object n):
@@ -137,6 +146,7 @@ cdef extern from "dlp_fst.h":
         short Compose(CFst*,CFst*,int,int)
         short Close(CFst*,int)
         short Union(CFst*)
+        short Cat(CFst*)
         short AddtransEx(int,int,int,int,int,double)
         short CopyUi(CFst*,CData*,int)
 
@@ -169,6 +179,7 @@ cdef class PFst(PObject):
     def td(self): return self.tdptr
     def os(self): return self.osptr
     def is_(self): return self.isptr
+    def stk(self): return self.FindDataWord('stk')
     def Status(self): return self.fptr.Status()
     def Print(self): return self.fptr.Print()
     def Probs(self,int unit): return self.fptr.Probs(unit)
@@ -179,6 +190,7 @@ cdef class PFst(PObject):
     def Compose(self,PFst src1,PFst src2,int unit1,int unit2): return self.fptr.Compose(src1.fptr,src2.fptr,unit1,unit2)
     def Close(self,PFst src,int unit): return self.fptr.Close(src.fptr,unit)
     def Union(self,PFst src): return self.fptr.Union(src.fptr)
+    def Cat(self,PFst src): return self.fptr.Cat(src.fptr)
     def AddtransEx(self,int unit,int ini,int ter,int tis,int tos,float w): return self.fptr.AddtransEx(unit,ini,ter,tis,tos,w)
     def LoopsEx(self,int unit,int tis,int tos,float w):
         xs=int(self.ud().Dfetch(unit,1))
