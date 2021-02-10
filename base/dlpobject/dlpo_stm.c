@@ -235,4 +235,161 @@ INT16 CDlpObject_Restore
   return O_K;                                                                   /* Everything's all right            */
 }
 
+/* gzip flag byte */
+static int const gz_magic[2] = {0x1f, 0x8b}; /* gzip magic header */
+#define ASCII_FLAG   0x01 /* bit 0 set: file probably ascii text */
+#define HEAD_CRC     0x02 /* bit 1 set: header CRC present */
+#define EXTRA_FIELD  0x04 /* bit 2 set: extra field present */
+#define ORIG_NAME    0x08 /* bit 3 set: original file name present */
+#define COMMENT      0x10 /* bit 4 set: file comment present */
+#define RESERVED     0xE0 /* bits 5..7: reserved */
+#include "zutil.h"
+
+INT16 uncompressbuf(void **buf,size_t *si){
+  z_stream stream;
+  int err;
+  uint32_t *footer=(uint32_t*)((char*)*buf+*si-8);
+  uint32_t crc=footer[0],nsi=footer[1];
+  void *nbuf;
+  memset(&stream,0,sizeof(stream));
+
+  if(!(nbuf=malloc(nsi))) return Z_BUF_ERROR;
+
+  stream.next_in = (Bytef*)*buf;
+  stream.avail_in = (uInt)*si;
+  /* Check for source > 64K on 16-bit machine: */
+  if ((uLong)stream.avail_in != *si) return Z_BUF_ERROR;
+  stream.next_out = (Bytef*)nbuf;
+  stream.avail_out = nsi;
+
+  /* gz_magic */
+  if(stream.next_in[0]!=gz_magic[0] || stream.next_in[1]!=gz_magic[1]) return Z_BUF_ERROR;
+  stream.next_in+=2; stream.avail_in-=2;
+  /* method+flags */
+  int method=stream.next_in[0]; stream.next_in+=1; stream.avail_in-=1;
+  int flags =stream.next_in[0]; stream.next_in+=1; stream.avail_in-=1;
+  if(method!=Z_DEFLATED || (flags&RESERVED)) return Z_BUF_ERROR;
+  /* time, xflags, os */
+  stream.next_in+=6; stream.avail_in-=6;
+  /* extra field */
+  if(flags&EXTRA_FIELD){
+    int len=stream.next_in[0]+stream.next_in[1]<<8;
+    stream.next_in+=len; stream.avail_in-=len;
+  }
+  /* original file name */
+  if(flags&ORIG_NAME){ int len=strlen((char*)stream.next_in)+1; stream.next_in+=len; stream.avail_in-=len; }
+  /* comment */
+  if(flags&COMMENT){ int len=strlen((char*)stream.next_in)+1; stream.next_in+=len; stream.avail_in-=len; }
+  /* crc */
+  if(flags&HEAD_CRC){ int len=strlen((char*)stream.next_in)+1; stream.next_in+=len; stream.avail_in-=len; }
+
+  /* inflate */
+  if((err=inflateInit2(&stream,-MAX_WBITS))!=Z_OK) return err;
+  if((err=inflate(&stream,Z_FINISH))!=Z_STREAM_END) return err==Z_OK ? Z_BUF_ERROR : err;
+  if(stream.total_out!=nsi) return Z_BUF_ERROR;
+  if(crc32(0L,(Bytef*)nbuf,nsi)!=crc) return Z_BUF_ERROR;
+  if(inflateEnd(&stream)!=Z_OK) return Z_BUF_ERROR;
+
+  *buf=nbuf;
+  *si=nsi;
+  return O_K;
+}
+
+INT16 compressbuf(void **buf,size_t *si){
+  uLongf nsi,bsi;
+  void *nbuf;
+  z_stream stream;
+  int err;
+  uint8_t header[10]={(uint8_t)gz_magic[0],(uint8_t)gz_magic[1],
+                      Z_DEFLATED, 0 /*flags*/, 0,0,0,0 /*time*/, 0 /*xflags*/, OS_CODE};
+  uint32_t footer[2]={0,(uint32_t)*si};
+  footer[0]=crc32(0L,(Bytef*)*buf,*si);
+  memset(&stream,0,sizeof(stream));
+
+  nsi=compressBound(*si);
+  bsi=nsi+sizeof(header)+sizeof(footer);
+  if(!(nbuf=malloc(bsi))) return Z_BUF_ERROR;
+  memcpy(nbuf,header,sizeof(header));
+
+  stream.next_in = (Bytef*)*buf;
+  stream.avail_in = (uInt)*si;
+  stream.next_out = (Bytef*)nbuf+sizeof(header);
+  stream.avail_out = (uInt)nsi;
+
+  if((err=deflateInit2(&stream,Z_DEFAULT_COMPRESSION,Z_DEFLATED,-MAX_WBITS,DEF_MEM_LEVEL,Z_DEFAULT_STRATEGY))!=Z_OK) return err;
+  if((err=deflate(&stream,Z_FINISH))!=Z_STREAM_END) return err==Z_OK ? Z_BUF_ERROR : err;
+  nsi=stream.total_out;
+  if((err=deflateEnd(&stream))!=Z_OK) return err;
+
+  memcpy((char*)nbuf+sizeof(header)+nsi,footer,sizeof(footer));
+
+  free(*buf);
+  *buf=nbuf;
+  *si=nsi+sizeof(header)+sizeof(footer);
+  return O_K;
+}
+
+INT16 CDlpObject_SaveBuffer(CDlpObject* _this, void **buf, size_t *si, INT16 nFormat){
+  BOOL bZip;                                                                    /* Zip file                          */
+  #if defined __NOXMLSTREAM
+    return IERROR(_this,ERR_NOTSUPPORTED,"Restore",0,0);                        /*   Turn one on in dlp_config.h!    */
+  #endif /* #if (defined __NOXMLSTREAM && defined __NODN3STREAM) */             /* # <--                             */
+
+  /* Validate */                                                                /* --------------------------------- */
+  if (!_this                  ) return NOT_EXEC;                                /* Need this instance                */
+  if (!buf || !si             ) return NOT_EXEC;                                /* Need target file name             */
+
+  /* Initialize */                                                              /* --------------------------------- */
+  bZip = (nFormat&SV_ZIP);                                                      /* Decide on zipping target file     */
+
+  /* Do serialization */                                                      /* --------------------------------- */
+  CXmlStream* fDest = CXmlStream_CreateInstance(NULL,XMLS_WRITE);             /*   Create XML output stream        */
+  if (!fDest) return IERROR(_this,ERR_FILEOPEN,"Buffer","writing",0);         /*   Failed --> return with error    */
+  CXmlStream_BeginInstance(fDest,_this->m_lpInstanceName,                     /*   Initialize stream               */
+    _this->m_lpClassName);                                                    /*   |                               */
+  INT16 nErr1 = INVOKE_VIRTUAL_1(SerializeXml,fDest);                         /*   Serialize instance              */
+  INT16 nErr2 = CXmlStream_EndInstance(fDest);                                /*   Finish stream                   */
+  CXmlStream_GetBuffer(fDest,buf,si);
+  INT16 nErr3 = CXmlStream_DestroyInstance(fDest);                            /*   Close stream                    */
+  IF_NOK(nErr1) { IERROR(_this,ERR_DN3,0,0,0); return nErr1; }                /*   Error on serialization?         */
+  IF_NOK(nErr2) { IERROR(_this,ERR_DN3,0,0,0); return nErr1; }                /*   Error on finishing stream?      */
+  IF_NOK(nErr3) { IERROR(_this,ERR_FILECLOSE,"Buffer",0,0); return nErr2; }   /*   Error on closing stream?        */
+
+  if(bZip && compressbuf(buf,si)!=O_K) return NOT_EXEC;
+
+  return O_K;
+}
+
+INT16 CDlpObject_RestoreBuffer(CDlpObject* _this,void *buf,size_t si){
+  #if defined __NOXMLSTREAM
+    return IERROR(_this,ERR_NOTSUPPORTED,"Restore",0,0);                        /*   Turn one on in dlp_config.h!    */
+  #endif /* #if (defined __NOXMLSTREAM && defined __NODN3STREAM) */             /* # <--                             */
+
+  /* Validate */                                                                /* --------------------------------- */
+  if (!_this                  ) return NOT_EXEC;                                /* Need this instance                */
+  if (!buf || !si             ) return NOT_EXEC;                                /* Need target file name             */
+
+  /* Zipped? */
+  char freebuf=0;
+  if(*(uint16_t*)buf==0x8b1f){
+    if(uncompressbuf(&buf,&si)!=O_K) return NOT_EXEC;
+    freebuf=1;
+  }
+
+  /* Check if buffer match xml-head    */
+  if(strncmp((char*)buf,"<?xml",5)) return NOT_EXEC;
+  
+  CXmlStream* fSrc = CXmlStream_CreateInstance(NULL,XMLS_READ); /*   Create XML input stream         */
+  CXmlStream_SetBuffer(fSrc,buf,si);
+  if(!fSrc) return NOT_EXEC;
+  INT16 nErr1 = INVOKE_VIRTUAL_1(DeserializeXml,fSrc);                        /*   Deserialize instance            */
+  INT16 nErr2 = CXmlStream_DestroyInstance(fSrc);                             /*   Close stream                    */
+  IF_NOK(nErr1) { IERROR(_this,ERR_DN3,0,0,0); return nErr1; }                /*   Error on deserialization?       */
+  IF_NOK(nErr2) { IERROR(_this,ERR_FILECLOSE,"Buffer",0,0); return nErr2;} /*   Error on closing stream?        */
+
+  /* Free if zipped */
+  if(freebuf) free(buf);
+
+  return O_K;
+}
 /* EOF */

@@ -283,10 +283,10 @@ INT16 CDlpObject_SerializeFieldXml(CDlpObject* _this, CXmlStream* lpiDst, SWord*
   }
 
   /* Open field tag */
-  XML_INDENT_LINE(lpiDst->m_lpFile,lpiDst->m_nDepth);
-  dlp_fprintf(lpiDst->m_lpFile,"<FIELD name=\"%s\" type=\"%s\"",CXmlStream_Encode(lpiDst,lpWord->lpName),lpType);
-  if (lpWord->ex.fld.nArrlen>1) dlp_fprintf(lpiDst->m_lpFile," arrlen=\"%ld\"",(long)nArrlen);
-  dlp_fprintf(lpiDst->m_lpFile,">");
+  XML_INDENT_LINE(lpiDst,lpiDst->m_nDepth);
+  CXmlStream_Printf(lpiDst,"<FIELD name=\"%s\" type=\"%s\"",CXmlStream_Encode(lpiDst,lpWord->lpName),lpType);
+  if (lpWord->ex.fld.nArrlen>1) CXmlStream_Printf(lpiDst," arrlen=\"%ld\"",(long)nArrlen);
+  CXmlStream_Printf(lpiDst,">");
 
   /* Write field value(s) */
   switch (nType)
@@ -305,9 +305,9 @@ INT16 CDlpObject_SerializeFieldXml(CDlpObject* _this, CXmlStream* lpiDst, SWord*
   case T_COMPLEX :
     for (i=0; i<nArrlen; i++)
     {
-      if (i>0) dlp_fprintf(lpiDst->m_lpFile,",");
+      if (i>0) CXmlStream_Printf(lpiDst,",");
       dlp_printx_ext(lpOutBuf,lpWord->lpData,nType,i,FALSE,TRUE,TRUE);
-      dlp_fprintf(lpiDst->m_lpFile,lpOutBuf);
+      CXmlStream_Printf(lpiDst,lpOutBuf);
     }
     break;
   case T_PTR     : DLPASSERT(FMSG("Unexpected pointer type")); break;
@@ -315,7 +315,7 @@ INT16 CDlpObject_SerializeFieldXml(CDlpObject* _this, CXmlStream* lpiDst, SWord*
   case T_CSTRING :
   case T_TEXT    :
     dlp_printx_ext(lpOutBuf,(void*)CXmlStream_Encode(lpiDst,*(char**)lpWord->lpData),T_STRING,0,FALSE,TRUE,TRUE);
-    dlp_fprintf(lpiDst->m_lpFile,lpOutBuf);
+    CXmlStream_Printf(lpiDst,lpOutBuf);
     break;
 
   case T_INSTANCE:
@@ -329,7 +329,7 @@ INT16 CDlpObject_SerializeFieldXml(CDlpObject* _this, CXmlStream* lpiDst, SWord*
 
       if (lpInst)
       {
-        dlp_fprintf(lpiDst->m_lpFile,"\n");
+        CXmlStream_Printf(lpiDst,"\n");
         CXmlStream_BeginInstance(lpiDst,lpFqNameI,lpInst->m_lpClassName);
 #ifdef __cplusplus
         nRet = lpInst->SerializeXml(lpiDst);
@@ -337,14 +337,14 @@ INT16 CDlpObject_SerializeFieldXml(CDlpObject* _this, CXmlStream* lpiDst, SWord*
         nRet = lpInst->SerializeXml(lpInst,lpiDst);
 #endif
         CXmlStream_EndInstance(lpiDst);
-        XML_INDENT_LINE(lpiDst->m_lpFile,lpiDst->m_nDepth);
+        XML_INDENT_LINE(lpiDst,lpiDst->m_nDepth);
       }
       else
       {
-        dlp_fprintf(lpiDst->m_lpFile,"\n");
-        XML_INDENT_LINE(lpiDst->m_lpFile,lpiDst->m_nDepth+1);
-        dlp_fprintf(lpiDst->m_lpFile,"<INSTANCE name=\"%s\"/>\n",lpFqNameI);
-        XML_INDENT_LINE(lpiDst->m_lpFile,lpiDst->m_nDepth);
+        CXmlStream_Printf(lpiDst,"\n");
+        XML_INDENT_LINE(lpiDst,lpiDst->m_nDepth+1);
+        CXmlStream_Printf(lpiDst,"<INSTANCE name=\"%s\"/>\n",lpFqNameI);
+        XML_INDENT_LINE(lpiDst,lpiDst->m_nDepth);
       }
 
       IF_NOK(nRet) IERROR(_this,ERR_SERIALIZE,lpWord->lpName,0,0);
@@ -360,13 +360,13 @@ INT16 CDlpObject_SerializeFieldXml(CDlpObject* _this, CXmlStream* lpiDst, SWord*
       char lpBuf[256];
       dlp_strncpy(lpBuf,(char*)lpWord->lpData,nType);
       dlp_printx_ext(lpOutBuf,(void*)CXmlStream_Encode(lpiDst,lpBuf),T_STRING,0,FALSE,TRUE,TRUE);
-      dlp_fprintf(lpiDst->m_lpFile,lpOutBuf);
+      CXmlStream_Printf(lpiDst,lpOutBuf);
     }
     else DLPASSERT(FMSG("Unexpected field type"));
   }
 
   /* Close field tag */
-  dlp_fprintf(lpiDst->m_lpFile,"</FIELD>\n");
+  CXmlStream_Printf(lpiDst,"</FIELD>\n");
 
   /* That's it */
   return O_K;

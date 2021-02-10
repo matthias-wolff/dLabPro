@@ -107,12 +107,77 @@ CXmlStream* CXmlStream_CreateInstance(const char* lpsFilename, const int nMode)
   return NULL;
 }
 
+short CXmlStream_SetBuffer(CXmlStream* _this,void *buf,size_t si){
+  BOOL bDone=1;
+  if (!(_this->m_nMode & XMLS_READ)) return NOT_EXEC;
+
+  /* Create parser */
+  _this->m_lpiParser = XML_ParserCreate(NULL);
+  if (!_this->m_lpiParser){ CXmlStream_Destructor(_this); return XMLSERR_NOMEM; }
+
+  /* Parametrize parser */
+  XML_SetUserData(_this->m_lpiParser,_this);
+  XML_SetElementHandler(_this->m_lpiParser,CXmlStream_OnOpenTag,CXmlStream_OnCloseTag);
+  XML_SetCharacterDataHandler(_this->m_lpiParser,CXmlStream_OnText);
+
+  /* Create DOM */
+  _this->m_lpDom = hash_create(HASHCOUNT_T_MAX,0,0,NULL);
+  if (!_this->m_lpDom){ CXmlStream_Destructor(_this); return XMLSERR_NOMEM; }
+
+  /* Parse Document */
+  if (!XML_Parse(_this->m_lpiParser,buf,si,(int)bDone)) {
+    ERRORMSG(XMLSERR_INFILE,_this->m_lpsFileName,XML_GetCurrentLineNumber(_this->m_lpiParser),XML_GetCurrentColumnNumber(_this->m_lpiParser));
+    ERRORMSG(XMLSERR_PARSE,XML_ErrorString(XML_GetErrorCode(_this->m_lpiParser)),0,0);
+
+    CXmlStream_Destructor(_this);
+    return XMLSERR_PARSE;
+  }
+
+  return O_K;
+}
+
+short CXmlStream_GetBuffer(CXmlStream* _this,void **buf,size_t *si){
+  if(*buf) *buf=_this->m_lpBuf;
+  if(*si)  *si=_this->m_nBufPos;
+  return O_K;
+}
+
+#ifndef DLP_PRINTF_BUFSIZE
+#  define DLP_PRINTF_BUFSIZE 4096
+#endif
+
+INT32 CXmlStream_Printf(CXmlStream* _this,const char* format, ...){
+   va_list va;
+   size_t len;
+   char buf[DLP_PRINTF_BUFSIZE];
+   va_start(va,format);
+#ifdef HAS_vsnprintf
+   (void)vsnprintf(buf, sizeof(buf), format, va);
+#else
+   (void)vsprintf(buf, format, va);
+#endif
+   va_end(va);
+   len=strlen(buf);
+   if(len<=0) return 0;
+
+   if(_this->m_lpFile) return dlp_fwrite(buf,len,1,_this->m_lpFile);
+
+   while(_this->m_nBufSi-_this->m_nBufPos<len)
+     if(!(_this->m_lpBuf=realloc(_this->m_lpBuf,_this->m_nBufSi+=4096))) return 0;
+
+   memcpy(_this->m_lpBuf+_this->m_nBufPos,buf,len);
+   _this->m_nBufPos+=len;
+   
+   return len;
+}
+
 /**
  *
  */
 short CXmlStream_Constructor(CXmlStream* _this, const char* lpsFilename, const int nMode)
 {
-  _this->m_lpFile          = dlp_fopen(lpsFilename,CONVERT_FMODE(nMode));
+  char bBuffer             = lpsFilename==NULL;
+  _this->m_lpFile          = lpsFilename ? dlp_fopen(lpsFilename,CONVERT_FMODE(nMode)) : NULL;
   _this->m_nDepth          = 0;
   _this->m_nMode           = nMode;
   _this->m_lpCurObject     = NULL;
@@ -122,17 +187,20 @@ short CXmlStream_Constructor(CXmlStream* _this, const char* lpsFilename, const i
   _this->m_lpsRootInameFq[0] = '\0';
 
   dlp_memset(_this->m_lpsInameFq,0,255);
-  dlp_strcpy(_this->m_lpsFileName,lpsFilename);
+  dlp_strcpy(_this->m_lpsFileName,lpsFilename ? lpsFilename : "Buffer");
 
   /* Verify file */
-  if (!_this->m_lpFile)
+  if (!bBuffer && !_this->m_lpFile)
   {
     CXmlStream_Destructor(_this);
     return -1;
   }
 
+  _this->m_lpBuf=NULL;
+  _this->m_nBufSi=_this->m_nBufPos=0;
+
   /* Initialize stream for reading */
-  if (_this->m_nMode & XMLS_READ)
+  if (!bBuffer && (_this->m_nMode & XMLS_READ))
   {
     /* Create parser */
     _this->m_lpiParser = XML_ParserCreate(NULL);
@@ -200,7 +268,7 @@ short CXmlStream_Constructor(CXmlStream* _this, const char* lpsFilename, const i
   /* Initialize stream for writing */
   else if (_this->m_nMode & XMLS_WRITE)
   {
-    dlp_fprintf(_this->m_lpFile,"<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\n");
+    CXmlStream_Printf(_this,"<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\n");
   }
 
   return O_K;
@@ -644,8 +712,8 @@ short CXmlStream_BeginInstance(CXmlStream* _this, const char* lpInstanceName, co
   /* Read/write dependent actions */
   if (_this->m_nMode&XMLS_WRITE)
   {
-    XML_INDENT_LINE(_this->m_lpFile,_this->m_nDepth);
-    dlp_fprintf(_this->m_lpFile,"<INSTANCE name=\"%s\" class=\"%s\">\n",lpInstanceName,lpClassName);
+    XML_INDENT_LINE(_this,_this->m_nDepth);
+    CXmlStream_Printf(_this,"<INSTANCE name=\"%s\" class=\"%s\">\n",lpInstanceName,lpClassName);
     _this->m_nDepth++;
 
     return O_K;
@@ -696,8 +764,8 @@ short CXmlStream_EndInstance(CXmlStream* _this)
     }
     else if (_this->m_nMode&XMLS_WRITE)
     {
-      XML_INDENT_LINE(_this->m_lpFile,_this->m_nDepth);
-      dlp_fprintf(_this->m_lpFile,"</INSTANCE>\n");
+      XML_INDENT_LINE(_this,_this->m_nDepth);
+      CXmlStream_Printf(_this,"</INSTANCE>\n");
       _this->m_nDepth--;
     }
 
@@ -730,22 +798,22 @@ short CXmlStream_SerializeTable(CXmlStream* _this, CDlpTable* lpiTable, const ch
 
   if(!_this)
   {
-    XML_INDENT_LINE(_this->m_lpFile,_this->m_nDepth);
-    dlp_fprintf(_this->m_lpFile,"<TABLE/>\n");
+    XML_INDENT_LINE(_this,_this->m_nDepth);
+    CXmlStream_Printf(_this,"<TABLE/>\n");
     return NOT_EXEC;
   }
 
   /* Open table tag */
-  XML_INDENT_LINE(_this->m_lpFile,_this->m_nDepth);
-  dlp_fprintf(_this->m_lpFile,"<TABLE name=\"%s\">\n",CXmlStream_Encode(_this,lpsFqName));
+  XML_INDENT_LINE(_this,_this->m_nDepth);
+  CXmlStream_Printf(_this,"<TABLE name=\"%s\">\n",CXmlStream_Encode(_this,lpsFqName));
 
   /* Serialize component structure */
   for (nComp=0; nComp<lpiTable->m_dim; nComp++)
   {
-    XML_INDENT_LINE(_this->m_lpFile,_this->m_nDepth+1);
-    dlp_fprintf
+    XML_INDENT_LINE(_this,_this->m_nDepth+1);
+    CXmlStream_Printf
     (
-      _this->m_lpFile,"<COMP name=\"%s\" type=\"%s\"/>\n",
+      _this,"<COMP name=\"%s\" type=\"%s\"/>\n",
       CXmlStream_Encode(_this,lpiTable->m_compDescrList[nComp].lpName),
       dlp_get_type_name(lpiTable->m_compDescrList[nComp].ctype)
     );
@@ -754,29 +822,29 @@ short CXmlStream_SerializeTable(CXmlStream* _this, CDlpTable* lpiTable, const ch
   /* Serialize cells */
   for (nRec=0; nRec<lpiTable->m_nrec; nRec++)
   {
-    XML_INDENT_LINE(_this->m_lpFile,_this->m_nDepth+1);
-    dlp_fprintf(_this->m_lpFile,"<REC>\n");
+    XML_INDENT_LINE(_this,_this->m_nDepth+1);
+    CXmlStream_Printf(_this,"<REC>\n");
 
     for (nComp=0; nComp<lpiTable->m_dim; nComp++)
     {
-      XML_INDENT_LINE(_this->m_lpFile,_this->m_nDepth+2);
-      dlp_fprintf(_this->m_lpFile,"<CELL>");
+      XML_INDENT_LINE(_this,_this->m_nDepth+2);
+      CXmlStream_Printf(_this,"<CELL>");
       if (CDlpTable_GetCompType(lpiTable,nComp)>1 && CDlpTable_GetCompType(lpiTable,nComp)<=255)
-        dlp_fprintf(_this->m_lpFile,"%s",CXmlStream_Encode(_this,(char*)CDlpTable_XAddr(lpiTable,nRec,nComp)));
+        CXmlStream_Printf(_this,"%s",CXmlStream_Encode(_this,(char*)CDlpTable_XAddr(lpiTable,nRec,nComp)));
       else{
         dlp_printx_ext(lpOutBuf,CDlpTable_XAddr(lpiTable,nRec,nComp),CDlpTable_GetCompType(lpiTable,nComp),0,FALSE,TRUE,TRUE);
-        dlp_fprintf(_this->m_lpFile,lpOutBuf);
+        CXmlStream_Printf(_this,lpOutBuf);
       }
-      dlp_fprintf(_this->m_lpFile,"</CELL>\n");
+      CXmlStream_Printf(_this,"</CELL>\n");
     }
 
-    XML_INDENT_LINE(_this->m_lpFile,_this->m_nDepth+1);
-    dlp_fprintf(_this->m_lpFile,"</REC>\n");
+    XML_INDENT_LINE(_this,_this->m_nDepth+1);
+    CXmlStream_Printf(_this,"</REC>\n");
   }
 
   /* Close table tag */
-  XML_INDENT_LINE(_this->m_lpFile,_this->m_nDepth);
-  dlp_fprintf(_this->m_lpFile,"</TABLE>\n");
+  XML_INDENT_LINE(_this,_this->m_nDepth);
+  CXmlStream_Printf(_this,"</TABLE>\n");
 
   return O_K;
 }

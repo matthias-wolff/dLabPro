@@ -1151,7 +1151,9 @@ INT16       CDlpObject_CopyField(CDlpObject*, SWord* lpWord, CDlpObject* iSrc);
 
 /* C functions - Common serialization / deserialization (dlpi_stm.c) */
 INT16       CDlpObject_Save(CDlpObject*, const char* lpsFilename, INT16 nFormat);
+INT16       CDlpObject_SaveBuffer(CDlpObject*, void **buf, size_t *si, INT16 nFormat);
 INT16       CDlpObject_Restore(CDlpObject*, const char* lpsFilename, INT16 nFormat);
+INT16       CDlpObject_RestoreBuffer(CDlpObject*, void *buf, size_t si);
 
 /* C functions - XML serialization / deserialization (dlpi_xml.c) */
 INT16       CDlpObject_SerializeXml(CDlpObject*, struct CXmlStream* lpiDst);
