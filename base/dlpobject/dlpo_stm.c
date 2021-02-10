@@ -235,6 +235,8 @@ INT16 CDlpObject_Restore
   return O_K;                                                                   /* Everything's all right            */
 }
 
+#ifndef __NOXMLSTREAM
+
 /* gzip flag byte */
 static int const gz_magic[2] = {0x1f, 0x8b}; /* gzip magic header */
 #define ASCII_FLAG   0x01 /* bit 0 set: file probably ascii text */
@@ -273,7 +275,7 @@ INT16 uncompressbuf(void **buf,size_t *si){
   stream.next_in+=6; stream.avail_in-=6;
   /* extra field */
   if(flags&EXTRA_FIELD){
-    int len=stream.next_in[0]+stream.next_in[1]<<8;
+    int len=stream.next_in[0]+(stream.next_in[1]<<8);
     stream.next_in+=len; stream.avail_in-=len;
   }
   /* original file name */
@@ -329,11 +331,13 @@ INT16 compressbuf(void **buf,size_t *si){
   return O_K;
 }
 
+#endif
+
 INT16 CDlpObject_SaveBuffer(CDlpObject* _this, void **buf, size_t *si, INT16 nFormat){
-  BOOL bZip;                                                                    /* Zip file                          */
   #if defined __NOXMLSTREAM
     return IERROR(_this,ERR_NOTSUPPORTED,"Restore",0,0);                        /*   Turn one on in dlp_config.h!    */
-  #endif /* #if (defined __NOXMLSTREAM && defined __NODN3STREAM) */             /* # <--                             */
+  #else
+  BOOL bZip;                                                                    /* Zip file                          */
 
   /* Validate */                                                                /* --------------------------------- */
   if (!_this                  ) return NOT_EXEC;                                /* Need this instance                */
@@ -358,12 +362,13 @@ INT16 CDlpObject_SaveBuffer(CDlpObject* _this, void **buf, size_t *si, INT16 nFo
   if(bZip && compressbuf(buf,si)!=O_K) return NOT_EXEC;
 
   return O_K;
+  #endif /* #if (defined __NOXMLSTREAM && defined __NODN3STREAM) */             /* # <--                             */
 }
 
 INT16 CDlpObject_RestoreBuffer(CDlpObject* _this,void *buf,size_t si){
   #if defined __NOXMLSTREAM
     return IERROR(_this,ERR_NOTSUPPORTED,"Restore",0,0);                        /*   Turn one on in dlp_config.h!    */
-  #endif /* #if (defined __NOXMLSTREAM && defined __NODN3STREAM) */             /* # <--                             */
+  #else
 
   /* Validate */                                                                /* --------------------------------- */
   if (!_this                  ) return NOT_EXEC;                                /* Need this instance                */
@@ -391,5 +396,6 @@ INT16 CDlpObject_RestoreBuffer(CDlpObject* _this,void *buf,size_t si){
   if(freebuf) free(buf);
 
   return O_K;
+  #endif /* #if (defined __NOXMLSTREAM && defined __NODN3STREAM) */             /* # <--                             */
 }
 /* EOF */
