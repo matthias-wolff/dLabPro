@@ -137,8 +137,8 @@ short CXmlStream_SetBuffer(CXmlStream* _this,void *buf,size_t si){
 }
 
 short CXmlStream_GetBuffer(CXmlStream* _this,void **buf,size_t *si){
-  if(*buf) *buf=_this->m_lpBuf;
-  if(*si)  *si=_this->m_nBufPos;
+  if(buf) *buf=_this->m_lpBuf;
+  if(si)  *si=_this->m_nBufPos;
   return O_K;
 }
 
