@@ -334,7 +334,12 @@ void CGEN_PRIVATE CFst_Cps_SetSdAux
   *(BYTE*     )(CData_XAddr(AS(CData,_this->sd),nS,_this->m_nIcSdAux+2)) = nFlagXY;
 
   /* Insert state into state hashmap for reverse lookup */
-  hash_alloc_insert((hash_t*)_this->m_lpCpsHash,(void*)(long)nS,(void*)(long)nS);
+  #ifdef __MINGW32__
+  #define CAST (void*)(__int64)
+  #else
+  #define CAST (void*)(long)
+  #endif
+  hash_alloc_insert((hash_t*)_this->m_lpCpsHash,CAST nS,CAST nS);
 }
 
 /**

@@ -259,7 +259,7 @@
 #define MODUS_ra "a+b"      /* Lesen und schreiben ans Ende */
 #define MODUS_rw "r+b"            /* Lesen&Schr. Datei muss exist.*/
 #define MODUS "r+b"      /* Modus zum Fileoeffnen:Binaerf*/
-#pragma warning( disable : 4244 )
+//#pragma warning( disable : 4244 )
 
 /* --- DEC DECUS C (PDP11) ---
 */

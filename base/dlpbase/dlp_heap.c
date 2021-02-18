@@ -30,7 +30,7 @@
 /* Local functions */
 hash_val_t __dlp_ptr2hash(const void* lpMemblock, void* lpHint)
 {
-#ifdef _MSC_VER
+#if defined _MSC_VER || defined __MINGW32__
   return (hash_val_t)(((__int64)lpMemblock)&0xFFFFFFFF);                        /* Hash code: least sign. 32 bits    */
 #else
   return (hash_val_t)lpMemblock;
