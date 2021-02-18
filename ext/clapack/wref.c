@@ -15,6 +15,7 @@
 #include "ctype.h"
 #endif
 
+int
 #ifdef KR_headers
 wrt_E(p,w,d,e,len) ufloat *p; ftnlen len;
 #else
@@ -191,6 +192,7 @@ nogood:
 	return 0;
 	}
 
+int
 #ifdef KR_headers
 wrt_F(p,w,d,len) ufloat *p; ftnlen len;
 #else

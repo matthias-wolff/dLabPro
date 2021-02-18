@@ -270,6 +270,7 @@ integer f_open(olist *a)
 				opnerr(a->oerr,129,"open");
 	return(0);
 }
+int
 #ifdef KR_headers
 fk_open(seq,fmt,n) ftnint n;
 #else
