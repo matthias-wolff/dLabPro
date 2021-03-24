@@ -547,7 +547,6 @@ void CDlpObject_GetErrorPos(char* lpInFile, INT32* lpInLine)
 INT16 CDlpObject_Error(CDlpObject* iInst, const char* lpsFilename, INT32 nLine, INT16 nErrorID, ...)
 {
 #ifdef _NO_DLP_ERR_
-  if(!strncmp(iInst->m_lpClassName,"gmm",4) && nErrorID==-1003) return nErrorID; /* Ignore GMM_RANK */
   printf("[%s:%i:] dlabpro-error: %i\n",lpsFilename,nLine,nErrorID);
   return nErrorID;
 #else
