@@ -864,11 +864,9 @@ INT16 CGEN_PROTECTED CFst_MinimizeUnit(CFst* _this, CFst* itSrc, INT32 nUnit)
   CFst* itAux  = NULL;
   INT16 nErr   = O_K;
 
-  DLPASSERT(_this!=itSrc);
-
   ICREATEEX(CFst,itAux,"CFst_MinimizeUnit~itAux",NULL);
 
-  CFst_CopyUi(_this,itSrc,NULL,nUnit);
+  if(_this!=itSrc) CFst_CopyUi(_this,itSrc,NULL,nUnit);
   CFst_Reverse(_this,0);
   IF_OK((nErr = CFst_DeterminizeUnit(itAux,_this,0)))
   {

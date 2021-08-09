@@ -40,7 +40,7 @@ char *ap_end(char *s)
 	f__fatal(100, "bad string");
 	/*NOTREACHED*/ return 0;
 }
- static
+ static int
 #ifdef KR_headers
 op_gen(a,b,c,d)
 #else
@@ -107,7 +107,7 @@ char *f_s(char *s, int curloc)
 	return(s);
 }
 
- static
+ static int
 #ifdef KR_headers
 ne_d(s,p) char *s,**p;
 #else
@@ -199,7 +199,7 @@ ne_d(char *s, char **p)
 	return(1);
 }
 
- static
+ static int
 #ifdef KR_headers
 e_d(s,p) char *s,**p;
 #else
@@ -359,6 +359,7 @@ char *f_list(char *s)
 	return(NULL);
 }
 
+int
 #ifdef KR_headers
 pars_f(s) char *s;
 #else
@@ -376,7 +377,7 @@ pars_f(char *s)
 int f__cnt[STKSZ],f__ret[STKSZ],f__cp,f__rp;
 flag f__workdone, f__nonl;
 
- static
+ static int
 #ifdef KR_headers
 type_f(n)
 #else
@@ -504,6 +505,7 @@ loop:	switch(type_f((p= &f__syl[f__pc])->op))
 	}
 	return(0);
 }
+int
 en_fio(Void)
 {	ftnint one=1;
 	return(do_fio(&one,(char *)NULL,(ftnint)0));

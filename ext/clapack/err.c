@@ -1,6 +1,7 @@
 #ifndef NON_UNIX_STDIO
 #define _INCLUDE_POSIX_SOURCE	/* for HP-UX */
 #define _INCLUDE_XOPEN_SOURCE	/* for HP-UX */
+#define _POSIX_C_SOURCE 1
 #include "sys/types.h"
 #include "sys/stat.h"
 #endif
@@ -81,6 +82,7 @@ char *F_err[] =
 };
 #define MAXERR (sizeof(F_err)/sizeof(char *)+100)
 
+int
 #ifdef KR_headers
 f__canseek(f) FILE *f; /*SYSDEP*/
 #else
@@ -186,6 +188,7 @@ f_init(Void)
 	p->ufmt=1;
 	p->uwrt=1;
 }
+int
 #ifdef KR_headers
 f__nowreading(x) unit *x;
 #else
@@ -217,6 +220,7 @@ f__nowreading(unit *x)
 	x->uwrt = 0;
 	return 0;
 }
+int
 #ifdef KR_headers
 f__nowwriting(x) unit *x;
 #else

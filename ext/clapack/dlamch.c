@@ -408,7 +408,7 @@ L30:
    ===================================================================== 
 */
     /* Table of constant values */
-    static integer c__1 = 1;
+    //static integer c__1 = 1;
     
     /* Initialized data */
     static logical first = TRUE_;

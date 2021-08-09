@@ -10,6 +10,7 @@ integer e_rsfe(Void)
 	f__fmtbuf=NULL;
 	return(n);
 }
+int
 #ifdef KR_headers
 c_sfe(a) cilist *a; /* check */
 #else

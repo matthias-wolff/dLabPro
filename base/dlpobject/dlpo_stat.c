@@ -546,6 +546,11 @@ void CDlpObject_GetErrorPos(char* lpInFile, INT32* lpInLine)
  */
 INT16 CDlpObject_Error(CDlpObject* iInst, const char* lpsFilename, INT32 nLine, INT16 nErrorID, ...)
 {
+#ifdef _NO_DLP_ERR_
+  printf("[%s:%i:] dlabpro-error: %i\n",lpsFilename,nLine,nErrorID);
+  return nErrorID;
+#else
+
   SWord*  lpError              = NULL;
   char    lpsPre[L_NAMES]      = "error";
   char    lpsInstName[L_NAMES] = "root";
@@ -815,6 +820,7 @@ INT16 CDlpObject_Error(CDlpObject* iInst, const char* lpsFilename, INT32 nLine, 
   }
 
   RETURN_ERR(nErrorID);
+#endif
 }
 
 /**

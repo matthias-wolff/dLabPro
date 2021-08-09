@@ -217,6 +217,7 @@ wrt_H(int a, char *s)
 	while(a--) (*f__putn)(*s++);
 	return(1);
 }
+int
 #ifdef KR_headers
 wrt_L(n,len, sz) Uint *n; ftnlen sz;
 #else
@@ -289,6 +290,7 @@ wrt_G(ufloat *p, int w, int d, int e, ftnlen len)
 	}
 	return(wrt_E(p,w,d,e,len));
 }
+int
 #ifdef KR_headers
 w_ed(p,ptr,len) struct syl *p; char *ptr; ftnlen len;
 #else
@@ -335,6 +337,7 @@ w_ed(struct syl *p, char *ptr, ftnlen len)
 		return(wrt_Z((Uint *)ptr,p->p1,p->p2.i[0],len));
 	}
 }
+int
 #ifdef KR_headers
 w_ned(p) struct syl *p;
 #else

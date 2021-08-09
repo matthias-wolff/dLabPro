@@ -67,7 +67,7 @@
 #define XMLSERR_BADTYPE    -11008
 
 /* Macros */
-#define XML_INDENT_LINE(A,B) { short i=0; for (i=0; i<B; i++) dlp_fprintf(A,"\t"); }
+#define XML_INDENT_LINE(A,B) { short i=0; for (i=0; i<B; i++) CXmlStream_Printf(A,"\t"); }
 
 /* Class CXmlStream */
 #ifdef __cplusplus
@@ -103,11 +103,16 @@ typedef struct CXmlStream
   long        m_nCompCtr;             /* Counts cells between <REC> and </REC> tags      */
   long        m_nFieldsNotFound;      /* Deserialize: no. of fields not found in stream  */
 
+  void*       m_lpBuf;
+  size_t      m_nBufSi,m_nBufPos;
 } CXmlStream;
 
 /* Methods - Constructors and destructors */
 BOOL        CXmlStream_CheckIsXml(const char* lpsFilename, const int nMode);
 CXmlStream* CXmlStream_CreateInstance(const char* lpsFilename, const int nMode);
+INT32       CXmlStream_Printf(CXmlStream* _this,const char* format, ...);
+short       CXmlStream_SetBuffer(CXmlStream* _this,void *buf,size_t si);
+short       CXmlStream_GetBuffer(CXmlStream* _this,void **buf,size_t *si);
 short       CXmlStream_Constructor(CXmlStream*, const char* lpsFilename, const int nMode);
 short       CXmlStream_DestroyInstance(CXmlStream*);
 short       CXmlStream_Destructor(CXmlStream*);
