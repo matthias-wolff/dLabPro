@@ -810,7 +810,7 @@ MAN:
 END_MAN
 CODE:
   CData_Realloc(_this,nRecs);
-  CData_IncNRecs(_this,nRecs);
+  CData_IncNRecs(_this,nRecs-CData_GetNRecs(_this));
 END_CODE
 
 METHOD:  -array
