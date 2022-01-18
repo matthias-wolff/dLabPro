@@ -175,6 +175,7 @@ public:
 	private: char GmmMix_CompareGauss(struct ssTperG* lpTperG1, struct ssTperG* lpTperG2);
 	private: void GmmMix_CreateMixture(INT32* lpGinMix, INT32 nNG, INT32 nG, struct ssTperG* lpTperG, INT32 nIcW, INT16 nWsrt, CData* idTmx, INT32 nNGnew, char* lpTDel);
 	public: INT16 GmmMix();
+	public: INT16 GmmUnmix();
 	public: INT16 ResetStats();
 	private: INT16 MergeStatsInt(CHmm* iSrc, const char* lpsFid);
 	public: INT16 MergeStats(CHmm* iSrc);

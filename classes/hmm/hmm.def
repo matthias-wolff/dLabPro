@@ -389,6 +389,13 @@ SYNTAX:  ()
   <img src="../resources/hmm/hmm_gmmmix.png" align="absmiddle" border="0">
 END_MAN
 
+METHOD:  -gmm_unmix
+COMMENT: Expand Gaussians mixtures
+SYNTAX:  ()
+/html MAN:
+  <p>This function expand Gaussians mixtures to transitions in the FST.</p>
+END_MAN
+
 ## Methods - Update / split
 METHOD:  -reset_stats
 COMMENT: Resets the internal statistics of an HMM instance.

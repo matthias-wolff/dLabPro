@@ -84,6 +84,7 @@ hmm.html hmm CHmm [
     hmm.html#mth_-gen_map "-gen_map" "-gen_map"
     hmm.html#mth_-get_dim "-get_dim" "-get_dim"
     hmm.html#mth_-gmm_mix "-gmm_mix" "-gmm_mix"
+    hmm.html#mth_-gmm_unmix "-gmm_unmix" "-gmm_unmix"
     hmm.html#mth_-hmm "-hmm" "-hmm"
     hmm.html#mth_-intersect "-intersect" "-intersect"
     hmm.html#mth_-invert "-invert" "-invert"
@@ -148,6 +149,7 @@ hmm.html hmm CHmm [
         top.TC1.InsertItem("-gen_map","&lt;data idLab&gt; &lt;int nIcLab&gt; &lt;int nIcOfs&gt; &lt;int nIcLen&gt; &lt;data idMap&gt; &lt;hmm this&gt; -gen_map     Generate GMM index map for label sequence.",27,27,0,"automatic/hmm.html#mth_-gen_map","CONT",nCls);
         top.TC1.InsertItem("-get_dim","&lt;hmm this&gt; -get_dim     Get feature space dimensionality.",27,27,0,"automatic/hmm.html#mth_-get_dim","CONT",nCls);
         top.TC1.InsertItem("-gmm_mix","&lt;hmm this&gt; -gmm_mix     Combines Gaussians to mixtures",27,27,0,"automatic/hmm.html#mth_-gmm_mix","CONT",nCls);
+        top.TC1.InsertItem("-gmm_unmix","&lt;hmm this&gt; -gmm_unmix     Expand Gaussians mixtures",27,27,0,"automatic/hmm.html#mth_-gmm_unmix","CONT",nCls);
         top.TC1.InsertItem("-hmm","&lt;hmm itSrc&gt; &lt;int nUnit&gt; &lt;hmm this&gt; -hmm     Convert to HMM-style (weighted) acceptor or transducer",27,27,0,"automatic/hmm.html#mth_-hmm","CONT",nCls);
         top.TC1.InsertItem("-intersect","&lt;hmm itSrc1&gt; &lt;hmm itSrc2&gt; &lt;int nUnit1&gt; &lt;int nUnit2&gt; &lt;hmm this&gt; -intersect     Calculates the intersection of weighted automata",27,27,0,"automatic/hmm.html#mth_-intersect","CONT",nCls);
         top.TC1.InsertItem("-invert","&lt;int nUnit&gt; &lt;hmm this&gt; -invert     Swap input and output symbols",27,27,0,"automatic/hmm.html#mth_-invert","CONT",nCls);
@@ -360,6 +362,7 @@ HMM-implementation of <code>-order</code>,
     <tr><td><a href="#mth_-gen_map"><code class="link">-gen_map</code></a></td><td><code>&lt;data idLab&gt; &lt;int nIcLab&gt; &lt;int nIcOfs&gt; &lt;int nIcLen&gt; &lt;data idMap&gt; &lt;hmm this&gt; <b>-gen_map</b> </code><br> Generate GMM index map for label sequence.</td></tr>
     <tr><td><a href="#mth_-get_dim"><code class="link">-get_dim</code></a></td><td><code>&lt;hmm this&gt; <b>-get_dim</b> </code><br> Get feature space dimensionality.</td></tr>
     <tr><td><a href="#mth_-gmm_mix"><code class="link">-gmm_mix</code></a></td><td><code>&lt;hmm this&gt; <b>-gmm_mix</b> </code><br> Combines Gaussians to mixtures</td></tr>
+    <tr><td><a href="#mth_-gmm_unmix"><code class="link">-gmm_unmix</code></a></td><td><code>&lt;hmm this&gt; <b>-gmm_unmix</b> </code><br> Expand Gaussians mixtures</td></tr>
     <tr><td><a href="#mth_-hmm"><code class="link">-hmm</code></a></td><td><code>&lt;hmm itSrc&gt; &lt;int nUnit&gt; &lt;hmm this&gt; <b>-hmm</b> </code><br> Convert to HMM-style (weighted) acceptor or transducer</td></tr>
     <tr><td><a href="#mth_-intersect"><code class="link">-intersect</code></a></td><td><code>&lt;hmm itSrc1&gt; &lt;hmm itSrc2&gt; &lt;int nUnit1&gt; &lt;int nUnit2&gt; &lt;hmm this&gt; <b>-intersect</b> </code><br> Calculates the intersection of weighted automata</td></tr>
     <tr><td><a href="#mth_-invert"><code class="link">-invert</code></a></td><td><code>&lt;int nUnit&gt; &lt;hmm this&gt; <b>-invert</b> </code><br> Swap input and output symbols</td></tr>
@@ -1527,7 +1530,7 @@ Use variance vectors
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">hmm.def(629)</td>
+      <td class="hidden">hmm.def(636)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -1679,7 +1682,7 @@ public: INT16 <b>CHmm::Bwalpha</b>(INT32 nUnit, CData* idWeights, CData* idAlpha
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">hmm_iam.cpp(1208)</td>
+      <td class="hidden">hmm_iam.cpp(1279)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -1748,7 +1751,7 @@ public: INT16 <b>CHmm::Bwupdate</b>(CData* idAlpha, CData* idMsf, CData* idLsf, 
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">hmm_iam.cpp(807)</td>
+      <td class="hidden">hmm_iam.cpp(878)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -1857,7 +1860,7 @@ nUnit
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">hmm.def(635)</td>
+      <td class="hidden">hmm.def(642)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -1946,7 +1949,7 @@ public: INT16 <b>CHmm::Cleanup</b>(CHmm* itSrc);<br>
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">hmm_iam.cpp(1158)</td>
+      <td class="hidden">hmm_iam.cpp(1229)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -2016,7 +2019,7 @@ Removes states and transitions not included in a path from start to end and dele
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">hmm.def(556)</td>
+      <td class="hidden">hmm.def(563)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -2081,7 +2084,7 @@ Kleene closure
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">hmm.def(583)</td>
+      <td class="hidden">hmm.def(590)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -2289,7 +2292,7 @@ public: INT16 <b>CHmm::CopyFst</b>(CFst* itSrc);<br>
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">hmm_iam.cpp(1039)</td>
+      <td class="hidden">hmm_iam.cpp(1110)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -2356,7 +2359,7 @@ Copies the automata graphs from an FST instance.
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">hmm.def(642)</td>
+      <td class="hidden">hmm.def(649)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -2472,7 +2475,7 @@ considered as index.<br>If <code>idIndex</code> is <code>NULL</code>: Index of u
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">hmm.def(589)</td>
+      <td class="hidden">hmm.def(596)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -2537,7 +2540,7 @@ Determinizes a (weighted) acceptor or transducer
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">hmm.def(601)</td>
+      <td class="hidden">hmm.def(608)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -2638,7 +2641,7 @@ public: INT16 <b>CHmm::GenMap</b>(CData* idLab, INT32 nIcLab, INT32 nIcOfs, INT3
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">hmm_iam.cpp(1072)</td>
+      <td class="hidden">hmm_iam.cpp(1143)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -2788,7 +2791,7 @@ public: INT32 <b>CHmm::GetDim</b>();<br>
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">hmm_iam.cpp(1062)</td>
+      <td class="hidden">hmm_iam.cpp(1133)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -2886,6 +2889,73 @@ Combines Gaussians to mixtures
   </div>
   <img src="../resources/blank_stc.gif" height="10">
   </div>
+  <div id="mth_-gmm_unmix">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td nowrap width="25%" class="navbar"><a 
+        name="mth_-gmm_unmix"></a>Method <span 
+        class="mid">-gmm_unmix</span></td>
+      <td nowrap width="75%" class="navbar" style="text-align:right;">
+        <a class="navbar" href="javascript:__PrintSection('mth_-gmm_unmix','Class hmm');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
+  </table>
+  <div class="mframe"><table cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td class="hidden">dLabPro</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Identifier</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code><b>-gmm_unmix</b></code></td>
+    </tr>
+    <tr>
+      <td class="hidden">&nbsp;</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Syntax</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code>
+&lt;hmm this&gt; <b>-gmm_unmix</b> 
+</code></td>
+    </tr>
+    <tr>
+      <td class="hidden" colspan="5">&nbsp;</td>
+    </tr>
+    <tr>
+      <td class="hidden">C/C++</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Member function</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code>
+public: INT16 <b>CHmm::GmmUnmix</b>();<br>
+</code></td>
+    </tr>
+    <tr>
+      <td class="hidden">&nbsp;</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Source</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">hmm_iam.cpp(588)</td>
+    </tr>
+  </table></div>
+  <div class="mframe2">
+  <h3>Synopsis</h3>
+  <p>
+Expand Gaussians mixtures
+  </p>
+  <h3>Description</h3>
+  <p>This function expand Gaussians mixtures to transitions in the FST.</p>
+  <!--{{ CUSTOM_DOC -->
+  <!--}} CUSTOM_DOC -->
+  </div>
+  <img src="../resources/blank_stc.gif" height="10">
+  </div>
   <div id="mth_-hmm">
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
@@ -2938,7 +3008,7 @@ Combines Gaussians to mixtures
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">hmm.def(607)</td>
+      <td class="hidden">hmm.def(614)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -3031,7 +3101,7 @@ Index of unit to be processed (-1 for all units)
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">hmm.def(550)</td>
+      <td class="hidden">hmm.def(557)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -3147,7 +3217,7 @@ Unit to be processed in left operand
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">hmm.def(562)</td>
+      <td class="hidden">hmm.def(569)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -3212,7 +3282,7 @@ public: INT16 <b>CHmm::MergeStats</b>(CHmm* iSrc);<br>
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">hmm_iam.cpp(643)</td>
+      <td class="hidden">hmm_iam.cpp(714)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -3292,7 +3362,7 @@ iSrc
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">hmm.def(595)</td>
+      <td class="hidden">hmm.def(602)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -3367,7 +3437,7 @@ Minimizes a (weighted) acceptor or transducer
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">hmm.def(577)</td>
+      <td class="hidden">hmm.def(584)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -3432,7 +3502,7 @@ Calculates the cartesian product of two graphs
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">hmm.def(567)</td>
+      <td class="hidden">hmm.def(574)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -3497,7 +3567,7 @@ public: INT16 <b>CHmm::ResetStats</b>();<br>
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">hmm_iam.cpp(588)</td>
+      <td class="hidden">hmm_iam.cpp(659)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -4107,7 +4177,7 @@ public: INT16 <b>CHmm::Split</b>(FLOAT64 nMinRc, INT32 nMaxCnt, CData* idMap);<b
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">hmm_iam.cpp(924)</td>
+      <td class="hidden">hmm_iam.cpp(995)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -4239,7 +4309,7 @@ Use RC instead of variance for selecting gausians to split specified by nMaxCnt
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">hmm.def(623)</td>
+      <td class="hidden">hmm.def(630)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -4373,7 +4443,7 @@ expanding self loops just like normal cycles)
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">hmm.def(544)</td>
+      <td class="hidden">hmm.def(551)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -4438,7 +4508,7 @@ Union
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">hmm.def(572)</td>
+      <td class="hidden">hmm.def(579)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -4503,7 +4573,7 @@ public: INT16 <b>CHmm::Update</b>(CData* idSrc, INT32 nIcTis, INT32 nIcTer, CDat
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">hmm_iam.cpp(748)</td>
+      <td class="hidden">hmm_iam.cpp(819)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -4885,7 +4955,7 @@ private: INT16 <b>CHmm::MergeStatsInt</b>(CHmm* iSrc, const char* lpsFid);<br>
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">hmm_iam.cpp(624)</td>
+      <td class="hidden">hmm_iam.cpp(695)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -5044,7 +5114,7 @@ private: INT16 <b>CHmm::UpdateStatInt</b>(CStatistics* iStat, CData* idVec, CDat
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">hmm_iam.cpp(700)</td>
+      <td class="hidden">hmm_iam.cpp(771)</td>
     </tr>
   </table></div>
   <div class="mframe2">

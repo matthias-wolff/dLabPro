@@ -585,6 +585,77 @@ INT16 CGEN_PUBLIC CHmm::GmmMix()
 /*
  * Manual page at hmm.def
  */
+INT16 CGEN_PUBLIC CHmm::GmmUnmix()
+{
+  INT32       nIcW   = -1;                                                       // Weight trans. quali. comp.
+  INT32       nU;                                                                // Unit index
+  INT32       nT;                                                                // Transition index
+  INT32       nG;
+  INT32       nM;
+  BOOL        bT;
+  FLOAT64     nW;
+  FLOAT64     nMW;
+  INT32       nNG;                                                               // Number of old Gaussians
+  INT32       nNM;
+  INT32       nNU;                                                               // Number of units
+  INT32       nXT;                                                               // Number of units
+  INT16      nWsrt  = 0;                                                        // Weight semiring type
+  INT32       nIcTis = -1;                                                       // Input symbol trans. quali. comp.
+  INT32       nIcTos = -1;                                                       // Input symbol trans. quali. comp.
+  CData*     idTmx    = NULL;                                                   // Mixture map table
+
+  if (!m_iGm->m_iMmap)                                                           // Mixture map available?
+    return IERROR(this,GMM_INVALD,"has no mixture map","","gmm");                  //   Error
+  idTmx = m_iGm->m_iMmap->m_idTmx;
+  nNG = idTmx->GetNComps();
+  nNM = idTmx->GetNRecs();
+  nNU = UD_XXU(_this);                                                          // Get number of units
+  nWsrt = Wsr_GetType(&nIcW);                                                   // Get weight type and component
+  if(nWsrt!=FST_WSR_LOG) return IERROR(this,FST_INTERNAL,"currently only LOG WSR implemented","","");
+  nIcTis = CData_FindComp(td,NC_TD_TIS);                                        // Find input symbol component
+  if (nIcTis<0)                                                                 // Can't do w/o input symbols!
+    return IERROR(this,FST_MISS,"input symbol","component","transition table"); //   Error
+  nIcTos = CData_FindComp(td,NC_TD_TOS);
+  if (nIcTos<0) return IERROR(this,FST_MISS,"output symbol","component","transition table");
+
+  // Expand Transitions
+  for(nU=0;nU<nNU;nU++)                                                         // Loop over all units
+  {                                                                             // >>
+    nXT=UD_FT(_this,nU)+UD_XT(_this,nU);
+    for(nT=UD_FT(_this,nU);nT<nXT;nT++){                                                                           //   >>
+      nM=*(FST_STYPE*)td->XAddr(nT,nIcTis);                                      //     Get input symbol
+      nW=*(FST_WTYPE*)td->XAddr(nT,nIcW);
+      bT=TRUE;
+      for(nG=0;nG<nNG;nG++){
+        if((nMW=CData_Dfetch(idTmx,nM,nG))==m_iGm->m_iMmap->m_nZero) continue;
+        if(bT){
+          *(FST_STYPE*)td->XAddr(nT,nIcTis)=nG;
+          bT=FALSE;
+          *(FST_WTYPE*)td->XAddr(nT,nIcW)=nW+nMW;
+        }else{
+          _this->AddtransEx(
+            nU,
+            *(FST_ITYPE*)td->XAddr(nT,IC_TD_INI),
+            *(FST_ITYPE*)td->XAddr(nT,IC_TD_TER),
+            nG,
+            *(FST_STYPE*)td->XAddr(nT,nIcTos),
+            nW+nMW
+          );
+        }
+      }
+      if(bT) *(FST_WTYPE*)td->XAddr(nT,nIcW)=m_iGm->m_iMmap->m_nZero;
+    }                                                                           //   <<
+  }                                                                             // <<
+
+  IDESTROY(m_iGm->m_iMmap);
+  m_iGm->m_iMmap=NULL;
+
+  return O_K;                                                                   // All done
+}
+
+/*
+ * Manual page at hmm.def
+ */
 INT16 CGEN_PUBLIC CHmm::ResetStats()
 {
   INT32 nT     = 0;                                                              // Current transition
@@ -1131,16 +1202,16 @@ INT16 CGEN_PUBLIC CHmm::GenMap
     for(nM=0;nM<nNM;nM++) if(m_bNomix && m_iGm->m_iMmap)                        //   Revert mixture map
     {                                                                           //   >>
       INT32 nG;                                                                  //     Current Gaussian
-      if(!CData_IsEmpty(m_iGm->m_iMmap->m_idWeakTmx))                           //     Use weak tmx matrix
+      if(!CData_IsEmpty(m_iGm->m_iMmap->m_idWeakTmx)){                          //     Use weak tmx matrix
         for(nG=0;nG<m_iGm->m_iMmap->m_idWeakTmx->GetNRecs();nG++){              //       Loop over records >>
           INT32 nGr=(INT32)m_iGm->m_iMmap->m_idWeakTmx->Dfetch(nG,nM*2);          //         Get Gaussian index
           if(nGr>=0) CData_Dstore(idMap,1,nL,nGr);                              //         Update new map
         }                                                                       //       <<
-      else if(m_iGm->m_iMmap->m_idTmx)                                          //     Use tmx matrix
+      }else if(m_iGm->m_iMmap->m_idTmx){                                        //     Use tmx matrix
         for(nG=0;nG<m_iGm->m_iMmap->m_idTmx->GetNRecs();nG++)                   //       Loop over Gaussians
           if(m_iGm->m_iMmap->m_idTmx->Dfetch(nM,nG)!=m_iGm->m_iMmap->m_nZero)   //         If Gaussian is used
             CData_Dstore(idMap,1,nL,nG);                                        //           Update new map
-      else CData_Dstore(idMap,lpMap[nM],nL,nM);                                 //   Else copy map vector
+      }else CData_Dstore(idMap,lpMap[nM],nL,nM);                                 //   Else copy map vector
     }                                                                           //   <<
     else CData_Dstore(idMap,lpMap[nM],nL,nM);                                   //   Else copy map vector
   }                                                                             // <<
