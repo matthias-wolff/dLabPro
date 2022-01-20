@@ -52,6 +52,7 @@ typedef struct tag_SGphInfo
   INT32   nIcTdTis;
   INT32   nIcTdTos;
   INT32   nIcTdW;
+  INT32   nIcTdStk;
   INT16  nWsr;
   INT32   nIcTdData;
 }
@@ -85,6 +86,7 @@ BOOL CDlpFile_Gph_GetGraphInfo(CDlpObject* iSrc, SGphInfo* lpGi)
     lpGi->nIcTdTis  = CData_FindComp(lpGi->idTd,NC_TD_TIS);
     lpGi->nIcTdTos  = CData_FindComp(lpGi->idTd,NC_TD_TOS);
     lpGi->nWsr      = CFst_Wsr_GetType(AS(CFst,iSrc),&lpGi->nIcTdW);
+    lpGi->nIcTdStk  = CData_FindComp(lpGi->idTd,"~STK");
     return TRUE;
   }
 
@@ -327,6 +329,7 @@ INT16 CGEN_PROTECTED CDlpFile_Gph_ExportFsm
   INT32     nTis    = -1;                                                       /* Input symbol of cur. trans.    */
   INT32     nTos    = -1;                                                       /* Output symbol of cur. trans.   */
   FLOAT64   nW      = 0.;                                                       /* Weight of current transition   */
+  INT32     nStk    = 0;                                                        /* Output symbol of cur. trans.   */
   BOOL     bDstFst = FALSE;                                                    /* Export fst                     */
   CData *idIs=AS(CData,AS(CFst,iSrc)->is); if(CData_IsEmpty(idIs)) idIs=NULL;  /* Input symbol table              */
   CData *idOs=AS(CData,AS(CFst,iSrc)->os); if(CData_IsEmpty(idOs)) idOs=NULL;  /* Output symbol table             */
@@ -356,6 +359,7 @@ INT16 CGEN_PROTECTED CDlpFile_Gph_ExportFsm
     nTis = gi.nIcTdTis>=0 ? (INT32)CData_Dfetch(gi.idTd,nT,gi.nIcTdTis) : -1;
     nTos = gi.nIcTdTos>=0 ? (INT32)CData_Dfetch(gi.idTd,nT,gi.nIcTdTos) : -1;
     nW   = gi.nIcTdW  >=0 ? CData_Dfetch(gi.idTd,nT,gi.nIcTdW)         : 0.;
+    nStk = gi.nIcTdStk>=0 ? CData_Dfetch(gi.idTd,nT,gi.nIcTdStk)       : 0;
     if (gi.nWsr==FST_WSR_PROB) nW=-log(nW);
 
     if (gi.bIsStr && nTer==0)
@@ -373,6 +377,7 @@ INT16 CGEN_PROTECTED CDlpFile_Gph_ExportFsm
         else     fprintf(fDst,"\t%ld",(long)nTos+1);
       }
       if (gi.nIcTdW>=0) fprintf(fDst,"\t%lG",(double)nW);
+      if (gi.nIcTdW>=0 && gi.nIcTdStk>=0) fprintf(fDst,"\t%ld",(long)nStk);
       fprintf(fDst,"\n");
     }
   }
@@ -445,6 +450,7 @@ INT16 CGEN_PROTECTED CDlpFile_Gph_ImportFsm
   BOOL     bSrcFst              = FALSE;                                       /* Source is an FST               */
   BOOL     bExtraFinal          = FALSE;                                       /* Added extra final state        */
   BOOL     bWeighted            = FALSE;                                       /* Source is weighted             */
+  BOOL     bStk                 = FALSE;                                       /* Source is weighted             */
   INT32  nLine                = 0;                                           /* Current line in source file    */
   INT32  nFld                 = 0;                                           /* Number of scanned fields       */
   INT32  nXS                  = 0;                                           /* Number of states               */
@@ -455,6 +461,7 @@ INT16 CGEN_PROTECTED CDlpFile_Gph_ImportFsm
   double   nBuf1                = 0.;                                          /* Copy buffer                    */
   double   nBuf2                = 0.;                                          /* Copy buffer                    */
   double   nBuf3                = 0.;                                          /* Copy buffer                    */
+  double   nBuf4                = 0.;                                          /* Copy buffer                    */
   char sBuf1[L_INPUTLINE];                                                     /* Copy buffer                    */
   char sBuf2[L_INPUTLINE];                                                     /* Copy buffer                    */
   CData *idIs;                                                                 /* Input symbol table             */
@@ -473,9 +480,11 @@ INT16 CGEN_PROTECTED CDlpFile_Gph_ImportFsm
     if (strlen(lpsLine)==0) continue;
 
     /* Scan line */
-    nFld = sscanf(lpsLine,"%d %lG %d %lG %lG",&nIni,&nBuf1,&nTis,&nBuf2,&nBuf3);
+    nFld = sscanf(lpsLine,"%d %lG %d %lG %lG %lG",&nIni,&nBuf1,&nTis,&nBuf2,&nBuf3,&nBuf4);
     if (bSrcFst  && (nFld==5 || nFld==2)) bWeighted = TRUE;
     if (!bSrcFst && (nFld==4 || nFld==2)) bWeighted = TRUE;
+    if (bSrcFst  && (nFld==6 || nFld==2)) bStk = TRUE;
+    if (!bSrcFst && (nFld==5 || nFld==2)) bStk = TRUE;
     if (nFld<3                          ) nFinal++; else nXT++;
     if (nIni>nXS                        ) nXS=nIni;
   }
@@ -488,7 +497,8 @@ INT16 CGEN_PROTECTED CDlpFile_Gph_ImportFsm
   CFst_Addunit((CFst*)iDst,"fsm");
   CData_AddComp(gi.idTd,NC_TD_TIS,DLP_TYPE(FST_STYPE));
   if (bSrcFst  ) CData_AddComp(gi.idTd,NC_TD_TOS,DLP_TYPE(FST_STYPE));
-  if (bWeighted) CData_AddComp(gi.idTd,NC_TD_TSR,DLP_TYPE(FST_WTYPE));
+  if (bWeighted) CData_AddComp(gi.idTd,NC_TD_LSR,DLP_TYPE(FST_WTYPE));
+  if (bStk     ) CData_AddComp(gi.idTd,"~STK",DLP_TYPE(FST_WTYPE));
 
   CDlpFile_Gph_GetGraphInfo(iDst,&gi);
   CData_Realloc(gi.idTd,nXT+nFinal);
@@ -541,7 +551,8 @@ INT16 CGEN_PROTECTED CDlpFile_Gph_ImportFsm
     nBuf1 = 0.;
     nBuf2 = 0.;
     nBuf3 = 0.;
-    nFld  = sscanf(lpsLine,"%d %lG %s %s %lG",&nIni,&nBuf1,sBuf1,sBuf2,&nBuf3);
+    nBuf4 = 0.;
+    nFld  = sscanf(lpsLine,"%d %lG %s %s %lG %lG",&nIni,&nBuf1,sBuf1,sBuf2,&nBuf3,&nBuf4);
     if (nFld>2)
     {
       /* Transition */
@@ -554,11 +565,13 @@ INT16 CGEN_PROTECTED CDlpFile_Gph_ImportFsm
         nBuf2=CDlpFile_Gph_Sym2Id(sBuf2,idOs);
         CData_Dstore(gi.idTd,nBuf2,nXT,gi.nIcTdTos);
         CData_Dstore(gi.idTd,nBuf3,nXT,gi.nIcTdW);
+        CData_Dstore(gi.idTd,nBuf4,nXT,gi.nIcTdStk);
       }
       else
       {
         nBuf2=dlp_strtod(sBuf2,NULL);
         CData_Dstore(gi.idTd,nBuf2,nXT,gi.nIcTdW);
+        CData_Dstore(gi.idTd,nBuf3,nXT,gi.nIcTdStk);
       }
 
       nXT++;
