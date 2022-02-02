@@ -268,7 +268,7 @@ short CXmlStream_Constructor(CXmlStream* _this, const char* lpsFilename, const i
   /* Initialize stream for writing */
   else if (_this->m_nMode & XMLS_WRITE)
   {
-    CXmlStream_Printf(_this,"<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\n");
+    CXmlStream_Printf(_this,"<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n");
   }
 
   return O_K;
