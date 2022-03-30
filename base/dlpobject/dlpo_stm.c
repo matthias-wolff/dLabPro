@@ -251,11 +251,13 @@ INT16 uncompressbuf(void **buf,size_t *si){
   z_stream stream;
   int err;
   uint32_t *footer=(uint32_t*)((char*)*buf+*si-8);
-  uint32_t crc=footer[0],nsi=footer[1];
-  void *nbuf;
+  uint32_t crc=footer[0]/*,nsi=footer[1] wrong if >4G*/;
   memset(&stream,0,sizeof(stream));
 
-  if(!(nbuf=malloc(nsi))) return Z_BUF_ERROR;
+  const size_t blk=1<<20;
+  size_t nsi=blk*2;
+  uint8_t *nbuf;
+  if(!(nbuf=(uint8_t*)malloc(nsi))) return Z_BUF_ERROR;
 
   stream.next_in = (Bytef*)*buf;
   stream.avail_in = (uInt)*si;
@@ -287,9 +289,21 @@ INT16 uncompressbuf(void **buf,size_t *si){
 
   /* inflate */
   if((err=inflateInit2(&stream,-MAX_WBITS))!=Z_OK) return err;
-  if((err=inflate(&stream,Z_FINISH))!=Z_STREAM_END) return err==Z_OK ? Z_BUF_ERROR : err;
-  if(stream.total_out!=nsi) return Z_BUF_ERROR;
-  if(crc32(0L,(Bytef*)nbuf,nsi)!=crc) return Z_BUF_ERROR;
+  while(1){
+    if((err=inflate(&stream,Z_BLOCK))!=Z_OK){
+      if(err==Z_STREAM_END) break;
+      return err;
+    }
+    if(stream.avail_out<blk){
+      nsi+=blk;
+      if(!(nbuf=(uint8_t*)realloc(nbuf,nsi))) return Z_BUF_ERROR;
+      stream.avail_out+=blk;
+      stream.next_out=nbuf+stream.total_out;
+    }
+  }
+  if(stream.total_out>nsi) return Z_BUF_ERROR;
+  if(!(nbuf=(uint8_t*)realloc(nbuf,nsi=stream.total_out))) return Z_BUF_ERROR;
+  if(nsi<1L<<32 && crc32(0L,(Bytef*)nbuf,nsi)!=crc) return Z_BUF_ERROR;
   if(inflateEnd(&stream)!=Z_OK) return Z_BUF_ERROR;
 
   *buf=nbuf;
@@ -377,6 +391,7 @@ INT16 CDlpObject_RestoreBuffer(CDlpObject* _this,void *buf,size_t si){
   /* Zipped? */
   char freebuf=0;
   if(*(uint16_t*)buf==0x8b1f){
+    /* TODO: Block wise uncompress + block wise CXmlStream_SetBuffer */
     if(uncompressbuf(&buf,&si)!=O_K) return NOT_EXEC;
     freebuf=1;
   }

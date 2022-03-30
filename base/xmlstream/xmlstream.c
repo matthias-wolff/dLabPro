@@ -108,7 +108,6 @@ CXmlStream* CXmlStream_CreateInstance(const char* lpsFilename, const int nMode)
 }
 
 short CXmlStream_SetBuffer(CXmlStream* _this,void *buf,size_t si){
-  BOOL bDone=1;
   if (!(_this->m_nMode & XMLS_READ)) return NOT_EXEC;
 
   /* Create parser */
@@ -124,13 +123,19 @@ short CXmlStream_SetBuffer(CXmlStream* _this,void *buf,size_t si){
   _this->m_lpDom = hash_create(HASHCOUNT_T_MAX,0,0,NULL);
   if (!_this->m_lpDom){ CXmlStream_Destructor(_this); return XMLSERR_NOMEM; }
 
-  /* Parse Document */
-  if (!XML_Parse(_this->m_lpiParser,buf,si,(int)bDone)) {
-    ERRORMSG(XMLSERR_INFILE,_this->m_lpsFileName,XML_GetCurrentLineNumber(_this->m_lpiParser),XML_GetCurrentColumnNumber(_this->m_lpiParser));
-    ERRORMSG(XMLSERR_PARSE,XML_ErrorString(XML_GetErrorCode(_this->m_lpiParser)),0,0);
+  while(si){
+    size_t li=MIN(si,1<<20);
+    BOOL bDone=li==si;
+    /* Parse Document */
+    if (!XML_Parse(_this->m_lpiParser,buf,li,(int)bDone)) {
+      ERRORMSG(XMLSERR_INFILE,_this->m_lpsFileName,XML_GetCurrentLineNumber(_this->m_lpiParser),XML_GetCurrentColumnNumber(_this->m_lpiParser));
+      ERRORMSG(XMLSERR_PARSE,XML_ErrorString(XML_GetErrorCode(_this->m_lpiParser)),0,0);
 
-    CXmlStream_Destructor(_this);
-    return XMLSERR_PARSE;
+      CXmlStream_Destructor(_this);
+      return XMLSERR_PARSE;
+    }
+    si-=li;
+    buf+=li;
   }
 
   return O_K;
