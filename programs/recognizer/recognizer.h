@@ -49,7 +49,7 @@
 #define dlp_calloc(A,B) __dlp_calloc(A,B,__FILE__,__LINE__,"kernel",NULL)
 #define dlp_realloc(A,B,C) __dlp_realloc(A,B,C,__FILE__,__LINE__,"kernel",NULL)
 
-#define STR_LEN   512
+#define STR_LEN   2048
 
 #define RECOOUT       E(res), E(cmd), E(sta), E(dbg), E(gui), E(vad), E(all)
 #define RECOIN        E(none), E(cmd), E(fea)

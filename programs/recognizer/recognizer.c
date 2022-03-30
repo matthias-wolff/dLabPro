@@ -373,14 +373,14 @@ FLOAT32 confidence_phn(CFst* itDC, CFst* itDCr){
 
 void confidence(CFst* itDC, CFst* itDCr, const char *sLab)
 {
-  char    lpsRRes[255];
+  char    lpsRRes[STR_LEN];
   FLOAT32 nGW0 = 0.f;
   FLOAT32 nGW1 = 0.f;
   short   nRAcc=0;
   short   nRCor=0;
 
   /* Get & store result sentence */
-  strcpy(lpsRRes,result_text(CData_Sfetch(AS(CData,itDC->ud),0,0)));
+  snprintf(lpsRRes,sizeof(lpsRRes),"%s",result_text(AS(CData,itDC->ud)->m_ftext));
   nGW0=CData_Dfetch(AS(CData,itDC->ud),0,CData_FindComp(AS(CData,itDC->ud),"~GW"));
   switch(rCfg.rRej.eTyp){
   case RR_off: break;
@@ -410,7 +410,7 @@ void confidence(CFst* itDC, CFst* itDCr, const char *sLab)
 
   if(rCfg.eOut==O_res) printf("%s\n",lpsRRes);
   else{
-    snprintf(rTmp.rRes.sLastRes,254,"%s%s%s",nRAcc?"":"(",lpsRRes,nRAcc?"":")");
+    snprintf(rTmp.rRes.sLastRes,sizeof(rTmp.rRes.sLastRes),"%s%s%s",nRAcc?"":"(",lpsRRes,nRAcc?"":")");
     routput(O_cmd,1,"");
     if(sLab) routput(O_cmd,0,"lab: %s ",sLab);
   	routput(O_cmd,0,"res: %s ",rTmp.rRes.sLastRes);
@@ -550,7 +550,7 @@ INT32 decode(CFst* itGP, CFst* itRN, CFstsearch *itSP, CFst* itDC)
   {
     INT64 nNT=UD_XT(itDC,0);
     INT64 nT,nC=0;
-    char lpsBuf[2048];
+    char lpsBuf[STR_LEN];
     INT64 nLen=0;
     BYTE *lpTos=CData_XAddr(AS(CData,itDC->td),0,CData_FindComp(AS(CData,itDC->td),itDC->m_lpsNCTDTOS));
     BYTE *lpTis=CData_XAddr(AS(CData,itDC->td),0,CData_FindComp(AS(CData,itDC->td),itDC->m_lpsNCTDTIS));
@@ -575,6 +575,11 @@ INT32 decode(CFst* itGP, CFst* itRN, CFstsearch *itSP, CFst* itDC)
       nLen+=nLLen;
     }
     IF_NOK(ret = CData_Sstore(AS(CData,itDC->ud), lpsBuf, 0, 0)) goto end;
+    
+    char *ft;
+    if(!(ft=dlp_malloc(strlen(lpsBuf)+1))) goto end;
+    memcpy(ft,lpsBuf,strlen(lpsBuf)+1);
+    AS(CData,itDC->ud)->m_ftext=ft;
   }
   
 end:
