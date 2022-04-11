@@ -76,11 +76,20 @@ void CGEN_PUBLIC CVmap_MapVectorD
   DLPASSERT(lpX!=lpY);                                                          /* Check in-/output ptrs. not equal  */
   for (m=0; m<nYdim; m++) lpY[m]=_this->m_nZero;                                /* Initialize output vector          */
   if (!lpX) return;                                                             /* If no input vector -> all done    */
-  N = CData_GetNComps(AS(CData,_this->m_idTmx));                                /* Get mapping input dimensionality  */
-  M = CData_GetNRecs(AS(CData,_this->m_idTmx));                                 /* Get mapping output dimensionality */
+  N = CVmap_GetInDim(_this);                                                    /* Get mapping input dimensionality  */
+  M = CVmap_GetOutDim(_this);                                                   /* Get mapping output dimensionality */
   if (nXdim>N) nXdim = N;                                                       /* Clip input dim. to mapping dim.   */
   if (nYdim>M) nYdim = M;                                                       /* Clip output dim. to mapping dim.  */
-  if(CData_IsEmpty(AS(CData,_this->m_idWeakTmx)))                               /* Do not use weak tmx               */
+  if(CTmx_IsCompressed(AS(CData,_this->m_idTmx))){
+    BYTE *bi=(BYTE*)CData_XAddr(AS(CData,_this->m_idTmx),0,0);
+    BYTE *bo=(BYTE*)CData_XAddr(AS(CData,_this->m_idTmx),0,1);
+    BYTE *bw=(BYTE*)CData_XAddr(AS(CData,_this->m_idTmx),0,2);
+    INT64  n=CData_GetNRecs(AS(CData,_this->m_idTmx));
+    INT32 nr=CData_GetRecLen(AS(CData,_this->m_idTmx));
+    for(;n;n--,bi+=nr,bo+=nr,bw+=nr)
+      lpY[*(INT64*)bo] = DLP_SCALOP(lpY[*(INT64*)bo],DLP_SCALOP(*(VMAP_FTYPE*)bw,lpX[*(INT64*)bi],_this->m_nWop),_this->m_nAop);
+  
+  }else if(CData_IsEmpty(AS(CData,_this->m_idWeakTmx)))                               /* Do not use weak tmx               */
   {                                                                             /* >>                                */
     W = (VMAP_FTYPE*)CData_XAddr(AS(CData,_this->m_idTmx),0,0);                 /*   Get pointer to trafo. matrix    */
      if (!W) return;                                                             /*   No trafo. mat., also no service */

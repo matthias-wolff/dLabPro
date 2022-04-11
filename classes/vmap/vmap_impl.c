@@ -27,6 +27,15 @@
 #include "dlp_cscope.h"                                                         /* Indicate C scope                  */
 #include "dlp_vmap.h"                                                           /* Include class header file         */
 
+INT16 CTmx_IsCompressed(CData *idTmx){
+  if(CData_GetNComps(idTmx)!=3) return 0;
+  if(CData_GetCompType(idTmx,0)!=T_LONG) return 0;
+  if(CData_GetCompType(idTmx,1)!=T_LONG) return 0;
+  if(CData_GetCompType(idTmx,2)==T_DOUBLE) return T_DOUBLE;
+  if(CData_GetCompType(idTmx,2)==T_FLOAT) return T_FLOAT;
+  return 0;
+}
+
 #define VMAP_FTYPE_CODE  T_FLOAT
 #include "vmap_impl_core.c"
 #undef VMAP_FTYPE_CODE
@@ -46,6 +55,13 @@
 INT32 CGEN_PUBLIC CVmap_GetInDim(CVmap* _this)
 {
   CHECK_THIS_RV(0);                                                             /* Check this pointer                */
+  if(CTmx_IsCompressed(AS(CData,_this->m_idTmx))){
+    INT64 mx=0,n=CData_GetNRecs(AS(CData,_this->m_idTmx));
+    BYTE *p=CData_XAddr(AS(CData,_this->m_idTmx),0,0);
+    INT32 nr=CData_GetRecLen(AS(CData,_this->m_idTmx));
+    for(;n;n--,p+=nr) if(*(INT64*)p>mx) mx=*(INT64*)p;
+    return mx+1;
+  }
   return CData_GetNComps(AS(CData,_this->m_idTmx));                             /* Return # comps. of trafo. matrix  */
 }
 
@@ -61,6 +77,13 @@ INT32 CGEN_PUBLIC CVmap_GetInDim(CVmap* _this)
 INT32 CGEN_PUBLIC CVmap_GetOutDim(CVmap* _this)
 {
   CHECK_THIS_RV(0);                                                             /* Check this pointer                */
+  if(CTmx_IsCompressed(AS(CData,_this->m_idTmx))){
+    INT64 mx=0,n=CData_GetNRecs(AS(CData,_this->m_idTmx));
+    BYTE *p=CData_XAddr(AS(CData,_this->m_idTmx),0,1);
+    INT32 nr=CData_GetRecLen(AS(CData,_this->m_idTmx));
+    for(;n;n--,p+=nr) if(*(INT64*)p>mx) mx=*(INT64*)p;
+    return mx+1;
+  }
   return CData_GetNRecs(AS(CData,_this->m_idTmx));                              /* Return # recs. of trafo. matrix   */
 }
 
@@ -90,7 +113,8 @@ INT16 CGEN_PUBLIC CVmap_Setup
   _this->m_nAop  = dlp_scalop_code(sAop);                                       /* Get aggregation operation code    */
   _this->m_nWop  = dlp_scalop_code(sWop);                                       /* Get weighting operation code      */
   _this->m_nZero = nZero;                                                       /* Store aggregation neutral element */
-  _this->m_nType = CData_IsHomogen(idTmx);                                      /* Auto detect floating point type   */
+  _this->m_nType = CTmx_IsCompressed(idTmx);
+  if(!_this->m_nType) _this->m_nType=CData_IsHomogen(idTmx);                    /* Auto detect floating point type   */
   if(_this->m_bDouble) _this->m_nType = T_DOUBLE;                               /* Override type by option           */
   if(_this->m_bFloat ) _this->m_nType = T_FLOAT;                                /* Override type by option           */
   if(_this->m_nType==T_FLOAT)                                                   /* Convert nZero to float            */
@@ -102,6 +126,7 @@ INT16 CGEN_PUBLIC CVmap_Setup
   }                                                                              /* <<                                */
   if (_this->m_nAop<0) return IERROR(_this,VMP_OPCODE,sAop,"scalar",0);         /* Check aggregation operation code  */
   if (_this->m_nWop<0) return IERROR(_this,VMP_OPCODE,sWop,"scalar",0);         /* Check weighting operation code    */
+  if(CTmx_IsCompressed(idTmx)){ CData_Copy(_this->m_idTmx,BASEINST(idTmx)); return O_K; }
   N = CData_GetNNumericComps(idTmx);                                            /* Get input vector dimensionality   */
   M = CData_GetNRecs(idTmx);                                                    /* Get output vector dimensionality  */
   lpBuf = (FLOAT64*)dlp_calloc(N,sizeof(FLOAT64));                                /* Allocate copy buffer              */
@@ -190,18 +215,17 @@ INT16 CGEN_PUBLIC CVmap_Status(CVmap* _this)
     BASEINST(_this)->m_lpInstanceName);                                         /* |                                 */
   printf("\n"); dlp_fprint_x_line(stdout,'-',dlp_maxprintcols());               /* ...                               */
   printf("\n   Floating point type  : %ld",(long)_this->m_nType);               /* Report floating point type        */
-  printf("\n   Input dimensionality : %ld",                                     /* Report input dimensionality       */
-  (long)CData_GetNComps(AS(CData,_this->m_idTmx)));                             /* |                                 */
-  printf("\n   Output dimensionality: %ld",                                     /* Report output dimensionality      */
-  (long)CData_GetNRecs(AS(CData,_this->m_idTmx)));                              /* |                                 */
+  printf("\n   Input dimensionality : %ld",(long)CVmap_GetInDim(_this)    );    /* Report input dimensionality       */
+  printf("\n   Output dimensionality: %ld",(long)CVmap_GetOutDim(_this)   );    /* Report output dimensionality      */
   printf("\n   Aggregation operation: %d" ,(int)_this->m_nAop             );    /* Report aggregation operation      */
   printf(" (%s)"                          ,dlp_scalop_name(_this->m_nAop) );    /* ...                               */
   printf("\n   - Neutral element    : %e" ,(double)_this->m_nZero         );    /* Report neutral element of aggr.op.*/
   printf("\n   Weighting operation  : %d" ,(int)_this->m_nWop             );    /* Report weighting operation        */
   printf(" (%s)"                          ,dlp_scalop_name(_this->m_nWop) );    /* ...                               */
   printf("\n"                                                             );    /* Print a blank line                */
-  if (CData_IsEmpty(AS(CData,_this->m_idTmx)) ||                                /* Setup ok                          */
-      CData_IsHomogen(AS(CData,_this->m_idTmx))!=_this->m_nType)                /* |                                 */
+  if (CData_IsEmpty(AS(CData,_this->m_idTmx)) || (                              /* Setup ok                          */
+      CTmx_IsCompressed(AS(CData,_this->m_idTmx))!=_this->m_nType &&            /* |                                 */
+      CData_IsHomogen(AS(CData,_this->m_idTmx))!=_this->m_nType))               /* |                                 */
     printf("\n   Mapping operator is CORRUPT");                                 /*   Report it                       */
   else                                                                          /* Setup not ok                      */
     printf("\n   Mapping operator is correctly setup.");                        /*   Report it                       */
@@ -234,11 +258,12 @@ INT16 CGEN_PUBLIC CVmap_Map(CVmap* _this, CData* idSrc, CData* idDst)
   if (!idSrc) return IERROR(_this,ERR_NULLARG,"idSrc",0,0);                     /* Check input vector sequence       */
   if (CData_IsEmpty(AS(CData,_this->m_idTmx)))                                  /* Check transformation matrix       */
     return IERROR(_this,VMP_NOTSETUP," (transformation matrix empty)",0,0);     /* ...                               */
-  if (CData_IsHomogen(AS(CData,_this->m_idTmx))!=T_DOUBLE)                      /* Check transformation matrix       */
+  if (CData_IsHomogen(AS(CData,_this->m_idTmx))!=T_DOUBLE &&                    /* Check transformation matrix       */
+      CTmx_IsCompressed(AS(CData,_this->m_idTmx))!=T_DOUBLE)
     return IERROR(_this,VMP_NOTSETUP," (transformation matrix corrupt)",0,0);   /* ...                               */
   I = CData_GetNNumericComps(idSrc);                                            /* Get numeric dimensionlty. of input*/
   K = CData_GetNRecs(idSrc);                                                    /* Get number of input vectors       */
-  M = CData_GetNRecs(AS(CData,_this->m_idTmx));                                 /* Get output dimensionality of map  */
+  M = CVmap_GetOutDim(_this);                                                   /* Get output dimensionality of map  */
   if (I==0)                                                                     /* No numeric input components       */
   {                                                                             /* >>                                */
     CData_Copy(BASEINST(idDst),BASEINST(idSrc));                                /*   Just copy input to output       */
