@@ -220,6 +220,7 @@ INT16 CVmap_OnStatus(CDlpObject*);
 /*{{CGEN_CEXPORT */
 
 /* Taken from 'vmap_impl.c' */
+INT16 CTmx_IsCompressed(CData* idTmx);
 INT32 CVmap_GetInDim(CVmap*);
 INT32 CVmap_GetOutDim(CVmap*);
 INT16 CVmap_Setup(CVmap*, CData* idTmx, const char* sAop, const char* sWop, FLOAT64 nZero);

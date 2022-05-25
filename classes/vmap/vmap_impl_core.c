@@ -87,7 +87,7 @@ void CGEN_PUBLIC CVmap_MapVectorD
     INT64  n=CData_GetNRecs(AS(CData,_this->m_idTmx));
     INT32 nr=CData_GetRecLen(AS(CData,_this->m_idTmx));
     for(;n;n--,bi+=nr,bo+=nr,bw+=nr)
-      lpY[*(INT64*)bo] = DLP_SCALOP(lpY[*(INT64*)bo],DLP_SCALOP(*(VMAP_FTYPE*)bw,lpX[*(INT64*)bi],_this->m_nWop),_this->m_nAop);
+      lpY[*(INT64*)bo] = DLP_SCALOP(lpY[*(INT64*)bo],DLP_SCALOP(*(FLOAT64*)bw,lpX[*(INT64*)bi],_this->m_nWop),_this->m_nAop);
   
   }else if(CData_IsEmpty(AS(CData,_this->m_idWeakTmx)))                               /* Do not use weak tmx               */
   {                                                                             /* >>                                */

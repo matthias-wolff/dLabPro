@@ -70,9 +70,10 @@ vmap.html vmap CVmap [
     vmap.html#mth_-status "-status" "-status"
   ]
   vmap.html#cfn C/C++ API - [
-    vmap.html#cfn_000 "CVmap_GetInDim" "GetInDim"
-    vmap.html#cfn_001 "CVmap_GetOutDim" "GetOutDim"
-    vmap.html#cfn_002 "CVmap_MapVector" "MapVector"
+    vmap.html#cfn_000 "CTmx_IsCompressed" "CTmx_IsCompressed"
+    vmap.html#cfn_001 "CVmap_GetInDim" "GetInDim"
+    vmap.html#cfn_002 "CVmap_GetOutDim" "GetOutDim"
+    vmap.html#cfn_003 "CVmap_MapVector" "MapVector"
   ]
   vmap.html#err Errors - [
     vmap.html#err_VMP_OPCODE "vmap1001" "VMP_OPCODE"
@@ -95,9 +96,10 @@ vmap.html vmap CVmap [
         top.TC1.InsertItem("-setup_i","&lt;data idImap&gt; &lt;data idWtab&gt; &lt;string sAop&gt; &lt;string sWop&gt; &lt;double nZero&gt; &lt;double nOne&gt; &lt;vmap this&gt; -setup_i     Setup with index map and weight table.",27,27,0,"automatic/vmap.html#mth_-setup_i","CONT",nCls);
         top.TC1.InsertItem("-status","&lt;vmap this&gt; -status     Prints status information of the vector mapping operator.",27,27,0,"automatic/vmap.html#mth_-status","CONT",nCls);
         nCfn = top.TC1.InsertItem("C/C++ API","",8,9,0,"automatic/vmap.html#cfn","CONT",nCls);
-        top.TC1.InsertItem("CVmap_GetInDim","INT32 CVmap_GetInDim(CVmap _this)     Returns the input dimensionality of this mapping operator.",27,27,0,"automatic/vmap.html#cfn_000","CONT",nCfn);
-        top.TC1.InsertItem("CVmap_GetOutDim","INT32 CVmap_GetOutDim(CVmap _this)     Returns the output dimensionality of this mapping operator.",27,27,0,"automatic/vmap.html#cfn_001","CONT",nCfn);
-        top.TC1.InsertItem("CVmap_MapVector","void CVmap_MapVector(CVmap _this, BYTE* lpX, BYTE* lpY, INT32 nXdim, INT32 nYdim, INT16 nFtype)     Transforms one vector.",27,27,0,"automatic/vmap.html#cfn_002","CONT",nCfn);
+        top.TC1.InsertItem("CTmx_IsCompressed","INT16 CVmap_CTmx_IsCompressed(CVmap _this, CData* idTmx)    ",27,27,0,"automatic/vmap.html#cfn_000","CONT",nCfn);
+        top.TC1.InsertItem("CVmap_GetInDim","INT32 CVmap_GetInDim(CVmap _this)     Returns the input dimensionality of this mapping operator.",27,27,0,"automatic/vmap.html#cfn_001","CONT",nCfn);
+        top.TC1.InsertItem("CVmap_GetOutDim","INT32 CVmap_GetOutDim(CVmap _this)     Returns the output dimensionality of this mapping operator.",27,27,0,"automatic/vmap.html#cfn_002","CONT",nCfn);
+        top.TC1.InsertItem("CVmap_MapVector","void CVmap_MapVector(CVmap _this, BYTE* lpX, BYTE* lpY, INT32 nXdim, INT32 nYdim, INT16 nFtype)     Transforms one vector.",27,27,0,"automatic/vmap.html#cfn_003","CONT",nCfn);
         nErr = top.TC1.InsertItem("Errors","",8,9,0,"automatic/vmap.html#err","CONT",nCls);
         top.TC1.InsertItem("vmap1001","VMP_OPCODE `%s` is not a valid %s operation name.",30,30,0,"automatic/vmap.html#err_VMP_OPCODE","CONT",nErr);
         top.TC1.InsertItem("vmap1002","VMP_NOTSETUP Mapping operator not properly set up%s.",30,30,0,"automatic/vmap.html#err_VMP_NOTSETUP","CONT",nErr);
@@ -395,9 +397,10 @@ Vector mapping operator
 <a href="#mth"><u>method list</u></a>
  for additional C/C++ functions)
 </td></tr>
-    <tr><td><a href="#cfn_000"><code class="link">CVmap_GetInDim</code></a></td><td><code>INT32 <b>CVmap_GetInDim</b>(CVmap _this);<br>public: INT32 <b>CVmap::GetInDim</b>();<br></code><br>  Returns the input dimensionality of this mapping operator.</td></tr>
-    <tr><td><a href="#cfn_001"><code class="link">CVmap_GetOutDim</code></a></td><td><code>INT32 <b>CVmap_GetOutDim</b>(CVmap _this);<br>public: INT32 <b>CVmap::GetOutDim</b>();<br></code><br>  Returns the output dimensionality of this mapping operator.</td></tr>
-    <tr><td><a href="#cfn_002"><code class="link">CVmap_MapVector</code></a></td><td><code>void <b>CVmap_MapVector</b>(CVmap _this, BYTE* lpX, BYTE* lpY, INT32 nXdim, INT32 nYdim, INT16 nFtype);<br>public: void <b>CVmap::MapVector</b>(BYTE* lpX, BYTE* lpY, INT32 nXdim, INT32 nYdim, INT16 nFtype);<br></code><br>  Transforms one vector.</td></tr>
+    <tr><td><a href="#cfn_000"><code class="link">CTmx_IsCompressed</code></a></td><td><code>INT16 <b>CVmap_CTmx_IsCompressed</b>(CVmap _this, CData* idTmx);<br>public: INT16 <b>CVmap::CTmx_IsCompressed</b>(CData* idTmx);<br></code><br> </td></tr>
+    <tr><td><a href="#cfn_001"><code class="link">CVmap_GetInDim</code></a></td><td><code>INT32 <b>CVmap_GetInDim</b>(CVmap _this);<br>public: INT32 <b>CVmap::GetInDim</b>();<br></code><br>  Returns the input dimensionality of this mapping operator.</td></tr>
+    <tr><td><a href="#cfn_002"><code class="link">CVmap_GetOutDim</code></a></td><td><code>INT32 <b>CVmap_GetOutDim</b>(CVmap _this);<br>public: INT32 <b>CVmap::GetOutDim</b>();<br></code><br>  Returns the output dimensionality of this mapping operator.</td></tr>
+    <tr><td><a href="#cfn_003"><code class="link">CVmap_MapVector</code></a></td><td><code>void <b>CVmap_MapVector</b>(CVmap _this, BYTE* lpX, BYTE* lpY, INT32 nXdim, INT32 nYdim, INT16 nFtype);<br>public: void <b>CVmap::MapVector</b>(BYTE* lpX, BYTE* lpY, INT32 nXdim, INT32 nYdim, INT16 nFtype);<br></code><br>  Transforms one vector.</td></tr>
     <tr><td colspan="2" class="rowempty">&nbsp;</td></tr>
     <tr>
       <td class="rowgroup"><a name="err">Errors</a></td>
@@ -1358,7 +1361,7 @@ INT16 <b>CVmap_Map</b>(CVmap _this, CData* idSrc, CData* idDst);<br>public: INT1
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">vmap_impl.c(222)</td>
+      <td class="hidden">vmap_impl.c(246)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -1601,7 +1604,7 @@ INT16 <b>CVmap_Setup</b>(CVmap _this, CData* idTmx, const char* sAop, const char
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">vmap_impl.c(70)</td>
+      <td class="hidden">vmap_impl.c(93)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -1815,7 +1818,7 @@ INT16 <b>CVmap_SetupI</b>(CVmap _this, CData* idImap, CData* idWtab, const char*
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">vmap_impl.c(149)</td>
+      <td class="hidden">vmap_impl.c(174)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -2219,7 +2222,7 @@ INT16 <b>CVmap_Status</b>(CVmap _this);<br>public: INT16 <b>CVmap::Status</b>();
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">vmap_impl.c(185)</td>
+      <td class="hidden">vmap_impl.c(210)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -2239,9 +2242,51 @@ Prints status information of the vector mapping operator.
     <tr>
       <td nowrap width="25%" class="navbar"><a 
         name="cfn_000"></a>C/C++ Function <span 
-        class="mid">CVmap_GetInDim</span></td>
+        class="mid">CTmx_IsCompressed</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
         <a class="navbar" href="javascript:__PrintSection('cfn_000','Class vmap');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
+        <a class="navbar" href="../home.html">Home</a>
+        <a class="navbar" href="#cls">Top</a>
+        <a class="navbar" href="#fld">Fields</a>
+        <a class="navbar" href="#opt">Options</a>
+        <a class="navbar" href="#mth">Methods</a>
+        <a class="navbar" href="#cfn">C/C++</a>
+        <a class="navbar" href="#err">Errors</a>
+      </td>
+    </tr>
+  </table>
+  <div class="mframe"><table cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td class="hidden"></td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Signature</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden"><code>
+INT16 <b>CVmap_CTmx_IsCompressed</b>(CVmap _this, CData* idTmx);<br>public: INT16 <b>CVmap::CTmx_IsCompressed</b>(CData* idTmx);<br>
+</code></td>
+    </tr>
+    <tr>
+      <td class="hidden">&nbsp;</td>
+      <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">Source</td>
+      <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
+      <td class="hidden">vmap_impl.c(30)</td>
+    </tr>
+  </table></div>
+  <div class="mframe2">
+  <!--{{ CUSTOM_DOC -->
+  <!--}} CUSTOM_DOC -->
+  </div>
+  <img src="../resources/blank_stc.gif" height="10">
+  </div>
+  <div id="cfn_001">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td nowrap width="25%" class="navbar"><a 
+        name="cfn_001"></a>C/C++ Function <span 
+        class="mid">CVmap_GetInDim</span></td>
+      <td nowrap width="75%" class="navbar" style="text-align:right;">
+        <a class="navbar" href="javascript:__PrintSection('cfn_001','Class vmap');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
         <a class="navbar" href="../home.html">Home</a>
         <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
@@ -2267,7 +2312,7 @@ INT32 <b>CVmap_GetInDim</b>(CVmap _this);<br>public: INT32 <b>CVmap::GetInDim</b
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">vmap_impl.c(46)</td>
+      <td class="hidden">vmap_impl.c(55)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -2299,14 +2344,14 @@ The input dimensionality
   </div>
   <img src="../resources/blank_stc.gif" height="10">
   </div>
-  <div id="cfn_001">
+  <div id="cfn_002">
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_001"></a>C/C++ Function <span 
+        name="cfn_002"></a>C/C++ Function <span 
         class="mid">CVmap_GetOutDim</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
-        <a class="navbar" href="javascript:__PrintSection('cfn_001','Class vmap');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
+        <a class="navbar" href="javascript:__PrintSection('cfn_002','Class vmap');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
         <a class="navbar" href="../home.html">Home</a>
         <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
@@ -2332,7 +2377,7 @@ INT32 <b>CVmap_GetOutDim</b>(CVmap _this);<br>public: INT32 <b>CVmap::GetOutDim<
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">vmap_impl.c(61)</td>
+      <td class="hidden">vmap_impl.c(77)</td>
     </tr>
   </table></div>
   <div class="mframe2">
@@ -2364,14 +2409,14 @@ The output dimensionality
   </div>
   <img src="../resources/blank_stc.gif" height="10">
   </div>
-  <div id="cfn_002">
+  <div id="cfn_003">
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td nowrap width="25%" class="navbar"><a 
-        name="cfn_002"></a>C/C++ Function <span 
+        name="cfn_003"></a>C/C++ Function <span 
         class="mid">CVmap_MapVector</span></td>
       <td nowrap width="75%" class="navbar" style="text-align:right;">
-        <a class="navbar" href="javascript:__PrintSection('cfn_002','Class vmap');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
+        <a class="navbar" href="javascript:__PrintSection('cfn_003','Class vmap');"><img src="../resources/print.gif" width="16" height="16" border="0" style="vertical-align:middle" alt="Print"></a>
         <a class="navbar" href="../home.html">Home</a>
         <a class="navbar" href="#cls">Top</a>
         <a class="navbar" href="#fld">Fields</a>
@@ -2397,7 +2442,7 @@ void <b>CVmap_MapVector</b>(CVmap _this, BYTE* lpX, BYTE* lpY, INT32 nXdim, INT3
       <td class="hidden">&nbsp;&nbsp;&nbsp;</td>
       <td class="hidden">Source</td>
       <td class="hidden">:&nbsp;&nbsp;&nbsp;</td>
-      <td class="hidden">vmap_impl.c(300)</td>
+      <td class="hidden">vmap_impl.c(325)</td>
     </tr>
   </table></div>
   <div class="mframe2">

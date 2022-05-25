@@ -27,7 +27,7 @@
 #include "dlp_cscope.h"                                                         /* Indicate C scope                  */
 #include "dlp_vmap.h"                                                           /* Include class header file         */
 
-INT16 CTmx_IsCompressed(CData *idTmx){
+INT16 CGEN_PUBLIC CTmx_IsCompressed(CData *idTmx){
   if(CData_GetNComps(idTmx)!=3) return 0;
   if(CData_GetCompType(idTmx,0)!=T_LONG) return 0;
   if(CData_GetCompType(idTmx,1)!=T_LONG) return 0;

@@ -582,6 +582,101 @@ INT16 CGEN_PUBLIC CHmm::GmmMix()
   return O_K;                                                                   // All done
 }
 
+static INT16 CHmm_GmmUnmixComp(CHmm *h){
+  if (!h->m_iGm->m_iMmap) return IERROR(h,GMM_INVALD,"has no mixture map","","gmm");
+  CData* tmx=h->m_iGm->m_iMmap->m_idTmx;
+  if(!CTmx_IsCompressed(tmx)) return IERROR(h,GMM_INVALD,"mixture map is not compressed","","gmm");
+  if(CData_GetNComps(h->is)!=3 || CData_IsHomogen(h->is)!=T_DOUBLE) return IERROR(h,GMM_INVALD,"only implemented with tid map","","gmm");
+
+  BYTE *bi0=(BYTE*)CData_XAddr(tmx,0,0),*bi;
+  BYTE *bo0=(BYTE*)CData_XAddr(tmx,0,1),*bo;
+  BYTE *bw0=(BYTE*)CData_XAddr(tmx,0,2),*bw;
+  INT64 n0=CData_GetNRecs(tmx),n;
+  INT32 nr=CData_GetRecLen(tmx);
+  INT64 no=0;
+  for(n=n0,bo=bo0;n;n--,bo+=nr)
+    if(*(INT64*)bo>=no) no=(*(INT64*)bo)+1;
+  struct tmxmap {
+    INT64 i;
+    FLOAT64 w;
+    struct tmxmap *nxt;
+  } **tmxmap,*tmxmaps,*tmi;
+  if(!(tmxmap=(struct tmxmap **)calloc(no,sizeof(*tmxmap)))) return IERROR(h,GMM_INVALD,"alloc failed","","gmm");
+  if(!(tmxmaps=(struct tmxmap *)malloc(n0*sizeof(*tmxmaps)))) return IERROR(h,GMM_INVALD,"alloc failed","","gmm");
+  for(n=n0,bi=bi0,bo=bo0,bw=bw0,tmi=tmxmaps;n;n--,bi+=nr,bo+=nr,bw+=nr,tmi++){
+    INT64 o=*(INT64*)bo;
+    tmi->i=*(INT64*)bi;
+    tmi->w=*(FLOAT64*)bw;
+    tmi->nxt=tmxmap[o];
+    tmxmap[o]=tmi;
+  }
+
+  FLOAT64 *tids=(FLOAT64*)CData_XAddr(h->is,0,0);
+  INT64 xtid0=CData_GetNRecs(h->is),tidi,tido;
+  INT64 xtid1=0;
+  for(tidi=0;tidi<xtid0;tidi++)
+    for(tmi=tmxmap[(INT64)tids[tidi*3]];tmi;tmi=tmi->nxt) xtid1++;
+  
+  struct tidmap { INT64 s,e; } *tidmap;
+  if(!(tidmap=(struct tidmap*)malloc(xtid0*sizeof(*tidmap)))) return IERROR(h,GMM_INVALD,"alloc failed","","gmm");
+  CData_InsertRecs(h->is,0,xtid1-xtid0,1);
+  tids=(FLOAT64*)CData_XAddr(h->is,0,0);
+  for(tidi=xtid1-xtid0,tido=0;tidi<xtid1;tidi++){
+    tidmap[tidi+xtid0-xtid1].s=tido;
+    for(tmi=tmxmap[(INT64)tids[tidi*3]];tmi;tmi=tmi->nxt,tido++){
+      tids[tido*3+0]=tmi->i;
+      tids[tido*3+1]=tids[tidi*3+1]-tmi->w;
+      tids[tido*3+2]=tids[tidi*3+2]-tmi->w;
+    }
+    tidmap[tidi+xtid0-xtid1].e=tido;
+  }
+  
+  INT32 nIcTis,nIcTos,nIcW,nRL;
+  BYTE *td,*tdtid;
+  if((nIcTis=CData_FindComp(h->td,NC_TD_TIS))<0) return IERROR(h,FST_MISS,"input symbol","component","transition table");
+  if((nIcTos=CData_FindComp(h->td,NC_TD_TOS))<0) return IERROR(h,FST_MISS,"output symbol","component","transition table");
+  if(h->Wsr_GetType(&nIcW)!=FST_WSR_LOG) return IERROR(h,FST_INTERNAL,"currently only LOG WSR implemented","","");
+  nRL=CData_GetRecLen(h->td);
+  tdtid=h->td->XAddr(0,nIcTis);
+
+  INT32 ti,xt0=CData_GetNRecs(h->td),xt1=0;
+  for(ti=0;ti<xt0;ti++){
+    INT32 tid=*(FST_STYPE*)(tdtid+nRL*ti);
+    if(tid<0) xt1++;
+    else if(tid>=xtid0) return IERROR(h,GMM_INVALD,"tid exceeds tid0","","gmm");
+    else xt1+=tidmap[tid].e-tidmap[tid].s;
+  }
+
+  CData_InsertRecs(h->td,0,xt1-xt0,1);
+  tdtid=h->td->XAddr(0,nIcTis);
+  td=h->td->XAddr(0,0);
+
+  INT32 ui,xu=UD_XXU(h),to=0;
+  for(ui=0;ui<xu;ui++){
+    INT32 uft=UD_FT(h,ui), uxt=UD_XT(h,ui);
+    UD_FT(h,ui)=to;
+    for(ti=uft+xt1-xt0;ti<uft+uxt+xt1-xt0;ti++){
+      INT32 tid=*(FST_STYPE*)(tdtid+nRL*ti);
+      if(tid<0) memcpy(td+nRL*to++,td+nRL*ti,nRL);
+      else if(tid>=xtid0) return IERROR(h,GMM_INVALD,"tid exceeds tid0","","gmm");
+      else for(tido=tidmap[tid].s;tido<tidmap[tid].e;tido++,to++){
+        memcpy(td+nRL*to,td+nRL*ti,nRL);
+        *(FST_STYPE*)(tdtid+nRL*to)=tido;
+      }
+    }
+    UD_XT(h,ui)=to-UD_FT(h,ui);
+  }
+
+  free(tidmap);
+  free(tmxmap);
+  free(tmxmaps);
+
+  IDESTROY(h->m_iGm->m_iMmap);
+  h->m_iGm->m_iMmap=NULL;
+
+  return O_K;
+}
+
 /*
  * Manual page at hmm.def
  */
@@ -607,6 +702,8 @@ INT16 CGEN_PUBLIC CHmm::GmmUnmix()
   if (!m_iGm->m_iMmap)                                                           // Mixture map available?
     return IERROR(this,GMM_INVALD,"has no mixture map","","gmm");                  //   Error
   idTmx = m_iGm->m_iMmap->m_idTmx;
+  if(CTmx_IsCompressed(idTmx)) return CHmm_GmmUnmixComp(this);
+
   nNG = idTmx->GetNComps();
   nNM = idTmx->GetNRecs();
   nNU = UD_XXU(_this);                                                          // Get number of units
