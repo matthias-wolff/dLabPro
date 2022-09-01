@@ -158,10 +158,9 @@ INT16 CGEN_IGNORE dlm_mf_init(MLP_CNVC_TYPE* lpCnvc, INT16 nIn, INT16 nOut, FLOA
   /* Free present data */
   dlm_mf_done(lpCnvc);
 
-  if(dlm_log2_i(nIn) < 0) nIn = 1 << ((INT16)dlm_log_bC(CMPLX(2),CMPLX(nIn)).x + 1);
 
   /* Basic initialization and memory allocation */
-  lpCnvc->n_in        = nIn;
+  lpCnvc->n_in        = dlm_log2_i(nIn)>=0 ? nIn : 1 << ((INT16)dlm_log_bC(CMPLX(2),CMPLX(nIn)).x + 1);
   lpCnvc->n_out       = nOut;
   lpCnvc->quant_energ = quant_energ;
   lpCnvc->mid         = (FLOAT64*) dlp_calloc(nOut,sizeof(FLOAT64));
@@ -282,6 +281,7 @@ INT16 CGEN_IGNORE dlm_mf_init(MLP_CNVC_TYPE* lpCnvc, INT16 nIn, INT16 nOut, FLOA
     return NOT_EXEC;
   }
   
+  lpCnvc->n_in        = nIn;
   return O_K;
 }
 
