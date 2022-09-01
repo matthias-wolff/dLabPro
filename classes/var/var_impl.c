@@ -222,6 +222,7 @@ void CGEN_PROTECTED CVar_PopOwnValue(CVar *_this)
       break;
     case T_COMPLEX:
     case T_RDOUBLE:
+    case T_DOUBLE:
     case T_RDDATA:
       CDlpObject_MicGetN(BASEINST(_this),-1,0);
       break;
