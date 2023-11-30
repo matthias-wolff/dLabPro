@@ -631,7 +631,8 @@ static INT16 CHmm_GmmUnmixComp(CHmm *h){
     tidmap[tidi+xtid0-xtid1].e=tido;
   }
   
-  INT32 nIcTis,nIcTos,nIcW,nRL;
+  INT32 nIcTis,nIcTos,nIcW;
+  INT64 nRL;
   BYTE *td,*tdtid;
   if((nIcTis=CData_FindComp(h->td,NC_TD_TIS))<0) return IERROR(h,FST_MISS,"input symbol","component","transition table");
   if((nIcTos=CData_FindComp(h->td,NC_TD_TOS))<0) return IERROR(h,FST_MISS,"output symbol","component","transition table");
@@ -642,9 +643,11 @@ static INT16 CHmm_GmmUnmixComp(CHmm *h){
   INT32 ti,xt0=CData_GetNRecs(h->td),xt1=0;
   for(ti=0;ti<xt0;ti++){
     INT32 tid=*(FST_STYPE*)(tdtid+nRL*ti);
+    INT32 xt1l=xt1;
     if(tid<0) xt1++;
     else if(tid>=xtid0) return IERROR(h,GMM_INVALD,"tid exceeds tid0","","gmm");
     else xt1+=tidmap[tid].e-tidmap[tid].s;
+    if(xt1<xt1l) return IERROR(h,GMM_INVALD,"xt1 exceeds type size of INT32","","gmm");
   }
 
   CData_InsertRecs(h->td,0,xt1-xt0,1);

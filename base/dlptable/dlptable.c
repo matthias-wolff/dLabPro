@@ -687,9 +687,9 @@ INT32 CDlpTable_InsertRecs(CDlpTable* _this, INT32 nInsertAt, INT32 nRecs, INT32
     (
       CDlpTable_XAddr(_this,nInsertAt+nRecs,0),
       CDlpTable_XAddr(_this,nInsertAt      ,0),
-      (nXXR-nInsertAt-nRecs)*nRl
+      (nXXR-nInsertAt-nRecs)*(INT64)nRl
     );
-    dlp_memset(CDlpTable_XAddr(_this,nInsertAt,0),0,nRecs*nRl);
+    dlp_memset(CDlpTable_XAddr(_this,nInsertAt,0),0,(INT64)nRecs*(INT64)nRl);
   }
 
   return nInsertAt;
