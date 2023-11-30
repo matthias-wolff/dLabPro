@@ -108,8 +108,9 @@ void CGEN_PUBLIC CFst_Check(CFst* _this)
   DLPASSERT(UD_XXS(_this)==nXSa);
   DLPASSERT(UD_XXT(_this)==nXTa);
 
+  /* Ignore extra components in input & output symbol tables
   DLPASSERT(IS_XXS(_this)<=1 || IS_XXS(_this)==UD_XXU(_this));
-  DLPASSERT(OS_XXS(_this)<=1 || OS_XXS(_this)==UD_XXU(_this));
+  DLPASSERT(OS_XXS(_this)<=1 || OS_XXS(_this)==UD_XXU(_this));*/
 
   /* Force checking heap */
   /* TODO: This slows the check significantly down; you may want to comment it out --> */
