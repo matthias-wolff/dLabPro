@@ -105,7 +105,7 @@
 #define RWID      9906
 #define ROFS      9907
 #define CHECK_DATA(A) {DLPASSERT(A!=NULL); DLPASSERT(A->m_lpTable);}
-#define CDATA_XADDR(THIS,R,C)                    (THIS->m_lpTable->m_theDataPointer         +    THIS->m_lpTable->m_reclen * R             +    THIS->m_lpTable->m_compDescrList[C].offset)
+#define CDATA_XADDR(THIS,R,C)                    (THIS->m_lpTable->m_theDataPointer         +    (size_t)THIS->m_lpTable->m_reclen * (size_t)R             +    (size_t)THIS->m_lpTable->m_compDescrList[C].offset)
 #define CDATA_SORT_UP    1
 #define CDATA_SORT_DOWN  2
 #define CDATA_MARK_RECS     0

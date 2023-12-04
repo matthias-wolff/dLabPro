@@ -393,9 +393,9 @@ FST_ITYPE CGEN_EXPORT CFst_STI_GetTransId(FST_TID_TYPE* lpTI, BYTE* lpTrans)
   DLPASSERT(CData_XAddr(AS(CData,lpTI->iFst->td),UD_FT(lpTI->iFst,lpTI->nUnit),0) == lpTI->lpFT);
   DLPASSERT(UD_XT(lpTI->iFst,lpTI->nUnit)  == lpTI->nXT);
   
-  if (lpTrans<lpTI->lpFT || lpTrans>lpTI->lpFT+lpTI->nRlt*(lpTI->nXT-1))
+  if (lpTrans<lpTI->lpFT || lpTrans>lpTI->lpFT+(size_t)lpTI->nRlt*(size_t)(lpTI->nXT-1))
     return -1;
-  return lpTI->nFT + (FST_ITYPE)((lpTrans-lpTI->lpFT)/lpTI->nRlt);
+  return lpTI->nFT + (FST_ITYPE)((lpTrans-lpTI->lpFT)/(size_t)lpTI->nRlt);
 /*
    if (lpTrans<CData_XAddr(AS(CData,lpTI->iFst->td),0,0)) return -1;
   if (lpTrans>CData_XAddr(AS(CData,lpTI->iFst->td),CData_GetNRecs(AS(CData,lpTI->iFst->td))-1,0)) return -1;

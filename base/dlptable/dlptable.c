@@ -336,7 +336,7 @@ INT16 CDlpTable_InsertNcomps(CDlpTable* _this, const char* lpsName, INT16 nType,
 #endif
     /* Assertion: There is a data pointer, but no data :( */
 
-    lpNewData = (BYTE*)dlp_calloc(_this->m_maxrec*_this->m_reclen,sizeof(BYTE));
+    lpNewData = (BYTE*)dlp_calloc((size_t)_this->m_maxrec*_this->m_reclen,sizeof(BYTE));
     if (!lpNewData) return NOT_EXEC;
 
     for(i=0               ; i<nInsertAt   ; i++) nSize1 += CDlpTable_GetCompSize(_this,i);
@@ -346,9 +346,9 @@ INT16 CDlpTable_InsertNcomps(CDlpTable* _this, const char* lpsName, INT16 nType,
 
     for(i=1;i<_this->m_maxrec;i++)
     {
-      dlp_memmove(lpNewData+i*nReclen-nSize2,lpData+i*nOldRln-nSize2,nSize1+nSize2);
+      dlp_memmove(lpNewData+(size_t)i*nReclen-nSize2,lpData+(size_t)i*nOldRln-nSize2,nSize1+nSize2);
     }
-    dlp_memmove(lpNewData+nNRecs*nReclen-nSize2,lpData+nNRecs*nOldRln-nSize2,nSize2);
+    dlp_memmove(lpNewData+(size_t)nNRecs*nReclen-nSize2,lpData+(size_t)nNRecs*nOldRln-nSize2,nSize2);
 
     dlp_free(lpData);
     _this->m_theDataPointer=lpNewData;
@@ -527,7 +527,7 @@ INT16 CDlpTable_Allocate(CDlpTable* _this, INT32 nRecs)
 
 #ifdef __OPTIMIZE_ALLOC
   if(nRetval == O_K) {
-    dlp_memset(_this->m_theDataPointer, 0L, nRecs*_this->m_reclen);
+    dlp_memset(_this->m_theDataPointer, 0L, nRecs*(size_t)_this->m_reclen);
   }
 #endif
 
@@ -574,7 +574,7 @@ INT16 CDlpTable_Alloc(CDlpTable* _this, INT32 nRecs)
 
   nRetval = CDlpTable_AllocUninitialized(_this,nRecs);
   if(nRetval == O_K) {
-    dlp_memset(_this->m_theDataPointer, 0L, nRecs*_this->m_reclen*sizeof(BYTE));
+    dlp_memset(_this->m_theDataPointer, 0L, (size_t)nRecs*_this->m_reclen*sizeof(BYTE));
   }
 
   return nRetval;
@@ -612,7 +612,7 @@ INT16 CDlpTable_Realloc(CDlpTable* _this, INT32 nRecs)
 
   /* Check size of reallocate memory */
 #ifndef __NOXALLOC
-  DLPASSERT((INT64)dlp_size(_this->m_theDataPointer)==(INT64)(CDlpTable_GetMaxRecs(_this)*CDlpTable_GetRecLen(_this)));
+  DLPASSERT((INT64)dlp_size(_this->m_theDataPointer)==(INT64)(CDlpTable_GetMaxRecs(_this)*(size_t)CDlpTable_GetRecLen(_this)));
 #endif
 
   return O_K;
@@ -707,7 +707,7 @@ INT16 CDlpTable_Clear(CDlpTable* _this)
   if(_this->m_compDescrList==NULL) return NOT_EXEC;
   if(!_this->m_theDataPointer) return NOT_EXEC;
 
-  dlp_memset(_this->m_theDataPointer,0,_this->m_nrec*_this->m_reclen);
+  dlp_memset(_this->m_theDataPointer,0,_this->m_nrec*(size_t)_this->m_reclen);
 
   return O_K;
 }
@@ -1030,7 +1030,7 @@ COMPLEX64 CDlpTable_Cfetch(CDlpTable* _this, INT32 nRec, INT32 nComp)
 
   c = &_this->m_compDescrList[nComp];
   t = c->ctype;
-  p = _this->m_theDataPointer+nRec*_this->m_reclen+c->offset;
+  p = _this->m_theDataPointer+(size_t)nRec*(size_t)_this->m_reclen+(size_t)c->offset;
 
   return dlp_fetch(p,t);
 }
@@ -1233,9 +1233,9 @@ INT16 CDlpTable_DeleteRecs
   CDlpTable_Copy(_this,lpiSrc,0,lpiSrc->m_maxrec);
   dlp_memmove
   (
-    _this->m_theDataPointer + nFirstRec*_this->m_reclen,
-    _this->m_theDataPointer + (nFirstRec+nRecs)*_this->m_reclen,
-    (lpiSrc->m_maxrec-nFirstRec-nRecs)*_this->m_reclen
+    _this->m_theDataPointer + nFirstRec*(size_t)_this->m_reclen,
+    _this->m_theDataPointer + (nFirstRec+nRecs)*(size_t)_this->m_reclen,
+    ((size_t)lpiSrc->m_maxrec-nFirstRec-nRecs)*(size_t)_this->m_reclen
   );
   _this->m_nrec = lpiSrc->m_nrec-nRecs;
   return O_K;
@@ -1283,9 +1283,9 @@ INT16 CDlpTable_DeleteComps(CDlpTable* _this, CDlpTable* lpiSrc, INT32 nFirstCom
 
   if (_this->m_nrec>0)
   {
-    if((_this->m_nrec * nNewRecLen) == 0) { CDlpTable_SReset(_this); return O_K; }
+    if(((size_t)_this->m_nrec * (size_t)nNewRecLen) == 0) { CDlpTable_SReset(_this); return O_K; }
 
-    lpNewDataPtr = (BYTE*)dlp_malloc(_this->m_maxrec * nNewRecLen * sizeof(BYTE));
+    lpNewDataPtr = (BYTE*)dlp_malloc((size_t)_this->m_maxrec * (size_t)nNewRecLen * sizeof(BYTE));
     if(!lpNewDataPtr) return NOT_EXEC;
 
     dlp_memmove(lpNewDataPtr, _this->m_theDataPointer, nSize1);
@@ -1293,15 +1293,15 @@ INT16 CDlpTable_DeleteComps(CDlpTable* _this, CDlpTable* lpiSrc, INT32 nFirstCom
     for(i=1; i<_this->m_maxrec; i++)
       dlp_memmove
       (
-        lpNewDataPtr + i * nNewRecLen - nSize3,
-        _this->m_theDataPointer + i * _this->m_reclen - nSize3,
+        lpNewDataPtr + (size_t)i * (size_t)nNewRecLen - (size_t)nSize3,
+        _this->m_theDataPointer + (size_t)i * (size_t)_this->m_reclen - (size_t)nSize3,
         nNewRecLen
       );
 
     dlp_memmove
     (
-      lpNewDataPtr + _this->m_maxrec * nNewRecLen - nSize3,
-      _this->m_theDataPointer + _this->m_maxrec * _this->m_reclen - nSize3,
+      lpNewDataPtr + (size_t)_this->m_maxrec * (size_t)nNewRecLen - (size_t)nSize3,
+      _this->m_theDataPointer + (size_t)_this->m_maxrec * (size_t)_this->m_reclen - (size_t)nSize3,
       nSize3
     );
 
@@ -1535,9 +1535,9 @@ INT16 CDlpTable_CatEx(CDlpTable* _this, CDlpTable* lpiSrc, INT32 nFirstRec, INT3
     IFCHECK printf("\n Source and destination instance have the same number and types, the operation is performed fast using dlp_memmove.");
     dlp_memmove
     (
-      _this->m_theDataPointer+(nNRecOld*_this->m_reclen),
-      lpiSrc->m_theDataPointer+(nFirstRec*lpiSrc->m_reclen),
-      nCount*lpiSrc->m_reclen
+      _this->m_theDataPointer+(nNRecOld*(size_t)_this->m_reclen),
+      lpiSrc->m_theDataPointer+(nFirstRec*(size_t)lpiSrc->m_reclen),
+      nCount*(size_t)lpiSrc->m_reclen
     );
   }
   else
@@ -1581,10 +1581,10 @@ INT16 CDlpTable_CatEx(CDlpTable* _this, CDlpTable* lpiSrc, INT32 nFirstRec, INT3
         IFCHECK printf("\n Adjust length of symbolic component to %d.",(int)nMatchingTypes);
 
         nCLn   = CDlpTable_GetCompType(_this,j);
-        lpComp = (unsigned char*)dlp_malloc(nCLn*CDlpTable_GetNRecs(_this)*sizeof(char));
+        lpComp = (unsigned char*)dlp_malloc(nCLn*(size_t)CDlpTable_GetNRecs(_this)*sizeof(char));
 
         for(nRIdx=0; nRIdx<CDlpTable_GetNRecs(_this); nRIdx++)
-          dlp_strncpy((char*)(lpComp+nRIdx*nCLn),
+          dlp_strncpy((char*)(lpComp+nRIdx*(size_t)nCLn),
             (char*)CDlpTable_XAddr(_this,nRIdx,j),nCLn);
 
         dlp_strcpy(sCompName,CDlpTable_GetCompName(_this,j));
@@ -1593,7 +1593,7 @@ INT16 CDlpTable_CatEx(CDlpTable* _this, CDlpTable* lpiSrc, INT32 nFirstRec, INT3
 
         for(nRIdx=0;nRIdx<CDlpTable_GetNRecs(_this);nRIdx++)
           dlp_strncpy((char*)CDlpTable_XAddr(_this,nRIdx,j),
-            (char*)(lpComp+nRIdx*nCLn),nCLn);
+            (char*)(lpComp+nRIdx*(size_t)nCLn),nCLn);
 
         dlp_free(lpComp);
       }
