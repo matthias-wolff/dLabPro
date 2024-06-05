@@ -163,7 +163,7 @@ INT16 CGEN_IGNORE dlm_mf_init(MLP_CNVC_TYPE* lpCnvc, INT16 nIn, INT16 nOut, FLOA
   lpCnvc->n_in        = dlm_log2_i(nIn)>=0 ? nIn : 1 << ((INT16)dlm_log_bC(CMPLX(2),CMPLX(nIn)).x + 1);
   lpCnvc->n_out       = nOut;
   lpCnvc->quant_energ = quant_energ;
-  lpCnvc->mid         = (FLOAT64*) dlp_calloc(nOut,sizeof(FLOAT64));
+  lpCnvc->mid         = (FLOAT64*) dlp_calloc(MAX(nOut,2),sizeof(FLOAT64));
   lpCnvc->width[0]    = (FLOAT64*) dlp_calloc(nOut,sizeof(FLOAT64));
   lpCnvc->width[1]    = (FLOAT64*) dlp_calloc(nOut,sizeof(FLOAT64));
   lpCnvc->norm        = (FLOAT64*) dlp_calloc(nOut,sizeof(FLOAT64));
