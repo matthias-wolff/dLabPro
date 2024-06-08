@@ -163,8 +163,7 @@ INT16 CDN3Stream_Constructor(CDN3Stream* _this, const char* lpsFilename, const I
 
       /* Write file class information to global information string */
       dlp_memset(_this->m_lpsGlobal,0,CDN3_GLOBLENGTH);
-      if(_this->m_lpsFileclass) sprintf(_this->m_lpsGlobal,"CLASS=%s ",_this->m_lpsFileclass);
-      else                   sprintf(_this->m_lpsGlobal,"CLASS= ");
+      sprintf(_this->m_lpsGlobal,"CLASS=%s ",_this->m_lpsFileclass);
       break;
     }
     case CDN3_READ:
