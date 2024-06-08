@@ -303,7 +303,7 @@ INT16 uncompressbuf(void **buf,size_t *si){
   }
   if(stream.total_out>nsi) return Z_BUF_ERROR;
   if(!(nbuf=(uint8_t*)realloc(nbuf,nsi=stream.total_out))) return Z_BUF_ERROR;
-  if(nsi<1L<<32 && crc32(0L,(Bytef*)nbuf,nsi)!=crc) return Z_BUF_ERROR;
+  if(nsi<0xffffffffu && crc32(0L,(Bytef*)nbuf,nsi)!=crc) return Z_BUF_ERROR;
   if(inflateEnd(&stream)!=Z_OK) return Z_BUF_ERROR;
 
   *buf=nbuf;
